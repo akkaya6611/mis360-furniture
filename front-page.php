@@ -154,8 +154,49 @@ get_header();
             <div class="trendyol-side-banners">
                 <!-- Kutu 1: Günün Flaş Fırsatı -->
                 <?php
-                $flash_product_id = 189; // Carmen 3 Raflı Kitaplık
-                $flash_link = get_permalink($flash_product_id) ?: home_url('/');
+                $flash_product = null;
+                if (class_exists('WooCommerce')) {
+                    // Carmen 3 Raflı ürününü dinamik bul
+                    $carmen_found = wc_get_products([
+                        'limit'  => 1,
+                        'status' => 'publish',
+                        's'      => 'Carmen 3 Raflı',
+                    ]);
+                    if (!empty($carmen_found)) {
+                        $flash_product = $carmen_found[0];
+                    } else {
+                        $fallback_prods = wc_get_products([
+                            'limit'   => 1,
+                            'status'  => 'publish',
+                            'orderby' => 'date',
+                            'order'   => 'DESC',
+                        ]);
+                        if (!empty($fallback_prods)) {
+                            $flash_product = $fallback_prods[0];
+                        }
+                    }
+                }
+
+                if ($flash_product instanceof WC_Product) {
+                    $flash_link       = $flash_product->get_permalink();
+                    $flash_title      = $flash_product->get_name();
+                    $flash_img_id     = $flash_product->get_image_id();
+                    $flash_img        = $flash_img_id ? wp_get_attachment_image_url($flash_img_id, 'medium') : '';
+                    if (!$flash_img) {
+                        $flash_img = 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
+                    }
+                    $flash_reg_price  = (float) $flash_product->get_regular_price();
+                    $flash_curr_price = (float) $flash_product->get_price();
+                    if ($flash_reg_price <= $flash_curr_price || $flash_reg_price <= 0) {
+                        $flash_reg_price = round($flash_curr_price * 1.25);
+                    }
+                } else {
+                    $flash_link       = class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/');
+                    $flash_title      = 'Carmen 3 Raflı Eğitici Kitaplık';
+                    $flash_img        = 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
+                    $flash_reg_price  = 950.0;
+                    $flash_curr_price = 800.0;
+                }
                 ?>
                 <div class="side-deal-card card-flash-deal">
                     <div class="deal-badge-row">
@@ -167,12 +208,12 @@ get_header();
                     </div>
                     <a href="<?php echo esc_url($flash_link); ?>" class="deal-product-row-link" style="text-decoration:none; color:inherit;">
                         <div class="deal-product-row">
-                            <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Carmen 3 Raflı Kitaplık" class="deal-thumb">
+                            <img src="<?php echo esc_url($flash_img); ?>" alt="<?php echo esc_attr($flash_title); ?>" class="deal-thumb">
                             <div class="deal-details">
-                                <h4 class="deal-title">Carmen 3 Raflı Eğitici Kitaplık</h4>
+                                <h4 class="deal-title"><?php echo esc_html($flash_title); ?></h4>
                                 <div class="deal-pricing">
-                                    <del>950 ₺</del>
-                                    <strong class="deal-price">800,00 ₺</strong>
+                                    <del><?php echo number_format($flash_reg_price, 0, ',', '.'); ?> ₺</del>
+                                    <strong class="deal-price"><?php echo number_format($flash_curr_price, 2, ',', '.'); ?> ₺</strong>
                                 </div>
                                 <div class="deal-stock-tag">🔥 Son 4 Adet Kaldı!</div>
                             </div>
@@ -253,7 +294,7 @@ get_header();
 function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bestseller', string $color_theme = 'orange', int $card_index = 0): void {
     $id        = $prod->get_id();
     $title     = $prod->get_name();
-    $permalink = get_permalink($id);
+    $permalink = $prod->get_permalink() ?: get_permalink($id);
 
     // Görsel
     $img_url = wp_get_attachment_image_url($prod->get_image_id(), 'medium');

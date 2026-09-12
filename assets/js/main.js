@@ -319,7 +319,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const mainImg = galleryEl.querySelector('.woocommerce-product-gallery__image img, .wp-post-image');
         const thumbs = galleryEl.querySelectorAll('.flex-control-thumbs img, div.thumbnails a img');
         thumbs.forEach(thumb => {
-            thumb.addEventListener('click', () => {
+            thumb.addEventListener('click', (e) => {
+                e.preventDefault();
                 const fullSrc = thumb.getAttribute('data-large_image') || thumb.getAttribute('src');
                 if (mainImg && fullSrc) {
                     mainImg.src = fullSrc;
@@ -328,6 +329,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             });
+        });
+
+        // Galeri görsellerine tıklandığında doğrudan browser'da ham görsel dosyasının (.jpg/.png) açılmasını engelle
+        galleryEl.addEventListener('click', function(e) {
+            const anchor = e.target.closest('.woocommerce-product-gallery__image a');
+            if (anchor) {
+                // Eğer PhotoSwipe açık değilse browser'ın doğrudan resim sayfasına gitmesini engelle
+                if (!document.querySelector('.pswp--open')) {
+                    e.preventDefault();
+                }
+            }
         });
     }
 

@@ -24,7 +24,7 @@ if (empty($product) || !$product->is_visible()) {
             // Rozetler
             mis360_product_badges();
             ?>
-            <a href="<?php the_permalink(); ?>" class="card-image-link">
+            <a href="<?php echo esc_url($product->get_permalink()); ?>" class="card-image-link">
                 <?php
                 if (has_post_thumbnail()) {
                     the_post_thumbnail('woocommerce_thumbnail', ['class' => 'product-main-img']);
@@ -56,7 +56,7 @@ if (empty($product) || !$product->is_visible()) {
                 ?>
             </div>
             <h3 class="card-product-title">
-                <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                <a href="<?php echo esc_url($product->get_permalink()); ?>"><?php the_title(); ?></a>
             </h3>
             <div class="card-rating">
                 <span class="stars">★★★★★</span>

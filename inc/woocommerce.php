@@ -363,7 +363,7 @@ function mis360_single_product_smart_slider() {
                 $item_product = wc_get_product(get_the_ID());
                 if (!$item_product) continue;
                 $item_id       = $item_product->get_id();
-                $item_link     = get_permalink($item_id);
+                $item_link     = $item_product->get_permalink();
                 $regular_price = (float) $item_product->get_regular_price();
                 $sale_price    = (float) $item_product->get_sale_price();
                 $is_sale       = $item_product->is_on_sale();
