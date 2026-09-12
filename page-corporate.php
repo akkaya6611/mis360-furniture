@@ -81,7 +81,15 @@ $current_slug = $post ? $post->post_name : '';
                         <?php
                         while (have_posts()):
                             the_post();
-                            the_content();
+                            $raw_content = get_the_content();
+                            $corporate_data = function_exists('mis360_get_corporate_pages_data') ? mis360_get_corporate_pages_data() : [];
+                            
+                            // Eğer veritabanındaki içerikte Orhan TEBER yoksa veya eski ise doğrudan güncel şablon içeriğini göster
+                            if (isset($corporate_data[$current_slug]) && (strpos($raw_content, 'Orhan TEBER') === false || strpos($raw_content, 'MİS360 Teknoloji') !== false)) {
+                                echo apply_filters('the_content', $corporate_data[$current_slug]['content']);
+                            } else {
+                                the_content();
+                            }
                         endwhile;
                         ?>
                     </div>

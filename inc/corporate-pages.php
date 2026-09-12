@@ -307,10 +307,19 @@ function mis360_get_corporate_pages_data() {
  * Kurumsal Sayfaların Otomatik Oluşturulması ve Eşleştirilmesi
  */
 function mis360_setup_corporate_pages() {
+    global $wpdb;
+    // Veritabanındaki tüm içeriklerde eski unvanı doğrudan SQL ile anında güncelle
+    $wpdb->query("UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, 'Emdief Home (MİS360 Teknoloji)', 'Emdief Home (Orhan TEBER)') WHERE post_content LIKE '%MİS360 Teknoloji%' OR post_content LIKE '%MIS360 Teknoloji%'");
+    $wpdb->query("UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, 'MİS360 Teknoloji', 'Orhan TEBER') WHERE post_content LIKE '%MİS360 Teknoloji%' OR post_content LIKE '%MIS360 Teknoloji%'");
+
     $pages = mis360_get_corporate_pages_data();
 
     foreach ($pages as $slug => $page_data) {
-        $existing = get_page_by_path($slug);
+        $existing = get_page_by_path($slug, OBJECT, 'page');
+        if (!$existing) {
+            $existing = get_page_by_title($page_data['title'], OBJECT, 'page');
+        }
+
         if (!$existing) {
             $page_id = wp_insert_post([
                 'post_title'     => $page_data['title'],
@@ -329,7 +338,10 @@ function mis360_setup_corporate_pages() {
             // Eğer içerikte eski unvan, eksik adres veya eski Kredi Kartı ibaresi varsa ya da Banka Havalesi / geniş Montessori ürünleri eksikse güncelle
             $needs_refresh = false;
             if (!empty($existing->post_content)) {
-                if (strpos($existing->post_content, 'MİS360 Teknoloji') !== false) {
+                if (strpos($existing->post_content, 'MİS360 Teknoloji') !== false || strpos($existing->post_content, 'MIS360 Teknoloji') !== false) {
+                    $needs_refresh = true;
+                }
+                if (strpos($existing->post_content, 'Orhan TEBER') === false && in_array($slug, ['mesafeli-satis-sozlesmesi', 'gizlilik-ve-kvkk'], true)) {
                     $needs_refresh = true;
                 }
                 if (strpos($existing->post_content, 'Mobilya Kent') === false && in_array($slug, ['mesafeli-satis-sozlesmesi', 'iletisim', 'gizlilik-ve-kvkk'], true)) {
@@ -363,6 +375,43 @@ function mis360_setup_corporate_pages() {
 }
 add_action('after_switch_theme', 'mis360_setup_corporate_pages');
 add_action('admin_init', 'mis360_setup_corporate_pages');
+
+/**
+ * İlk sayfa yüklemesinde (ön yüz veya arka yüz) veritabanı senkronizasyonunu tetikle
+ */
+function mis360_maybe_sync_corporate_pages() {
+    $version_key = 'mis360_corporate_v151_synced';
+    if (!get_option($version_key) || is_admin()) {
+        mis360_setup_corporate_pages();
+        update_option($version_key, 1);
+    }
+}
+add_action('init', 'mis360_maybe_sync_corporate_pages');
+
+/**
+ * Sayfa Görüntülenirken Unvan ve İçerik Güvencesi Filtresi
+ */
+function mis360_clean_corporate_content($content) {
+    if (is_singular() || is_page()) {
+        $content = str_replace(
+            [
+                'Emdief Home (MİS360 Teknoloji)',
+                'Emdief Home (MIS360 Teknoloji)',
+                'MİS360 Teknoloji',
+                'MIS360 Teknoloji',
+            ],
+            [
+                'Emdief Home (Orhan TEBER)',
+                'Emdief Home (Orhan TEBER)',
+                'Orhan TEBER',
+                'Orhan TEBER',
+            ],
+            $content
+        );
+    }
+    return $content;
+}
+add_filter('the_content', 'mis360_clean_corporate_content', 1);
 
 /**
  * Sayfa Görüntülenirken Kurumsal Şablonu Otomatik Filtrele
