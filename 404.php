@@ -2,7 +2,7 @@
 /**
  * 404 Error Page
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -22,11 +22,11 @@ get_header();
         </p>
         <div class="error-actions">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="emdief-btn btn-primary btn-lg">
-                <?php esc_html_e('Anasayfaya Dön', 'mis360-furniture'); ?>
+                <?php esc_html_e('Anasayfaya Dön', 'mis360-mobilya'); ?>
             </a>
             <?php if (class_exists('WooCommerce')): ?>
                 <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-secondary btn-lg">
-                    <?php esc_html_e('Ürünleri İncele', 'mis360-furniture'); ?>
+                    <?php esc_html_e('Ürünleri İncele', 'mis360-mobilya'); ?>
                 </a>
             <?php endif; ?>
         </div>

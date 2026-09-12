@@ -2,7 +2,7 @@
 /**
  * Schema.org JSON-LD Structured Data
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 

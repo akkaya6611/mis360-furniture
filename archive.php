@@ -2,7 +2,7 @@
 /**
  * Archive Template
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -45,7 +45,7 @@ mis360_breadcrumbs();
                             <?php the_excerpt(); ?>
                         </div>
                         <a href="<?php the_permalink(); ?>" class="card-read-more">
-                            <?php esc_html_e('Devam�n� Oku &rarr;', 'mis360-furniture'); ?>
+                            <?php esc_html_e('Devam�n� Oku &rarr;', 'mis360-mobilya'); ?>
                         </a>
                     </div>
                 </article>
@@ -55,7 +55,7 @@ mis360_breadcrumbs();
             the_posts_pagination();
         else:
             ?>
-            <p><?php esc_html_e('Bu kategoride hen�z yaz� bulunamad�.', 'mis360-furniture'); ?></p>
+            <p><?php esc_html_e('Bu kategoride hen�z yaz� bulunamad�.', 'mis360-mobilya'); ?></p>
         <?php endif; ?>
     </div>
 </div>

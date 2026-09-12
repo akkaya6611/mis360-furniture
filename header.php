@@ -2,7 +2,7 @@
 /**
  * Theme Header
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -49,7 +49,7 @@ if (!defined('ABSPATH')) {
     <div class="emdief-container">
         <div class="header-main">
             <!-- Mobil Menü Butonu -->
-            <button type="button" class="emdief-mobile-toggle" id="emdief-mobile-menu-trigger" aria-label="<?php esc_attr_e('Menüyü Aç', 'mis360-furniture'); ?>">
+            <button type="button" class="emdief-mobile-toggle" id="emdief-mobile-menu-trigger" aria-label="<?php esc_attr_e('Menüyü Aç', 'mis360-mobilya'); ?>">
                 <?php echo mis360_icon('menu', 26); ?>
             </button>
 
@@ -69,15 +69,15 @@ if (!defined('ABSPATH')) {
             <div class="emdief-search-box">
                 <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                     <div class="search-input-wrapper">
-                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, öğrenme kulesi veya ürün adı arayın...', 'mis360-furniture'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, öğrenme kulesi veya ürün adı arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
-                        <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-furniture'); ?>">
+                        <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                             <?php echo mis360_icon('search', 20); ?>
                         </button>
                     </div>
                 </form>
                 <div class="search-quick-tags">
-                    <span class="tags-label"><?php esc_html_e('Trend:', 'mis360-furniture'); ?></span>
+                    <span class="tags-label"><?php esc_html_e('Trend:', 'mis360-mobilya'); ?></span>
                     <a href="<?php echo esc_url(home_url('/?s=carmen&post_type=product')); ?>">Carmen</a>
                     <a href="<?php echo esc_url(home_url('/?s=safir&post_type=product')); ?>">Safir</a>
                     <a href="<?php echo esc_url(home_url('/?s=kitaplik&post_type=product')); ?>">Montessori Kitaplık</a>
@@ -88,31 +88,31 @@ if (!defined('ABSPATH')) {
             <!-- Sağ Aksiyon Butonları (Arama, Giriş / Hesabım, Sepet) -->
             <div class="emdief-header-actions">
                 <!-- Mobil Arama Butonu -->
-                <button type="button" class="action-btn action-search-mobile" id="emdief-mobile-search-toggle" aria-label="<?php esc_attr_e('Arama Aç', 'mis360-furniture'); ?>">
+                <button type="button" class="action-btn action-search-mobile" id="emdief-mobile-search-toggle" aria-label="<?php esc_attr_e('Arama Aç', 'mis360-mobilya'); ?>">
                     <span class="action-icon"><?php echo mis360_icon('search', 20); ?></span>
                 </button>
 
                 <!-- Hesabım / Giriş Butonu (Giriş Yapılmamışsa Popup Açar) -->
                 <?php if (is_user_logged_in()): ?>
-                    <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="action-btn action-account" title="<?php esc_attr_e('Hesabım', 'mis360-furniture'); ?>">
+                    <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="action-btn action-account" title="<?php esc_attr_e('Hesabım', 'mis360-mobilya'); ?>">
                         <span class="action-icon"><?php echo mis360_icon('user', 22); ?></span>
                         <span class="action-label">
-                            <small><?php esc_html_e('Hoş Geldiniz', 'mis360-furniture'); ?></small>
+                            <small><?php esc_html_e('Hoş Geldiniz', 'mis360-mobilya'); ?></small>
                             <strong><?php echo esc_html(wp_get_current_user()->display_name); ?></strong>
                         </span>
                     </a>
                 <?php else: ?>
-                    <button type="button" class="action-btn action-account" id="emdief-login-trigger" aria-label="<?php esc_attr_e('Giriş Yap', 'mis360-furniture'); ?>">
+                    <button type="button" class="action-btn action-account" id="emdief-login-trigger" aria-label="<?php esc_attr_e('Giriş Yap', 'mis360-mobilya'); ?>">
                         <span class="action-icon"><?php echo mis360_icon('user', 22); ?></span>
                         <span class="action-label">
-                            <small><?php esc_html_e('Giriş Yapın', 'mis360-furniture'); ?></small>
-                            <strong><?php esc_html_e('Hesabım', 'mis360-furniture'); ?></strong>
+                            <small><?php esc_html_e('Giriş Yapın', 'mis360-mobilya'); ?></small>
+                            <strong><?php esc_html_e('Hesabım', 'mis360-mobilya'); ?></strong>
                         </span>
                     </button>
                 <?php endif; ?>
 
                 <!-- Sepet Butonu (Daima Görünür) -->
-                <button type="button" class="action-btn action-cart" id="emdief-cart-trigger" aria-label="<?php esc_attr_e('Sepeti Aç', 'mis360-furniture'); ?>">
+                <button type="button" class="action-btn action-cart" id="emdief-cart-trigger" aria-label="<?php esc_attr_e('Sepeti Aç', 'mis360-mobilya'); ?>">
                     <span class="action-icon">
                         <?php echo mis360_icon('cart', 22); ?>
                         <span class="emdief-cart-count" id="emdief-cart-count">
@@ -120,7 +120,7 @@ if (!defined('ABSPATH')) {
                         </span>
                     </span>
                     <span class="action-label">
-                        <small><?php esc_html_e('Sepetim', 'mis360-furniture'); ?></small>
+                        <small><?php esc_html_e('Sepetim', 'mis360-mobilya'); ?></small>
                         <strong class="emdief-cart-total"><?php echo (class_exists('WooCommerce') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL'; ?></strong>
                     </span>
                 </button>
@@ -131,9 +131,9 @@ if (!defined('ABSPATH')) {
         <div class="emdief-mobile-search-bar" id="emdief-mobile-search-bar">
             <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                 <div class="search-input-wrapper">
-                    <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, masa, öğrenme kulesi...', 'mis360-furniture'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                    <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, masa, öğrenme kulesi...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                     <input type="hidden" name="post_type" value="product">
-                    <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-furniture'); ?>">
+                    <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                         <?php echo mis360_icon('search', 18); ?>
                     </button>
                 </div>
@@ -141,7 +141,7 @@ if (!defined('ABSPATH')) {
         </div>
 
         <!-- Ana Menü Barı (Desktop Navigation) -->
-        <nav class="emdief-nav-bar" aria-label="<?php esc_attr_e('Ana Gezinti', 'mis360-furniture'); ?>">
+        <nav class="emdief-nav-bar" aria-label="<?php esc_attr_e('Ana Gezinti', 'mis360-mobilya'); ?>">
             <?php
             if (has_nav_menu('primary')) {
                 wp_nav_menu([
@@ -153,16 +153,16 @@ if (!defined('ABSPATH')) {
             } else {
                 ?>
                 <ul class="emdief-nav-menu">
-                    <li class="<?php echo is_front_page() ? 'current-menu-item' : ''; ?>"><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Anasayfa', 'mis360-furniture'); ?></a></li>
+                    <li class="<?php echo is_front_page() ? 'current-menu-item' : ''; ?>"><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Anasayfa', 'mis360-mobilya'); ?></a></li>
                     <?php if (class_exists('WooCommerce')): ?>
-                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php esc_html_e('Tüm Ürünler', 'mis360-furniture'); ?></a></li>
+                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
                     <?php endif; ?>
-                    <li><a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>"><?php esc_html_e('Kitaplıklar', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>"><?php esc_html_e('Öğrenme Kuleleri', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>"><?php esc_html_e('Masa & Sandalye', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about-us/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('Blog & Rehber', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim', 'mis360-furniture'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>"><?php esc_html_e('Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>"><?php esc_html_e('Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>"><?php esc_html_e('Masa & Sandalye', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/about-us/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('Blog & Rehber', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim', 'mis360-mobilya'); ?></a></li>
                 </ul>
                 <?php
             }
@@ -170,7 +170,7 @@ if (!defined('ABSPATH')) {
             <div class="nav-extra-badge">
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') . '?on_sale=1' : home_url('/shop/')); ?>" class="badge-link">
                     <span class="flame-icon">🔥</span>
-                    <span><?php esc_html_e('Haftanın İndirimleri', 'mis360-furniture'); ?></span>
+                    <span><?php esc_html_e('Haftanın İndirimleri', 'mis360-mobilya'); ?></span>
                 </a>
             </div>
         </nav>
@@ -182,8 +182,8 @@ if (!defined('ABSPATH')) {
     <div class="emdief-drawer-overlay" id="emdief-mobile-overlay"></div>
     <div class="emdief-drawer-panel drawer-left">
         <div class="drawer-header">
-            <h3><?php esc_html_e('Menü', 'mis360-furniture'); ?></h3>
-            <button type="button" class="drawer-close" id="emdief-mobile-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-furniture'); ?>">
+            <h3><?php esc_html_e('Menü', 'mis360-mobilya'); ?></h3>
+            <button type="button" class="drawer-close" id="emdief-mobile-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
                 <?php echo mis360_icon('close', 20); ?>
             </button>
         </div>
@@ -191,9 +191,9 @@ if (!defined('ABSPATH')) {
             <div class="drawer-mobile-search">
                 <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                     <div class="search-input-wrapper">
-                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori ürünü arayın...', 'mis360-furniture'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori ürünü arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
-                        <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-furniture'); ?>">
+                        <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                             <?php echo mis360_icon('search', 16); ?>
                         </button>
                     </div>
@@ -209,16 +209,16 @@ if (!defined('ABSPATH')) {
             } else {
                 ?>
                 <ul class="emdief-mobile-menu-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>">🏠 <?php esc_html_e('Anasayfa', 'mis360-furniture'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/')); ?>">🏠 <?php esc_html_e('Anasayfa', 'mis360-mobilya'); ?></a></li>
                     <?php if (class_exists('WooCommerce')): ?>
-                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">🛍️ <?php esc_html_e('Tüm Ürünler', 'mis360-furniture'); ?></a></li>
+                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">🛍️ <?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
                     <?php endif; ?>
-                    <li><a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>">📚 <?php esc_html_e('Montessori Kitaplıklar', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>">🪜 <?php esc_html_e('Öğrenme Kuleleri', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>">🎨 <?php esc_html_e('Masa & Sandalye', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/about-us/')); ?>">ℹ️ <?php esc_html_e('Hakkımızda', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">📝 <?php esc_html_e('Blog & Rehber', 'mis360-furniture'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📞 <?php esc_html_e('İletişim', 'mis360-furniture'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>">📚 <?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>">🪜 <?php esc_html_e('Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>">🎨 <?php esc_html_e('Masa & Sandalye', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/about-us/')); ?>">ℹ️ <?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">📝 <?php esc_html_e('Blog & Rehber', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📞 <?php esc_html_e('İletişim', 'mis360-mobilya'); ?></a></li>
                 </ul>
                 <?php
             }
@@ -243,10 +243,10 @@ if (!defined('ABSPATH')) {
     <div class="emdief-drawer-panel drawer-right">
         <div class="drawer-header">
             <div class="drawer-title-group">
-                <h3><?php esc_html_e('Alışveriş Sepetim', 'mis360-furniture'); ?></h3>
+                <h3><?php esc_html_e('Alışveriş Sepetim', 'mis360-mobilya'); ?></h3>
                 <span class="drawer-count-badge"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?> ürün</span>
             </div>
-            <button type="button" class="drawer-close" id="emdief-cart-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-furniture'); ?>">
+            <button type="button" class="drawer-close" id="emdief-cart-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
                 <?php echo mis360_icon('close', 20); ?>
             </button>
         </div>
@@ -257,8 +257,8 @@ if (!defined('ABSPATH')) {
             ?>
             <div class="emdief-cart-empty">
                 <div class="empty-icon">🧸</div>
-                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-furniture'); ?></h3>
-                <p><?php esc_html_e('Montessori felsefesine uygun 1. sınıf kaliteli MDF ürünlerimizi keşfedin!', 'mis360-furniture'); ?></p>
+                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-mobilya'); ?></h3>
+                <p><?php esc_html_e('Montessori felsefesine uygun 1. sınıf kaliteli MDF ürünlerimizi keşfedin!', 'mis360-mobilya'); ?></p>
             </div>
             <?php
         }
@@ -270,18 +270,18 @@ if (!defined('ABSPATH')) {
 <div class="emdief-modal" id="emdief-auth-modal" aria-hidden="true">
     <div class="emdief-modal-overlay" id="emdief-auth-overlay"></div>
     <div class="emdief-modal-dialog">
-        <button type="button" class="emdief-modal-close" id="emdief-auth-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-furniture'); ?>">
+        <button type="button" class="emdief-modal-close" id="emdief-auth-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
             <?php echo mis360_icon('close', 20); ?>
         </button>
 
         <div class="auth-modal-header">
             <div class="auth-modal-icon">🧸</div>
-            <h3 class="auth-modal-title"><?php esc_html_e('Emdief Home Ailesine Hoş Geldiniz', 'mis360-furniture'); ?></h3>
-            <p class="auth-modal-subtitle"><?php esc_html_e('Montessori doğal mobilya dünyasına erişin, siparişlerinizi kolayca yönetin.', 'mis360-furniture'); ?></p>
+            <h3 class="auth-modal-title"><?php esc_html_e('Emdief Home Ailesine Hoş Geldiniz', 'mis360-mobilya'); ?></h3>
+            <p class="auth-modal-subtitle"><?php esc_html_e('Montessori doğal mobilya dünyasına erişin, siparişlerinizi kolayca yönetin.', 'mis360-mobilya'); ?></p>
             
             <div class="auth-tabs">
-                <button type="button" class="auth-tab-btn is-active" data-tab="login"><?php esc_html_e('Giriş Yap', 'mis360-furniture'); ?></button>
-                <button type="button" class="auth-tab-btn" data-tab="register"><?php esc_html_e('Kayıt Ol', 'mis360-furniture'); ?></button>
+                <button type="button" class="auth-tab-btn is-active" data-tab="login"><?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?></button>
+                <button type="button" class="auth-tab-btn" data-tab="register"><?php esc_html_e('Kayıt Ol', 'mis360-mobilya'); ?></button>
             </div>
         </div>
 
@@ -290,28 +290,28 @@ if (!defined('ABSPATH')) {
             <div class="auth-form-panel is-active" id="auth-tab-login">
                 <form method="post" action="<?php echo esc_url(site_url('wp-login.php', 'login_post')); ?>" class="emdief-auth-form">
                     <div class="form-group">
-                        <label for="emdief-user-login"><?php esc_html_e('E-posta veya Kullanıcı Adı', 'mis360-furniture'); ?></label>
+                        <label for="emdief-user-login"><?php esc_html_e('E-posta veya Kullanıcı Adı', 'mis360-mobilya'); ?></label>
                         <input type="text" name="log" id="emdief-user-login" class="form-input" required placeholder="ornek@mail.com" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <div class="d-flex-between">
-                            <label for="emdief-user-pass"><?php esc_html_e('Şifre', 'mis360-furniture'); ?></label>
-                            <a href="<?php echo esc_url(wp_lostpassword_url()); ?>" class="forgot-pass-link" target="_blank"><?php esc_html_e('Şifremi Unuttum?', 'mis360-furniture'); ?></a>
+                            <label for="emdief-user-pass"><?php esc_html_e('Şifre', 'mis360-mobilya'); ?></label>
+                            <a href="<?php echo esc_url(wp_lostpassword_url()); ?>" class="forgot-pass-link" target="_blank"><?php esc_html_e('Şifremi Unuttum?', 'mis360-mobilya'); ?></a>
                         </div>
                         <div class="input-password-wrap">
                             <input type="password" name="pwd" id="emdief-user-pass" class="form-input" required placeholder="••••••••" autocomplete="current-password">
-                            <button type="button" class="toggle-password-btn" id="emdief-toggle-pass" aria-label="<?php esc_attr_e('Şifreyi Göster', 'mis360-furniture'); ?>">👁️</button>
+                            <button type="button" class="toggle-password-btn" id="emdief-toggle-pass" aria-label="<?php esc_attr_e('Şifreyi Göster', 'mis360-mobilya'); ?>">👁️</button>
                         </div>
                     </div>
                     <div class="form-options">
                         <label class="remember-label">
                             <input type="checkbox" name="rememberme" value="forever" checked>
-                            <span><?php esc_html_e('Beni Hatırla', 'mis360-furniture'); ?></span>
+                            <span><?php esc_html_e('Beni Hatırla', 'mis360-mobilya'); ?></span>
                         </label>
                     </div>
                     <input type="hidden" name="redirect_to" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
                     <button type="submit" class="emdief-btn btn-primary btn-block btn-lg auth-submit-btn">
-                        <span><?php esc_html_e('Giriş Yap', 'mis360-furniture'); ?></span>
+                        <span><?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?></span>
                         <?php echo mis360_icon('arrow-right', 18); ?>
                     </button>
                 </form>
@@ -321,27 +321,27 @@ if (!defined('ABSPATH')) {
             <div class="auth-form-panel" id="auth-tab-register">
                 <form method="post" action="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : wp_registration_url()); ?>" class="emdief-auth-form">
                     <div class="form-group">
-                        <label for="emdief-reg-email"><?php esc_html_e('E-posta Adresi', 'mis360-furniture'); ?></label>
+                        <label for="emdief-reg-email"><?php esc_html_e('E-posta Adresi', 'mis360-mobilya'); ?></label>
                         <input type="email" name="<?php echo class_exists('WooCommerce') ? 'email' : 'user_email'; ?>" id="emdief-reg-email" class="form-input" required placeholder="ornek@mail.com">
                     </div>
                     <?php if (class_exists('WooCommerce')): ?>
                         <div class="form-group">
-                            <label for="emdief-reg-pass"><?php esc_html_e('Şifre', 'mis360-furniture'); ?></label>
-                            <input type="password" name="password" id="emdief-reg-pass" class="form-input" required placeholder="<?php esc_attr_e('Güvenli bir şifre belirleyin', 'mis360-furniture'); ?>">
+                            <label for="emdief-reg-pass"><?php esc_html_e('Şifre', 'mis360-mobilya'); ?></label>
+                            <input type="password" name="password" id="emdief-reg-pass" class="form-input" required placeholder="<?php esc_attr_e('Güvenli bir şifre belirleyin', 'mis360-mobilya'); ?>">
                         </div>
                         <?php wp_nonce_field('woocommerce-register', 'woocommerce-register-nonce'); ?>
                         <input type="hidden" name="register" value="1">
                     <?php else: ?>
                         <div class="form-group">
-                            <label for="emdief-reg-user"><?php esc_html_e('Kullanıcı Adı', 'mis360-furniture'); ?></label>
-                            <input type="text" name="user_login" id="emdief-reg-user" class="form-input" required placeholder="<?php esc_attr_e('kullaniciadi', 'mis360-furniture'); ?>">
+                            <label for="emdief-reg-user"><?php esc_html_e('Kullanıcı Adı', 'mis360-mobilya'); ?></label>
+                            <input type="text" name="user_login" id="emdief-reg-user" class="form-input" required placeholder="<?php esc_attr_e('kullaniciadi', 'mis360-mobilya'); ?>">
                         </div>
                     <?php endif; ?>
                     <p class="form-terms-note">
-                        <?php esc_html_e('Kayıt olarak Üyelik Sözleşmesini ve Kişisel Verilerin Korunması Politikasını kabul etmiş sayılırsınız.', 'mis360-furniture'); ?>
+                        <?php esc_html_e('Kayıt olarak Üyelik Sözleşmesini ve Kişisel Verilerin Korunması Politikasını kabul etmiş sayılırsınız.', 'mis360-mobilya'); ?>
                     </p>
                     <button type="submit" class="emdief-btn btn-primary btn-block btn-lg auth-submit-btn">
-                        <span><?php esc_html_e('Ücretsiz Hesap Oluştur', 'mis360-furniture'); ?></span>
+                        <span><?php esc_html_e('Ücretsiz Hesap Oluştur', 'mis360-mobilya'); ?></span>
                         <?php echo mis360_icon('sparkles', 18); ?>
                     </button>
                 </form>
@@ -351,7 +351,7 @@ if (!defined('ABSPATH')) {
         <div class="auth-modal-footer">
             <div class="security-badge">
                 <span class="sec-icon">🔒</span>
-                <span><?php esc_html_e('256-Bit SSL şifreleme ile verileriniz %100 güvende.', 'mis360-furniture'); ?></span>
+                <span><?php esc_html_e('256-Bit SSL şifreleme ile verileriniz %100 güvende.', 'mis360-mobilya'); ?></span>
             </div>
         </div>
     </div>

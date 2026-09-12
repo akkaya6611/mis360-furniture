@@ -3,7 +3,7 @@
  * Template Name: Emdief Hesabım (My Account)
  * Template Post Type: page
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -24,7 +24,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
 <div class="emdief-container py-8">
     <?php if ($is_logged_in): ?>
                 <!-- Sepete Ürün Ekleyen Sevimli Montessori Ayıcık Şeridi -->
-        <div class="account-cart-bear-banner" aria-label="<?php esc_attr_e('Sepet ve Keşif Alanı', 'mis360-furniture'); ?>">
+        <div class="account-cart-bear-banner" aria-label="<?php esc_attr_e('Sepet ve Keşif Alanı', 'mis360-mobilya'); ?>">
             <div class="cart-bear-visual">
                 <?php echo mis360_bear_shopping_cart(190, 105, 'animated-cart-bear'); ?>
             </div>
@@ -53,7 +53,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
         </div>
         <div class="emdief-account-wrapper">
             <!-- Sol Panel: Prestij Kullanıcı Kartı & Navigasyon -->
-            <aside class="account-sidebar" aria-label="<?php esc_attr_e('Hesap Gezinti Menüsü', 'mis360-furniture'); ?>">
+            <aside class="account-sidebar" aria-label="<?php esc_attr_e('Hesap Gezinti Menüsü', 'mis360-mobilya'); ?>">
                 <div class="account-user-card">
                     <div class="sidebar-avatar-wrap">
                         <?php echo mis360_teddy_bear_avatar(68); ?>
@@ -79,46 +79,46 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                         <li class="nav-item is-active">
                             <a href="#tab-dashboard" class="account-tab-trigger" data-target="tab-dashboard">
                                 <span class="nav-svg"><?php echo mis360_icon('home', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Genel Bakış', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Genel Bakış', 'mis360-mobilya'); ?></span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#tab-orders" class="account-tab-trigger" data-target="tab-orders">
                                 <span class="nav-svg"><?php echo mis360_icon('package', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Siparişlerim', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Siparişlerim', 'mis360-mobilya'); ?></span>
                                 <span class="nav-counter">1</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#tab-wishlist" class="account-tab-trigger" data-target="tab-wishlist">
                                 <span class="nav-svg"><?php echo mis360_icon('heart', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Favorilerim', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Favorilerim', 'mis360-mobilya'); ?></span>
                                 <span class="nav-counter">3</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#tab-addresses" class="account-tab-trigger" data-target="tab-addresses">
                                 <span class="nav-svg"><?php echo mis360_icon('map-pin', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Kayıtlı Adreslerim', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Kayıtlı Adreslerim', 'mis360-mobilya'); ?></span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#tab-coupons" class="account-tab-trigger" data-target="tab-coupons">
                                 <span class="nav-svg"><?php echo mis360_icon('ticket', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Kuponlarım & Puan', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Kuponlarım & Puan', 'mis360-mobilya'); ?></span>
                                 <span class="nav-tag-badge">%10</span>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="#tab-details" class="account-tab-trigger" data-target="tab-details">
                                 <span class="nav-svg"><?php echo mis360_icon('settings', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Hesap & Güvenlik', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Hesap & Güvenlik', 'mis360-mobilya'); ?></span>
                             </a>
                         </li>
                         <li class="nav-item nav-logout">
                             <a href="<?php echo esc_url(wp_logout_url(home_url('/'))); ?>">
                                 <span class="nav-svg"><?php echo mis360_icon('logout', 18); ?></span>
-                                <span class="nav-text"><?php esc_html_e('Güvenli Çıkış', 'mis360-furniture'); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Güvenli Çıkış', 'mis360-mobilya'); ?></span>
                             </a>
                         </li>
                     </ul>
@@ -563,22 +563,22 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                         <div class="form-section-title">Kişisel Bilgiler</div>
                         <div class="form-grid-2">
                             <div class="form-group">
-                                <label><?php esc_html_e('Ad Soyad', 'mis360-furniture'); ?></label>
+                                <label><?php esc_html_e('Ad Soyad', 'mis360-mobilya'); ?></label>
                                 <input type="text" class="form-input" value="<?php echo esc_attr($display_name); ?>">
                             </div>
                             <div class="form-group">
-                                <label><?php esc_html_e('E-posta Adresi', 'mis360-furniture'); ?></label>
+                                <label><?php esc_html_e('E-posta Adresi', 'mis360-mobilya'); ?></label>
                                 <input type="email" class="form-input" value="<?php echo esc_attr($user_email); ?>">
                             </div>
                             <div class="form-group">
-                                <label><?php esc_html_e('Telefon Numarası', 'mis360-furniture'); ?></label>
+                                <label><?php esc_html_e('Telefon Numarası', 'mis360-mobilya'); ?></label>
                                 <div class="input-with-badge">
                                     <input type="tel" class="form-input" value="+90 537 477 87 66">
                                     <span class="input-verified-badge">✓ Doğrulandı</span>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label><?php esc_html_e('Çocuğunuzun Doğum Yılı (Opsiyonel)', 'mis360-furniture'); ?></label>
+                                <label><?php esc_html_e('Çocuğunuzun Doğum Yılı (Opsiyonel)', 'mis360-mobilya'); ?></label>
                                 <input type="text" class="form-input" placeholder="Örn: 2023 (Yaşa özel ürün önerileri için)">
                             </div>
                         </div>

@@ -1,11 +1,11 @@
 ﻿<?php
 /**
- * Mis360 Furniture - GitHub Otomatik Tema Güncelleyici
+ * Mis360 Mobilya - GitHub Otomatik Tema Güncelleyici
  *
  * Bu modül, GitHub üzerindeki 'main' dalını kontrol ederek WordPress
  * panelinde yerel güncelleme bildirimleri sunar ve tek tıkla güncelleme sağlar.
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 if (!defined('ABSPATH')) {
@@ -20,7 +20,7 @@ class Mis360_Theme_Updater {
     private $github_branch;
 
     public function __construct() {
-        $this->theme_slug    = 'mis360-furniture';
+        $this->theme_slug    = 'mis360-mobilya';
         $this->github_user   = 'akkaya6611';
         $this->github_repo   = 'mis360-furniture';
         $this->github_branch = 'main';

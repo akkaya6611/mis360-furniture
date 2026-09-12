@@ -2,7 +2,7 @@
 /**
  * Single Post Template (Montessori Blog & Articles)
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 

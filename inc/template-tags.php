@@ -2,7 +2,7 @@
 /**
  * Template Helper Functions & SVG Icon System
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -108,9 +108,9 @@ function mis360_breadcrumbs() {
         return;
     }
 
-    echo '<nav class="emdief-breadcrumbs" aria-label="' . esc_attr__('Ekmek Kırıntısı', 'mis360-furniture') . '">';
+    echo '<nav class="emdief-breadcrumbs" aria-label="' . esc_attr__('Ekmek Kırıntısı', 'mis360-mobilya') . '">';
     echo '<div class="emdief-container">';
-    echo '<a href="' . esc_url(home_url('/')) . '">' . esc_html__('Anasayfa', 'mis360-furniture') . '</a>';
+    echo '<a href="' . esc_url(home_url('/')) . '">' . esc_html__('Anasayfa', 'mis360-mobilya') . '</a>';
     echo '<span class="separator">/</span>';
 
     if (class_exists('WooCommerce') && (is_woocommerce() || is_cart() || is_checkout())) {

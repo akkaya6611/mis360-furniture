@@ -2,7 +2,7 @@
 /**
  * WooCommerce Customizations & AJAX Mini Cart Engine
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -105,7 +105,7 @@ function mis360_render_drawer_cart_content() {
                                     sprintf(
                                         '<a href="%s" class="remove-cart-item" aria-label="%s" data-product_id="%s" data-cart_item_key="%s">&times;</a>',
                                         esc_url(wc_get_cart_remove_url($cart_item_key)),
-                                        esc_attr__('Bu ürünü sepetten çıkar', 'mis360-furniture'),
+                                        esc_attr__('Bu ürünü sepetten çıkar', 'mis360-mobilya'),
                                         esc_attr((string) $product_id),
                                         esc_attr($cart_item_key)
                                     ),
@@ -121,25 +121,25 @@ function mis360_render_drawer_cart_content() {
             <!-- Sepet Alt Toplam & Butonlar -->
             <div class="emdief-drawer-footer">
                 <div class="drawer-subtotal">
-                    <span><?php esc_html_e('Ara Toplam:', 'mis360-furniture'); ?></span>
+                    <span><?php esc_html_e('Ara Toplam:', 'mis360-mobilya'); ?></span>
                     <strong><?php echo $cart->get_cart_subtotal(); ?></strong>
                 </div>
                 <div class="drawer-actions">
                     <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="emdief-btn btn-outline btn-block">
-                        <?php esc_html_e('Sepeti Görüntüle', 'mis360-furniture'); ?>
+                        <?php esc_html_e('Sepeti Görüntüle', 'mis360-mobilya'); ?>
                     </a>
                     <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block">
-                        <?php esc_html_e('Siparişi Tamamla', 'mis360-furniture'); ?>
+                        <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
                     </a>
                 </div>
             </div>
         <?php else: ?>
             <div class="emdief-cart-empty">
                 <div class="empty-icon">🧸</div>
-                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-furniture'); ?></h3>
-                <p><?php esc_html_e('Montessori felsefesine uygun, 1. sınıf kaliteli MDF çocuk odası ürünlerimizi keşfetmeye başlayın!', 'mis360-furniture'); ?></p>
+                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-mobilya'); ?></h3>
+                <p><?php esc_html_e('Montessori felsefesine uygun, 1. sınıf kaliteli MDF çocuk odası ürünlerimizi keşfetmeye başlayın!', 'mis360-mobilya'); ?></p>
                 <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-primary">
-                    <?php esc_html_e('Ürünleri Keşfet', 'mis360-furniture'); ?>
+                    <?php esc_html_e('Ürünleri Keşfet', 'mis360-mobilya'); ?>
                 </a>
             </div>
         <?php endif; ?>
@@ -222,7 +222,7 @@ function mis360_single_product_whatsapp_button() {
     $link  = get_permalink($product->get_id());
 
     $message = sprintf(
-        __('Merhaba, "%s"%s ürünü hakkında bilgi almak ve soru sormak istiyorum: %s', 'mis360-furniture'),
+        __('Merhaba, "%s"%s ürünü hakkında bilgi almak ve soru sormak istiyorum: %s', 'mis360-mobilya'),
         $title,
         $sku,
         $link
@@ -230,9 +230,9 @@ function mis360_single_product_whatsapp_button() {
 
     $wa_url = 'https://wa.me/' . $phone . '?text=' . rawurlencode($message);
     ?>
-    <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="emdief-single-wa-btn" aria-label="<?php esc_attr_e('WhatsApp ile Soru Sor', 'mis360-furniture'); ?>" title="<?php esc_attr_e('WhatsApp Danışma Hattı', 'mis360-furniture'); ?>">
+    <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="emdief-single-wa-btn" aria-label="<?php esc_attr_e('WhatsApp ile Soru Sor', 'mis360-mobilya'); ?>" title="<?php esc_attr_e('WhatsApp Danışma Hattı', 'mis360-mobilya'); ?>">
         <span class="wa-btn-icon"><?php echo mis360_icon('whatsapp', 20); ?></span>
-        <span class="wa-btn-text"><?php esc_html_e('WhatsApp\'tan Sor', 'mis360-furniture'); ?></span>
+        <span class="wa-btn-text"><?php esc_html_e('WhatsApp\'tan Sor', 'mis360-mobilya'); ?></span>
     </a>
     <?php
 }
@@ -287,9 +287,9 @@ function mis360_single_product_smart_slider() {
     $is_recently_viewed = !empty($viewed_ids);
 
     if ($is_recently_viewed) {
-        $section_title    = __('👀 Son Gezdiğiniz Ürünler', 'mis360-furniture');
-        $section_subtitle = __('Daha önce incelediğiniz Montessori & çocuk odası modelleri', 'mis360-furniture');
-        $slider_badge     = __('Son Gezilen', 'mis360-furniture');
+        $section_title    = __('👀 Son Gezdiğiniz Ürünler', 'mis360-mobilya');
+        $section_subtitle = __('Daha önce incelediğiniz Montessori & çocuk odası modelleri', 'mis360-mobilya');
+        $slider_badge     = __('Son Gezilen', 'mis360-mobilya');
 
         $args = [
             'post_type'      => 'product',
@@ -299,9 +299,9 @@ function mis360_single_product_smart_slider() {
             'orderby'        => 'post__in',
         ];
     } else {
-        $section_title    = __('✨ Sizin İçin Seçtiğimiz Benzer Ürünler', 'mis360-furniture');
-        $section_subtitle = __('Bu ürünü inceleyenlerin en çok tercih ettiği 1. sınıf kaliteli MDF tasarımlar', 'mis360-furniture');
-        $slider_badge     = __('Önerilen', 'mis360-furniture');
+        $section_title    = __('✨ Sizin İçin Seçtiğimiz Benzer Ürünler', 'mis360-mobilya');
+        $section_subtitle = __('Bu ürünü inceleyenlerin en çok tercih ettiği 1. sınıf kaliteli MDF tasarımlar', 'mis360-mobilya');
+        $slider_badge     = __('Önerilen', 'mis360-mobilya');
 
         $cats = wp_get_post_terms($current_id, 'product_cat', ['fields' => 'ids']);
         $tax_query = [];
@@ -347,10 +347,10 @@ function mis360_single_product_smart_slider() {
                 <p class="section-subtitle"><?php echo esc_html($section_subtitle); ?></p>
             </div>
             <div class="slider-nav-arrows">
-                <button type="button" class="slider-btn prev-btn" aria-label="<?php esc_attr_e('Önceki Ürünler', 'mis360-furniture'); ?>" data-target="<?php echo esc_attr($slider_id); ?>">
+                <button type="button" class="slider-btn prev-btn" aria-label="<?php esc_attr_e('Önceki Ürünler', 'mis360-mobilya'); ?>" data-target="<?php echo esc_attr($slider_id); ?>">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                 </button>
-                <button type="button" class="slider-btn next-btn" aria-label="<?php esc_attr_e('Sonraki Ürünler', 'mis360-furniture'); ?>" data-target="<?php echo esc_attr($slider_id); ?>">
+                <button type="button" class="slider-btn next-btn" aria-label="<?php esc_attr_e('Sonraki Ürünler', 'mis360-mobilya'); ?>" data-target="<?php echo esc_attr($slider_id); ?>">
                     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                 </button>
             </div>
@@ -406,7 +406,7 @@ function mis360_single_product_smart_slider() {
                                 <span class="current-price"><?php echo wc_price($item_product->get_price()); ?></span>
                             </div>
                             <a href="<?php echo esc_url($item_link); ?>" class="mini-action-btn">
-                                <span><?php esc_html_e('Ürünü İncele', 'mis360-furniture'); ?></span>
+                                <span><?php esc_html_e('Ürünü İncele', 'mis360-mobilya'); ?></span>
                                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                             </a>
                         </div>

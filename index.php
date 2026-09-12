@@ -2,7 +2,7 @@
 /**
  * Main Template Fallback
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -44,7 +44,7 @@ mis360_breadcrumbs();
                             <?php the_excerpt(); ?>
                         </div>
                         <a href="<?php the_permalink(); ?>" class="card-read-more">
-                            <?php esc_html_e('Devam�n� Oku &rarr;', 'mis360-furniture'); ?>
+                            <?php esc_html_e('Devam�n� Oku &rarr;', 'mis360-mobilya'); ?>
                         </a>
                     </div>
                 </article>
@@ -52,12 +52,12 @@ mis360_breadcrumbs();
             endwhile;
 
             the_posts_pagination([
-                'prev_text' => __('&laquo; �nceki', 'mis360-furniture'),
-                'next_text' => __('Sonraki &raquo;', 'mis360-furniture'),
+                'prev_text' => __('&laquo; �nceki', 'mis360-mobilya'),
+                'next_text' => __('Sonraki &raquo;', 'mis360-mobilya'),
             ]);
         else:
             ?>
-            <p><?php esc_html_e('Hen�z i�erik bulunmuyor.', 'mis360-furniture'); ?></p>
+            <p><?php esc_html_e('Hen�z i�erik bulunmuyor.', 'mis360-mobilya'); ?></p>
         <?php endif; ?>
     </div>
 </div>

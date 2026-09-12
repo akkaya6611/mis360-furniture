@@ -1,4 +1,4 @@
-﻿# Mis360 Furniture - WooCommerce Theme
+﻿# Mis360 Mobilya - WooCommerce Theme
 
 Özel tasarım, yüksek performanslı WooCommerce çocuk ve bebek mobilyası teması. Emdief Home için %100 1. Sınıf Kaliteli E1 MDF Montessori ürünlerine özel olarak geliştirilmiştir.
 

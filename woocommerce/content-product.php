@@ -2,7 +2,7 @@
 /**
  * Custom Product Card Template
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -51,7 +51,7 @@ if (empty($product) || !$product->is_visible()) {
                 if ($terms && !is_wp_error($terms)) {
                     echo esc_html($terms[0]->name);
                 } else {
-                    echo esc_html__('Montessori Mobilya', 'mis360-furniture');
+                    echo esc_html__('Montessori Mobilya', 'mis360-mobilya');
                 }
                 ?>
             </div>

@@ -2,14 +2,14 @@
 /**
  * Enqueue Styles and Scripts
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_furniture_scripts() {
+function mis360_mobilya_scripts() {
     // 1. Google Fonts: Plus Jakarta Sans
     wp_enqueue_style(
         'mis360-fonts',
@@ -23,33 +23,33 @@ function mis360_furniture_scripts() {
         'mis360-style',
         get_stylesheet_uri(),
         [],
-        MIS360_FURNITURE_VERSION
+        MIS360_MOBILYA_VERSION
     );
 
     // 3. Ana Arayüz Stilleri (assets/css/main.css)
     wp_enqueue_style(
         'mis360-main',
-        MIS360_FURNITURE_URI . '/assets/css/main.css',
+        MIS360_MOBILYA_URI . '/assets/css/main.css',
         ['mis360-style'],
-        MIS360_FURNITURE_VERSION
+        MIS360_MOBILYA_VERSION
     );
 
     // 4. WooCommerce Özel Stilleri (Sadece WooCommerce aktifken)
     if (class_exists('WooCommerce')) {
         wp_enqueue_style(
             'mis360-woocommerce',
-            MIS360_FURNITURE_URI . '/assets/css/woocommerce.css',
+            MIS360_MOBILYA_URI . '/assets/css/woocommerce.css',
             ['mis360-main'],
-            MIS360_FURNITURE_VERSION
+            MIS360_MOBILYA_VERSION
         );
     }
 
     // 5. Ana Tema Scripti (Vanilla JS)
     wp_enqueue_script(
         'mis360-main-js',
-        MIS360_FURNITURE_URI . '/assets/js/main.js',
+        MIS360_MOBILYA_URI . '/assets/js/main.js',
         [],
-        MIS360_FURNITURE_VERSION,
+        MIS360_MOBILYA_VERSION,
         true
     );
 
@@ -57,9 +57,9 @@ function mis360_furniture_scripts() {
     if (class_exists('WooCommerce')) {
         wp_enqueue_script(
             'mis360-ajax-cart',
-            MIS360_FURNITURE_URI . '/assets/js/ajax-cart.js',
+            MIS360_MOBILYA_URI . '/assets/js/ajax-cart.js',
             ['mis360-main-js'],
-            MIS360_FURNITURE_VERSION,
+            MIS360_MOBILYA_VERSION,
             true
         );
 
@@ -70,10 +70,10 @@ function mis360_furniture_scripts() {
             'nonce'             => wp_create_nonce('mis360_cart_nonce'),
             'freeShippingLimit' => $free_shipping_min,
             'currencySymbol'    => function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : 'TL',
-            'addedToCartText'   => __('Sepete Eklendi!', 'mis360-furniture'),
-            'addingText'        => __('Ekleniyor...', 'mis360-furniture'),
+            'addedToCartText'   => __('Sepete Eklendi!', 'mis360-mobilya'),
+            'addingText'        => __('Ekleniyor...', 'mis360-mobilya'),
         ]);
     }
 }
-add_action('wp_enqueue_scripts', 'mis360_furniture_scripts');
+add_action('wp_enqueue_scripts', 'mis360_mobilya_scripts');
 

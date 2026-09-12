@@ -2,7 +2,7 @@
 /**
  * Theme Setup & Capabilities
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -10,9 +10,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_furniture_setup() {
+function mis360_mobilya_setup() {
     // Çeviri desteği
-    load_theme_textdomain('mis360-furniture', get_template_directory() . '/languages');
+    load_theme_textdomain('mis360-mobilya', get_template_directory() . '/languages');
 
     // Başlık etiketi desteği
     add_theme_support('title-tag');
@@ -26,10 +26,10 @@ function mis360_furniture_setup() {
 
     // Menüler
     register_nav_menus([
-        'primary'       => __('Ana Menü', 'mis360-furniture'),
-        'mobile'        => __('Mobil Menü', 'mis360-furniture'),
-        'footer_col_1'  => __('Kurumsal Menü (Footer 1)', 'mis360-furniture'),
-        'footer_col_2'  => __('Montessori & Kategoriler (Footer 2)', 'mis360-furniture'),
+        'primary'       => __('Ana Menü', 'mis360-mobilya'),
+        'mobile'        => __('Mobil Menü', 'mis360-mobilya'),
+        'footer_col_1'  => __('Kurumsal Menü (Footer 1)', 'mis360-mobilya'),
+        'footer_col_2'  => __('Montessori & Kategoriler (Footer 2)', 'mis360-mobilya'),
     ]);
 
     // HTML5 Desteği
@@ -72,4 +72,4 @@ function mis360_furniture_setup() {
     add_theme_support('responsive-embeds');
     add_theme_support('align-wide');
 }
-add_action('after_setup_theme', 'mis360_furniture_setup');
+add_action('after_setup_theme', 'mis360_mobilya_setup');

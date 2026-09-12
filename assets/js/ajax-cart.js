@@ -1,5 +1,5 @@
 /**
- * Mis360-Furniture AJAX Mini-Cart & Drawer Engine
+ * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
  */
 
 document.addEventListener('DOMContentLoaded', () => {

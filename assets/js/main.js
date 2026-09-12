@@ -1,5 +1,5 @@
 /**
- * Mis360-Furniture Main JavaScript
+ * Mis360-Mobilya Main JavaScript
  * Vanilla ES6+ - Zero jQuery Dependency
  */
 

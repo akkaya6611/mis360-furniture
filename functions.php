@@ -1,8 +1,8 @@
 <?php
 /**
- * Mis360-Furniture Theme Functions & Definitions
+ * Mis360-Mobilya Theme Functions & Definitions
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  * @author Serkan AKKAYA
  * @since 1.0.0
  */
@@ -11,9 +11,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_FURNITURE_VERSION', '1.2.1789172600');
-define('MIS360_FURNITURE_DIR', get_template_directory());
-define('MIS360_FURNITURE_URI', get_template_directory_uri());
+define('MIS360_MOBILYA_VERSION', '1.2.1789172600');
+define('MIS360_MOBILYA_DIR', get_template_directory());
+define('MIS360_MOBILYA_URI', get_template_directory_uri());
 
 // Modüler Bileşen Yükleyici
 $mis360_includes = [
@@ -26,7 +26,7 @@ $mis360_includes = [
 ];
 
 foreach ($mis360_includes as $inc_file) {
-    $filepath = MIS360_FURNITURE_DIR . $inc_file;
+    $filepath = MIS360_MOBILYA_DIR . $inc_file;
     if (file_exists($filepath)) {
         require_once $filepath;
     }
@@ -34,7 +34,7 @@ foreach ($mis360_includes as $inc_file) {
 
 // WooCommerce Entegrasyonu (Sadece WooCommerce aktifken yüklenir)
 if (class_exists('WooCommerce')) {
-    $wc_inc = MIS360_FURNITURE_DIR . '/inc/woocommerce.php';
+    $wc_inc = MIS360_MOBILYA_DIR . '/inc/woocommerce.php';
     if (file_exists($wc_inc)) {
         require_once $wc_inc;
     }
@@ -59,7 +59,7 @@ function mis360_check_woocommerce_dependency() {
         add_action('admin_notices', function() {
             ?>
             <div class="notice notice-warning is-dismissible">
-                <p><strong>Mis360-Furniture:</strong> Bu temanın tüm e-ticaret özelliklerinin çalışması için lütfen <a href="<?php echo esc_url(admin_url('plugin-install.php?s=woocommerce&tab=search&type=term')); ?>">WooCommerce</a> eklentisini etkinleştirin.</p>
+                <p><strong>Mis360-Mobilya:</strong> Bu temanın tüm e-ticaret özelliklerinin çalışması için lütfen <a href="<?php echo esc_url(admin_url('plugin-install.php?s=woocommerce&tab=search&type=term')); ?>">WooCommerce</a> eklentisini etkinleştirin.</p>
             </div>
             <?php
         });

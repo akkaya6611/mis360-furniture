@@ -2,7 +2,7 @@
 /**
  * Custom WooCommerce Single Product Template (Emdief Home)
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 

@@ -2,7 +2,7 @@
 /**
  * Front Page Template - Trendyol Tarzı Hero Banner, Story Halkaları & 3 Dinamik Ürün Sliderı
  *
- * @package Mis360-Furniture
+ * @package Mis360-Mobilya
  */
 
 
@@ -270,7 +270,7 @@ function emdief_render_slider_card(WC_Product $prod, string $badge_type = 'bests
                 <span class="card-tag tag-fav-count"><?php echo esc_html($custom_fav ?: '❤️ Favori'); ?></span>
             <?php endif; ?>
 
-            <button type="button" class="btn-wishlist-heart <?php echo ($badge_type === 'fav') ? 'is-active' : ''; ?>" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-furniture'); ?>">
+            <button type="button" class="btn-wishlist-heart <?php echo ($badge_type === 'fav') ? 'is-active' : ''; ?>" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="<?php echo ($badge_type === 'fav') ? '#ef4444' : 'none'; ?>" stroke="<?php echo ($badge_type === 'fav') ? '#ef4444' : 'currentColor'; ?>" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
             </button>
             <a href="<?php echo esc_url($permalink); ?>" class="shelf-image-link" style="display:block; width:100%; height:100%;">
@@ -288,7 +288,7 @@ function emdief_render_slider_card(WC_Product $prod, string $badge_type = 'bests
                 <div class="pricing-group">
                     <span class="price"><?php echo $price_html; ?></span>
                 </div>
-                <a href="<?php echo esc_url($prod->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr((string)$prod->get_id()); ?>" class="btn-add-cart-icon ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-furniture'); ?>">
+                <a href="<?php echo esc_url($prod->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr((string)$prod->get_id()); ?>" class="btn-add-cart-icon ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                 </a>
             </div>
