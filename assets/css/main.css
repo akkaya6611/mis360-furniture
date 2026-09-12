@@ -1032,6 +1032,8 @@
   z-index: 9999;
   visibility: hidden;
   pointer-events: none;
+  overflow: hidden !important;
+  max-width: 100vw !important;
   transition: visibility 0.3s ease;
 }
 
@@ -1230,13 +1232,23 @@
   .emdief-breadcrumbs {
     padding: 0.35rem 0 !important;
     font-size: 0.75rem !important;
-    white-space: nowrap !important;
-    overflow-x: auto !important;
-    scrollbar-width: none !important;
-    -webkit-overflow-scrolling: touch !important;
+    overflow: hidden !important;
+    max-width: 100% !important;
   }
-  .emdief-breadcrumbs::-webkit-scrollbar {
-    display: none !important;
+  .emdief-breadcrumbs .emdief-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    white-space: normal !important;
+    gap: 4px !important;
+  }
+  .emdief-breadcrumbs .current {
+    max-width: 200px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: inline-block !important;
+    vertical-align: bottom !important;
   }
 }
 
@@ -4838,7 +4850,9 @@
 
 @media (max-width: 768px) {
   html, body {
-    overflow-x: hidden !important;
+    overflow-x: clip !important;
+    max-width: 100% !important;
+    position: relative !important;
   }
   
   body {

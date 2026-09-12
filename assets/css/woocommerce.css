@@ -861,7 +861,7 @@ ul.products {
 @media (max-width: 991px) {
     .woocommerce div.product,
     .woocommerce-page div.product {
-        grid-template-columns: 1fr !important;
+        grid-template-columns: minmax(0, 1fr) !important;
         padding: 14px !important;
         gap: 16px !important;
         width: 100% !important;
@@ -870,6 +870,21 @@ ul.products {
         overflow: hidden !important;
         border-radius: 16px !important;
     }
+}
+
+/* Izolasyon: Grid içindeki hiçbir eleman konteyneri dışarı taşırıp genişletemez */
+.woocommerce div.product > *,
+.woocommerce-page div.product > *,
+.woocommerce div.product div.images,
+.woocommerce div.product div.summary,
+.woocommerce div.product .woocommerce-tabs,
+.woocommerce div.product .related,
+.woocommerce div.product .upsells,
+.emdief-smart-slider-section,
+.emdief-product-slider-track {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* --------------------------------------------------------------------------
@@ -1330,7 +1345,7 @@ ul.products {
     .woocommerce div.product form.cart,
     .woocommerce-page div.product form.cart {
         display: grid !important;
-        grid-template-columns: 68px 1fr !important;
+        grid-template-columns: 68px minmax(0, 1fr) !important;
         gap: 10px !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -1625,6 +1640,9 @@ ul.products {
     padding: 6px 2px 14px 2px !important;
     scrollbar-width: none !important;
     -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .emdief-product-slider-track::-webkit-scrollbar {
