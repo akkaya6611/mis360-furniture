@@ -377,40 +377,255 @@ ul.products {
   overflow: hidden;
 }
 
-.emdief-shipping-meter {
-  background-color: #f8fafc;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #f1f5f9;
+/* ==========================================================================
+   MASKOTTAN MESAJ VAR! (Mascot Speech Bubble & Shipping Advice)
+   ========================================================================== */
+.mascot-speech-bubble-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, #fffaf5 0%, #ffffff 100%);
+  border: 1.5px solid #fed7aa;
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 12px;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.07);
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.meter-text {
-  font-size: 0.82rem;
-  line-height: 1.4;
-  margin-bottom: 0.5rem;
+.mascot-speech-bubble-box.is-free-shipping {
+  background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+  border-color: #86efac;
+  box-shadow: 0 4px 14px rgba(22, 163, 74, 0.08);
+}
+
+.mascot-bubble-avatar-col {
+  flex-shrink: 0;
+}
+
+.mascot-avatar-wrapper {
+  position: relative;
+  display: inline-block;
+  animation: mascotBob 3s ease-in-out infinite;
+}
+
+@keyframes mascotBob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.mascot-live-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 10px;
+  height: 10px;
+  background-color: #10b981;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  display: block;
+}
+
+.mascot-speech-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mascot-speech-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.mascot-label-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #fed7aa;
+  letter-spacing: 0.3px;
+}
+
+.is-free-shipping .mascot-label-tag {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #86efac;
+}
+
+.tag-pulse {
+  width: 6px;
+  height: 6px;
+  background-color: #ea580c;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseDot 1.5s infinite;
+}
+
+.is-free-shipping .tag-pulse {
+  background-color: #16a34a;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.8; }
+}
+
+.mascot-time-tag {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.mascot-speech-msg {
+  font-size: 12px;
   color: #1e293b;
+  line-height: 1.45;
+  margin-bottom: 8px;
 }
 
-.meter-text.success {
+.mascot-speech-msg em {
+  font-style: normal;
+  color: #334155;
+}
+
+.mascot-speech-msg strong {
+  color: #ea580c;
+}
+
+.is-free-shipping .mascot-speech-msg strong {
   color: #16a34a;
 }
 
-.meter-bar {
-  width: 100%;
-  height: 8px;
+.mascot-meter-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mascot-meter-track {
+  flex: 1;
+  height: 6px;
   background-color: #e2e8f0;
   border-radius: 999px;
   overflow: hidden;
 }
 
-.meter-fill {
+.mascot-meter-fill {
   height: 100%;
-  background: linear-gradient(90deg, #f27a1a 0%, #16a34a 100%);
+  background: linear-gradient(90deg, #f27a1a 0%, #ea580c 100%);
   border-radius: 999px;
   transition: width 0.4s ease;
 }
 
-.meter-fill.full {
+.mascot-meter-fill.full {
   background: #16a34a;
+}
+
+.mascot-meter-status {
+  font-size: 10px;
+  font-weight: 700;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.is-free-shipping .mascot-meter-status {
+  color: #16a34a;
+}
+
+/* Sepet Sayfası (Cart Page) Kutusu */
+.cart-page-mascot-box {
+  margin: 0 0 24px 0;
+  padding: 16px 20px;
+  border-radius: 18px;
+}
+
+.cart-page-mascot-box .mascot-speech-msg {
+  font-size: 13.5px;
+}
+
+/* Tekil Ürün Sayfası Kargo Tavsiye Kutusu */
+.single-product-mascot-advice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fffaf5;
+  border: 1px solid #fed7aa;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin: 14px 0;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.05);
+  animation: emdiefFadeIn 0.3s ease;
+}
+
+.single-product-mascot-advice.is-qualifying {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.advice-mascot-avatar {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.advice-avatar-dot {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border: 1.5px solid #ffffff;
+  border-radius: 50%;
+}
+
+.advice-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.advice-header {
+  margin-bottom: 2px;
+}
+
+.advice-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #ea580c;
+  letter-spacing: 0.3px;
+}
+
+.single-product-mascot-advice.is-qualifying .advice-badge {
+  color: #15803d;
+}
+
+.advice-text {
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.35;
+}
+
+.advice-text strong {
+  color: #ea580c;
+}
+
+.single-product-mascot-advice.is-qualifying .advice-text strong {
+  color: #16a34a;
+}
+
+/* Eski Kargo Barı Geriye Uyumluluk */
+.emdief-shipping-meter {
+  display: none;
 }
 
 .emdief-drawer-items {

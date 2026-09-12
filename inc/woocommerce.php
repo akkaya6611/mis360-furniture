@@ -60,19 +60,44 @@ function mis360_render_drawer_cart_content() {
     $percent = min(100, max(0, ($cart_subtotal / ($free_shipping_limit ?: 1)) * 100));
     ?>
     <div id="emdief-drawer-cart-content" class="emdief-drawer-body">
-        <!-- Kargo Hedef Barı -->
-        <div class="emdief-shipping-meter">
-            <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
-                <div class="meter-text success">
-                    🎉 <strong>Tebrikler!</strong> Siparişiniz için <strong>ÜCRETSİZ KARGO</strong> kazandınız!
+        <!-- Maskottan Mesaj Var: Canlı Kargo Tavsiye Kutusu -->
+        <div class="mascot-speech-bubble-box <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'is-free-shipping' : ''; ?>">
+            <div class="mascot-bubble-avatar-col">
+                <div class="mascot-avatar-wrapper">
+                    <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(44, 'mascot-chat-bear') : '🧸'; ?>
+                    <span class="mascot-live-indicator" title="Maskot Çevrimiçi"></span>
                 </div>
-                <div class="meter-bar"><div class="meter-fill full" style="width: 100%;"></div></div>
-            <?php else: ?>
-                <div class="meter-text">
-                    🚚 Ücretsiz kargo için sepetinize <strong><?php echo function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL'; ?></strong> değerinde ürün daha ekleyin!
+            </div>
+            <div class="mascot-speech-body">
+                <div class="mascot-speech-top">
+                    <span class="mascot-label-tag">
+                        <span class="tag-pulse"></span>
+                        💬 MASKOTTAN MESAJ VAR!
+                    </span>
+                    <span class="mascot-time-tag">Canlı İpucu</span>
                 </div>
-                <div class="meter-bar"><div class="meter-fill" style="width: <?php echo esc_attr((string) $percent); ?>%;"></div></div>
-            <?php endif; ?>
+                <div class="mascot-speech-msg">
+                    <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
+                        🎉 <strong>Harika seçim!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı, kargo ücreti ödemeyeceksiniz!
+                    <?php elseif ($cart_subtotal > 0): ?>
+                        🧸 <em>"Sepetinize <strong><?php echo function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL'; ?></strong> değerinde daha ürün ekleyin, kargo ücreti ödemeyin!"</em>
+                    <?php else: ?>
+                        🧸 <em>"<strong>1.500 TL</strong> üzeri tüm siparişlerde kargo bizden hediye! Miniklerin odasını donatın, kargo ücreti ödemeyin!"</em>
+                    <?php endif; ?>
+                </div>
+                <div class="mascot-meter-wrap">
+                    <div class="mascot-meter-track">
+                        <div class="mascot-meter-fill <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'full' : ''; ?>" style="width: <?php echo esc_attr((string) $percent); ?>%;"></div>
+                    </div>
+                    <span class="mascot-meter-status">
+                        <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
+                            %100 Ücretsiz Kargo
+                        <?php else: ?>
+                            %<?php echo round($percent); ?> Tamamlandı
+                        <?php endif; ?>
+                    </span>
+                </div>
+            </div>
         </div>
 
         <!-- Sepetteki Ürünler -->
@@ -447,3 +472,96 @@ function mis360_single_product_smart_slider() {
 // Varsayılan ilgili ürünleri kaldır, akıllı slider ekle
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
 add_action('woocommerce_after_single_product_summary', 'mis360_single_product_smart_slider', 25);
+
+/**
+ * Tekil Ürün Sayfasında Maskottan Canlı Kargo Tavsiyesi (Mascot Advice Pill)
+ */
+function mis360_single_product_mascot_advice() {
+    global $product;
+    if (!$product) return;
+
+    $cart = (function_exists('WC') && WC()) ? WC()->cart : null;
+    $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+    $cart_subtotal = ($cart && method_exists($cart, 'get_subtotal')) ? (float) $cart->get_subtotal() : 0.0;
+    $product_price = (float) $product->get_price();
+    
+    $projected_subtotal = $cart_subtotal + $product_price;
+    $projected_diff = $free_shipping_limit - $projected_subtotal;
+    ?>
+    <div class="single-product-mascot-advice <?php echo ($projected_diff <= 0) ? 'is-qualifying' : ''; ?>">
+        <div class="advice-mascot-avatar">
+            <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(38, 'advice-bear') : '🧸'; ?>
+            <span class="advice-avatar-dot"></span>
+        </div>
+        <div class="advice-content">
+            <div class="advice-header">
+                <span class="advice-badge">
+                    <span class="tag-pulse"></span>
+                    💬 MASKOTTAN MESAJ VAR!
+                </span>
+            </div>
+            <div class="advice-text">
+                <?php if ($projected_diff <= 0): ?>
+                    🎉 <strong>Süper Haber!</strong> Bu ürünü sepetinize eklediğinizde anında <strong>ÜCRETSİZ KARGO</strong> kazanıyorsunuz! Kargo ücreti ödemeyeceksiniz!
+                <?php else: ?>
+                    🧸 <em>"Bu ürünü sepete eklerseniz ücretsiz kargo fırsatına sadece <strong><?php echo function_exists('wc_price') ? wc_price($projected_diff) : $projected_diff . ' TL'; ?></strong> kalıyor!"</em>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+add_action('woocommerce_single_product_summary', 'mis360_single_product_mascot_advice', 35);
+
+/**
+ * Sepet Sayfasında Maskottan Canlı Kargo Tavsiye Kutusu
+ */
+function mis360_cart_page_mascot_notice() {
+    $cart = (function_exists('WC') && WC()) ? WC()->cart : null;
+    if (!$cart || $cart->is_empty()) return;
+
+    $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+    $cart_subtotal = (float) $cart->get_subtotal();
+    $diff = $free_shipping_limit - $cart_subtotal;
+    $percent = min(100, max(0, ($cart_subtotal / ($free_shipping_limit ?: 1)) * 100));
+    ?>
+    <div class="mascot-speech-bubble-box cart-page-mascot-box <?php echo ($diff <= 0) ? 'is-free-shipping' : ''; ?>">
+        <div class="mascot-bubble-avatar-col">
+            <div class="mascot-avatar-wrapper">
+                <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(46, 'mascot-chat-bear') : '🧸'; ?>
+                <span class="mascot-live-indicator"></span>
+            </div>
+        </div>
+        <div class="mascot-speech-body">
+            <div class="mascot-speech-top">
+                <span class="mascot-label-tag">
+                    <span class="tag-pulse"></span>
+                    💬 MASKOTTAN MESAJ VAR!
+                </span>
+                <span class="mascot-time-tag">Canlı İpucu</span>
+            </div>
+            <div class="mascot-speech-msg">
+                <?php if ($diff <= 0): ?>
+                    🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
+                <?php else: ?>
+                    🧸 <em>"Sepetinize <strong><?php echo function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL'; ?></strong> değerinde daha ürün ekleyin, kargo ücreti ödemeyin!"</em>
+                <?php endif; ?>
+            </div>
+            <div class="mascot-meter-wrap">
+                <div class="mascot-meter-track">
+                    <div class="mascot-meter-fill <?php echo ($diff <= 0) ? 'full' : ''; ?>" style="width: <?php echo esc_attr((string) $percent); ?>%;"></div>
+                </div>
+                <span class="mascot-meter-status">
+                    <?php if ($diff <= 0): ?>
+                        %100 Ücretsiz Kargo
+                    <?php else: ?>
+                        %<?php echo round($percent); ?> (Ücretsiz kargoya son <?php echo function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL'; ?>)
+                    <?php endif; ?>
+                </span>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+add_action('woocommerce_before_cart', 'mis360_cart_page_mascot_notice', 15);
+
