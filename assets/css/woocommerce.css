@@ -300,6 +300,116 @@ ul.products {
   line-height: 1.4;
 }
 
+/* ==========================================================================
+   Shop Header Category Pills Bar (v1.5.7)
+   ========================================================================== */
+.shop-category-bar-wrapper {
+  margin-top: 0.85rem;
+  width: 100%;
+}
+
+.shop-category-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  overflow-x: auto;
+  padding: 0.25rem 0.15rem 0.5rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+}
+
+.shop-category-pills::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+.cat-pill-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.48rem 0.95rem;
+  background: #ffffff;
+  border: 1.5px solid #e7ded5;
+  border-radius: 9999px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #334155;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  scroll-snap-align: start;
+}
+
+.cat-pill-item:hover {
+  border-color: #f59e0b;
+  color: #1e293b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.15);
+}
+
+.cat-pill-item.is-active {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-color: #1e293b;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+}
+
+.cat-pill-item.is-active .cat-pill-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.cat-pill-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.cat-pill-thumb-img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.cat-pill-name {
+  line-height: 1.2;
+}
+
+.cat-pill-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding: 0 0.35rem;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  color: #64748b;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.cat-pill-item:hover .cat-pill-count {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+@media (min-width: 1024px) {
+  .shop-category-pills {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+}
+
 .emdief-shop-content {
   padding-top: 1.25rem;
   padding-bottom: 3.5rem;

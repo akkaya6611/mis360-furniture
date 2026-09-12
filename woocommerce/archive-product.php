@@ -29,6 +29,49 @@ mis360_breadcrumbs();
                     <?php esc_html_e('Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve Montessori ürünleri koleksiyonu.', 'mis360-mobilya'); ?>
                 </p>
             <?php endif; ?>
+
+            <!-- Üst Kategori Gezinme Barı (Category Pills Bar) -->
+            <?php
+            $shop_categories = get_terms([
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => true,
+                'orderby'    => 'count',
+                'order'      => 'DESC',
+            ]);
+
+            if (!empty($shop_categories) && !is_wp_error($shop_categories)):
+                $current_cat_id = is_product_category() ? get_queried_object_id() : 0;
+                $is_all_active  = (is_shop() || (is_post_type_archive('product') && !is_product_taxonomy()));
+
+                $total_products = 0;
+                if (function_exists('wp_count_posts')) {
+                    $c_obj = wp_count_posts('product');
+                    $total_products = isset($c_obj->publish) ? $c_obj->publish : 0;
+                }
+            ?>
+            <div class="shop-category-bar-wrapper">
+                <div class="shop-category-pills" role="navigation" aria-label="<?php esc_attr_e('Ürün Kategorileri', 'mis360-mobilya'); ?>">
+                    <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="cat-pill-item <?php echo $is_all_active ? 'is-active' : ''; ?>">
+                        <span class="cat-pill-icon">✨</span>
+                        <span class="cat-pill-name"><?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></span>
+                        <?php if ($total_products > 0): ?>
+                            <span class="cat-pill-count"><?php echo esc_html($total_products); ?></span>
+                        <?php endif; ?>
+                    </a>
+                    <?php foreach ($shop_categories as $cat): 
+                        $is_active = ($current_cat_id === $cat->term_id);
+                        $cat_link  = get_term_link($cat);
+                        $icon      = function_exists('mis360_get_category_icon') ? mis360_get_category_icon($cat) : '🏷️';
+                    ?>
+                        <a href="<?php echo esc_url($cat_link); ?>" class="cat-pill-item <?php echo $is_active ? 'is-active' : ''; ?>">
+                            <span class="cat-pill-icon"><?php echo $icon; ?></span>
+                            <span class="cat-pill-name"><?php echo esc_html($cat->name); ?></span>
+                            <span class="cat-pill-count"><?php echo esc_html($cat->count); ?></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

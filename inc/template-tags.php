@@ -652,3 +652,40 @@ function mis360_get_category_url($slug, $fallback_search = '') {
     return home_url('/?s=' . urlencode($fallback_search ?: (is_array($slug) ? reset($slug) : $slug)) . '&post_type=product');
 }
 
+/**
+ * Ürün Kategorisi İçin Akıllı İkon / Görsel Çözücü
+ *
+ * @param WP_Term $term Kategori terim nesnesi
+ * @return string HTML veya Emoji
+ */
+function mis360_get_category_icon($term) {
+    if (!is_object($term)) {
+        return '🏷️';
+    }
+
+    // Varsa WooCommerce kategori görselini kontrol et
+    $thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
+    if ($thumb_id) {
+        $thumb_url = wp_get_attachment_image_url($thumb_id, [48, 48]);
+        if ($thumb_url) {
+            return '<img src="' . esc_url($thumb_url) . '" alt="' . esc_attr($term->name) . '" class="cat-pill-thumb-img">';
+        }
+    }
+
+    $name = function_exists('mb_strtolower') ? mb_strtolower($term->name, 'UTF-8') : strtolower($term->name);
+    $slug = $term->slug;
+
+    if (strpos($name, 'kitap') !== false || strpos($slug, 'kitap') !== false) return '📚';
+    if (strpos($name, 'oyuncak') !== false || strpos($slug, 'oyuncak') !== false) return '🧸';
+    if (strpos($name, 'banyo') !== false || strpos($slug, 'banyo') !== false) return '🛁';
+    if (strpos($name, 'hırdavat') !== false || strpos($slug, 'hirdavat') !== false) return '🔧';
+    if (strpos($name, 'duvar') !== false || strpos($name, 'raf') !== false || strpos($slug, 'raf') !== false) return '🖼️';
+    if (strpos($name, 'askı') !== false || strpos($slug, 'aski') !== false) return '🧥';
+    if (strpos($name, 'kutu') !== false || strpos($slug, 'kutu') !== false) return '📦';
+    if (strpos($name, 'saat') !== false || strpos($slug, 'saat') !== false) return '⏰';
+    if (strpos($name, 'ajanda') !== false || strpos($slug, 'ajanda') !== false) return '📓';
+    if (strpos($name, 'bebek') !== false || strpos($slug, 'bebek') !== false) return '👶';
+    if (strpos($name, 'dekoratif') !== false) return '✨';
+
+    return '🏷️';
+}
