@@ -20,6 +20,7 @@ function mis360_cart_count_fragment($fragments) {
     $count = (function_exists('WC') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0';
     $fragments['#emdief-cart-count'] = '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>';
     $fragments['#emdief-bottom-cart-count'] = '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>';
+    $fragments['#emdief-drawer-count-badge'] = '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>';
     return $fragments;
 }
 add_filter('woocommerce_add_to_cart_fragments', 'mis360_cart_count_fragment');
@@ -182,6 +183,30 @@ function mis360_render_drawer_cart_content() {
     </div>
     <?php
 }
+
+/**
+ * AJAX ile Çekmeceden Ürün Çıkarma (Remove Cart Item via AJAX)
+ */
+function mis360_ajax_remove_cart_item() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce');
+
+    $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field(wp_unslash($_POST['cart_item_key'])) : '';
+
+    if (!empty($cart_item_key) && function_exists('WC') && WC()->cart) {
+        WC()->cart->remove_cart_item($cart_item_key);
+        WC()->cart->calculate_totals();
+    }
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
+    $cart_hash = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '';
+
+    wp_send_json_success([
+        'fragments' => $fragments,
+        'cart_hash' => $cart_hash,
+    ]);
+}
+add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 
 /**
  * Ürün Kartlarında İndirim Yüzdesi ve Montessori Rozetleri

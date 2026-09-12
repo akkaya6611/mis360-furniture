@@ -65,7 +65,7 @@ function mis360_mobilya_scripts() {
         wp_enqueue_script(
             'mis360-ajax-cart',
             MIS360_MOBILYA_URI . '/assets/js/ajax-cart.js',
-            ['mis360-main-js'],
+            ['jquery', 'mis360-main-js'],
             $cart_js_ver,
             true
         );

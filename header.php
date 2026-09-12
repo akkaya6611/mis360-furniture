@@ -244,7 +244,7 @@ if (!defined('ABSPATH')) {
         <div class="drawer-header">
             <div class="drawer-title-group">
                 <h3><?php esc_html_e('Alışveriş Sepetim', 'mis360-mobilya'); ?></h3>
-                <span class="drawer-count-badge"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?> ürün</span>
+                <span class="drawer-count-badge" id="emdief-drawer-count-badge"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?> <?php esc_html_e('ürün', 'mis360-mobilya'); ?></span>
             </div>
             <button type="button" class="drawer-close" id="emdief-cart-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
                 <?php echo mis360_icon('close', 20); ?>
