@@ -1,0 +1,114 @@
+/*
+Theme Name: Mis360-Furniture
+Theme URI: https://emdiefhome.com.tr/
+Author: Serkan AKKAYA & MİS360
+Author URI: https://misteknoloji360.com.tr/
+Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
+Version: 1.0.0
+Requires at least: 6.3
+Requires PHP: 8.2
+Requires Plugins: woocommerce
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: mis360-furniture
+Tags: e-commerce, woocommerce, montessori, kids-furniture, colorful, modern, corporate, responsive-layout, block-patterns, custom-colors, custom-header, custom-menu, featured-images, full-width-template
+*/
+
+/* ==========================================================================
+   Montessori & Corporate Design Tokens (CSS Custom Properties)
+   ========================================================================== */
+:root {
+  /* Kurumsal & Zemin Tonları */
+  --emd-bg-main: #fdfbf7;           /* Sıcak süt beyazı / Doğal huş zemin */
+  --emd-bg-surface: #ffffff;        /* Kart ve panel beyazı */
+  --emd-bg-warm: #f8f4ed;           /* Sıcak ahşap bej ton */
+  --emd-bg-alt: #f1f5f9;            /* Alternatif açık gri zemin */
+
+  /* Kurumsal Metin & Çizgiler */
+  --emd-text-main: #1e293b;         /* Koyu arduvaz / Okunabilir kurumsal metin */
+  --emd-text-muted: #64748b;        /* İkincil açıklama metinleri */
+  --emd-text-light: #94a3b8;        /* Pasif etiket ve ipucu metinleri */
+  --emd-border: #e9e3d8;            /* Yumuşak ahşap uyumlu sınır rengi */
+  --emd-border-focus: #f59e0b;      /* Odaklanma çerçevesi */
+
+  /* Canlı Montessori Vurgu Renkleri */
+  --emd-primary: #f59e0b;           /* Montessori Güneş Sarısı (Öğrenme & Enerji) */
+  --emd-primary-hover: #d97706;
+  --emd-primary-light: #fef3c7;
+  --emd-primary-rgb: 245, 158, 11;
+
+  --emd-secondary: #0284c7;         /* Keşif Mavisi (Özgürlük & Güven) */
+  --emd-secondary-hover: #0369a1;
+  --emd-secondary-light: #e0f2fe;
+
+  --emd-coral: #ff6b6b;             /* Neşeli Mercan (Sıcaklık & Sevgi) */
+  --emd-coral-hover: #fa5252;
+  --emd-coral-light: #ffe3e3;
+
+  --emd-mint: #10b981;              /* Doğa & Ahşap Yeşili (Sağlık & Ekoloji) */
+  --emd-mint-hover: #059669;
+  --emd-mint-light: #d1fae5;
+
+  --emd-lavender: #8b5cf6;          /* Hayal Gücü Moru (Yaratıcılık) */
+  --emd-lavender-hover: #7c3aed;
+  --emd-lavender-light: #ede9fe;
+
+  --emd-wood: #b45309;              /* Sıcak Montessori Tonu */
+  --emd-wood-light: #fffbeb;
+
+  /* E1 & Güvenlik Rozetleri */
+  --emd-badge-eco: #10b981;
+  --emd-badge-safe: #0284c7;
+  --emd-badge-sale: #ef4444;
+
+  /* Yumuşak Montessori Kavisleri & Gölgeler */
+  --emd-radius-sm: 8px;
+  --emd-radius-md: 14px;
+  --emd-radius-lg: 20px;
+  --emd-radius-xl: 28px;
+  --emd-radius-full: 9999px;
+
+  --emd-shadow-soft: 0 4px 20px -2px rgba(30, 41, 59, 0.05);
+  --emd-shadow-card: 0 10px 25px -4px rgba(30, 41, 59, 0.07), 0 4px 10px -2px rgba(30, 41, 59, 0.03);
+  --emd-shadow-hover: 0 20px 30px -6px rgba(245, 158, 11, 0.15), 0 8px 16px -4px rgba(30, 41, 59, 0.06);
+
+  /* Akıcı Tipografi */
+  --emd-font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --emd-font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+
+  /* Sayfa Genişlikleri */
+  --emd-container: 1240px;
+  --emd-container-wide: 1400px;
+}
+
+/* Temel Sıfırlama */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--emd-font-body);
+  color: var(--emd-text-main);
+  background-color: var(--emd-bg-main);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+}

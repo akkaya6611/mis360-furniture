@@ -1,0 +1,1522 @@
+/* ==========================================================================
+   Mis360-Furniture WooCommerce Stylesheet (Emdief Home)
+   ========================================================================== */
+
+/* Products Grid Layout Override - Clean Modern CSS Grid */
+.woocommerce ul.products,
+.woocommerce-page ul.products,
+.woocommerce ul.products.columns-4,
+.woocommerce-page ul.products.columns-4,
+ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)) !important;
+  gap: 24px !important;
+  margin: 0 0 40px 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  clear: both !important;
+  float: none !important;
+  width: 100% !important;
+}
+
+.woocommerce ul.products::before,
+.woocommerce ul.products::after,
+.woocommerce-page ul.products::before,
+.woocommerce-page ul.products::after {
+  display: none !important;
+}
+
+/* Individual Product Card (Reset all WooCommerce float & width restrictions) */
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product,
+.woocommerce ul.products.columns-4 li.product,
+.woocommerce-page ul.products.columns-4 li.product,
+.woocommerce ul.products li.first,
+.woocommerce-page ul.products li.first,
+.woocommerce ul.products li.last,
+.woocommerce-page ul.products li.last,
+.emdief-product-card {
+  float: none !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+  clear: none !important;
+  box-sizing: border-box !important;
+  list-style: none !important;
+}
+
+/* Card Outer & Inner Container */
+.card-inner {
+  background-color: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.card-inner:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border-color: #fed7aa;
+}
+
+/* Image Thumbnail & Badges */
+.card-thumb-wrap {
+  position: relative;
+  background-color: #f8fafc;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.card-thumb-wrap a.card-image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.card-thumb-wrap img,
+.card-thumb-wrap .product-main-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.4s ease;
+  display: block !important;
+  margin: 0 !important;
+}
+
+.card-inner:hover .card-thumb-wrap img {
+  transform: scale(1.06);
+}
+
+/* Badges (1. Sınıf E1 MDF & İndirim) */
+.emdief-card-badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  z-index: 5;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 9px;
+  border-radius: 6px;
+  display: inline-block;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.badge-natural {
+  background-color: #0284c7;
+  color: #ffffff;
+}
+
+.badge-discount {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+/* Hover Add to Cart Button */
+.card-hover-actions {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  background: linear-gradient(to top, rgba(0,0,0,0.45) 0%, transparent 100%);
+  transform: translateY(100%);
+  opacity: 0;
+  transition: all 0.25s ease;
+  z-index: 6;
+}
+
+.card-inner:hover .card-hover-actions {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.emdief-btn-add-cart,
+.card-hover-actions .button {
+  width: 100% !important;
+  padding: 10px 14px !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+  background-color: #f27a1a !important;
+  color: #ffffff !important;
+  border-radius: 10px !important;
+  text-align: center !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: block !important;
+  box-shadow: 0 4px 10px rgba(242, 122, 26, 0.3) !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+}
+
+.emdief-btn-add-cart:hover,
+.card-hover-actions .button:hover {
+  background-color: #d8640c !important;
+  transform: scale(1.02);
+}
+
+/* Product Card Body Details */
+.card-details {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.card-category {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.card-product-title {
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  line-height: 1.35 !important;
+  margin: 0 0 6px 0 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 38px;
+}
+
+.card-product-title a {
+  color: #1f2937 !important;
+  text-decoration: none !important;
+}
+
+.card-product-title a:hover {
+  color: #f27a1a !important;
+}
+
+.card-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: #fbbf24;
+  margin-bottom: 10px;
+}
+
+.card-rating .rating-text {
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.card-price-row {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.price-box {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.price-box del,
+.price-box del .amount {
+  color: #94a3b8 !important;
+  font-size: 12px !important;
+  text-decoration: line-through;
+}
+
+.price-box ins,
+.price-box ins .amount {
+  text-decoration: none !important;
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  color: #f27a1a !important;
+}
+
+.price-box .amount {
+  font-size: 17px !important;
+  font-weight: 900 !important;
+  color: #f27a1a !important;
+}
+
+/* Shop Header & Toolbar */
+.emdief-shop-header-banner {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  padding: 3rem 0;
+  border-bottom: 1px solid #fed7aa;
+  margin-bottom: 2rem;
+}
+
+.shop-banner-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.shop-banner-sub {
+  margin: 0;
+  font-size: 1rem;
+  color: #4b5563;
+}
+
+.emdief-shop-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f1f5f9;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.woocommerce-ordering select {
+  padding: 8px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 999px;
+  background-color: #ffffff;
+  font-size: 13px;
+  outline: none;
+  font-weight: 600;
+  color: #334155;
+}
+
+/* Pagination */
+.emdief-pagination-wrap .page-numbers,
+.woocommerce-pagination ul.page-numbers {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 40px 0 !important;
+  border: none !important;
+}
+
+.woocommerce-pagination ul.page-numbers li {
+  border: none !important;
+  display: inline-block !important;
+}
+
+.woocommerce-pagination ul.page-numbers li .page-numbers {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  background: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+}
+
+.woocommerce-pagination ul.page-numbers li .page-numbers.current {
+  background: #f27a1a !important;
+  border-color: #f27a1a !important;
+  color: #ffffff !important;
+}
+
+/* Single Product Trust Box */
+.emdief-single-trust {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  background-color: #fff7ed;
+  border-radius: 16px;
+  border: 1px solid #fed7aa;
+}
+
+.trust-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.trust-pill .pill-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.trust-pill .pill-text {
+  font-size: 0.88rem;
+  color: #1f2937;
+}
+
+/* AJAX Mini-Cart Drawer Elements */
+.emdief-drawer-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.emdief-shipping-meter {
+  background-color: #f8fafc;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.meter-text {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  color: #1e293b;
+}
+
+.meter-text.success {
+  color: #16a34a;
+}
+
+.meter-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #f27a1a 0%, #16a34a 100%);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.meter-fill.full {
+  background: #16a34a;
+}
+
+.emdief-drawer-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emdief-drawer-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.emdief-drawer-item .item-thumb img {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.emdief-drawer-item .item-info {
+  flex: 1;
+}
+
+.emdief-drawer-item .item-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  display: block;
+  line-height: 1.3;
+  margin-bottom: 0.25rem;
+}
+
+.emdief-drawer-item .item-price {
+  font-size: 0.82rem;
+  color: #64748b;
+}
+
+.emdief-drawer-item .item-remove a {
+  font-size: 1.4rem;
+  color: #94a3b8;
+  line-height: 1;
+  padding: 0.2rem;
+}
+
+.emdief-drawer-item .item-remove a:hover {
+  color: #ef4444;
+}
+
+.emdief-drawer-footer {
+  padding: 1.25rem;
+  background-color: #ffffff;
+  border-top: 1px solid #f1f5f9;
+}
+
+.drawer-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.drawer-subtotal strong {
+  font-size: 1.25rem;
+  color: #ea580c;
+}
+
+.drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.emdief-cart-empty {
+  padding: 3rem 1.5rem;
+  text-align: center;
+  margin: auto 0;
+}
+
+.emdief-cart-empty .empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.emdief-cart-empty h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.emdief-cart-empty p {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   EMDIEF HOME LUXURY SINGLE PRODUCT PAGE STYLING (TIGHT & CLEAN)
+   ========================================================================== */
+
+/* Sayfa Zemin ve Üst Boşluk: Fazla boşluklar kaldırıldı */
+.emdief-single-product-page {
+    background-color: #f8fafc;
+    min-height: auto;
+    padding: 16px 0 36px 0;
+}
+
+/* Product Container Card: Daha derli toplu ve kompakt */
+.woocommerce div.product,
+.woocommerce-page div.product {
+    background: #ffffff !important;
+    border-radius: 20px !important;
+    padding: 24px 28px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #eef2f6 !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr) !important;
+    gap: 32px !important;
+    position: relative !important;
+    align-items: start !important;
+}
+
+@media (max-width: 991px) {
+    .woocommerce div.product,
+    .woocommerce-page div.product {
+        grid-template-columns: 1fr !important;
+        padding: 16px !important;
+        gap: 20px !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   1. SOL SUTUN: Urun Gorseli & Galerisi (Kompakt & Orantılı)
+   -------------------------------------------------------------------------- */
+.woocommerce div.product div.images,
+.woocommerce-page div.product div.images {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    position: relative !important;
+    top: auto !important;
+}
+
+/* İndirim Rozeti: Doğrudan görselin sol üstüne oturur, havada boşlukta kalmaz */
+.woocommerce div.product span.onsale,
+.woocommerce-page div.product span.onsale {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    position: relative !important;
+    z-index: 10 !important;
+    align-self: start !important;
+    justify-self: start !important;
+    margin: 12px 0 0 12px !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    padding: 5px 12px !important;
+    border-radius: 999px !important;
+    min-height: auto !important;
+    min-width: auto !important;
+    line-height: 1.3 !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3) !important;
+    width: fit-content !important;
+    height: fit-content !important;
+}
+
+/* Zorunlu Görünürlük & Sıkı Galeri Çerçevesi */
+.woocommerce-product-gallery,
+.woocommerce div.product div.images .woocommerce-product-gallery {
+    opacity: 1 !important;
+    visibility: visible !important;
+    position: relative !important;
+    border-radius: 16px !important;
+    background: #fbfbfb !important;
+    border: 1px solid #eef2f6 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce-product-gallery .flex-viewport {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    background: #fbfbfb !important;
+}
+
+.woocommerce-product-gallery__wrapper {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.woocommerce-product-gallery__image {
+    display: block !important;
+    text-align: center !important;
+    background: #fbfbfb !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce-product-gallery__image a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 380px !important;
+    text-decoration: none !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce-product-gallery__image img {
+    max-height: 400px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+    border-radius: 8px !important;
+    transition: transform 0.3s ease !important;
+}
+
+@media (max-width: 768px) {
+    .woocommerce-product-gallery__image a {
+        min-height: 280px !important;
+        padding: 8px !important;
+    }
+    .woocommerce-product-gallery__image img {
+        max-height: 300px !important;
+    }
+}
+
+/* Zoom / Büyüteç Butonu */
+.woocommerce-product-gallery__trigger {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    z-index: 20 !important;
+    width: 36px !important;
+    height: 36px !important;
+    background: #ffffff !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-indent: -9999px !important;
+    overflow: hidden !important;
+    border: 1px solid #e2e8f0 !important;
+    transition: all 0.2s ease !important;
+}
+
+.woocommerce-product-gallery__trigger:hover {
+    transform: scale(1.08) !important;
+    background: #f8fafc !important;
+}
+
+.woocommerce-product-gallery__trigger::before {
+    content: "🔍" !important;
+    text-indent: 0 !important;
+    display: block !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+/* Küçük Resimler (Thumbnails) */
+.woocommerce div.product div.thumbnails,
+.woocommerce-page div.product div.thumbnails,
+.woocommerce-product-gallery ol.flex-control-thumbs,
+.flex-control-thumbs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    margin-top: 12px !important;
+    padding: 0 !important;
+    list-style: none !important;
+}
+
+.woocommerce-product-gallery ol.flex-control-thumbs li,
+.flex-control-thumbs li {
+    width: 70px !important;
+    height: 70px !important;
+    float: none !important;
+    margin: 0 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    border: 2px solid #e2e8f0 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce-product-gallery ol.flex-control-thumbs li:hover,
+.woocommerce-product-gallery ol.flex-control-thumbs li img.flex-active,
+.flex-control-thumbs li img.flex-active {
+    border-color: #f27a1a !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 10px rgba(242, 122, 26, 0.2) !important;
+}
+
+.woocommerce-product-gallery ol.flex-control-thumbs li img,
+.flex-control-thumbs li img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    opacity: 0.8 !important;
+    transition: opacity 0.2s ease !important;
+}
+
+.woocommerce-product-gallery ol.flex-control-thumbs li img.flex-active,
+.woocommerce-product-gallery ol.flex-control-thumbs li:hover img,
+.flex-control-thumbs li:hover img {
+    opacity: 1 !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. SAG SUTUN: Urun Bilgileri & Satin Alma (Sıkı & Modern Hiyerarşi)
+   -------------------------------------------------------------------------- */
+.woocommerce div.product div.summary,
+.woocommerce-page div.product div.summary {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    float: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+@media (max-width: 991px) {
+    .woocommerce div.product div.summary,
+    .woocommerce-page div.product div.summary {
+        grid-column: 1 !important;
+        grid-row: 2 !important;
+    }
+}
+
+/* Baslik: Orantılı ve şık */
+.woocommerce div.product .product_title,
+.woocommerce-page div.product .product_title {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    line-height: 1.3 !important;
+    color: #0f172a !important;
+    margin: 0 0 10px 0 !important;
+    letter-spacing: -0.01em !important;
+}
+
+@media (max-width: 768px) {
+    .woocommerce div.product .product_title,
+    .woocommerce-page div.product .product_title {
+        font-size: 20px !important;
+    }
+}
+
+/* Yildiz Degerlendirme */
+.woocommerce div.product .woocommerce-product-rating,
+.woocommerce-page div.product .woocommerce-product-rating {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    margin-bottom: 12px !important;
+    font-size: 13px !important;
+}
+
+.woocommerce-review-link {
+    color: #64748b !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+.woocommerce-review-link:hover {
+    color: #f27a1a !important;
+}
+
+/* Fiyat Kutusu: Kompakt */
+.woocommerce div.product p.price,
+.woocommerce div.product span.price,
+.woocommerce-page div.product p.price {
+    display: inline-flex !important;
+    align-items: baseline !important;
+    gap: 10px !important;
+    margin: 0 0 12px 0 !important;
+    padding: 8px 16px !important;
+    background: #f8fafc !important;
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0 !important;
+    width: fit-content !important;
+}
+
+.woocommerce div.product p.price del,
+.woocommerce-page div.product p.price del,
+.woocommerce div.product p.price del .amount {
+    font-size: 15px !important;
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+    text-decoration: line-through !important;
+}
+
+.woocommerce div.product p.price ins,
+.woocommerce-page div.product p.price ins,
+.woocommerce div.product p.price ins .amount,
+.woocommerce div.product p.price > .amount {
+    font-size: 26px !important;
+    font-weight: 900 !important;
+    color: #f27a1a !important;
+    text-decoration: none !important;
+}
+
+/* Kisa Aciklama */
+.woocommerce-product-details__short-description {
+    font-size: 14px !important;
+    line-height: 1.55 !important;
+    color: #475569 !important;
+    margin-bottom: 14px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Stok Durumu */
+.woocommerce div.product p.stock,
+.woocommerce-page div.product p.stock {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    margin: 0 0 14px 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 4px 12px !important;
+    border-radius: 999px !important;
+    width: fit-content !important;
+}
+
+.woocommerce div.product p.stock.in-stock {
+    background: #f0fdf4 !important;
+    color: #16a34a !important;
+    border: 1px solid #bbf7d0 !important;
+}
+
+/* Sepete Ekle Formu */
+.woocommerce div.product form.cart,
+.woocommerce-page div.product form.cart {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin: 4px 0 16px 0 !important;
+    flex-wrap: wrap !important;
+}
+
+/* Miktar Kutusu (Quantity) */
+.woocommerce div.product form.cart div.quantity,
+.woocommerce-page div.product form.cart div.quantity {
+    float: none !important;
+    margin: 0 !important;
+}
+
+.woocommerce div.product form.cart div.quantity input.qty,
+.woocommerce-page div.product form.cart div.quantity input.qty {
+    width: 68px !important;
+    height: 46px !important;
+    border-radius: 10px !important;
+    border: 1.5px solid #cbd5e1 !important;
+    text-align: center !important;
+    font-size: 16px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+    outline: none !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce div.product form.cart div.quantity input.qty:focus {
+    border-color: #f27a1a !important;
+    box-shadow: 0 0 0 3px rgba(242, 122, 26, 0.15) !important;
+}
+
+/* Sepete Ekle Butonu */
+.woocommerce div.product form.cart .single_add_to_cart_button,
+.woocommerce-page div.product form.cart .single_add_to_cart_button {
+    background: linear-gradient(135deg, #f27a1a 0%, #ea580c 100%) !important;
+    color: #ffffff !important;
+    font-size: 15px !important;
+    font-weight: 800 !important;
+    padding: 0 24px !important;
+    height: 46px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(242, 122, 26, 0.3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    flex: 1 1 170px !important;
+    min-width: 160px !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce div.product form.cart .single_add_to_cart_button:hover {
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(242, 122, 26, 0.4) !important;
+}
+
+/* WhatsApp Soru Sor Butonu */
+.woocommerce div.product form.cart .emdief-single-wa-btn,
+.woocommerce-page div.product form.cart .emdief-single-wa-btn {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%) !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    padding: 0 18px !important;
+    height: 46px !important;
+    border-radius: 10px !important;
+    border: none !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    flex: 0 1 auto !important;
+    white-space: nowrap !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+    box-sizing: border-box !important;
+}
+
+.woocommerce div.product form.cart .emdief-single-wa-btn:hover {
+    background: linear-gradient(135deg, #128c7e 0%, #075e54 100%) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4) !important;
+    color: #ffffff !important;
+}
+
+.woocommerce div.product form.cart .emdief-single-wa-btn .wa-btn-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+    fill: #ffffff !important;
+    display: block !important;
+}
+
+@media (max-width: 600px) {
+    .woocommerce div.product form.cart .single_add_to_cart_button,
+    .woocommerce-page div.product form.cart .single_add_to_cart_button {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+    .woocommerce div.product form.cart .emdief-single-wa-btn,
+    .woocommerce-page div.product form.cart .emdief-single-wa-btn {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+    }
+}
+
+/* Guven Rozetleri Kutusu (100% MDF Guvencesi): Derli Toplu */
+.emdief-single-trust {
+    background: linear-gradient(135deg, #fffaf5 0%, #fff4ec 100%) !important;
+    border: 1px solid #fed7aa !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    margin: 12px 0 16px 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+}
+
+@media (max-width: 600px) {
+    .emdief-single-trust {
+        grid-template-columns: 1fr !important;
+        padding: 12px !important;
+    }
+}
+
+.trust-pill {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+}
+
+.trust-pill .pill-icon {
+    font-size: 16px !important;
+    line-height: 1 !important;
+    flex-shrink: 0 !important;
+    padding-top: 1px !important;
+}
+
+.trust-pill .pill-text {
+    font-size: 12px !important;
+    line-height: 1.35 !important;
+    color: #334155 !important;
+}
+
+.trust-pill .pill-text strong {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+    display: inline !important;
+}
+
+/* Meta Bilgileri (SKU, Kategoriler, vb.) */
+.product_meta {
+    font-size: 12.5px !important;
+    color: #64748b !important;
+    border-top: 1px solid #f1f5f9 !important;
+    padding-top: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+}
+
+.product_meta > span {
+    display: block !important;
+}
+
+.product_meta strong,
+.product_meta span.sku_wrapper,
+.product_meta span.posted_in {
+    font-weight: 700 !important;
+    color: #334155 !important;
+}
+
+.product_meta a {
+    color: #f27a1a !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+
+.product_meta a:hover {
+    text-decoration: underline !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. SEKME VE DETAYLAR (TABS: Aciklama, Ek Bilgi, Yorumlar)
+   -------------------------------------------------------------------------- */
+.woocommerce div.product .woocommerce-tabs,
+.woocommerce-page div.product .woocommerce-tabs {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    margin-top: 24px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    padding-top: 20px !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs {
+    display: flex !important;
+    gap: 10px !important;
+    border-bottom: 2px solid #f1f5f9 !important;
+    padding: 0 0 10px 0 !important;
+    margin: 0 0 20px 0 !important;
+    list-style: none !important;
+    background: transparent !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li::before,
+.woocommerce div.product .woocommerce-tabs ul.tabs li::after {
+    display: none !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li a,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li a {
+    display: inline-block !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    padding: 8px 18px !important;
+    border-radius: 999px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    background: #f1f5f9 !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.active a,
+.woocommerce-page div.product .woocommerce-tabs ul.tabs li.active a {
+    background: #f27a1a !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 10px rgba(242, 122, 26, 0.25) !important;
+}
+
+.woocommerce div.product .woocommerce-tabs .panel,
+.woocommerce-page div.product .woocommerce-tabs .panel {
+    background: #fbfbf9 !important;
+    border: 1px solid #f1f5f9 !important;
+    border-radius: 14px !important;
+    padding: 22px 26px !important;
+    font-size: 14.5px !important;
+    line-height: 1.75 !important;
+    color: #334155 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .woocommerce div.product .woocommerce-tabs .panel,
+    .woocommerce-page div.product .woocommerce-tabs .panel {
+        padding: 16px 18px !important;
+    }
+}
+
+.woocommerce div.product .woocommerce-tabs .panel h2 {
+    font-size: 18px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin-bottom: 12px !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. AKILLI URUN SLIDERI (Son Gezilenler & Ilgili Urunler)
+   -------------------------------------------------------------------------- */
+.emdief-smart-product-section {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    margin-top: 28px !important;
+    padding-top: 24px !important;
+    border-top: 1px solid #e2e8f0 !important;
+    position: relative !important;
+}
+
+.emdief-smart-slider-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    margin-bottom: 16px !important;
+    gap: 14px !important;
+}
+
+.emdief-smart-slider-header .header-text {
+    flex: 1 !important;
+}
+
+.emdief-smart-slider-header .section-pill {
+    background: #fff3e8 !important;
+    color: #ea580c !important;
+    font-size: 11px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    padding: 3px 10px !important;
+    border-radius: 999px !important;
+    display: inline-block !important;
+    margin-bottom: 4px !important;
+    text-transform: uppercase !important;
+    border: 1px solid #fed7aa !important;
+}
+
+.emdief-smart-slider-header .section-title {
+    font-size: 20px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 0 3px 0 !important;
+    letter-spacing: -0.02em !important;
+}
+
+.emdief-smart-slider-header .section-subtitle {
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin: 0 !important;
+}
+
+.emdief-smart-slider-header .slider-nav-arrows {
+    display: flex !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+}
+
+.emdief-smart-slider-header .slider-btn {
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 50% !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #334155 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+    padding: 0 !important;
+}
+
+.emdief-smart-slider-header .slider-btn:hover {
+    background: #f27a1a !important;
+    border-color: #f27a1a !important;
+    color: #ffffff !important;
+    transform: scale(1.06) !important;
+    box-shadow: 0 4px 12px rgba(242, 122, 26, 0.3) !important;
+}
+
+/* Slider Track */
+.emdief-product-slider-track {
+    display: flex !important;
+    gap: 16px !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    padding: 6px 2px 14px 2px !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.emdief-product-slider-track::-webkit-scrollbar {
+    display: none !important;
+}
+
+/* Slider Item */
+.emdief-slider-item {
+    flex: 0 0 240px !important;
+    max-width: 240px !important;
+    scroll-snap-align: start !important;
+}
+
+@media (max-width: 600px) {
+    .emdief-slider-item {
+        flex: 0 0 190px !important;
+        max-width: 190px !important;
+    }
+}
+
+/* Mini Product Card */
+.emdief-mini-card {
+    background: #ffffff !important;
+    border-radius: 16px !important;
+    border: 1px solid #eef2f6 !important;
+    overflow: hidden !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03) !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.emdief-mini-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+    border-color: #fed7aa !important;
+}
+
+.mini-card-thumb {
+    position: relative !important;
+    background: #f8fafc !important;
+    padding: 10px !important;
+    height: 180px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+@media (max-width: 600px) {
+    .mini-card-thumb {
+        height: 150px !important;
+    }
+}
+
+.mini-card-thumb .thumb-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.mini-card-thumb img.mini-product-img {
+    max-height: 160px !important;
+    width: auto !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto !important;
+    transition: transform 0.25s ease !important;
+}
+
+.emdief-mini-card:hover .mini-card-thumb img.mini-product-img {
+    transform: scale(1.05) !important;
+}
+
+.mini-badges {
+    position: absolute !important;
+    top: 8px !important;
+    left: 8px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    z-index: 5 !important;
+}
+
+.mini-badges .badge-mdf {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: #047857 !important;
+    border: 1px solid #a7f3d0 !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    padding: 2px 6px !important;
+    border-radius: 5px !important;
+}
+
+.mini-badges .badge-sale {
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    padding: 2px 6px !important;
+    border-radius: 5px !important;
+}
+
+.mini-card-content {
+    padding: 12px 14px 14px 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+}
+
+.mini-rating {
+    display: flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    font-size: 11.5px !important;
+    margin-bottom: 4px !important;
+}
+
+.mini-rating .star-icon {
+    font-size: 12px !important;
+    line-height: 1 !important;
+}
+
+.mini-rating .rating-val {
+    font-weight: 800 !important;
+    color: #0f172a !important;
+}
+
+.mini-rating .rating-cnt {
+    color: #94a3b8 !important;
+    font-size: 10.5px !important;
+}
+
+.mini-title {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.35 !important;
+    margin: 0 0 8px 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    min-height: 36px !important;
+}
+
+.mini-title a {
+    color: #0f172a !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+.mini-title a:hover {
+    color: #f27a1a !important;
+}
+
+.mini-price {
+    display: flex !important;
+    align-items: baseline !important;
+    gap: 6px !important;
+    margin-bottom: 10px !important;
+    margin-top: auto !important;
+}
+
+.mini-price .current-price {
+    font-size: 17px !important;
+    font-weight: 900 !important;
+    color: #f27a1a !important;
+}
+
+.mini-price .old-price {
+    font-size: 12px !important;
+    color: #94a3b8 !important;
+    text-decoration: line-through !important;
+    font-weight: 600 !important;
+}
+
+.mini-action-btn {
+    background: #f8fafc !important;
+    color: #0f172a !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    padding: 8px 12px !important;
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 5px !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+.mini-action-btn:hover {
+    background: #f27a1a !important;
+    color: #ffffff !important;
+    border-color: #f27a1a !important;
+    box-shadow: 0 4px 10px rgba(242, 122, 26, 0.25) !important;
+}
+
+/* Standart Güven Rozetleri (Trust Badges) */
+.emdief-trust-strip {
+    background-color: #ffffff !important;
+    border-top: 1px solid #f1f5f9 !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    padding: 1.75rem 0 !important;
+}
+
+.emdief-trust-grid {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+    gap: 1.5rem !important;
+}
+
+.emdief-trust-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    padding: 0.625rem 0.875rem !important;
+    border-radius: 12px !important;
+    transition: all 0.25s ease !important;
+}
+
+.emdief-trust-item:hover {
+    background-color: #fffaf5 !important;
+}
+
+.emdief-trust-icon {
+    width: 48px !important;
+    height: 48px !important;
+    border-radius: 13px !important;
+    background-color: #fff7ed !important;
+    border: 1.5px solid #fed7aa !important;
+    color: #ea580c !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 2px 8px rgba(234, 88, 12, 0.08) !important;
+    transition: all 0.25s ease !important;
+}
+
+.emdief-trust-icon svg {
+    width: 22px !important;
+    height: 22px !important;
+    stroke: #ea580c !important;
+    stroke-width: 2 !important;
+    display: block !important;
+    transition: all 0.25s ease !important;
+}
+
+.emdief-trust-item:hover .emdief-trust-icon {
+    background-color: #f27a1a !important;
+    border-color: #f27a1a !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(242, 122, 26, 0.25) !important;
+}
+
+.emdief-trust-item:hover .emdief-trust-icon svg {
+    stroke: #ffffff !important;
+}
+
+.emdief-trust-text strong {
+    display: block !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    margin-bottom: 2px !important;
+}
+
+.emdief-trust-text span {
+    display: block !important;
+    font-size: 0.78rem !important;
+    line-height: 1.35 !important;
+    color: #64748b !important;
+}
+
