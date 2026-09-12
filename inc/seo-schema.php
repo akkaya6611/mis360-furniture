@@ -20,7 +20,7 @@ function mis360_output_json_ld() {
         'logo'     => 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/emdief-home-logo-01.webp',
         'description' => 'Montessori felsefesine uygun, 1. sınıf kaliteli MDF çocuk odası mobilyaları ve eğitici kitaplıklar.',
         'telephone' => get_theme_mod('mis360_phone', '+90 537 477 87 66'),
-        'priceRange' => '₺₺',
+        'priceRange' => 'TL',
     ];
 
     echo '<script type="application/ld+json">' . wp_json_encode($org_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";

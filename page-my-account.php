@@ -37,7 +37,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                     Çocuğunuzun boyuna ve ergonomisine uygun <strong>1. Sınıf MDF</strong> Montessori kitaplıklarımızı sepetinize ekleyin, odasını düzenli bir keşif alanına dönüştürün.
                 </p>
                 <div class="cart-bear-perks">
-                    <span class="perk-item">🚚 <strong>1.500 ₺ Üzeri</strong> Ücretsiz Kargo</span>
+                    <span class="perk-item">🚚 <strong>1.500 TL Üzeri</strong> Ücretsiz Kargo</span>
                     <span class="perk-sep">•</span>
                     <span class="perk-item">🛡️ <strong>1. Sınıf</strong> Güvenli MDF</span>
                     <span class="perk-sep">•</span>
@@ -158,7 +158,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                             <div class="stat-meta">
                                 <span class="stat-title">Montessori Puanı</span>
                                 <strong class="stat-value">1.000 Puan</strong>
-                                <span class="stat-sub">5,00 ₺ Kullanılabilir Bakiye (1.000 Puan = 5 ₺)</span>
+                                <span class="stat-sub">5,00 TL Kullanılabilir Bakiye (1.000 Puan = 5 TL)</span>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -205,7 +205,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                 <div class="tracker-item-pricing">
                                     <span class="qty">1 Adet</span>
                                     <span class="dot">•</span>
-                                    <span class="price">800,00 ₺</span>
+                                    <span class="price">800,00 TL</span>
                                     <span class="shipping-tag">Ücretsiz Kargo</span>
                                 </div>
                             </div>
@@ -312,7 +312,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                 </div>
                                 <div class="meta-col">
                                     <span class="label">Toplam Tutar</span>
-                                    <strong class="price-highlight">800,00 ₺</strong>
+                                    <strong class="price-highlight">800,00 TL</strong>
                                 </div>
                                 <div class="meta-col-status">
                                     <span class="status-pill status-shipping"><?php echo mis360_icon('truck', 14); ?> Kargoda</span>
@@ -324,7 +324,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                     <div class="product-mini-info">
                                         <h4>Carmen 3 Raflı Kitaplık – Çocuk Odası Eğitici Montessori</h4>
                                         <p class="product-specs">1. Sınıf Dayanıklı MDF • Çocuk Güvenlikli Yuvarlatılmış Kenar • 1 Adet</p>
-                                        <span class="product-price">800,00 ₺</span>
+                                        <span class="product-price">800,00 TL</span>
                                     </div>
                                     <div class="order-actions-group">
                                         <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Siparis%20Takip%20No%20EMD-2026-9812" target="_blank" rel="noopener" class="emdief-btn btn-secondary btn-sm">
@@ -365,7 +365,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                 </div>
                                 <h4>Safir 4 Raflı 1. Sınıf MDF Kitaplık</h4>
                                 <div class="wish-price-row">
-                                    <span class="wish-price">1.750,00 ₺</span>
+                                    <span class="wish-price">1.750,00 TL</span>
                                     <span class="in-stock-label">Stokta</span>
                                 </div>
                                 <a href="<?php echo esc_url(home_url('/shop/?s=safir')); ?>" class="emdief-btn btn-primary btn-sm btn-block">
@@ -387,7 +387,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                 </div>
                                 <h4>Safir 3 Raflı 1. Sınıf MDF Kitaplık</h4>
                                 <div class="wish-price-row">
-                                    <span class="wish-price">1.250,00 ₺</span>
+                                    <span class="wish-price">1.250,00 TL</span>
                                     <span class="in-stock-label">Stokta</span>
                                 </div>
                                 <a href="<?php echo esc_url(home_url('/shop/?s=safir')); ?>" class="emdief-btn btn-primary btn-sm btn-block">
@@ -409,7 +409,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                 </div>
                                 <h4>Safir 5 Raflı 1. Sınıf MDF Kitaplık</h4>
                                 <div class="wish-price-row">
-                                    <span class="wish-price">2.250,00 ₺</span>
+                                    <span class="wish-price">2.250,00 TL</span>
                                     <span class="in-stock-label">Stokta</span>
                                 </div>
                                 <a href="<?php echo esc_url(home_url('/shop/?s=safir')); ?>" class="emdief-btn btn-primary btn-sm btn-block">
@@ -485,7 +485,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                         </div>
                         <div class="points-balance-tag">
                             <span>Kullanılabilir Bakiye:</span>
-                            <strong>5,00 ₺ (1.000 Puan)</strong>
+                            <strong>5,00 TL (1.000 Puan)</strong>
                         </div>
                     </div>
 
@@ -514,7 +514,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
 
                         <div class="coupon-ticket-card">
                             <div class="coupon-left-ticket ticket-emerald">
-                                <span class="val">5 ₺</span>
+                                <span class="val">5 TL</span>
                                 <span class="sub">PUAN İNDİRİMİ</span>
                             </div>
                             <div class="coupon-right-ticket">
@@ -523,7 +523,7 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                                     <span class="badge-active">Aktif</span>
                                 </div>
                                 <h4>1.000 Puan İndirim Çeki</h4>
-                                <p>1.000 Montessori Puanınız ile sepetinizde anında 5 ₺ nakit indirim uygulayın.</p>
+                                <p>1.000 Montessori Puanınız ile sepetinizde anında 5 TL nakit indirim uygulayın.</p>
                                 <div class="coupon-action-row">
                                     <code class="ticket-code">PUAN5</code>
                                     <button type="button" class="btn-ticket-copy btn-copy-code" data-copy="PUAN5">
@@ -542,10 +542,10 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                             <h4>Montessori Puan Sistemi Nasıl Çalışır?</h4>
                         </div>
                         <ul class="points-rules-list">
-                            <li><?php echo mis360_icon('check', 16); ?> <strong>1.000 Montessori Puanı = 5,00 ₺</strong> nakit indirim değerindedir.</li>
-                            <li><?php echo mis360_icon('check', 16); ?> Her 1.000 ₺ alışverişinizde <strong>1.000 Puan (5 ₺)</strong> kazanırsınız.</li>
-                            <li><?php echo mis360_icon('check', 16); ?> Ürün değerlendirmesi ve fotoğraf eklemelerinde ekstra <strong>200 Puan (1 ₺)</strong> kazanırsınız.</li>
-                            <li><?php echo mis360_icon('check', 16); ?> Puanlarınızı biriktirip sepet aşamasında 1.000 Puan ve katları (1.000 Puan = 5 ₺) olarak indirim çeki şeklinde kullanabilirsiniz.</li>
+                            <li><?php echo mis360_icon('check', 16); ?> <strong>1.000 Montessori Puanı = 5,00 TL</strong> nakit indirim değerindedir.</li>
+                            <li><?php echo mis360_icon('check', 16); ?> Her 1.000 TL alışverişinizde <strong>1.000 Puan (5 TL)</strong> kazanırsınız.</li>
+                            <li><?php echo mis360_icon('check', 16); ?> Ürün değerlendirmesi ve fotoğraf eklemelerinde ekstra <strong>200 Puan (1 TL)</strong> kazanırsınız.</li>
+                            <li><?php echo mis360_icon('check', 16); ?> Puanlarınızı biriktirip sepet aşamasında 1.000 Puan ve katları (1.000 Puan = 5 TL) olarak indirim çeki şeklinde kullanabilirsiniz.</li>
                         </ul>
                     </div>
                 </div>

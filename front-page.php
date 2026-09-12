@@ -92,7 +92,7 @@ get_header();
                                     <span>Fırsatları İncele</span>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                                 </a>
-                                <span class="slide-price-bubble">800 ₺'den Başlayan Fiyatlarla</span>
+                                <span class="slide-price-bubble">800 TL'den Başlayan Fiyatlarla</span>
                             </div>
                         </div>
                     </div>
@@ -123,7 +123,7 @@ get_header();
                         <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-448-300x300.jpg" alt="Hızlı Kargo" class="slide-bg-cover">
                         <div class="slide-overlay-gradient"></div>
                         <div class="slide-caption-box">
-                            <span class="slide-tag-pill badge-blue">🚚 1.500 ₺ ÜZERİ KARGO BEDAVA</span>
+                            <span class="slide-tag-pill badge-blue">🚚 1.500 TL ÜZERİ KARGO BEDAVA</span>
                             <h2 class="slide-headline">13:00'a Kadar Verilen Siparişler<br>Öncelikli İmalatta!</h2>
                             <p class="slide-lead">Özel straforlu koruma ambalajıyla tüm Türkiye'ye sigortalı kapıdan teslimat güvencesi.</p>
                             <div class="slide-highlights">
@@ -212,8 +212,8 @@ get_header();
                             <div class="deal-details">
                                 <h4 class="deal-title"><?php echo esc_html($flash_title); ?></h4>
                                 <div class="deal-pricing">
-                                    <del><?php echo number_format($flash_reg_price, 0, ',', '.'); ?> ₺</del>
-                                    <strong class="deal-price"><?php echo number_format($flash_curr_price, 2, ',', '.'); ?> ₺</strong>
+                                    <del><?php echo number_format($flash_reg_price, 0, ',', '.'); ?> TL</del>
+                                    <strong class="deal-price"><?php echo number_format($flash_curr_price, 2, ',', '.'); ?> TL</strong>
                                 </div>
                                 <div class="deal-stock-tag">🔥 Son 4 Adet Kaldı!</div>
                             </div>
@@ -280,7 +280,7 @@ get_header();
                 <div class="guar-icon-box guar-coral">🚚</div>
                 <div class="guar-info">
                     <h5>Ücretsiz & Sigortalı Kargo</h5>
-                    <p>1.500 ₺ üzeri kapıya kadar güvenli teslimat</p>
+                    <p>1.500 TL üzeri kapıya kadar güvenli teslimat</p>
                 </div>
             </div>
         </div>
@@ -366,7 +366,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         </div>
 
         <div class="trendyol-card-content">
-            <!-- Kargo Kuralı: 1.500 ₺ ve Üzeri Bedava Kontrolü -->
+            <!-- Kargo Kuralı: 1.500 TL ve Üzeri Bedava Kontrolü -->
             <div class="trendyol-pills-row">
                 <?php
                 $free_shipping_limit = (float)get_theme_mod('mis360_free_shipping_limit', 1500);
@@ -374,7 +374,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                 ?>
                     <span class="pill-cargo">Kargo Bedava</span>
                 <?php else: ?>
-                    <span class="pill-cargo-info"><?php echo number_format($free_shipping_limit, 0, ',', '.'); ?> ₺ Üzeri Bedava</span>
+                    <span class="pill-cargo-info"><?php echo number_format($free_shipping_limit, 0, ',', '.'); ?> TL Üzeri Bedava</span>
                 <?php endif; ?>
                 <span class="pill-fast-shipping">
                     <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -469,7 +469,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 ?>
 
 <!-- =========================================================================
-     ÖZEL KAMPANYA: 1.500 ₺ ÜZERİ ÜCRETSİZ KARGO BANNER'I
+     ÖZEL KAMPANYA: 1.500 TL ÜZERİ ÜCRETSİZ KARGO BANNER'I
      ========================================================================= -->
 <section class="emdief-cargo-promo-banner">
     <div class="emdief-container">
@@ -480,7 +480,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 </div>
                 <div class="cargo-promo-text">
                     <span class="cargo-badge-pill">🚚 EMDIEF HOME SEVKİYAT GÜVENCESİ</span>
-                    <h3 class="cargo-headline">1.500 ₺ ve Üzeri Tüm Siparişlerinizde <span>Kargo Tamamen Ücretsiz!</span></h3>
+                    <h3 class="cargo-headline">1.500 TL ve Üzeri Tüm Siparişlerinizde <span>Kargo Tamamen Ücretsiz!</span></h3>
                     <p class="cargo-sub">1. Sınıf MDF Montessori ürünleriniz darbe emici özel straforlu ambalajlarla %100 sigortalı teslim edilir.</p>
                 </div>
             </div>

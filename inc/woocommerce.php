@@ -29,6 +29,17 @@ function mis360_cart_count_fragment($fragments) {
 add_filter('woocommerce_add_to_cart_fragments', 'mis360_cart_count_fragment');
 
 /**
+ * Para Birimi Simgesini ₺ yerine TL olarak ayarla
+ */
+function mis360_turkish_lira_currency_symbol($currency_symbol, $currency) {
+    if ($currency === 'TRY') {
+        return 'TL';
+    }
+    return $currency_symbol;
+}
+add_filter('woocommerce_currency_symbol', 'mis360_turkish_lira_currency_symbol', 10, 2);
+
+/**
  * Mini-Cart Çekmece Fragmanı (Drawer Cart İçeriği)
  */
 function mis360_drawer_cart_fragment($fragments) {
