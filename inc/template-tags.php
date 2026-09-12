@@ -129,6 +129,10 @@ function mis360_breadcrumbs() {
             echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
         } elseif (is_product_taxonomy()) {
             echo '<span class="current">' . esc_html(single_term_title('', false)) . '</span>';
+        } elseif (is_cart()) {
+            echo '<span class="current">' . esc_html__('Sepet', 'mis360-mobilya') . '</span>';
+        } elseif (is_checkout()) {
+            echo '<span class="current">' . esc_html__('Ödeme', 'mis360-mobilya') . '</span>';
         } else {
             echo '<span class="current">' . esc_html(get_the_title($shop_page_id)) . '</span>';
         }

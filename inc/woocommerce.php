@@ -851,4 +851,187 @@ function mis360_cart_free_shipping_popup() {
 }
 add_action('wp_footer', 'mis360_cart_free_shipping_popup', 30);
 
+/**
+ * Sepet Sayfası Canlı Sipariş Bildirimi (Live Recent Order Toast) (v1.4.1)
+ * Sepetteki ürün için rastgele isim ve şehirle "Az önce sipariş verildi" uyarısı gösterir, 10sn sonra kaybolur.
+ */
+function mis360_cart_live_order_toast() {
+    if (!class_exists('WooCommerce') || !is_cart()) {
+        return;
+    }
+
+    $cart = WC()->cart;
+    if (!$cart || $cart->is_empty()) {
+        return;
+    }
+
+    // Sepetteki ürünlerin verilerini topla
+    $cart_products = [];
+    foreach ($cart->get_cart() as $cart_item_key => $cart_item) {
+        $_product = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
+        if ($_product && $_product->exists() && $cart_item['quantity'] > 0) {
+            $image_id = $_product->get_image_id();
+            $img_url = $image_id ? wp_get_attachment_image_url($image_id, 'thumbnail') : wc_placeholder_img_src('thumbnail');
+
+            $cart_products[] = [
+                'id'    => $_product->get_id(),
+                'name'  => $_product->get_name(),
+                'image' => $img_url,
+                'link'  => $_product->get_permalink(),
+            ];
+        }
+    }
+
+    if (empty($cart_products)) {
+        return;
+    }
+
+    $cart_products_json = wp_json_encode($cart_products);
+    ?>
+    <!-- Canlı Sipariş Bildirimi (Social Proof Toast) -->
+    <div id="emdief-cart-order-toast" class="emdief-order-toast" style="display: none;" role="status" aria-live="polite">
+        <div class="toast-progress-bar" id="toast-progress-bar"></div>
+        <button type="button" class="toast-close-btn" id="toast-close-btn" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">&times;</button>
+        <div class="toast-inner">
+            <div class="toast-thumb-wrap">
+                <img id="toast-prod-img" src="" alt="<?php esc_attr_e('Ürün Görseli', 'mis360-mobilya'); ?>" width="54" height="54" class="toast-thumb" />
+            </div>
+            <div class="toast-content">
+                <div class="toast-header-row">
+                    <span class="toast-live-dot"></span>
+                    <span class="toast-badge-text"><?php esc_html_e('CANLI SİPARİŞ', 'mis360-mobilya'); ?></span>
+                    <span class="toast-time-text"><?php esc_html_e('• Az önce', 'mis360-mobilya'); ?></span>
+                </div>
+                <div class="toast-body-text" id="toast-body-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const toast = document.getElementById('emdief-cart-order-toast');
+        if (!toast) return;
+
+        let cartProducts = <?php echo $cart_products_json; ?>;
+        const names = [
+            'Ayşe S.', 'Mehmet K.', 'Zeynep T.', 'Elif D.', 'Burak A.',
+            'Fatma B.', 'Emre Y.', 'Selin M.', 'Merve G.', 'Canan O.',
+            'Ahmet Y.', 'Büşra K.', 'Hakan T.', 'Esra N.', 'Ömer Ç.',
+            'Yasemin L.', 'Tolga B.', 'Ece R.', 'Deniz P.'
+        ];
+        const cities = [
+            'İstanbul', 'Ankara', 'İzmir', 'Bursa', 'Antalya',
+            'Kocaeli', 'Eskişehir', 'Adana', 'Konya', 'Mersin',
+            'Gaziantep', 'Samsun', 'Trabzon', 'Denizli', 'Kayseri',
+            'Muğla', 'Aydın', 'Balıkesir', 'Tekirdağ'
+        ];
+
+        let toastTimer = null;
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        function showOrderToast() {
+            if (!cartProducts || cartProducts.length === 0) return;
+
+            const product = getRandomItem(cartProducts);
+            const customerName = getRandomItem(names);
+            const customerCity = getRandomItem(cities);
+
+            const imgEl = document.getElementById('toast-prod-img');
+            const bodyEl = document.getElementById('toast-body-text');
+            const progressBar = document.getElementById('toast-progress-bar');
+
+            if (imgEl) {
+                imgEl.src = product.image || '';
+                imgEl.alt = product.name || '';
+            }
+
+            if (bodyEl) {
+                bodyEl.innerHTML = 'Sepetinizdeki <strong>' + escapeHtml(product.name) + '</strong> ürününü <strong>' + customerName + '</strong> isimli müşterimiz <strong>' + customerCity + '\'dan</strong> az önce sipariş oluşturdu.';
+            }
+
+            // Toast'ı göster
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.classList.add('is-active');
+            }, 50);
+
+            // 10 saniyelik ilerleme çubuğu animasyonu
+            if (progressBar) {
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.style.transition = 'width 10s linear';
+                    progressBar.style.width = '0%';
+                }, 100);
+            }
+
+            // 10 saniye sonra otomatik kaybol
+            if (toastTimer) clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                hideOrderToast();
+            }, 10000);
+        }
+
+        function hideOrderToast() {
+            if (!toast) return;
+            toast.classList.remove('is-active');
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 400);
+        }
+
+        const closeBtn = document.getElementById('toast-close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (toastTimer) clearTimeout(toastTimer);
+                hideOrderToast();
+            });
+        }
+
+        // Kullanıcı sepete baktıktan 3.5 saniye sonra ilk bildirimi çıkar
+        setTimeout(() => {
+            showOrderToast();
+        }, 3500);
+
+        // Kullanıcı sayfada kaldığı sürece her 35 saniyede bir yeni rastgele isim/şehirle tekrar göster
+        setInterval(() => {
+            if (!toast.classList.contains('is-active')) {
+                showOrderToast();
+            }
+        }, 35000);
+
+        // Gutenberg Store API ile ürünler değişirse listeyi güncelle
+        if (window.wp && window.wp.data && window.wp.data.subscribe) {
+            window.wp.data.subscribe(() => {
+                const store = window.wp.data.select('wc/store/cart');
+                if (store) {
+                    const data = store.getCartData();
+                    if (data && data.items && data.items.length > 0) {
+                        cartProducts = data.items.map(item => ({
+                            id: item.id,
+                            name: item.name,
+                            image: (item.images && item.images[0]) ? item.images[0].src : '',
+                            link: item.permalink || '#'
+                        }));
+                    }
+                }
+            });
+        }
+    });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'mis360_cart_live_order_toast', 35);
+
+
 
