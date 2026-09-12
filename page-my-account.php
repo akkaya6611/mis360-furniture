@@ -23,34 +23,68 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
 
 <div class="emdief-container py-8">
     <?php if ($is_logged_in): ?>
-                <!-- Sepete Ürün Ekleyen Sevimli Montessori Ayıcık Şeridi -->
-        <div class="account-cart-bear-banner" aria-label="<?php esc_attr_e('Sepet ve Keşif Alanı', 'mis360-mobilya'); ?>">
-            <div class="cart-bear-visual">
-                <?php echo mis360_bear_shopping_cart(190, 105, 'animated-cart-bear'); ?>
-            </div>
-            <div class="cart-bear-content">
-                <div class="cart-bear-badge">
-                    <span>🧸 EMDIEF MONTESSORI SEPET DANIŞMANI</span>
+        <?php
+        $cart_item_count = (class_exists('WooCommerce') && WC()->cart) ? WC()->cart->get_cart_contents_count() : 0;
+        ?>
+        <?php if ($cart_item_count > 0): ?>
+            <!-- Sepette Ürün Varsa: Mutlu Alışveriş Yapan Ayıcık -->
+            <div class="account-cart-bear-banner is-cart-active" aria-label="<?php esc_attr_e('Aktif Sepet Alanı', 'mis360-mobilya'); ?>">
+                <div class="cart-bear-visual">
+                    <?php echo mis360_bear_shopping_cart(190, 105, 'animated-cart-bear'); ?>
                 </div>
-                <h3 class="cart-bear-title">Ayıcık Sepetinizi Hazırlıyor! Miniklerin Dünyasını Büyütelim 🛒✨</h3>
-                <p class="cart-bear-sub">
-                    Çocuğunuzun boyuna ve ergonomisine uygun <strong>1. Sınıf MDF</strong> Montessori kitaplıklarımızı sepetinize ekleyin, odasını düzenli bir keşif alanına dönüştürün.
-                </p>
-                <div class="cart-bear-perks">
-                    <span class="perk-item">🚚 <strong>1.500 TL Üzeri</strong> Ücretsiz Kargo</span>
-                    <span class="perk-sep">•</span>
-                    <span class="perk-item">🛡️ <strong>1. Sınıf</strong> Güvenli MDF</span>
-                    <span class="perk-sep">•</span>
-                    <span class="perk-item">⚡ <strong>13:00'a Kadar</strong> Öncelikli İmalat</span>
+                <div class="cart-bear-content">
+                    <div class="cart-bear-badge">
+                        <span>🛒 SEPETİNİZDE <?php echo esc_html((string)$cart_item_count); ?> ÜRÜN SİZİ BEKLİYOR</span>
+                    </div>
+                    <h3 class="cart-bear-title">Ayıcık Sepetinizi Hazırlıyor! Miniklerin Dünyasını Büyütelim 🛒✨</h3>
+                    <p class="cart-bear-sub">
+                        Sepetinizde <strong><?php echo esc_html((string)$cart_item_count); ?> adet</strong> Montessori mobilya bulunuyor. 1.500 TL üzeri ücretsiz kargo avantajıyla siparişinizi güvenle tamamlayabilirsiniz.
+                    </p>
+                    <div class="cart-bear-perks">
+                        <span class="perk-item">🚚 <strong>1.500 TL Üzeri</strong> Ücretsiz Kargo</span>
+                        <span class="perk-sep">•</span>
+                        <span class="perk-item">🛡️ <strong>1. Sınıf</strong> Güvenli MDF</span>
+                        <span class="perk-sep">•</span>
+                        <span class="perk-item">⚡ <strong>13:00'a Kadar</strong> Öncelikli İmalat</span>
+                    </div>
+                </div>
+                <div class="cart-bear-action">
+                    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_cart_url() : home_url('/cart/')); ?>" class="emdief-btn btn-primary btn-md">
+                        <span>Sepetime Git</span>
+                        <?php echo mis360_icon('arrow-right', 16); ?>
+                    </a>
                 </div>
             </div>
-            <div class="cart-bear-action">
-                <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="emdief-btn btn-primary btn-md">
-                    <span>Kataloğu İncele</span>
-                    <?php echo mis360_icon('arrow-right', 16); ?>
-                </a>
+        <?php else: ?>
+            <!-- Sepette Ürün Yoksa: Ağlayan Sevimli Ayıcık -->
+            <div class="account-cart-bear-banner is-cart-empty" aria-label="<?php esc_attr_e('Boş Sepet Alanı', 'mis360-mobilya'); ?>">
+                <div class="cart-bear-visual">
+                    <?php echo mis360_bear_empty_cart(190, 105, 'animated-crying-bear'); ?>
+                </div>
+                <div class="cart-bear-content">
+                    <div class="cart-bear-badge badge-crying">
+                        <span>🥺 AYICIK ÇOK ÜZGÜN • SEPETİNİZ BOMBOŞ</span>
+                    </div>
+                    <h3 class="cart-bear-title">Sepetiniz Boş Kaldı, Ayıcığımız Ağlıyor... 🧸💔</h3>
+                    <p class="cart-bear-sub">
+                        Çocuğunuzun odasına düzen ve estetik katacak <strong>1. Sınıf MDF</strong> Montessori kitaplık veya dolaplarımızı sepetinize ekleyin, sevimli ayıcığımızın gözyaşları dinsin!
+                    </p>
+                    <div class="cart-bear-perks">
+                        <span class="perk-item">🚚 <strong>1.500 TL Üzeri</strong> Ücretsiz Kargo</span>
+                        <span class="perk-sep">•</span>
+                        <span class="perk-item">🛡️ <strong>1. Sınıf</strong> Güvenli MDF</span>
+                        <span class="perk-sep">•</span>
+                        <span class="perk-item">⚡ <strong>13:00'a Kadar</strong> Öncelikli İmalat</span>
+                    </div>
+                </div>
+                <div class="cart-bear-action">
+                    <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="emdief-btn btn-primary btn-md">
+                        <span>Hemen Ürünleri Keşfet</span>
+                        <?php echo mis360_icon('arrow-right', 16); ?>
+                    </a>
+                </div>
             </div>
-        </div>
+        <?php endif; ?>
         <div class="emdief-account-wrapper">
             <!-- Sol Panel: Prestij Kullanıcı Kartı & Navigasyon -->
             <aside class="account-sidebar" aria-label="<?php esc_attr_e('Hesap Gezinti Menüsü', 'mis360-mobilya'); ?>">

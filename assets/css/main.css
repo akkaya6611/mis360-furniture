@@ -3291,6 +3291,70 @@
   50% { opacity: 1; transform: scale(1.15); }
 }
 
+/* Ağlayan Sevimli Ayıcık ve Gözyaşı Animasyonları */
+.animated-crying-bear .bear-crying-shopper,
+.animated-drawer-crying-bear .bear-sobbing-body,
+.animated-page-crying-bear .bear-sobbing-body {
+  animation: bearSobbingAnimation 3s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@keyframes bearSobbingAnimation {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-3px) rotate(-0.8deg); }
+  50% { transform: translateY(1px) rotate(0.6deg); }
+  75% { transform: translateY(-2px) rotate(-0.4deg); }
+}
+
+.bear-tear-stream {
+  animation: tearStreamFlow 2.4s ease-in-out infinite;
+  transform-origin: top center;
+}
+
+@keyframes tearStreamFlow {
+  0%, 100% { opacity: 0.75; transform: scaleY(0.92); }
+  50% { opacity: 1; transform: scaleY(1.06); }
+}
+
+.bear-tear-drop {
+  animation: tearDripping 1.8s ease-in infinite;
+}
+
+.bear-tear-drop.drop-right,
+.bear-tear-drop.tear-drop-right {
+  animation-delay: 0.9s;
+}
+
+@keyframes tearDripping {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.6);
+  }
+  35% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  85% {
+    opacity: 1;
+    transform: translateY(8px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.8);
+  }
+}
+
+.account-cart-bear-banner.is-cart-empty {
+  background: linear-gradient(135deg, #fffaf5 0%, #fff1f2 100%);
+  border-color: #fecdd3;
+}
+
+.cart-bear-badge.badge-crying {
+  background: #ffe4e6 !important;
+  color: #e11d48 !important;
+  border-color: #fecdd3 !important;
+}
+
 .cart-bear-content {
   flex: 1;
   min-width: 280px;

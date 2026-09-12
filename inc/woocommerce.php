@@ -142,11 +142,15 @@ function mis360_render_drawer_cart_content() {
             </div>
         <?php else: ?>
             <div class="emdief-cart-empty">
-                <div class="empty-icon">🧸</div>
-                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-mobilya'); ?></h3>
-                <p><?php esc_html_e('Montessori felsefesine uygun, 1. sınıf kaliteli MDF çocuk odası ürünlerimizi keşfetmeye başlayın!', 'mis360-mobilya'); ?></p>
-                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-primary">
-                    <?php esc_html_e('Ürünleri Keşfet', 'mis360-mobilya'); ?>
+                <div class="empty-bear-wrap">
+                    <?php echo mis360_crying_bear(125, 115, 'animated-drawer-crying-bear'); ?>
+                </div>
+                <div class="empty-bear-badge">🥺 Ayıcık Ağlıyor!</div>
+                <h3><?php esc_html_e('Sepetiniz Bomboş Kaldı...', 'mis360-mobilya'); ?></h3>
+                <p><?php esc_html_e('Miniklerin odasına neşe ve düzen katacak 1. sınıf MDF Montessori mobilyalarımızı ekleyin, sevimli ayıcığımızın gözyaşları dinsin!', 'mis360-mobilya'); ?></p>
+                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-primary btn-md">
+                    <span><?php esc_html_e('Ürünleri Keşfet', 'mis360-mobilya'); ?></span>
+                    <?php echo mis360_icon('arrow-right', 16); ?>
                 </a>
             </div>
         <?php endif; ?>

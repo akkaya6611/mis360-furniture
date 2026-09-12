@@ -256,9 +256,12 @@ if (!defined('ABSPATH')) {
         } else {
             ?>
             <div class="emdief-cart-empty">
-                <div class="empty-icon">🧸</div>
-                <h3><?php esc_html_e('Sepetiniz Henüz Boş', 'mis360-mobilya'); ?></h3>
-                <p><?php esc_html_e('Montessori felsefesine uygun 1. sınıf kaliteli MDF ürünlerimizi keşfedin!', 'mis360-mobilya'); ?></p>
+                <div class="empty-bear-wrap">
+                    <?php echo function_exists('mis360_crying_bear') ? mis360_crying_bear(125, 115, 'animated-drawer-crying-bear') : '<div class="empty-icon">🧸</div>'; ?>
+                </div>
+                <div class="empty-bear-badge">🥺 Ayıcık Ağlıyor!</div>
+                <h3><?php esc_html_e('Sepetiniz Bomboş Kaldı...', 'mis360-mobilya'); ?></h3>
+                <p><?php esc_html_e('Montessori felsefesine uygun 1. sınıf kaliteli MDF ürünlerimizi ekleyin, sevimli ayıcığımızın gözyaşları dinsin!', 'mis360-mobilya'); ?></p>
             </div>
             <?php
         }

@@ -358,3 +358,206 @@ function mis360_bear_shopping_cart(int $width = 200, int $height = 110, string $
         $style_attr
     );
 }
+
+/**
+ * Boş Sepet İçin Ağlayan Sevimli Montessori Ayıcık İllüstrasyonu (Crying Teddy Bear)
+ */
+function mis360_crying_bear(int $width = 130, int $height = 120, string $class = ''): string {
+    $class_attr = $class ? ' class="emdief-crying-bear-svg ' . esc_attr($class) . '"' : ' class="emdief-crying-bear-svg"';
+    $style_attr = sprintf(' style="width:%dpx;height:%dpx;display:inline-block;flex-shrink:0;"', $width, $height);
+
+    return sprintf(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 130"%s%s>
+          <defs>
+            <linearGradient id="oakWoodSad" x1="0%%" y1="0%%" x2="100%%" y2="100%%">
+              <stop offset="0%%" stop-color="#C2926E"/>
+              <stop offset="60%%" stop-color="#A87550"/>
+              <stop offset="100%%" stop-color="#8F5E3B"/>
+            </linearGradient>
+            <linearGradient id="tearCyan" x1="0%%" y1="0%%" x2="0%%" y2="100%%">
+              <stop offset="0%%" stop-color="#38BDF8"/>
+              <stop offset="100%%" stop-color="#0284C7"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Zemin Gölgesi -->
+          <ellipse cx="70" cy="124" rx="44" ry="4.5" fill="#E5DDD3" opacity="0.65"/>
+
+          <g class="bear-sobbing-body">
+            <!-- Gövde -->
+            <ellipse cx="70" cy="98" rx="26" ry="24" fill="url(#oakWoodSad)"/>
+            <ellipse cx="70" cy="101" rx="14" ry="14" fill="#FAF7F2" opacity="0.6"/>
+
+            <!-- Düşük ve Üzgün Kulaklar -->
+            <ellipse cx="38" cy="44" rx="13" ry="11" transform="rotate(-15 38 44)" fill="url(#oakWoodSad)"/>
+            <ellipse cx="38" cy="44" rx="7" ry="6" transform="rotate(-15 38 44)" fill="#F2E6DA"/>
+
+            <ellipse cx="102" cy="44" rx="13" ry="11" transform="rotate(15 102 44)" fill="url(#oakWoodSad)"/>
+            <ellipse cx="102" cy="44" rx="7" ry="6" transform="rotate(15 102 44)" fill="#F2E6DA"/>
+
+            <!-- Kafa -->
+            <ellipse cx="70" cy="64" rx="38" ry="32" fill="url(#oakWoodSad)"/>
+
+            <!-- Montessori Ağız Bölgesi -->
+            <ellipse cx="70" cy="74" rx="19" ry="14" fill="#FAF7F2"/>
+
+            <!-- Burun -->
+            <path d="M64 69 Q70 66 76 69 Q73 74 70 75 Q67 74 64 69 Z" fill="#3D2619"/>
+            <ellipse cx="68" cy="69" rx="1.5" ry="0.8" fill="#FFFFFF" opacity="0.5"/>
+
+            <!-- Üzgün Titreyen Dudak (Down-turned quivering pout) -->
+            <path d="M70 75 L70 78 M64 83 Q70 78 76 83" stroke="#3D2619" stroke-width="1.9" stroke-linecap="round" fill="none"/>
+
+            <!-- Gül Kurusu Yanaklar -->
+            <circle cx="46" cy="74" r="5.5" fill="#FDA4AF" opacity="0.55"/>
+            <circle cx="94" cy="74" r="5.5" fill="#FDA4AF" opacity="0.55"/>
+
+            <!-- Üzgün Kaşlar (Ortaya Doğru Yukarı Kıvrık) -->
+            <path d="M48 48 Q54 43 60 49" stroke="#6D4327" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <path d="M80 49 Q86 43 92 48" stroke="#6D4327" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+
+            <!-- Büyük ve Sulu Islak Gözler -->
+            <circle cx="54" cy="58" r="5.8" fill="#1E293B"/>
+            <circle cx="56.5" cy="56" r="2.3" fill="#FFFFFF"/>
+            <circle cx="52" cy="59.5" r="1.1" fill="#FFFFFF"/>
+            <path d="M49 61 Q54 65 59 61" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+            <circle cx="86" cy="58" r="5.8" fill="#1E293B"/>
+            <circle cx="88.5" cy="56" r="2.3" fill="#FFFFFF"/>
+            <circle cx="84" cy="59.5" r="1.1" fill="#FFFFFF"/>
+            <path d="M81 61 Q86 65 91 61" stroke="#38BDF8" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+            <!-- Yanaklardan Süzülen Parlak Gözyaşları -->
+            <path class="bear-tear-stream stream-left" d="M51 63 C46 72 48 80 50 83 C52 84 53 82 53 77 C53 71 52 64 51 63 Z" fill="url(#tearCyan)" opacity="0.95"/>
+            <path class="bear-tear-stream stream-right" d="M89 63 C94 72 92 80 90 83 C88 84 87 82 87 77 C87 71 88 64 89 63 Z" fill="url(#tearCyan)" opacity="0.95"/>
+
+            <!-- Damlayan Gözyaşı Damlaları -->
+            <path class="bear-tear-drop drop-left" d="M48 88 C45 92 45 96 49 97 C52 97 53 93 49 89 Z" fill="#38BDF8"/>
+            <path class="bear-tear-drop drop-right" d="M92 89 C89 93 90 97 94 97 C97 96 97 92 93 88 Z" fill="#38BDF8"/>
+
+            <!-- Gözyaşını Silen Minik Patiler -->
+            <ellipse cx="61" cy="94" rx="6.5" ry="5.5" fill="#8F5E3B"/>
+            <ellipse cx="79" cy="94" rx="6.5" ry="5.5" fill="#8F5E3B"/>
+          </g>
+        </svg>',
+        $class_attr,
+        $style_attr
+    );
+}
+
+/**
+ * Boş Sepet ve Ağlayan Ayıcık Sahnesi (Hesabım & Sepet Sayfası İçin)
+ */
+function mis360_bear_empty_cart(int $width = 200, int $height = 110, string $class = ''): string {
+    $class_attr = $class ? ' class="emdief-cart-bear-svg emdief-empty-cart-bear-svg ' . esc_attr($class) . '"' : ' class="emdief-cart-bear-svg emdief-empty-cart-bear-svg"';
+    $style_attr = sprintf(' style="width:%dpx;height:%dpx;display:inline-block;flex-shrink:0;"', $width, $height);
+
+    return sprintf(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120"%s%s>
+          <defs>
+            <linearGradient id="bearCoatSad2" x1="0%%" y1="0%%" x2="100%%" y2="100%%">
+              <stop offset="0%%" stop-color="#C2926E"/>
+              <stop offset="60%%" stop-color="#A87550"/>
+              <stop offset="100%%" stop-color="#8F5E3B"/>
+            </linearGradient>
+            <linearGradient id="tearCyan2" x1="0%%" y1="0%%" x2="0%%" y2="100%%">
+              <stop offset="0%%" stop-color="#38BDF8"/>
+              <stop offset="100%%" stop-color="#0284C7"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Zemin Gölgesi -->
+          <ellipse cx="110" cy="112" rx="98" ry="5.5" fill="#E5DDD3" opacity="0.7"/>
+
+          <!-- BOMBOŞ ALISVERIS ARABASI (Sağda) -->
+          <g class="cart-empty-structure">
+            <!-- Tekerlekler -->
+            <circle cx="124" cy="106" r="9" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2.5"/>
+            <circle cx="124" cy="106" r="3" fill="#94A3B8"/>
+            <circle cx="184" cy="106" r="9" fill="#FFFFFF" stroke="#94A3B8" stroke-width="2.5"/>
+            <circle cx="184" cy="106" r="3" fill="#94A3B8"/>
+
+            <!-- Araba Alt Şasesi -->
+            <path d="M112 96 L192 96 L180 106 L128 106 Z" fill="#E2E8F0"/>
+
+            <!-- Sepet Tel Kafesi (İçi Bomboş) -->
+            <path d="M106 46 L124 90 L190 90 L202 46 Z" fill="rgba(241, 245, 249, 0.4)" stroke="#CBD5E1" stroke-width="2.6" stroke-linejoin="round"/>
+            
+            <!-- Sepet Izgaraları -->
+            <line x1="130" y1="46" x2="140" y2="90" stroke="#CBD5E1" stroke-width="1.6" opacity="0.6"/>
+            <line x1="154" y1="46" x2="156" y2="90" stroke="#CBD5E1" stroke-width="1.6" opacity="0.6"/>
+            <line x1="178" y1="46" x2="172" y2="90" stroke="#CBD5E1" stroke-width="1.6" opacity="0.6"/>
+            <line x1="112" y1="68" x2="196" y2="68" stroke="#CBD5E1" stroke-width="1.6" opacity="0.6"/>
+
+            <!-- Tutma Kolu -->
+            <path d="M106 46 L92 40 L88 46" stroke="#94A3B8" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+            <rect x="86" y="38" width="12" height="6" rx="3" fill="#CBD5E1"/>
+
+            <!-- Boş Sepet Simgesi (Kırık Kalp ve Boş İbaresi) -->
+            <text x="156" y="70" font-size="16" text-anchor="middle" fill="#FDA4AF" opacity="0.9">💔</text>
+            <text x="156" y="82" font-size="7.5" font-weight="bold" text-anchor="middle" fill="#94A3B8" letter-spacing="0.5">BOMBOŞ</text>
+          </g>
+
+          <!-- SEPETİN BOŞLUĞUNA AĞLAYAN AYICIK (Solda) -->
+          <g class="bear-crying-shopper">
+            <!-- Ayaklar -->
+            <ellipse cx="44" cy="108" rx="10" ry="6" fill="#8F5E3B"/>
+            <ellipse cx="64" cy="108" rx="10" ry="6" fill="#8F5E3B"/>
+
+            <!-- Gövde -->
+            <ellipse cx="52" cy="85" rx="22" ry="24" fill="url(#bearCoatSad2)"/>
+            <ellipse cx="52" cy="88" rx="12" ry="14" fill="#FBF7F2" opacity="0.45"/>
+
+            <!-- Kulaklar (Üzgün Düşük) -->
+            <ellipse cx="36" cy="38" rx="10" ry="8.5" transform="rotate(-12 36 38)" fill="url(#bearCoatSad2)"/>
+            <ellipse cx="36" cy="38" rx="6" ry="4.5" transform="rotate(-12 36 38)" fill="#F2E6DA"/>
+
+            <ellipse cx="68" cy="38" rx="10" ry="8.5" transform="rotate(12 68 38)" fill="url(#bearCoatSad2)"/>
+            <ellipse cx="68" cy="38" rx="6" ry="4.5" transform="rotate(12 68 38)" fill="#F2E6DA"/>
+
+            <!-- Kafa -->
+            <ellipse cx="52" cy="54" rx="24" ry="20" fill="url(#bearCoatSad2)"/>
+
+            <!-- Burun ve Üzgün Dudak -->
+            <ellipse cx="55" cy="59" rx="11" ry="8" fill="#FAF7F2"/>
+            <path d="M52 56 Q56 54 60 56 Q58 60 56 61 Q54 60 52 56 Z" fill="#3D2619"/>
+            <path d="M56 61 L56 63 M53 66 Q56 62 59 66" stroke="#3D2619" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+
+            <!-- Yanaklar -->
+            <circle cx="41" cy="58" r="3.4" fill="#FDA4AF" opacity="0.55"/>
+            <circle cx="68" cy="58" r="3.4" fill="#FDA4AF" opacity="0.55"/>
+
+            <!-- Üzgün Kaşlar -->
+            <path d="M43 47 Q47 43 50 48" stroke="#6D4327" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+            <path d="M60 48 Q63 43 67 47" stroke="#6D4327" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+
+            <!-- Islak Ağlayan Gözler -->
+            <circle cx="47" cy="51" r="3.8" fill="#1E293B"/>
+            <circle cx="48.5" cy="49.5" r="1.5" fill="#FFFFFF"/>
+            <circle cx="45.5" cy="51.8" r="0.8" fill="#FFFFFF"/>
+            <path d="M44 53 Q47 56 50 53" stroke="#38BDF8" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+
+            <circle cx="63" cy="51" r="3.8" fill="#1E293B"/>
+            <circle cx="64.5" cy="49.5" r="1.5" fill="#FFFFFF"/>
+            <circle cx="61.5" cy="51.8" r="0.8" fill="#FFFFFF"/>
+            <path d="M60 53 Q63 56 66 53" stroke="#38BDF8" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+
+            <!-- Gözyaşları -->
+            <path class="bear-tear-stream stream-left" d="M45 54 C42 61 43 66 45 68 C46 69 47 67 47 64 Z" fill="url(#tearCyan2)"/>
+            <path class="bear-tear-stream stream-right" d="M65 54 C68 61 67 66 65 68 C64 69 63 67 63 64 Z" fill="url(#tearCyan2)"/>
+
+            <path class="bear-tear-drop drop-left" d="M43 72 C41 75 41 78 44 79 C46 79 47 76 44 73 Z" fill="#38BDF8"/>
+            <path class="bear-tear-drop drop-right" d="M67 73 C65 76 66 79 69 79 C71 78 71 75 68 72 Z" fill="#38BDF8"/>
+
+            <!-- Patiler: Biri Gözünü Siliyor, Diğeri Boş Arabayı Tutuyor -->
+            <path d="M42 78 Q50 72 58 70" stroke="url(#bearCoatSad2)" stroke-width="8" stroke-linecap="round" fill="none"/>
+            <circle cx="56" cy="67" r="4.8" fill="#8F5E3B"/>
+
+            <path d="M48 80 Q64 74 86 46" stroke="url(#bearCoatSad2)" stroke-width="7" stroke-linecap="round" fill="none"/>
+            <circle cx="87" cy="45" r="5" fill="#8F5E3B"/>
+          </g>
+        </svg>',
+        $class_attr,
+        $style_attr
+    );
+}
