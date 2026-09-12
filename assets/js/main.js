@@ -230,8 +230,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // 2.1 Trendyol Slider Track Arrows
+    document.querySelectorAll('.trendyol-nav-arrow').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const track = document.getElementById(targetId);
+            if (track) {
+                const scrollAmount = 440;
+                if (this.classList.contains('trendyol-nav-prev')) {
+                    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                } else {
+                    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                }
+            }
+        });
+    });
+
     // 3. Wishlist Heart Button Toggling
-    document.querySelectorAll('.btn-wishlist-heart').forEach(btn => {
+    document.querySelectorAll('.btn-wishlist-heart, .trendyol-heart-btn').forEach(btn => {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             this.classList.toggle('is-active');
@@ -245,6 +261,23 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    // 3.1 Trendyol Countdown Timer
+    const digitHours = document.querySelectorAll('.countdown-hours');
+    const digitMins = document.querySelectorAll('.countdown-mins');
+    const digitSecs = document.querySelectorAll('.countdown-secs');
+    if (digitHours.length > 0) {
+        let totalSecs = 5 * 3600 + 6 * 60 + 36;
+        setInterval(() => {
+            if (totalSecs > 0) totalSecs--;
+            const h = String(Math.floor(totalSecs / 3600)).padStart(2, '0');
+            const m = String(Math.floor((totalSecs % 3600) / 60)).padStart(2, '0');
+            const s = String(totalSecs % 60).padStart(2, '0');
+            digitHours.forEach(el => el.textContent = h);
+            digitMins.forEach(el => el.textContent = m);
+            digitSecs.forEach(el => el.textContent = s);
+        }, 1000);
+    }
 
     // 4. Kupon Kodu Kopyalama
     const btnCopy = document.getElementById('btnCopyCode');
