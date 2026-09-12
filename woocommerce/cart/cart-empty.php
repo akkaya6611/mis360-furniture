@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Mis360-Mobilya Boş Sepet Şablonu (Empty Cart Template)
  * Ürün yoksa ağlayan sevimli Montessori ayıcığı sergiler.

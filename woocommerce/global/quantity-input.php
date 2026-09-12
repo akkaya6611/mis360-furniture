@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Product quantity inputs with +/- stepper buttons
  *

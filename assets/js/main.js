@@ -46,6 +46,31 @@ function mis360Init() {
         });
     });
 
+    // 1.1. Masaüstü Dropdown Menü Tıklama Desteği
+    const dropdownParents = document.querySelectorAll('.emdief-nav-menu li.menu-item-has-children');
+    dropdownParents.forEach(item => {
+        const link = item.querySelector(':scope > a');
+        if (link) {
+            link.addEventListener('click', (e) => {
+                // Eğer menü henüz açık değilse dropdown'ı aç
+                if (!item.classList.contains('is-open')) {
+                    e.preventDefault();
+                    dropdownParents.forEach(other => {
+                        if (other !== item) other.classList.remove('is-open');
+                    });
+                    item.classList.add('is-open');
+                }
+            });
+        }
+    });
+
+    // Sayfa dışına tıklandığında açık dropdown'ı kapat
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.menu-item-has-children')) {
+            dropdownParents.forEach(item => item.classList.remove('is-open'));
+        }
+    });
+
     // 2. Mobil Arama Toggle
     const searchToggle = document.getElementById('emdief-mobile-search-toggle');
     const searchBar = document.getElementById('emdief-mobile-search-bar');
