@@ -17,13 +17,9 @@ function mis360_cart_count_fragment($fragments) {
     if (!is_array($fragments)) {
         $fragments = [];
     }
-    ob_start();
-    ?>
-    <span class="emdief-cart-count" id="emdief-cart-count">
-        <?php echo (function_exists('WC') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?>
-    </span>
-    <?php
-    $fragments['#emdief-cart-count'] = ob_get_clean();
+    $count = (function_exists('WC') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0';
+    $fragments['#emdief-cart-count'] = '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>';
+    $fragments['#emdief-bottom-cart-count'] = '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>';
     return $fragments;
 }
 add_filter('woocommerce_add_to_cart_fragments', 'mis360_cart_count_fragment');

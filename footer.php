@@ -104,9 +104,9 @@ if (!defined('ABSPATH')) {
     </div>
 </footer>
 
-<!-- Canlı WhatsApp Butonu (Sabit Sağ Alt) -->
+<!-- Canlı WhatsApp Butonu (Sabit Sağ Alt - Mobilde Bar Üstüne Hizalanır) -->
 <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" class="emdief-floating-wa" target="_blank" rel="noopener" aria-label="<?php esc_attr_e('WhatsApp Sipariş ve Destek', 'mis360-mobilya'); ?>">
-    <span class="wa-icon"><?php echo mis360_icon('whatsapp', 30); ?></span>
+    <span class="wa-icon"><?php echo mis360_icon('whatsapp', 28); ?></span>
     <span class="wa-tooltip">Montessori ürünleri hakkında bilgi alın! 🧸</span>
 </a>
 
@@ -114,6 +114,77 @@ if (!defined('ABSPATH')) {
 <button type="button" class="emdief-back-to-top" id="emdief-back-to-top" aria-label="<?php esc_attr_e('Yukarı Çık', 'mis360-mobilya'); ?>">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><polyline points="18 15 12 9 6 15"></polyline></svg>
 </button>
+
+<?php
+// Tekil Ürün Sayfası Mobilde Sabit Satın Alma Çubuğu
+if (class_exists('WooCommerce') && is_product()):
+    global $product;
+    if ($product && $product->is_purchasable() && $product->is_in_stock()):
+        $sticky_img = wp_get_attachment_image_url($product->get_image_id(), 'thumbnail') ?: wc_placeholder_img_src('thumbnail');
+        ?>
+        <div class="emdief-mobile-sticky-buy-bar" id="emdiefStickyBuyBar">
+            <div class="sticky-buy-inner">
+                <div class="sticky-buy-product">
+                    <img src="<?php echo esc_url($sticky_img); ?>" alt="<?php echo esc_attr($product->get_name()); ?>" class="sticky-thumb">
+                    <div class="sticky-info">
+                        <span class="sticky-price"><?php echo $product->get_price_html(); ?></span>
+                        <span class="sticky-title"><?php echo esc_html(wp_trim_words($product->get_name(), 4, '...')); ?></span>
+                    </div>
+                </div>
+                <button type="button" class="btn-sticky-add-cart" id="triggerStickyAddToCart">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span>Sepete Ekle</span>
+                </button>
+            </div>
+        </div>
+        <?php
+    endif;
+endif;
+?>
+
+<!-- Mobil Sabit Alt Gezinme Çubuğu (Mobile App-style Bottom Navigation Bar) -->
+<nav class="emdief-mobile-bottom-nav" id="emdief-mobile-bottom-nav" aria-label="<?php esc_attr_e('Mobil Gezinme', 'mis360-mobilya'); ?>">
+    <a href="<?php echo esc_url(home_url('/')); ?>" class="bottom-nav-item <?php echo is_front_page() ? 'is-active' : ''; ?>">
+        <span class="nav-icon">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </span>
+        <span class="nav-label"><?php esc_html_e('Anasayfa', 'mis360-mobilya'); ?></span>
+    </a>
+    <button type="button" class="bottom-nav-item" id="bottomNavCategoriesBtn" aria-label="<?php esc_attr_e('Kategoriler', 'mis360-mobilya'); ?>">
+        <span class="nav-icon">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="3" width="7" height="7" rx="1.5"></rect><rect x="14" y="14" width="7" height="7" rx="1.5"></rect><rect x="3" y="14" width="7" height="7" rx="1.5"></rect></svg>
+        </span>
+        <span class="nav-label"><?php esc_html_e('Kategori', 'mis360-mobilya'); ?></span>
+    </button>
+    <button type="button" class="bottom-nav-item" id="bottomNavSearchBtn" aria-label="<?php esc_attr_e('Arama', 'mis360-mobilya'); ?>">
+        <span class="nav-icon">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </span>
+        <span class="nav-label"><?php esc_html_e('Arama', 'mis360-mobilya'); ?></span>
+    </button>
+    <button type="button" class="bottom-nav-item" id="bottomNavCartBtn" aria-label="<?php esc_attr_e('Sepetim', 'mis360-mobilya'); ?>">
+        <span class="nav-icon has-badge">
+            <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+            <span class="bottom-cart-badge" id="emdief-bottom-cart-count"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?></span>
+        </span>
+        <span class="nav-label"><?php esc_html_e('Sepetim', 'mis360-mobilya'); ?></span>
+    </button>
+    <?php if (is_user_logged_in()): ?>
+        <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="bottom-nav-item">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <span class="nav-label"><?php esc_html_e('Hesabım', 'mis360-mobilya'); ?></span>
+        </a>
+    <?php else: ?>
+        <button type="button" class="bottom-nav-item" id="bottomNavAccountBtn" aria-label="<?php esc_attr_e('Giriş Yap', 'mis360-mobilya'); ?>">
+            <span class="nav-icon">
+                <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </span>
+            <span class="nav-label"><?php esc_html_e('Giriş', 'mis360-mobilya'); ?></span>
+        </button>
+    <?php endif; ?>
+</nav>
 
 <?php wp_footer(); ?>
 </body>

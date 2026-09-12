@@ -1520,3 +1520,246 @@ ul.products {
     color: #64748b !important;
 }
 
+/* ==========================================================================
+   Emdief Home Mobile-First Responsive WooCommerce Styles
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* 2 Sütunlu Kompakt Mobil Ürün Izgarası */
+  .woocommerce ul.products,
+  .woocommerce-page ul.products,
+  .woocommerce ul.products.columns-4,
+  .woocommerce-page ul.products.columns-4,
+  ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    margin: 0 0 24px 0 !important;
+    padding: 0 !important;
+  }
+
+  .card-inner {
+    border-radius: 12px !important;
+  }
+
+  .card-details {
+    padding: 8px !important;
+  }
+
+  .card-category {
+    font-size: 9px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .card-product-title {
+    font-size: 11.5px !important;
+    line-height: 1.25 !important;
+    min-height: 30px !important;
+    margin: 0 0 4px 0 !important;
+  }
+
+  .card-rating {
+    font-size: 9.5px !important;
+    margin-bottom: 4px !important;
+    gap: 3px !important;
+  }
+
+  .card-price-row {
+    padding-top: 6px !important;
+  }
+
+  .price-box {
+    flex-wrap: wrap !important;
+    gap: 3px !important;
+  }
+
+  .price-box ins,
+  .price-box ins .amount {
+    font-size: 13px !important;
+  }
+
+  .price-box del,
+  .price-box del .amount {
+    font-size: 10px !important;
+  }
+
+  /* Dokunmatik Ekranlarda Sepete Ekle Butonunu Sürekli Görünür ve Erişilebilir Yap */
+  .card-hover-actions {
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
+    background: transparent !important;
+    padding: 6px 0 0 0 !important;
+    z-index: 2 !important;
+  }
+
+  .emdief-btn-add-cart,
+  .card-hover-actions .button {
+    font-size: 11px !important;
+    padding: 6px 8px !important;
+    border-radius: 7px !important;
+    font-weight: 700 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+  }
+
+  /* Rozet Boyutları */
+  .emdief-card-badges {
+    top: 5px !important;
+    left: 5px !important;
+    gap: 3px !important;
+  }
+
+  .badge {
+    font-size: 8.5px !important;
+    padding: 2px 5px !important;
+    border-radius: 4px !important;
+  }
+
+  /* Tekil Ürün Sayfası */
+  .single-product-wrapper {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .woocommerce #content div.product div.images,
+  .woocommerce div.product div.images,
+  .woocommerce-page #content div.product div.images,
+  .woocommerce-page div.product div.images,
+  .woocommerce #content div.product div.summary,
+  .woocommerce div.product div.summary,
+  .woocommerce-page #content div.product div.summary,
+  .woocommerce-page div.product div.summary {
+    float: none !important;
+    width: 100% !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Sepet ve Ödeme Sayfaları */
+  .woocommerce-cart table.cart td.actions .coupon,
+  .woocommerce-cart table.cart td.actions .button {
+    width: 100% !important;
+    float: none !important;
+    margin-bottom: 8px !important;
+  }
+
+  .woocommerce-cart .cart-collaterals .cart_totals,
+  .woocommerce-checkout #order_review_heading,
+  .woocommerce-checkout #order_review {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  /* Tekil Ürün Mobilde Sabit Satın Alma Çubuğu */
+  .emdief-mobile-sticky-buy-bar {
+    position: fixed;
+    bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #fed7aa;
+    padding: 8px 12px;
+    z-index: 9998;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    display: none;
+  }
+
+  .emdief-mobile-sticky-buy-bar.is-visible {
+    display: block !important;
+    animation: emdiefSlideUp 0.3s ease;
+  }
+
+  .sticky-buy-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .sticky-buy-product {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .sticky-thumb {
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #e2e8f0;
+    flex-shrink: 0;
+  }
+
+  .sticky-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .sticky-price {
+    font-size: 14px;
+    font-weight: 800;
+    color: #ea580c;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .sticky-price del {
+    font-size: 10px;
+    color: #94a3b8;
+    margin-right: 3px;
+  }
+
+  .sticky-price ins {
+    text-decoration: none;
+  }
+
+  .sticky-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .btn-sticky-add-cart {
+    background: linear-gradient(135deg, #f27a1a 0%, #ea580c 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 9px;
+    padding: 9px 15px;
+    font-size: 12.5px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(234, 88, 12, 0.35);
+    white-space: nowrap;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn-sticky-add-cart:active {
+    transform: scale(0.97);
+  }
+}
+
+@media (min-width: 769px) {
+  .emdief-mobile-sticky-buy-bar {
+    display: none !important;
+  }
+}
+
+@keyframes emdiefSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+

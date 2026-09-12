@@ -142,6 +142,82 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // 6. Mobil Alt Gezinme Çubuğu (Bottom Navigation Bar)
+    const bottomNavCategories = document.getElementById('bottomNavCategoriesBtn');
+    if (bottomNavCategories) {
+        bottomNavCategories.addEventListener('click', (e) => {
+            e.preventDefault();
+            openMobileMenu();
+        });
+    }
+
+    const bottomNavSearch = document.getElementById('bottomNavSearchBtn');
+    if (bottomNavSearch && searchBar) {
+        bottomNavSearch.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchBar.classList.toggle('is-open');
+            if (searchBar.classList.contains('is-open')) {
+                const input = searchBar.querySelector('input');
+                if (input) input.focus();
+            }
+        });
+    }
+
+    const bottomNavCart = document.getElementById('bottomNavCartBtn');
+    if (bottomNavCart) {
+        bottomNavCart.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cartDrawer = document.getElementById('emdief-cart-drawer');
+            if (cartDrawer) {
+                cartDrawer.classList.add('is-active');
+                cartDrawer.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+    }
+
+    const bottomNavAccount = document.getElementById('bottomNavAccountBtn');
+    if (bottomNavAccount) {
+        bottomNavAccount.addEventListener('click', (e) => {
+            e.preventDefault();
+            openAuthModal();
+        });
+    }
+
+    // 7. Tekil Ürün Mobilde Sabit Satın Alma Çubuğu (Sticky Buy Bar)
+    const stickyBuyBar = document.getElementById('emdiefStickyBuyBar');
+    const triggerStickyAddToCart = document.getElementById('triggerStickyAddToCart');
+
+    if (stickyBuyBar) {
+        const mainAddToCartBtn = document.querySelector('form.cart .single_add_to_cart_button') || document.querySelector('button[name="add-to-cart"]');
+
+        window.addEventListener('scroll', () => {
+            if (window.innerWidth <= 768) {
+                if (mainAddToCartBtn) {
+                    const rect = mainAddToCartBtn.getBoundingClientRect();
+                    if (rect.bottom < 0) {
+                        stickyBuyBar.classList.add('is-visible');
+                    } else {
+                        stickyBuyBar.classList.remove('is-visible');
+                    }
+                } else if (window.scrollY > 350) {
+                    stickyBuyBar.classList.add('is-visible');
+                } else {
+                    stickyBuyBar.classList.remove('is-visible');
+                }
+            } else {
+                stickyBuyBar.classList.remove('is-visible');
+            }
+        }, { passive: true });
+
+        if (triggerStickyAddToCart && mainAddToCartBtn) {
+            triggerStickyAddToCart.addEventListener('click', (e) => {
+                e.preventDefault();
+                mainAddToCartBtn.click();
+            });
+        }
+    }
 });
 
 /* ==========================================================================

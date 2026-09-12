@@ -4750,3 +4750,140 @@
     white-space: nowrap !important;
     border: 1px solid #e2e8f0 !important;
 }
+
+/* ==========================================================================
+   Emdief Home Mobile App-Style Bottom Navigation Bar
+   ========================================================================== */
+.emdief-mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+  }
+  
+  body {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  .emdief-floating-wa {
+    bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 14px !important;
+    width: 48px !important;
+    height: 48px !important;
+    z-index: 997 !important;
+  }
+
+  .emdief-back-to-top {
+    bottom: calc(128px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 16px !important;
+    width: 38px !important;
+    height: 38px !important;
+    z-index: 996 !important;
+  }
+
+  .trendyol-circle-badge {
+    width: 34px !important;
+    height: 34px !important;
+    font-size: 8px !important;
+    top: 6px !important;
+    left: 6px !important;
+    line-height: 1 !important;
+  }
+
+  .trendyol-heart-btn {
+    width: 28px !important;
+    height: 28px !important;
+    top: 6px !important;
+    right: 6px !important;
+  }
+
+  .trendyol-heart-btn svg {
+    width: 15px !important;
+    height: 15px !important;
+  }
+
+  .emdief-mobile-bottom-nav {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: calc(58px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.08);
+    z-index: 9999;
+    align-items: center;
+  }
+
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    color: #64748b;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 6px 2px;
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bottom-nav-item.is-active,
+  .bottom-nav-item:hover,
+  .bottom-nav-item:active {
+    color: #f27a1a !important;
+  }
+
+  .bottom-nav-item .nav-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .bottom-nav-item .nav-icon svg {
+    display: block;
+    width: 22px;
+    height: 22px;
+  }
+
+  .bottom-nav-item .nav-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.1px;
+  }
+
+  .bottom-cart-badge {
+    position: absolute;
+    top: -5px;
+    right: -8px;
+    background: #ea580c;
+    color: #ffffff;
+    font-size: 9.5px;
+    font-weight: 800;
+    min-width: 17px;
+    height: 17px;
+    line-height: 17px;
+    text-align: center;
+    border-radius: 999px;
+    padding: 0 4px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 5px rgba(234, 88, 12, 0.35);
+  }
+
+  /* Drawer and Modal Safe Area */
+  .emdief-mobile-drawer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+}
