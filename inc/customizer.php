@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_customize_register(WP_Customize_Manager $wp_customize): void {
+function mis360_customize_register($wp_customize) {
     // 1. Emdief Home Genel Ayarlar Paneli
     $wp_customize->add_panel('emdief_theme_options', [
         'title'       => __('Emdief Home & Montessori Ayarları', 'mis360-furniture'),

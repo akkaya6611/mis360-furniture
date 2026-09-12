@@ -5,15 +5,12 @@
  * @package Mis360-Furniture
  */
 
-
 if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_furniture_scripts(): void {
-    // Dequeue WooCommerce default layout floats if causing narrow columns
-    // wp_dequeue_style('woocommerce-layout');
-    // 1. Google Fonts: Plus Jakarta Sans (Hafif ve modern tipografi)
+function mis360_furniture_scripts() {
+    // 1. Google Fonts: Plus Jakarta Sans
     wp_enqueue_style(
         'mis360-fonts',
         'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap',
@@ -42,21 +39,18 @@ function mis360_furniture_scripts(): void {
         wp_enqueue_style(
             'mis360-woocommerce',
             MIS360_FURNITURE_URI . '/assets/css/woocommerce.css',
-            ['mis360-main', 'woocommerce-general', 'woocommerce-layout'],
+            ['mis360-main'],
             MIS360_FURNITURE_VERSION
         );
     }
 
-    // 5. Ana Tema Scripti (Vanilla JS, Defer)
+    // 5. Ana Tema Scripti (Vanilla JS)
     wp_enqueue_script(
         'mis360-main-js',
         MIS360_FURNITURE_URI . '/assets/js/main.js',
         [],
         MIS360_FURNITURE_VERSION,
-        [
-            'strategy'  => 'defer',
-            'in_footer' => true,
-        ]
+        true
     );
 
     // 6. WooCommerce AJAX Sepet ve Çekmece Scripti
@@ -66,10 +60,7 @@ function mis360_furniture_scripts(): void {
             MIS360_FURNITURE_URI . '/assets/js/ajax-cart.js',
             ['mis360-main-js'],
             MIS360_FURNITURE_VERSION,
-            [
-                'strategy'  => 'defer',
-                'in_footer' => true,
-            ]
+            true
         );
 
         $free_shipping_min = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
@@ -85,3 +76,4 @@ function mis360_furniture_scripts(): void {
     }
 }
 add_action('wp_enqueue_scripts', 'mis360_furniture_scripts');
+

@@ -13,11 +13,14 @@ if (!defined('ABSPATH')) {
 /**
  * Sepet İkonu ve Sayacı (Header için AJAX Fragmanı)
  */
-function mis360_cart_count_fragment(array $fragments): array {
+function mis360_cart_count_fragment($fragments) {
+    if (!is_array($fragments)) {
+        $fragments = [];
+    }
     ob_start();
     ?>
     <span class="emdief-cart-count" id="emdief-cart-count">
-        <?php echo WC()->cart ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?>
+        <?php echo (function_exists('WC') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?>
     </span>
     <?php
     $fragments['#emdief-cart-count'] = ob_get_clean();
@@ -28,7 +31,10 @@ add_filter('woocommerce_add_to_cart_fragments', 'mis360_cart_count_fragment');
 /**
  * Mini-Cart Çekmece Fragmanı (Drawer Cart İçeriği)
  */
-function mis360_drawer_cart_fragment(array $fragments): array {
+function mis360_drawer_cart_fragment($fragments) {
+    if (!is_array($fragments)) {
+        $fragments = [];
+    }
     ob_start();
     mis360_render_drawer_cart_content();
     $fragments['#emdief-drawer-cart-content'] = ob_get_clean();
@@ -39,10 +45,10 @@ add_filter('woocommerce_add_to_cart_fragments', 'mis360_drawer_cart_fragment');
 /**
  * Çekmece Sepet İçeriği HTML Üreticisi
  */
-function mis360_render_drawer_cart_content(): void {
-    $cart = WC()->cart;
+function mis360_render_drawer_cart_content() {
+    $cart = (function_exists('WC') && WC()) ? WC()->cart : null;
     $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
-    $cart_subtotal = $cart ? (float) $cart->get_subtotal() : 0.0;
+    $cart_subtotal = ($cart && method_exists($cart, 'get_subtotal')) ? (float) $cart->get_subtotal() : 0.0;
     $diff = $free_shipping_limit - $cart_subtotal;
     $percent = min(100, max(0, ($cart_subtotal / ($free_shipping_limit ?: 1)) * 100));
     ?>
@@ -56,7 +62,7 @@ function mis360_render_drawer_cart_content(): void {
                 <div class="meter-bar"><div class="meter-fill full" style="width: 100%;"></div></div>
             <?php else: ?>
                 <div class="meter-text">
-                    🚚 Ücretsiz kargo için sepetinize <strong><?php echo wc_price(max(0, $diff)); ?></strong> değerinde ürün daha ekleyin!
+                    🚚 Ücretsiz kargo için sepetinize <strong><?php echo function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL'; ?></strong> değerinde ürün daha ekleyin!
                 </div>
                 <div class="meter-bar"><div class="meter-fill" style="width: <?php echo esc_attr((string) $percent); ?>%;"></div></div>
             <?php endif; ?>
@@ -144,7 +150,7 @@ function mis360_render_drawer_cart_content(): void {
 /**
  * Ürün Kartlarında İndirim Yüzdesi ve Montessori Rozetleri
  */
-function mis360_product_badges(): void {
+function mis360_product_badges() {
     global $product;
     if (!$product) return;
 
@@ -172,7 +178,7 @@ add_action('woocommerce_before_shop_loop_item_title', 'mis360_product_badges', 9
 /**
  * Ürün Detay Sayfası Güven Rozetleri ve Montessori Bilgisi
  */
-function mis360_single_product_trust_box(): void {
+function mis360_single_product_trust_box() {
     ?>
     <div class="emdief-single-trust">
         <div class="trust-pill">
@@ -199,7 +205,7 @@ add_action('woocommerce_single_product_summary', 'mis360_single_product_trust_bo
 /**
  * Ürün Detay Sayfası - Sepete Ekle Yanında WhatsApp Soru Sor Butonu
  */
-function mis360_single_product_whatsapp_button(): void {
+function mis360_single_product_whatsapp_button() {
     global $product;
     if (!$product) {
         return;
@@ -235,7 +241,7 @@ add_action('woocommerce_after_add_to_cart_button', 'mis360_single_product_whatsa
 /**
  * Ziyaretçi Son Gezilen Ürünleri Çerezde Saklama (PHP Cookie Tracker)
  */
-function mis360_track_recently_viewed_products(): void {
+function mis360_track_recently_viewed_products() {
     if (!is_singular('product')) {
         return;
     }
@@ -253,14 +259,17 @@ function mis360_track_recently_viewed_products(): void {
     array_unshift($viewed_ids, $product_id);
     $viewed_ids = array_slice($viewed_ids, 0, 12);
 
-    setcookie('emdief_recently_viewed', implode('|', $viewed_ids), time() + (86400 * 30), COOKIEPATH ? COOKIEPATH : '/', COOKIE_DOMAIN);
+    $cookie_path = defined('COOKIEPATH') && COOKIEPATH ? COOKIEPATH : '/';
+    $cookie_domain = defined('COOKIE_DOMAIN') ? COOKIE_DOMAIN : '';
+
+    @setcookie('emdief_recently_viewed', implode('|', $viewed_ids), time() + (86400 * 30), $cookie_path, $cookie_domain);
 }
 add_action('template_redirect', 'mis360_track_recently_viewed_products');
 
 /**
  * Ürün Detay Altı: Akıllı Ürün Sliderı (Son Gezilenler veya Benzer Ürünler)
  */
-function mis360_single_product_smart_slider(): void {
+function mis360_single_product_smart_slider() {
     global $product;
     if (!$product) {
         return;

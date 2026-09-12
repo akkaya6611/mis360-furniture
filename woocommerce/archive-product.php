@@ -44,7 +44,7 @@ mis360_breadcrumbs();
 
             <?php if (wc_get_loop_prop('total')): ?>
                 <?php while (have_posts()): the_post(); ?>
-                    <?php wc_get_template_part('woocommerce/content-product'); ?>
+                    <?php wc_get_template_part('content', 'product'); ?>
                 <?php endwhile; ?>
             <?php endif; ?>
 

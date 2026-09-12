@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_furniture_setup(): void {
+function mis360_furniture_setup() {
     // Çeviri desteği
     load_theme_textdomain('mis360-furniture', get_template_directory() . '/languages');
 

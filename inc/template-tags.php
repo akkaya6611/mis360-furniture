@@ -13,9 +13,9 @@ if (!defined('ABSPATH')) {
 /**
  * Modern Crisp SVG Icon Helper
  */
-function mis360_icon(string $name, int $size = 20, string $class = ''): string {
+function mis360_icon($name, $size = 20, $class = '') {
     $class_attr = $class ? ' class="mis360-svg ' . esc_attr($class) . '"' : ' class="mis360-svg"';
-    $style_attr = sprintf(' style="width:%dpx;height:%dpx;"', $size, $size);
+    $style_attr = sprintf(' style="width:%dpx;height:%dpx;"', (int)$size, (int)$size);
 
     $icons = [
         'search' => '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />',
@@ -53,7 +53,7 @@ function mis360_icon(string $name, int $size = 20, string $class = ''): string {
 /**
  * Montessori & Kurumsal Güven Rozetleri (Header & Footer & Ürün Sayfalarında)
  */
-function mis360_render_trust_badges(): void {
+function mis360_render_trust_badges() {
     ?>
     <div class="emdief-trust-strip">
         <div class="emdief-container">
@@ -103,7 +103,7 @@ function mis360_render_trust_badges(): void {
 /**
  * Ekmek Kırıntısı (Breadcrumbs)
  */
-function mis360_breadcrumbs(): void {
+function mis360_breadcrumbs() {
     if (is_front_page()) {
         return;
     }

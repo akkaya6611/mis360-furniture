@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-function mis360_output_json_ld(): void {
+function mis360_output_json_ld() {
     // 1. Organization & Brand Schema
     $org_schema = [
         '@context' => 'https://schema.org',
