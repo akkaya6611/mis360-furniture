@@ -10,6 +10,13 @@ if (!defined('ABSPATH')) {
 }
 
 function mis360_mobilya_scripts() {
+    $theme_dir   = get_template_directory();
+    $style_ver   = file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.2.0';
+    $main_css_ver = file_exists($theme_dir . '/assets/css/main.css') ? filemtime($theme_dir . '/assets/css/main.css') : '1.2.0';
+    $wc_css_ver  = file_exists($theme_dir . '/assets/css/woocommerce.css') ? filemtime($theme_dir . '/assets/css/woocommerce.css') : '1.2.0';
+    $main_js_ver = file_exists($theme_dir . '/assets/js/main.js') ? filemtime($theme_dir . '/assets/js/main.js') : '1.2.0';
+    $cart_js_ver = file_exists($theme_dir . '/assets/js/ajax-cart.js') ? filemtime($theme_dir . '/assets/js/ajax-cart.js') : '1.2.0';
+
     // 1. Google Fonts: Plus Jakarta Sans
     wp_enqueue_style(
         'mis360-fonts',
@@ -23,7 +30,7 @@ function mis360_mobilya_scripts() {
         'mis360-style',
         get_stylesheet_uri(),
         [],
-        MIS360_MOBILYA_VERSION
+        $style_ver
     );
 
     // 3. Ana Arayüz Stilleri (assets/css/main.css)
@@ -31,7 +38,7 @@ function mis360_mobilya_scripts() {
         'mis360-main',
         MIS360_MOBILYA_URI . '/assets/css/main.css',
         ['mis360-style'],
-        MIS360_MOBILYA_VERSION
+        $main_css_ver
     );
 
     // 4. WooCommerce Özel Stilleri (Sadece WooCommerce aktifken)
@@ -40,7 +47,7 @@ function mis360_mobilya_scripts() {
             'mis360-woocommerce',
             MIS360_MOBILYA_URI . '/assets/css/woocommerce.css',
             ['mis360-main'],
-            MIS360_MOBILYA_VERSION
+            $wc_css_ver
         );
     }
 
@@ -49,7 +56,7 @@ function mis360_mobilya_scripts() {
         'mis360-main-js',
         MIS360_MOBILYA_URI . '/assets/js/main.js',
         [],
-        MIS360_MOBILYA_VERSION,
+        $main_js_ver,
         true
     );
 
@@ -59,7 +66,7 @@ function mis360_mobilya_scripts() {
             'mis360-ajax-cart',
             MIS360_MOBILYA_URI . '/assets/js/ajax-cart.js',
             ['mis360-main-js'],
-            MIS360_MOBILYA_VERSION,
+            $cart_js_ver,
             true
         );
 
