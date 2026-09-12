@@ -49,7 +49,10 @@ remove_action('wp_head', 'wp_shortlink_wp_head');
  * Otomatik Hesabim (My Account) Sayfasi Olusturucu
  */
 function mis360_ensure_my_account_page(): void {
-    if (!get_page_by_path('my-account')) {
+    if (!function_exists('get_page_by_path')) {
+        return;
+    }
+    if (!get_page_by_path('my-account', OBJECT, 'page')) {
         wp_insert_post([
             'post_title'     => 'Hesabım',
             'post_name'      => 'my-account',
@@ -60,7 +63,7 @@ function mis360_ensure_my_account_page(): void {
         ]);
     }
 }
-add_action('after_setup_theme', 'mis360_ensure_my_account_page');
+add_action('after_switch_theme', 'mis360_ensure_my_account_page');
 
 
 /**
@@ -114,7 +117,7 @@ add_action('admin_init', 'mis360_check_woocommerce_dependency');
  * WooCommerce Türkçe Dil Desteği Yükleyici
  */
 function mis360_load_woocommerce_turkish_translations(): void {
-    if (get_locale() === 'tr_TR') {
+    if (!is_admin() && get_locale() === 'tr_TR') {
         $mo_file = MIS360_FURNITURE_DIR . '/languages/woocommerce-tr_TR.mo';
         if (file_exists($mo_file)) {
             load_textdomain('woocommerce', $mo_file);
