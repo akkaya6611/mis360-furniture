@@ -20,14 +20,20 @@ mis360_breadcrumbs();
             <h1 class="shop-banner-title">
                 <?php woocommerce_page_title(); ?>
             </h1>
-            <p class="shop-banner-sub">
-                Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve eğitici kitaplık koleksiyonu.
-            </p>
+            <?php
+            $term_desc = is_product_taxonomy() ? term_description() : '';
+            if (!empty($term_desc)): ?>
+                <div class="shop-banner-sub"><?php echo wp_kses_post($term_desc); ?></div>
+            <?php else: ?>
+                <p class="shop-banner-sub">
+                    <?php esc_html_e('Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve eğitici kitaplık koleksiyonu.', 'mis360-mobilya'); ?>
+                </p>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<div class="emdief-container py-8">
+<div class="emdief-container emdief-shop-content">
     <div class="emdief-shop-wrapper">
         <!-- Üst Filtre & Sıralama Barı -->
         <div class="emdief-shop-toolbar">
