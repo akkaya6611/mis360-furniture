@@ -382,7 +382,7 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons;
                             <div class="promo-left">
                                 <div class="promo-badge-tag">ÖZEL KULÜP AYRICALIĞI</div>
                                 <h3 class="promo-heading">Montessori Aile Kulübü %10 İndirim Kuponunuz</h3>
-                                <p class="promo-desc">1. Sınıf MDF kitaplık, öğrenme kulesi ve çocuk çalışma masalarında geçerlidir.</p>
+                                <p class="promo-desc">1. Sınıf MDF kitaplık, eğitici ahşap oyuncaklar ve çocuk odası düzenleyicilerinde geçerlidir.</p>
                             </div>
                             <div class="promo-right">
                                 <div class="coupon-pill-wrap">

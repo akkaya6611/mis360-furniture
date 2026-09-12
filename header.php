@@ -69,7 +69,7 @@ if (!defined('ABSPATH')) {
             <div class="emdief-search-box">
                 <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                     <div class="search-input-wrapper">
-                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, öğrenme kulesi veya ürün adı arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, ahşap oyuncak veya ürün adı arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
                         <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                             <?php echo mis360_icon('search', 20); ?>
@@ -80,8 +80,8 @@ if (!defined('ABSPATH')) {
                     <span class="tags-label"><?php esc_html_e('Trend:', 'mis360-mobilya'); ?></span>
                     <a href="<?php echo esc_url(home_url('/?s=carmen&post_type=product')); ?>">Carmen</a>
                     <a href="<?php echo esc_url(home_url('/?s=safir&post_type=product')); ?>">Safir</a>
-                    <a href="<?php echo esc_url(home_url('/?s=kitaplik&post_type=product')); ?>">Montessori Kitaplık</a>
-                    <a href="<?php echo esc_url(home_url('/?s=masa&post_type=product')); ?>">Çocuk Masası</a>
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/?s=kitapl%C4%B1k&post_type=product')); ?>">Kitaplık</a>
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>">Oyuncak</a>
                 </div>
             </div>
 
@@ -131,7 +131,7 @@ if (!defined('ABSPATH')) {
         <div class="emdief-mobile-search-bar" id="emdief-mobile-search-bar">
             <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                 <div class="search-input-wrapper">
-                    <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, masa, öğrenme kulesi...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                    <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, ahşap oyuncak...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                     <input type="hidden" name="post_type" value="product">
                     <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                         <?php echo mis360_icon('search', 18); ?>
@@ -157,10 +157,9 @@ if (!defined('ABSPATH')) {
                     <?php if (class_exists('WooCommerce')): ?>
                         <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
                     <?php endif; ?>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>"><?php esc_html_e('Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Masa & Sandalye', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyici', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>"><?php esc_html_e('Oyuncaklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
                     <li class="menu-item-has-children">
                         <a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Kurumsal', 'mis360-mobilya'); ?> <span class="nav-arrow-down">▾</span></a>
                         <ul class="sub-menu">
@@ -222,10 +221,9 @@ if (!defined('ABSPATH')) {
                     <?php if (class_exists('WooCommerce')): ?>
                         <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">🛍️ <?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
                     <?php endif; ?>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>">📚 <?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>">🪜 <?php esc_html_e('Mutfak Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>">🎨 <?php esc_html_e('Çocuk Aktivite Masası & Sandalye', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyici', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">🧸 <?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>">📚 <?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>">🧸 <?php esc_html_e('Ahşap Oyuncaklar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">📦 <?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">ℹ️ <?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('Teslimat ve İade Koşulları', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>">🛡️ <?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>

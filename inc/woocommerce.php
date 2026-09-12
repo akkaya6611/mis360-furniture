@@ -674,14 +674,14 @@ function mis360_cart_free_shipping_popup() {
             <div class="fs-popup-quick-links">
                 <span class="quick-links-title"><?php esc_html_e('Sepeti Kolayca Tamamlayabileceğiniz Ürünler:', 'mis360-mobilya'); ?></span>
                 <div class="quick-links-chips">
-                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>" class="chip-item">
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>" class="chip-item">
                         <span>📚 Montessori Kitaplıklar</span>
                     </a>
-                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>" class="chip-item">
-                        <span>🏰 Öğrenme Kuleleri</span>
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>" class="chip-item">
+                        <span>🧸 Ahşap Oyuncaklar</span>
                     </a>
-                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>" class="chip-item">
-                        <span>🎨 Masa & Sandalye</span>
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/shop/?s=raf')); ?>" class="chip-item">
+                        <span>🖼️ Duvar & Banyo Rafları</span>
                     </a>
                 </div>
             </div>
@@ -1058,5 +1058,49 @@ function mis360_cart_live_order_toast() {
 }
 add_action('wp_footer', 'mis360_cart_live_order_toast', 35);
 
+/**
+ * Türkçe Karakterleri Esnek Eşleştiren Akıllı Arama Geliştiricisi
+ * 
+ * Kullanıcı "kitaplik", "cocuk", "ahsap" gibi İngilizce harflerle arasa dahi
+ * veritabanındaki "Kitaplık", "Çocuk", "Ahşap" ürünlerini de eşleştirir.
+ */
+function mis360_turkish_search_expansion($search, $wp_query) {
+    if (empty($search) || is_admin() || !$wp_query->is_search()) {
+        return $search;
+    }
 
+    $raw_s = $wp_query->get('s');
+    if (empty($raw_s) || strlen($raw_s) < 2) {
+        return $search;
+    }
 
+    // Türkçe karakter dönüşüm haritaları
+    $tr_from = ['i', 'c', 's', 'g', 'u', 'o'];
+    $tr_to   = ['ı', 'ç', 'ş', 'ğ', 'ü', 'ö'];
+    $tr_variant = str_replace($tr_from, $tr_to, mb_strtolower($raw_s, 'UTF-8'));
+
+    // Ters dönüşüm (örn: kullanıcı 'ı' yazdıysa 'i' halini de destekle)
+    $en_variant = str_replace($tr_to, $tr_from, mb_strtolower($raw_s, 'UTF-8'));
+
+    $variants = array_unique(array_filter([$tr_variant, $en_variant], function($v) use ($raw_s) {
+        return $v !== mb_strtolower($raw_s, 'UTF-8');
+    }));
+
+    if (!empty($variants)) {
+        global $wpdb;
+        $clauses = [];
+        foreach ($variants as $v) {
+            $like = '%' . $wpdb->esc_like($v) . '%';
+            $clauses[] = $wpdb->prepare("({$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_content LIKE %s)", $like, $like);
+        }
+
+        if (!empty($clauses)) {
+            $extra_sql = ' OR ' . implode(' OR ', $clauses);
+            // WordPress posts_search sonundaki kapanış parantezinden önce ekle
+            $search = preg_replace('/\)\s*$/', $extra_sql . ')', $search);
+        }
+    }
+
+    return $search;
+}
+add_filter('posts_search', 'mis360_turkish_search_expansion', 20, 2);

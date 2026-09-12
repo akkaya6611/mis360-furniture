@@ -37,17 +37,17 @@ get_header();
                 </div>
                 <span class="story-name">Safir MDF</span>
             </a>
-            <a href="<?php echo esc_url(home_url('/?s=kule&post_type=product')); ?>" class="story-item">
+            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>" class="story-item">
                 <div class="story-ring ring-emerald">
-                    <div class="story-inner">🪜</div>
+                    <div class="story-inner">🧸</div>
                 </div>
-                <span class="story-name">Öğrenme Kulesi</span>
+                <span class="story-name">Ahşap Oyuncak</span>
             </a>
-            <a href="<?php echo esc_url(home_url('/?s=masa&post_type=product')); ?>" class="story-item">
+            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/?s=raf&post_type=product')); ?>" class="story-item">
                 <div class="story-ring ring-blue">
-                    <div class="story-inner">🎨</div>
+                    <div class="story-inner">🖼️</div>
                 </div>
-                <span class="story-name">Masa & Sandalye</span>
+                <span class="story-name">Duvar Rafları</span>
             </a>
             <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="story-item">
                 <div class="story-ring ring-purple">
@@ -97,21 +97,21 @@ get_header();
                         </div>
                     </div>
 
-                    <!-- Slayt 2: Öğrenme Kuleleri -->
+                    <!-- Slayt 2: Eğitici Ahşap Oyuncaklar -->
                     <div class="hero-slide-item">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Öğrenme Kulesi" class="slide-bg-cover">
+                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Eğitici Ahşap Oyuncaklar" class="slide-bg-cover">
                         <div class="slide-overlay-gradient"></div>
                         <div class="slide-caption-box">
-                            <span class="slide-tag-pill badge-emerald">✨ MİNİK ŞEFLER İŞ BAŞINDA</span>
-                            <h2 class="slide-headline">Ayarlanabilir 1. Sınıf MDF<br>Öğrenme Kuleleri</h2>
-                            <p class="slide-lead">Mutfakta kek yapma ve tezgaha erişimde tam bağımsızlık. Kilitli güvenlik barıyla %100 emniyetli.</p>
+                            <span class="slide-tag-pill badge-emerald">🧸 DOĞAL &amp; EĞİTİCİ OYUNCAKLAR</span>
+                            <h2 class="slide-headline">Doğal Ahşap Eğitici<br>Çocuk Oyuncakları</h2>
+                            <p class="slide-lead">Çocukların motor becerilerini ve hayal gücünü geliştiren, sağlığa zararsız %100 doğal ahşap tasarımlar.</p>
                             <div class="slide-highlights">
-                                <span>🔒 Çift Kademeli Emniyet</span>
-                                <span>🪜 3 Kademeli Basamak</span>
+                                <span>🌿 Doğal Ahşap Doku</span>
+                                <span>✨ Yuvarlak Güvenli Hatlar</span>
                             </div>
                             <div class="slide-cta-group">
-                                <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="btn-hero-action">
-                                    <span>Öğrenme Kulelerini Gör</span>
+                                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="btn-hero-action">
+                                    <span>Oyuncak Koleksiyonunu Gör</span>
                                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                                 </a>
                             </div>

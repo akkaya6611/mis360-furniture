@@ -567,24 +567,80 @@ function mis360_bear_empty_cart(int $width = 200, int $height = 110, string $cla
 }
 
 /**
- * Montessori Kategori veya Akıllı Arama Bağlantısı Çözücü (404 Hatasını Önler)
+ * Montessori Kategori veya Akıllı Arama Bağlantısı Çözücü (404 ve Yanlış Arama Hatasını Önler)
  *
- * @param string $slug            Kategori slug'ı veya terim adı
- * @param string $fallback_search Kategori bulunamazsa kullanılacak akıllı arama terimi
+ * @param string|array $slug            Kategori slug'ı, slug listesi veya terim adı
+ * @param string       $fallback_search Kategori bulunamazsa kullanılacak akıllı arama terimi
  * @return string
  */
 function mis360_get_category_url($slug, $fallback_search = '') {
-    if (taxonomy_exists('product_cat')) {
-        $term = get_term_by('slug', $slug, 'product_cat');
-        if ($term && !is_wp_error($term)) {
-            return get_term_link($term);
+    if (!taxonomy_exists('product_cat')) {
+        return class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/');
+    }
+
+    // Kategori eşleşme haritası (Kullanıcı veritabanındaki gerçek slug'ları önceliklendirir)
+    $alias_map = [
+        'kitaplik'               => ['cocuk-montessori-kitaplik', 'montessori-kitapliklar', 'montessori-kitaplik', 'kitapliklar', 'kitaplik'],
+        'montessori-kitapliklar' => ['cocuk-montessori-kitaplik', 'montessori-kitapliklar', 'montessori-kitaplik', 'kitapliklar', 'kitaplik'],
+        'cocuk-montessori-kitaplik' => ['cocuk-montessori-kitaplik', 'montessori-kitapliklar', 'montessori-kitaplik', 'kitapliklar', 'kitaplik'],
+        'oyuncak'                => ['ahsap-oyuncak', 'ahsap-oyuncaklar', 'oyuncaklar', 'oyuncak', 'egitici-oyuncaklar'],
+        'oyuncaklar'             => ['ahsap-oyuncak', 'ahsap-oyuncaklar', 'oyuncaklar', 'oyuncak', 'egitici-oyuncaklar'],
+        'ahsap-oyuncak'          => ['ahsap-oyuncak', 'ahsap-oyuncaklar', 'oyuncaklar', 'oyuncak'],
+        'ogrenme-kulesi'         => ['ahsap-oyuncak', 'ogrenme-kulesi', 'ogrenme-kuleleri'],
+        'duzenleyici'            => ['duzenleyiciler', 'duzenleyici', 'duvar-rafi', 'banyo-raflari', 'askilik', 'dekoratif-kutu'],
+        'duzenleyiciler'         => ['duzenleyiciler', 'duzenleyici', 'duvar-rafi', 'banyo-raflari', 'askilik', 'dekoratif-kutu'],
+        'duvar-rafi'             => ['duvar-rafi', 'duzenleyiciler', 'banyo-raflari'],
+        'banyo-raflari'          => ['banyo-raflari', 'duvar-rafi', 'duzenleyiciler'],
+    ];
+
+    $candidates = [];
+    if (is_array($slug)) {
+        $candidates = $slug;
+    } elseif (isset($alias_map[$slug])) {
+        $candidates = $alias_map[$slug];
+    } else {
+        $candidates = [$slug];
+    }
+
+    // 1. Slug veya Ad ile doğrudan eşleşme ara
+    foreach ($candidates as $candidate) {
+        $term = get_term_by('slug', $candidate, 'product_cat');
+        if (!$term) {
+            $term = get_term_by('name', $candidate, 'product_cat');
         }
-        $term_by_name = get_term_by('name', $slug, 'product_cat');
-        if ($term_by_name && !is_wp_error($term_by_name)) {
-            return get_term_link($term_by_name);
+        if ($term && !is_wp_error($term)) {
+            $link = get_term_link($term, 'product_cat');
+            if (!is_wp_error($link)) {
+                return $link;
+            }
         }
     }
 
+    // 2. Kısmi eşleşme ara (Örn: adında veya slug'ında 'kitap' veya 'oyuncak' geçen ilk kategori)
+    $search_key = is_array($slug) ? reset($slug) : $slug;
+    if (strpos($search_key, 'kitap') !== false) {
+        $terms = get_terms([
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => false,
+            'name__like' => 'Kitap',
+            'number'     => 1,
+        ]);
+        if (!empty($terms) && !is_wp_error($terms)) {
+            return get_term_link($terms[0], 'product_cat');
+        }
+    } elseif (strpos($search_key, 'oyuncak') !== false) {
+        $terms = get_terms([
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => false,
+            'name__like' => 'Oyuncak',
+            'number'     => 1,
+        ]);
+        if (!empty($terms) && !is_wp_error($terms)) {
+            return get_term_link($terms[0], 'product_cat');
+        }
+    }
+
+    // 3. Fallback olarak Mağaza veya Türkçe Doğru Arama
     if (class_exists('WooCommerce')) {
         $shop_url = wc_get_page_permalink('shop');
         if ($fallback_search) {
@@ -593,6 +649,6 @@ function mis360_get_category_url($slug, $fallback_search = '') {
         return $shop_url;
     }
 
-    return home_url('/?s=' . urlencode($fallback_search ?: $slug) . '&post_type=product');
+    return home_url('/?s=' . urlencode($fallback_search ?: (is_array($slug) ? reset($slug) : $slug)) . '&post_type=product');
 }
 

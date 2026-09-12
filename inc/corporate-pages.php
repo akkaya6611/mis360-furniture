@@ -155,7 +155,7 @@ function mis360_get_corporate_pages_data() {
     Web sitesinden sipariş oluşturan, fatura ve teslimat bilgilerini giren gerçek veya tüzel kişi ("Alıcı").</p>
 
     <h2>MADDE 2 – SÖZLEŞMENİN KONUSU</h2>
-    <p>İşbu sözleşmenin konusu; Alıcı\'nın Satıcı\'ya ait web sitesi üzerinden elektronik ortamda siparişini verdiği, sitede nitelikleri ve satış fiyatı belirtilen 1. sınıf MDF Montessori çocuk mobilyaları (Montessori kitaplıklar, öğrenme kuleleri, çocuk aktivite masa ve sandalye takımları, oyuncak düzenleyiciler, açık askılıklar) ve tamamlayıcı çocuk odası ürünlerinin satışı ve teslimi ile ilgili olarak tarafların hak ve yükümlülüklerinin belirlenmesidir.</p>
+    <p>İşbu sözleşmenin konusu; Alıcı\'nın Satıcı\'ya ait web sitesi üzerinden elektronik ortamda siparişini verdiği, sitede nitelikleri ve satış fiyatı belirtilen 1. sınıf MDF Montessori çocuk mobilyaları (Montessori kitaplıklar, eğitici ahşap oyuncaklar, oyuncak ve eşya düzenleyiciler, açık askılıklar ve duvar rafları) ve tamamlayıcı çocuk odası ürünlerinin satışı ve teslimi ile ilgili olarak tarafların hak ve yükümlülüklerinin belirlenmesidir.</p>
 
     <h2>MADDE 3 – SİPARİŞ VE ÖDEME KOŞULLARI</h2>
     <ul>
@@ -239,8 +239,8 @@ function mis360_get_corporate_pages_data() {
     <p>Geleneksel mobilyalar genellikle yetişkinlerin boyuna ve ihtiyaçlarına göre tasarlanır; bu durum çocukların istedikleri kitaba, oyuncağa veya çalışma alanına erişmek için sürekli bir büyükten yardım istemesine yol açar. Emdief Home olarak biz, mobilyalarımızın boyutlarını çocukların doğal ergonomisine ve bağımsız gelişim metoduna göre planlıyoruz:</p>
     <ul>
         <li><strong>Erişilebilir Montessori Kitaplıklar:</strong> Kitapların kapaklarının doğrudan çocuğa baktığı ön yüzlü raflarımız sayesinde çocuklar henüz okuma yazma bilmeseler dahi kapak resmini görerek istedikleri kitabı kendi başlarına seçer ve yerine koyar.</li>
-        <li><strong>Mutfak Öğrenme Kuleleri & Güvenli Basamaklar:</strong> Mutfakta tezgaha veya banyoda lavaboya güvenli yükseklik sağlayarak miniklerin yemek hazırlamaya, el yıkamaya ve aile içi aktivitelere bağımsız katılımını teşvik eder.</li>
-        <li><strong>Çocuk Aktivite Masaları ve Sandalye Takımları:</strong> Omurga sağlığını destekleyen ergonomik oturumla çizim, boyama, montaj ve oyun saatlerini keyifli bir öğrenme ortamına dönüştürür.</li>
+        <li><strong>Eğitici Ahşap Çocuk Oyuncakları:</strong> Motor becerilerini, el-göz koordinasyonunu ve yaratıcılığı geliştiren %100 doğal ahşap eğitici materyaller ve oyun arkadaşları.</li>
+        <li><strong>Duvar ve Banyo Rafları:</strong> Çocukların boy hizasına uygun, emniyetli koruma barlı ve dekoratif montajlı estetik raf çözümleri.</li>
         <li><strong>Montessori Oyuncak Düzenleyiciler & Saklama Çözümleri:</strong> Çocukların kendi boy seviyesinde oyuncaklarını kategorize etmelerini ve odalarını toplama alışkanlığı kazanmalarını sağlayan fonksiyonel bölmeler.</li>
         <li><strong>Montessori Çocuk Gardıropları & Açık Askılıklar:</strong> Çocukların kendi kıyafetlerini seçip asabilmelerine olanak tanıyan, bağımsız giyinme becerisini geliştiren alçak askı sistemleri.</li>
     </ul>
@@ -353,7 +353,7 @@ function mis360_setup_corporate_pages() {
                 if (strpos($existing->post_content, 'Banka Havalesi') === false && in_array($slug, ['gizlilik-ve-kvkk', 'mesafeli-satis-sozlesmesi', 'teslimat-ve-iade'], true)) {
                     $needs_refresh = true;
                 }
-                if (strpos($existing->post_content, 'öğrenme kuleleri') === false && in_array($slug, ['hakkimizda', 'mesafeli-satis-sozlesmesi'], true)) {
+                if (strpos($existing->post_content, 'Eğitici Ahşap Çocuk Oyuncakları') === false && in_array($slug, ['hakkimizda', 'mesafeli-satis-sozlesmesi'], true)) {
                     $needs_refresh = true;
                 }
             }

@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
                     <span class="footer-logo-fallback" style="display:none; font-weight:800; font-size:1.4rem; color:var(--emd-text-main);">Emdief<span style="color:var(--emd-primary);">Home</span></span>
                 </div>
                 <p class="footer-desc">
-                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve öğrenme heveslerini destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları üreticisidir. Montessori kitaplıklardan öğrenme kulelerine, aktivite masalarından düzenleyicilere tüm ürünlerimiz sivri kenar barındırmayan yuvarlatılmış güvenli hatlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
+                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve yaratıcılıklarını destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları ve eğitici ahşap ürünler üreticisidir. Montessori kitaplıklardan eğitici ahşap oyuncaklara, duvar raflarından oda düzenleyicilerine tüm ürünlerimiz sivri kenar barındırmayan yuvarlatılmış güvenli hatlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
                 </p>
                 <div class="footer-cert-badges">
                     <span class="cert-pill">🛡️ 1. Sınıf MDF</span>
@@ -49,10 +49,10 @@ if (!defined('ABSPATH')) {
                 } else {
                     ?>
                     <ul class="footer-links">
-                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>"><?php esc_html_e('Mutfak Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
-                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Çocuk Aktivite Masası & Sandalye', 'mis360-mobilya'); ?></a></li>
-                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyici', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>"><?php esc_html_e('Eğitici Ahşap Oyuncaklar', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/shop/?s=raf')); ?>"><?php esc_html_e('Duvar & Banyo Rafları', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Koleksiyonu', 'mis360-mobilya'); ?></a></li>
                     </ul>
                     <?php
