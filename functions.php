@@ -22,6 +22,7 @@ $mis360_includes = [
     '/inc/template-tags.php',  // SVG ikonlar, rozetler ve yardımcı fonksiyonlar
     '/inc/customizer.php',     // Tema ayarları (Duyuru çubuğu, telefon, kargo limiti)
     '/inc/seo-schema.php',     // Schema.org Product ve Organization
+    '/inc/theme-updater.php',  // GitHub Otomatik Güncelleyici
 ];
 
 foreach ($mis360_includes as $inc_file) {
