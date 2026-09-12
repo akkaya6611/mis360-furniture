@@ -2195,5 +2195,430 @@ ul.products {
   margin-top: 1.5rem;
 }
 
+/* --------------------------------------------------------------------------
+   6. SEPET ÜCRETSİZ KARGO POPUP & HATIRLATMA BARI (v1.4.0)
+   -------------------------------------------------------------------------- */
+.emdief-shipping-popup-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.emdief-shipping-popup-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.emdief-shipping-popup-modal {
+  background: #ffffff;
+  width: 100%;
+  max-width: 520px;
+  border-radius: 24px;
+  padding: 2.25rem 2rem 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(229, 221, 211, 0.8);
+  position: relative;
+  text-align: center;
+  transform: scale(0.92) translateY(18px);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.emdief-shipping-popup-backdrop.is-open .emdief-shipping-popup-modal {
+  transform: scale(1) translateY(0);
+}
+
+.fs-popup-close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 36px;
+  height: 36px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.fs-popup-close-btn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  transform: rotate(90deg);
+}
+
+.fs-popup-header {
+  margin-bottom: 1.5rem;
+}
+
+.fs-popup-mascot-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 0.85rem;
+  animation: fsMascotFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes fsMascotFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.fs-mascot-badge {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #8c6246;
+  background: #faf6f0;
+  border: 1px solid #e5ddd3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-top: 0.4rem;
+  letter-spacing: 0.03em;
+}
+
+.fs-popup-tag-row {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.fs-popup-tag {
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.fs-popup-save-badge {
+  background: #fef3c7;
+  color: #b45309;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+
+.fs-popup-title {
+  font-size: 1.55rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0.35rem 0 0.5rem;
+  line-height: 1.25;
+}
+
+.fs-popup-subtitle {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.fs-highlight-diff {
+  color: #ea580c;
+  font-weight: 900;
+  font-size: 1.05rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fs-shipping-fee-val {
+  color: #b45309;
+  font-weight: 800;
+}
+
+/* Sayaç Kartı */
+.fs-popup-meter-card {
+  background: linear-gradient(135deg, #faf8f5 0%, #f7ede2 100%);
+  border: 1px solid #e5ddd3;
+  border-radius: 16px;
+  padding: 1.15rem 1.25rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.fs-meter-labels {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.fs-meter-labels strong {
+  color: #1e293b;
+  font-weight: 800;
+}
+
+.fs-meter-track {
+  position: relative;
+  height: 12px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: visible;
+  margin-bottom: 0.6rem;
+}
+
+.fs-meter-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  min-width: 14px;
+}
+
+.fs-meter-bar.is-complete {
+  background: #10b981;
+}
+
+.fs-meter-truck {
+  position: absolute;
+  right: -10px;
+  top: -9px;
+  font-size: 16px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+
+.fs-meter-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.fs-meter-percent {
+  color: #8c6246;
+  font-weight: 800;
+}
+
+.fs-meter-saving {
+  color: #15803d;
+}
+
+/* Hızlı Öneri Çipleri */
+.fs-popup-quick-links {
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.quick-links-title {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #475569;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.quick-links-chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-links-chips .chip-item {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #334155;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.quick-links-chips .chip-item:hover {
+  background: #faf6f0;
+  border-color: #8c6246;
+  color: #8c6246;
+  transform: translateY(-1px);
+}
+
+/* Aksiyonlar */
+.fs-popup-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fs-btn-shop {
+  width: 100%;
+  justify-content: center;
+  padding: 13px 20px !important;
+  font-size: 1rem !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 16px rgba(242, 122, 26, 0.3) !important;
+}
+
+.fs-btn-dismiss {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.fs-btn-dismiss:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+/* Sepet Sayfası Hatırlatma Barı */
+.emdief-cart-shipping-bar {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.08);
+  animation: emdiefFadeIn 0.3s ease;
+}
+
+.fs-bar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.fs-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.fs-bar-avatar {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.fs-bar-text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.fs-bar-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #b45309;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.fs-bar-msg {
+  font-size: 0.92rem;
+  color: #78350f;
+  line-height: 1.35;
+}
+
+.fs-fee-highlight {
+  color: #b45309;
+}
+
+.fs-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.fs-bar-trigger-btn {
+  background: #8c6246;
+  color: #ffffff;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: background 0.2s ease;
+}
+
+.fs-bar-trigger-btn:hover {
+  background: #734f36;
+}
+
+.fs-bar-shop-link {
+  background: #ffffff;
+  border: 1px solid #fde68a;
+  color: #92400e;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: all 0.2s ease;
+}
+
+.fs-bar-shop-link:hover {
+  background: #fef3c7;
+  border-color: #d97706;
+}
+
+@media (max-width: 640px) {
+  .emdief-shipping-popup-modal {
+    padding: 1.75rem 1.25rem 1.5rem;
+  }
+  .fs-popup-title {
+    font-size: 1.3rem;
+  }
+  .fs-popup-subtitle {
+    font-size: 0.88rem;
+  }
+  .fs-bar-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .fs-bar-right {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+
+
 
 

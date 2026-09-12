@@ -565,3 +565,290 @@ function mis360_cart_page_mascot_notice() {
 }
 add_action('woocommerce_before_cart', 'mis360_cart_page_mascot_notice', 15);
 
+/**
+ * Sepet Sayfasında Ücretsiz Kargo Uyarı & Teşvik Popup Modalı (v1.4.0)
+ * Gutenberg Cart Block ve Klasik Sepet ile %100 Uyumlu
+ */
+function mis360_cart_free_shipping_popup() {
+    if (!class_exists('WooCommerce')) {
+        return;
+    }
+
+    // Sadece sepet sayfasında çalıştır
+    if (!is_cart()) {
+        return;
+    }
+
+    $cart = WC()->cart;
+    if (!$cart) {
+        return;
+    }
+
+    $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+    $cart_subtotal = (float) $cart->get_subtotal();
+    $diff = $free_shipping_limit - $cart_subtotal;
+    $percent = min(100, max(0, ($cart_subtotal / ($free_shipping_limit ?: 1)) * 100));
+    $shipping_fee = 150.0; // Standart kargo ücreti
+
+    // Formatlar
+    $diff_text = function_exists('wc_price') ? wc_price(max(0, $diff)) : max(0, $diff) . ' TL';
+    $subtotal_text = function_exists('wc_price') ? wc_price($cart_subtotal) : $cart_subtotal . ' TL';
+    $limit_text = function_exists('wc_price') ? wc_price($free_shipping_limit) : $free_shipping_limit . ' TL';
+    $shipping_fee_text = function_exists('wc_price') ? wc_price($shipping_fee) : $shipping_fee . ' TL';
+    $is_empty = $cart->is_empty();
+    ?>
+    <!-- Sepet Ücretsiz Kargo Popup Modalı -->
+    <div id="emdief-cart-shipping-popup" class="emdief-shipping-popup-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="fs-popup-title">
+        <div class="emdief-shipping-popup-modal">
+            <!-- Kapatma Butonu (X) -->
+            <button type="button" class="fs-popup-close-btn" id="fs-popup-close-x" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">&times;</button>
+
+            <div class="fs-popup-header">
+                <div class="fs-popup-mascot-wrap">
+                    <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(76, 'fs-mascot-bear') : '<span style="font-size: 3rem;">🧸</span>'; ?>
+                    <span class="fs-mascot-badge"><?php esc_html_e('🧸 MASKOTTAN CANLI MESAJ', 'mis360-mobilya'); ?></span>
+                </div>
+                <div class="fs-popup-tag-row">
+                    <span class="fs-popup-tag">🚚 <?php esc_html_e('ÜCRETSİZ KARGO FIRSATI', 'mis360-mobilya'); ?></span>
+                    <span class="fs-popup-save-badge">💰 <?php printf(esc_html__('%s Kargo Bedava!', 'mis360-mobilya'), wp_strip_all_tags($shipping_fee_text)); ?></span>
+                </div>
+                <h3 id="fs-popup-title" class="fs-popup-title"><?php esc_html_e('Kargo Ücreti Ödemeyin! 🎁', 'mis360-mobilya'); ?></h3>
+                <p class="fs-popup-subtitle" id="fs-popup-desc">
+                    <?php if ($diff > 0): ?>
+                        <?php printf(__('Sepetinize sadece <strong class="fs-highlight-diff" id="fs-popup-diff-text">%s</strong> değerinde daha ürün ekleyin, <strong class="fs-shipping-fee-val">%s</strong> kargo ücreti ödemekten anında kurtulun!', 'mis360-mobilya'), $diff_text, $shipping_fee_text); ?>
+                    <?php else: ?>
+                        <?php esc_html_e('🎉 Tebrikler! Sepetiniz ücretsiz kargo limitini aştı, kargo ücreti ödemeyeceksiniz!', 'mis360-mobilya'); ?>
+                    <?php endif; ?>
+                </p>
+            </div>
+
+            <!-- İlerleme Çubuğu ve Durum -->
+            <div class="fs-popup-meter-card">
+                <div class="fs-meter-labels">
+                    <span class="fs-meter-current"><?php esc_html_e('Mevcut Sepet:', 'mis360-mobilya'); ?> <strong id="fs-popup-subtotal-text"><?php echo $subtotal_text; ?></strong></span>
+                    <span class="fs-meter-goal"><?php esc_html_e('Hedef:', 'mis360-mobilya'); ?> <strong><?php echo $limit_text; ?></strong></span>
+                </div>
+                <div class="fs-meter-track">
+                    <div class="fs-meter-bar <?php echo ($diff <= 0) ? 'is-complete' : ''; ?>" id="fs-popup-bar" style="width: <?php echo esc_attr((string) $percent); ?>%;">
+                        <span class="fs-meter-truck" title="Kargo Aracı">🚚</span>
+                    </div>
+                </div>
+                <div class="fs-meter-footer">
+                    <span class="fs-meter-percent" id="fs-popup-percent-text"><?php printf(esc_html__('%%%d Tamamlandı', 'mis360-mobilya'), round($percent)); ?></span>
+                    <span class="fs-meter-saving" id="fs-popup-saving-text">
+                        <?php if ($diff > 0): ?>
+                            🎯 <strong><?php echo esc_html(wp_strip_all_tags($shipping_fee_text)); ?></strong> <?php esc_html_e('Tasarruf Fırsatı', 'mis360-mobilya'); ?>
+                        <?php else: ?>
+                            ⭐ <?php esc_html_e('Ücretsiz Kargo Aktif', 'mis360-mobilya'); ?>
+                        <?php endif; ?>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Hızlı Kategori Önerileri (Sepeti Tamamla) -->
+            <div class="fs-popup-quick-links">
+                <span class="quick-links-title"><?php esc_html_e('Sepeti Kolayca Tamamlayabileceğiniz Ürünler:', 'mis360-mobilya'); ?></span>
+                <div class="quick-links-chips">
+                    <a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>" class="chip-item">
+                        <span>📚 Montessori Kitaplıklar</span>
+                    </a>
+                    <a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>" class="chip-item">
+                        <span>🏰 Öğrenme Kuleleri</span>
+                    </a>
+                    <a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>" class="chip-item">
+                        <span>🎨 Masa & Sandalye</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Aksiyon Butonları -->
+            <div class="fs-popup-actions">
+                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-primary btn-lg fs-btn-shop">
+                    <span>🛒 Alışverişe Devam Et (Kargo Bedava Yap)</span>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('arrow-right', 18) : '→'; ?>
+                </a>
+                <button type="button" class="fs-btn-dismiss" id="fs-popup-continue-btn">
+                    <span>Kargo Ücreti Ödeyerek Ödemeye Geç</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sepet Sayfası Üst Hatırlatma Çubuğu (Kapatıldığında da Görünür Kalır) -->
+    <div id="emdief-cart-shipping-bar" class="emdief-cart-shipping-bar" style="display: none;">
+        <div class="fs-bar-inner emdief-container">
+            <div class="fs-bar-left">
+                <span class="fs-bar-avatar">🧸</span>
+                <div class="fs-bar-text-group">
+                    <span class="fs-bar-badge"><?php esc_html_e('Kargo Tasarrufu', 'mis360-mobilya'); ?></span>
+                    <span class="fs-bar-msg" id="fs-bar-msg-text">
+                        <?php printf(__('Ücretsiz kargo için son <strong id="fs-bar-diff-text">%s</strong>! <strong class="fs-fee-highlight">%s</strong> kargo ücreti ödemekten kurtulun.', 'mis360-mobilya'), $diff_text, $shipping_fee_text); ?>
+                    </span>
+                </div>
+            </div>
+            <div class="fs-bar-right">
+                <button type="button" class="fs-bar-trigger-btn" id="fs-bar-reopen-btn">
+                    <span><?php esc_html_e('Fırsatı İncele', 'mis360-mobilya'); ?></span>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('gift', 15) : '🎁'; ?>
+                </button>
+                <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="fs-bar-shop-link">
+                    <span><?php esc_html_e('Ürün Ekle', 'mis360-mobilya'); ?></span>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('arrow-right', 14) : '→'; ?>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('emdief-cart-shipping-popup');
+        const bar = document.getElementById('emdief-cart-shipping-bar');
+        const closeX = document.getElementById('fs-popup-close-x');
+        const continueBtn = document.getElementById('fs-popup-continue-btn');
+        const reopenBtn = document.getElementById('fs-bar-reopen-btn');
+
+        const freeShippingThreshold = <?php echo (float) $free_shipping_limit; ?>;
+        const initialSubtotal = <?php echo (float) $cart_subtotal; ?>;
+        const initialIsEmpty = <?php echo $is_empty ? 'true' : 'false'; ?>;
+
+        function openModal() {
+            if (!modal) return;
+            modal.style.display = 'flex';
+            setTimeout(() => modal.classList.add('is-open'), 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.remove('is-open');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            }, 300);
+            sessionStorage.setItem('emdief_fs_popup_dismissed', '1');
+        }
+
+        // Hatırlatma çubuğunu sepet alanının en üstüne taşı
+        const cartContainer = document.querySelector('.wp-block-woocommerce-cart') || document.querySelector('.woocommerce-cart-form') || document.querySelector('.entry-content');
+        if (cartContainer && bar) {
+            cartContainer.parentNode.insertBefore(bar, cartContainer);
+        }
+
+        // Açılış mantığı
+        if (!initialIsEmpty && initialSubtotal < freeShippingThreshold && initialSubtotal > 0) {
+            // Hatırlatma çubuğunu göster
+            if (bar) bar.style.display = 'block';
+
+            // Popup daha önce bu sekmede kapatılmadıysa 700ms sonra otomatik aç
+            if (!sessionStorage.getItem('emdief_fs_popup_dismissed')) {
+                setTimeout(openModal, 700);
+            }
+        }
+
+        // Gutenberg Store API ilk yükleme kontrolü (PHP oturumu gecikmeli olsa bile garanti eder)
+        setTimeout(() => {
+            if (window.wp && window.wp.data && window.wp.data.select) {
+                const store = window.wp.data.select('wc/store/cart');
+                if (store) {
+                    const data = store.getCartData();
+                    if (data && data.totals && data.totals.total_items) {
+                        const clientSub = parseInt(data.totals.total_items, 10) / 100;
+                        if (clientSub > 0 && clientSub < freeShippingThreshold) {
+                            updateFromSubtotal(clientSub);
+                            if (bar) bar.style.display = 'block';
+                            if (!sessionStorage.getItem('emdief_fs_popup_dismissed')) {
+                                openModal();
+                            }
+                        }
+                    }
+                }
+            }
+        }, 500);
+
+        if (closeX) closeX.addEventListener('click', closeModal);
+        if (continueBtn) continueBtn.addEventListener('click', closeModal);
+        if (reopenBtn) reopenBtn.addEventListener('click', openModal);
+
+        // Arka plana tıklayınca kapat
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        }
+
+        // ESC tuşu ile kapat
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
+                closeModal();
+            }
+        });
+
+        // Dinamik Gutenberg Cart Block veya Klasik Sepet güncelleme dinleyicisi
+        function updateFromSubtotal(subtotal) {
+            if (subtotal <= 0) {
+                if (modal) modal.style.display = 'none';
+                if (bar) bar.style.display = 'none';
+                return;
+            }
+
+            const diff = Math.max(0, freeShippingThreshold - subtotal);
+            const percent = Math.min(100, Math.max(0, (subtotal / freeShippingThreshold) * 100));
+
+            const diffEl = document.getElementById('fs-popup-diff-text');
+            const subtotalEl = document.getElementById('fs-popup-subtotal-text');
+            const barEl = document.getElementById('fs-popup-bar');
+            const percentEl = document.getElementById('fs-popup-percent-text');
+            const barDiffEl = document.getElementById('fs-bar-diff-text');
+
+            const formattedDiff = diff.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' TL';
+            const formattedSub = subtotal.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' TL';
+
+            if (diffEl) diffEl.textContent = formattedDiff;
+            if (subtotalEl) subtotalEl.textContent = formattedSub;
+            if (barEl) {
+                barEl.style.width = percent + '%';
+                if (diff <= 0) barEl.classList.add('is-complete');
+                else barEl.classList.remove('is-complete');
+            }
+            if (percentEl) percentEl.textContent = '%' + Math.round(percent) + ' Tamamlandı';
+            if (barDiffEl) barDiffEl.textContent = formattedDiff;
+
+            if (diff <= 0) {
+                const descEl = document.getElementById('fs-popup-desc');
+                if (descEl) descEl.innerHTML = '🎉 <strong>Tebrikler!</strong> Sepetiniz ücretsiz kargo limitini aştı, kargo ücreti ödemeyeceksiniz!';
+                const barMsgEl = document.getElementById('fs-bar-msg-text');
+                if (barMsgEl) barMsgEl.innerHTML = '🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı!';
+            }
+        }
+
+        // Gutenberg Store API dinle
+        if (window.wp && window.wp.data && window.wp.data.subscribe) {
+            let lastSub = initialSubtotal;
+            window.wp.data.subscribe(() => {
+                const store = window.wp.data.select('wc/store/cart');
+                if (store) {
+                    const data = store.getCartData();
+                    if (data && data.totals && data.totals.total_items) {
+                        const newSub = parseInt(data.totals.total_items, 10) / 100;
+                        if (newSub !== lastSub) {
+                            lastSub = newSub;
+                            updateFromSubtotal(newSub);
+                        }
+                    }
+                }
+            });
+        }
+
+        // jQuery klasik sepet güncellemelerini dinle
+        if (window.jQuery) {
+            jQuery(document.body).on('updated_cart_totals updated_wc_div wc_fragments_refreshed', () => {
+                // Sepet güncellendiğinde gerekiyorsa tetikle
+            });
+        }
+    });
+    </script>
+    <?php
+}
+add_action('wp_footer', 'mis360_cart_free_shipping_popup', 30);
+
+
