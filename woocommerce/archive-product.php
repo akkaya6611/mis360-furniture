@@ -21,7 +21,7 @@ mis360_breadcrumbs();
                 <?php woocommerce_page_title(); ?>
             </h1>
             <p class="shop-banner-sub">
-                Montessori pedagojisine uygun, 1. sınıf E1 sertifikalı kaliteli MDF çocuk odası ve eğitici kitaplık koleksiyonu.
+                Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve eğitici kitaplık koleksiyonu.
             </p>
         </div>
     </div>

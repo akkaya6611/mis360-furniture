@@ -34,12 +34,12 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                 </div>
                 <h3 class="cart-bear-title">Ayıcık Sepetinizi Hazırlıyor! Miniklerin Dünyasını Büyütelim 🛒✨</h3>
                 <p class="cart-bear-sub">
-                    Çocuğunuzun boyuna ve ergonomisine uygun <strong>1. Sınıf E1 MDF</strong> Montessori kitaplıklarımızı sepetinize ekleyin, odasını düzenli bir keşif alanına dönüştürün.
+                    Çocuğunuzun boyuna ve ergonomisine uygun <strong>1. Sınıf MDF</strong> Montessori kitaplıklarımızı sepetinize ekleyin, odasını düzenli bir keşif alanına dönüştürün.
                 </p>
                 <div class="cart-bear-perks">
                     <span class="perk-item">🚚 <strong>1.500 ₺ Üzeri</strong> Ücretsiz Kargo</span>
                     <span class="perk-sep">•</span>
-                    <span class="perk-item">🛡️ <strong>E1 Sertifikalı</strong> Güvenli MDF</span>
+                    <span class="perk-item">🛡️ <strong>1. Sınıf</strong> Güvenli MDF</span>
                     <span class="perk-sep">•</span>
                     <span class="perk-item">⚡ <strong>13:00'a Kadar</strong> Öncelikli İmalat</span>
                 </div>
@@ -198,8 +198,8 @@ $user_email   = is_user_logged_in() ? $current_user->user_email : ($is_demo ? 's
                             </div>
                             <div class="tracker-details">
                                 <div class="tracker-item-tags">
-                                    <span class="badge-mdf-eco"><?php echo mis360_icon('leaf', 12); ?> 1. Sınıf E1 Kalite MDF</span>
-                                    <span class="badge-cert">E1 Sertifikalı</span>
+                                    <span class="badge-mdf-eco"><?php echo mis360_icon('leaf', 12); ?> 1. Sınıf MDF</span>
+                                    <span class="badge-cert">1. Sınıf Kalite</span>
                                 </div>
                                 <h4 class="tracker-item-title">Carmen 3 Raflı Kitaplık – Çocuk Odası Eğitici Montessori</h4>
                                 <div class="tracker-item-pricing">

@@ -81,9 +81,9 @@ get_header();
                         <div class="slide-caption-box">
                             <span class="slide-tag-pill badge-primary">⚡ BÜYÜK MONTESSORI SEZON FIRSATI</span>
                             <h2 class="slide-headline">Çocuk Odası Eğitici<br>Montessori Kitaplıklar</h2>
-                            <p class="slide-lead">Kendi kitabını kendi seçen özgüvenli minikler için 1. Sınıf E1 Kalite MDF tasarımlar.</p>
+                            <p class="slide-lead">Kendi kitabını kendi seçen özgüvenli minikler için 1. Sınıf MDF tasarımlar.</p>
                             <div class="slide-highlights">
-                                <span>🛡️ E1 Belgeli MDF</span>
+                                <span>🛡️ 1. Sınıf MDF</span>
                                 <span>🌿 360° Yuvarlak Hatlar</span>
                                 <span>🔧 Kolay Kurulum</span>
                             </div>
@@ -103,7 +103,7 @@ get_header();
                         <div class="slide-overlay-gradient"></div>
                         <div class="slide-caption-box">
                             <span class="slide-tag-pill badge-emerald">✨ MİNİK ŞEFLER İŞ BAŞINDA</span>
-                            <h2 class="slide-headline">Ayarlanabilir E1 MDF<br>Öğrenme Kuleleri</h2>
+                            <h2 class="slide-headline">Ayarlanabilir 1. Sınıf MDF<br>Öğrenme Kuleleri</h2>
                             <p class="slide-lead">Mutfakta kek yapma ve tezgaha erişimde tam bağımsızlık. Kilitli güvenlik barıyla %100 emniyetli.</p>
                             <div class="slide-highlights">
                                 <span>🔒 Çift Kademeli Emniyet</span>
@@ -233,7 +233,7 @@ get_header();
                     </div>
                     <div class="coupon-content-box">
                         <h4 class="coupon-title">İlk Siparişinize Özel</h4>
-                        <p class="coupon-desc">1. Sınıf E1 MDF Montessori ürünlerinde sepette geçerli kupon kodunuz:</p>
+                        <p class="coupon-desc">1. Sınıf MDF Montessori ürünlerinde sepette geçerli kupon kodunuz:</p>
                         <div class="coupon-code-clipboard">
                             <code id="emdiefCouponCode">EMDIEF10</code>
                             <button type="button" class="btn-copy-code" id="btnCopyCode" title="Kodu Kopyala">Kopyala</button>
@@ -250,7 +250,7 @@ get_header();
 </section>
 
 <!-- =========================================================================
-     3. BÖLÜM: GÜVEN ROZETLERİ (E1 MDF & ÜCRETSİZ KARGO)
+     3. BÖLÜM: GÜVEN ROZETLERİ (1. SINIF MDF & ÜCRETSİZ KARGO)
      ========================================================================= -->
 <section class="emdief-guarantee-bar">
     <div class="emdief-container">
@@ -258,7 +258,7 @@ get_header();
             <div class="guarantee-item">
                 <div class="guar-icon-box guar-mint">🛡️</div>
                 <div class="guar-info">
-                    <h5>1. Sınıf E1 Kalite MDF</h5>
+                    <h5>1. Sınıf MDF</h5>
                     <p>Çocuk sağlığına dost, pürüzsüz dayanıklı yüzey</p>
                 </div>
             </div>
@@ -481,7 +481,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <div class="cargo-promo-text">
                     <span class="cargo-badge-pill">🚚 EMDIEF HOME SEVKİYAT GÜVENCESİ</span>
                     <h3 class="cargo-headline">1.500 ₺ ve Üzeri Tüm Siparişlerinizde <span>Kargo Tamamen Ücretsiz!</span></h3>
-                    <p class="cargo-sub">1. Sınıf E1 Kalite MDF Montessori ürünleriniz darbe emici özel straforlu ambalajlarla %100 sigortalı teslim edilir.</p>
+                    <p class="cargo-sub">1. Sınıf MDF Montessori ürünleriniz darbe emici özel straforlu ambalajlarla %100 sigortalı teslim edilir.</p>
                 </div>
             </div>
             <div class="cargo-promo-right">
@@ -665,7 +665,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
         <div class="philosophy-card">
             <div class="philosophy-grid">
                 <div class="philosophy-text">
-                    <span class="section-subtitle color-amber">Montessori Pedagojisi & 1. Sınıf E1 MDF</span>
+                    <span class="section-subtitle color-amber">Montessori Pedagojisi & 1. Sınıf MDF</span>
                     <h2 class="section-title">"Bana Kendi Başıma Yapabilmem İçin Yardım Et"</h2>
                     <p>
                         Maria Montessori'nin temel felsefesi; çocuğun kendi boyuna ve erişimine uygun bir çevrede büyümesidir. Geleneksel yüksek raflar çocuğun yetişkine bağımlı olmasına yol açarken, <strong>Emdief Home Montessori Kitaplıkları</strong> kitapların ön yüzünü çocuğa çevirir.
@@ -681,7 +681,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                         <div class="pillar">
                             <div class="pillar-icon">🛡️</div>
                             <div class="pillar-content">
-                                <h4>1. Sınıf E1 Kalite MDF</h4>
+                                <h4>1. Sınıf MDF</h4>
                                 <p>Avrupa standartlarında çocuk sağlığına zararsız, pürüzsüz ve uzun ömürlü 1. sınıf MDF malzeme.</p>
                             </div>
                         </div>

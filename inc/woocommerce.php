@@ -157,7 +157,7 @@ function mis360_product_badges() {
     echo '<div class="emdief-card-badges">';
 
     // 1. Sınıf MDF Rozeti
-    echo '<span class="badge badge-natural">1. Sınıf E1 MDF</span>';
+    echo '<span class="badge badge-natural">1. Sınıf MDF</span>';
 
     // İndirim Yüzdesi
     if ($product->is_on_sale()) {
@@ -183,11 +183,11 @@ function mis360_single_product_trust_box() {
     <div class="emdief-single-trust">
         <div class="trust-pill">
             <span class="pill-icon">🌿</span>
-            <div class="pill-text"><strong>1. Sınıf Kaliteli MDF:</strong> Çocuğunuz için pürüzsüz, sağlam ve güvenli yüzey</div>
+            <div class="pill-text"><strong>1. Sınıf MDF:</strong> Çocuğunuz için pürüzsüz, sağlam ve güvenli yüzey</div>
         </div>
         <div class="trust-pill">
             <span class="pill-icon">🛡️</span>
-            <div class="pill-text"><strong>E1 & EN71-3 Belgeli:</strong> Çocuk sağlığına %100 uygun su bazlı koruyucu</div>
+            <div class="pill-text"><strong>EN71-3 Belgeli:</strong> Çocuk sağlığına %100 uygun su bazlı koruyucu</div>
         </div>
         <div class="trust-pill">
             <span class="pill-icon">👶</span>
@@ -382,7 +382,7 @@ function mis360_single_product_smart_slider() {
                                 ?>
                             </a>
                             <div class="mini-badges">
-                                <span class="badge badge-mdf">1. Sınıf E1 MDF</span>
+                                <span class="badge badge-mdf">1. Sınıf MDF</span>
                                 <?php if ($discount > 0): ?>
                                     <span class="badge badge-sale">-%<?php echo esc_html((string)$discount); ?></span>
                                 <?php endif; ?>

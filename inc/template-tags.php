@@ -63,7 +63,7 @@ function mis360_render_trust_badges() {
                         <?php echo mis360_icon('leaf', 22); ?>
                     </div>
                     <div class="emdief-trust-text">
-                        <strong>1. Sınıf E1 Kalite MDF</strong>
+                        <strong>1. Sınıf MDF</strong>
                         <span>Avrupa çocuk sağlığı normlarında, pürüzsüz ve dayanıklı</span>
                     </div>
                 </div>
@@ -72,7 +72,7 @@ function mis360_render_trust_badges() {
                         <?php echo mis360_icon('shield-check', 22); ?>
                     </div>
                     <div class="emdief-trust-text">
-                        <strong>E1 & EN71-3 Sertifikalı</strong>
+                        <strong>EN71-3 Sertifikalı</strong>
                         <span>Avrupa çocuk sağlığı normlarına uygun</span>
                     </div>
                 </div>
