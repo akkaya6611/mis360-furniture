@@ -1226,6 +1226,20 @@
   font-weight: 600;
 }
 
+@media (max-width: 768px) {
+  .emdief-breadcrumbs {
+    padding: 0.35rem 0 !important;
+    font-size: 0.75rem !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .emdief-breadcrumbs::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
 /* Mobil Arama Barı ve Menü Bileşenleri */
 .emdief-mobile-search-bar {
   display: none;
@@ -4839,12 +4853,22 @@
     z-index: 997 !important;
   }
 
+  .single-product .emdief-floating-wa {
+    bottom: calc(134px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 12px !important;
+  }
+
   .emdief-back-to-top {
     bottom: calc(128px + env(safe-area-inset-bottom, 0px)) !important;
     right: 16px !important;
     width: 38px !important;
     height: 38px !important;
     z-index: 996 !important;
+  }
+
+  .single-product .emdief-back-to-top {
+    bottom: calc(190px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 14px !important;
   }
 
   .trendyol-circle-badge {

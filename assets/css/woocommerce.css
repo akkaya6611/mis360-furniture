@@ -862,8 +862,13 @@ ul.products {
     .woocommerce div.product,
     .woocommerce-page div.product {
         grid-template-columns: 1fr !important;
-        padding: 16px !important;
-        gap: 20px !important;
+        padding: 14px !important;
+        gap: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+        border-radius: 16px !important;
     }
 }
 
@@ -967,22 +972,22 @@ ul.products {
 
 @media (max-width: 768px) {
     .woocommerce-product-gallery__image a {
-        min-height: 280px !important;
-        padding: 8px !important;
+        min-height: 240px !important;
+        padding: 6px !important;
     }
     .woocommerce-product-gallery__image img {
-        max-height: 300px !important;
+        max-height: 260px !important;
     }
 }
 
 /* Zoom / Büyüteç Butonu */
 .woocommerce-product-gallery__trigger {
     position: absolute !important;
-    top: 12px !important;
-    right: 12px !important;
-    z-index: 20 !important;
-    width: 36px !important;
-    height: 36px !important;
+    top: 10px !important;
+    right: 10px !important;
+    z-index: 25 !important;
+    width: 34px !important;
+    height: 34px !important;
     background: #ffffff !important;
     border-radius: 50% !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
@@ -1004,7 +1009,7 @@ ul.products {
     content: "🔍" !important;
     text-indent: 0 !important;
     display: block !important;
-    font-size: 15px !important;
+    font-size: 14px !important;
     line-height: 1 !important;
     position: absolute !important;
     top: 50% !important;
@@ -1038,6 +1043,34 @@ ul.products {
     transition: all 0.2s ease !important;
     background: #ffffff !important;
     box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+    .woocommerce div.product div.thumbnails,
+    .woocommerce-page div.product div.thumbnails,
+    .woocommerce-product-gallery ol.flex-control-thumbs,
+    .flex-control-thumbs {
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 8px !important;
+        margin-top: 10px !important;
+        padding-bottom: 4px !important;
+        scrollbar-width: none !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .woocommerce-product-gallery ol.flex-control-thumbs::-webkit-scrollbar,
+    .flex-control-thumbs::-webkit-scrollbar {
+        display: none !important;
+    }
+
+    .woocommerce-product-gallery ol.flex-control-thumbs li,
+    .flex-control-thumbs li {
+        width: 56px !important;
+        height: 56px !important;
+        flex: 0 0 56px !important;
+        border-radius: 8px !important;
+    }
 }
 
 .woocommerce-product-gallery ol.flex-control-thumbs li:hover,
@@ -1294,15 +1327,43 @@ ul.products {
 }
 
 @media (max-width: 600px) {
+    .woocommerce div.product form.cart,
+    .woocommerce-page div.product form.cart {
+        display: grid !important;
+        grid-template-columns: 68px 1fr !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        align-items: stretch !important;
+    }
+
+    .woocommerce div.product form.cart div.quantity,
+    .woocommerce-page div.product form.cart div.quantity {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .woocommerce div.product form.cart div.quantity input.qty,
+    .woocommerce-page div.product form.cart div.quantity input.qty {
+        width: 100% !important;
+        height: 48px !important;
+    }
+
     .woocommerce div.product form.cart .single_add_to_cart_button,
     .woocommerce-page div.product form.cart .single_add_to_cart_button {
-        flex: 1 1 100% !important;
         width: 100% !important;
+        min-width: 0 !important;
+        flex: none !important;
+        height: 48px !important;
     }
+
     .woocommerce div.product form.cart .emdief-single-wa-btn,
     .woocommerce-page div.product form.cart .emdief-single-wa-btn {
-        flex: 1 1 100% !important;
+        grid-column: 1 / -1 !important;
         width: 100% !important;
+        box-sizing: border-box !important;
+        height: 46px !important;
+        margin-top: 2px !important;
     }
 }
 
@@ -1316,12 +1377,16 @@ ul.products {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 10px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 @media (max-width: 600px) {
     .emdief-single-trust {
         grid-template-columns: 1fr !important;
-        padding: 12px !important;
+        padding: 12px 14px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
 }
 
