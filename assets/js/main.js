@@ -578,6 +578,44 @@ function mis360Init() {
             showStockNotice(wrapper, max);
         }
     });
+
+    // 7. Çerez Onay Bildirimi (Cookie Consent Banner)
+    const cookieBanner = document.getElementById('emdief-cookie-banner');
+    const cookieAcceptBtn = document.getElementById('emdiefCookieAccept');
+    const cookieCloseBtn = document.getElementById('emdiefCookieClose');
+
+    if (cookieBanner) {
+        let hasConsent = false;
+        try {
+            hasConsent = localStorage.getItem('emdief_cookie_consent');
+        } catch (err) {}
+
+        if (!hasConsent) {
+            setTimeout(() => {
+                cookieBanner.style.display = 'block';
+                requestAnimationFrame(() => {
+                    cookieBanner.classList.add('is-visible');
+                });
+            }, 1200);
+        }
+
+        function dismissCookieBanner(val) {
+            cookieBanner.classList.remove('is-visible');
+            try {
+                localStorage.setItem('emdief_cookie_consent', val || 'accepted');
+            } catch (err) {}
+            setTimeout(() => {
+                cookieBanner.style.display = 'none';
+            }, 350);
+        }
+
+        if (cookieAcceptBtn) {
+            cookieAcceptBtn.addEventListener('click', () => dismissCookieBanner('accepted'));
+        }
+        if (cookieCloseBtn) {
+            cookieCloseBtn.addEventListener('click', () => dismissCookieBanner('closed'));
+        }
+    }
 }
 
 if (document.readyState === 'loading') {

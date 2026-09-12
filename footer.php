@@ -51,9 +51,10 @@ if (!defined('ABSPATH')) {
             <div class="footer-col">
                 <h4 class="footer-heading"><?php esc_html_e('Müşteri & Kurumsal', 'mis360-mobilya'); ?></h4>
                 <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/about-us/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/blog/')); ?>"><?php esc_html_e('Montessori Ebeveyn Rehberi', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/teslimat-iade/')); ?>"><?php esc_html_e('Teslimat & İade Koşulları', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>"><?php esc_html_e('Teslimat & İade Koşulları', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>"><?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></a></li>
                 </ul>
@@ -96,6 +97,13 @@ if (!defined('ABSPATH')) {
         <div class="footer-bottom">
             <div class="footer-copy">
                 &copy; <?php echo date('Y'); ?> <strong>Emdief Home</strong>. <?php esc_html_e('Tüm hakları saklıdır. Çocuklar için sevgiyle üretilmiştir.', 'mis360-mobilya'); ?>
+            </div>
+            <div class="footer-legal-links">
+                <a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerezler', 'mis360-mobilya'); ?></a>
+                <span class="legal-sep">&bull;</span>
+                <a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik & KVKK', 'mis360-mobilya'); ?></a>
+                <span class="legal-sep">&bull;</span>
+                <a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>"><?php esc_html_e('Mesafeli Satış', 'mis360-mobilya'); ?></a>
             </div>
             <div class="footer-credit">
                 <span>Theme by <strong>MİS360</strong> & Serkan AKKAYA</span>
@@ -185,6 +193,32 @@ endif;
         </button>
     <?php endif; ?>
 </nav>
+
+<!-- Çerez Onay Bildirimi (Cookie Consent Banner) -->
+<div class="emdief-cookie-banner" id="emdief-cookie-banner" role="dialog" aria-live="polite" aria-label="<?php esc_attr_e('Çerez İzin Bildirimi', 'mis360-mobilya'); ?>" style="display: none;">
+    <div class="cookie-banner-inner">
+        <div class="cookie-icon-col">
+            <span class="cookie-emoji" aria-hidden="true">🍪</span>
+        </div>
+        <div class="cookie-content-col">
+            <div class="cookie-title">
+                <strong><?php esc_html_e('Çerez Tercihleri ve Deneyiminiz', 'mis360-mobilya'); ?></strong>
+            </div>
+            <p class="cookie-text">
+                <?php esc_html_e('Emdief Home olarak, sitemizde güvenli alışveriş yapabilmeniz, sepetinizi hatırlayabilmemiz ve deneyiminizi geliştirebilmemiz için yasal mevzuata uygun çerezler (cookies) kullanıyoruz.', 'mis360-mobilya'); ?>
+                <a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>" class="cookie-policy-link"><?php esc_html_e('Çerez Politikamızı İnceleyin', 'mis360-mobilya'); ?></a>
+            </p>
+        </div>
+        <div class="cookie-actions-col">
+            <button type="button" class="emdief-btn btn-primary btn-sm cookie-accept-btn" id="emdiefCookieAccept">
+                <?php esc_html_e('Kabul Ediyorum', 'mis360-mobilya'); ?>
+            </button>
+            <button type="button" class="cookie-close-btn" id="emdiefCookieClose" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
+                &times;
+            </button>
+        </div>
+    </div>
+</div>
 
 <?php wp_footer(); ?>
 </body>
