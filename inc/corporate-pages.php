@@ -91,7 +91,7 @@ function mis360_get_corporate_pages_data() {
     <div class="prose-alert prose-alert-info">
         <span class="alert-icon">🛡️</span>
         <div class="alert-body">
-            <strong>Veri Sorumlusu:</strong> Emdief Home (MİS360 Teknoloji), 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca kişisel verilerinizin güvenliğine ve gizliliğine azami hassasiyet göstermektedir.
+            <strong>Veri Sorumlusu:</strong> Emdief Home (Orhan TEBER), 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca kişisel verilerinizin güvenliğine ve gizliliğine azami hassasiyet göstermektedir.
         </div>
     </div>
 
@@ -145,7 +145,7 @@ function mis360_get_corporate_pages_data() {
 
     <h2>MADDE 1 – TARAFLAR</h2>
     <p><strong>1.1. SATICI:</strong><br>
-    Unvan: Emdief Home (MİS360 Teknoloji)<br>
+    Unvan: Emdief Home (Orhan TEBER)<br>
     Telefon: +90 537 477 87 66<br>
     E-posta: info@emdiefhome.com.tr<br>
     Web: https://emdiefhome.com.tr</p>
@@ -323,6 +323,14 @@ function mis360_setup_corporate_pages() {
                 update_post_meta($page_id, '_wp_page_template', 'page-corporate.php');
             }
         } else {
+            // Eğer daha önce oluşturulan içerikte eski unvan varsa güncelle
+            if (!empty($existing->post_content) && strpos($existing->post_content, 'MİS360 Teknoloji') !== false) {
+                wp_update_post([
+                    'ID'           => $existing->ID,
+                    'post_content' => str_replace('MİS360 Teknoloji', 'Orhan TEBER', $existing->post_content),
+                ]);
+            }
+
             // Mevcut sayfa şablonunu kontrol et
             $current_template = get_post_meta($existing->ID, '_wp_page_template', true);
             if (empty($current_template) || $current_template === 'default') {
