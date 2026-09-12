@@ -17,7 +17,7 @@ function mis360_output_json_ld() {
         '@type'    => 'FurnitureStore',
         'name'     => 'Emdief Home',
         'url'      => home_url('/'),
-        'logo'     => 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/emdief-home-logo-01.webp',
+        'logo'     => get_template_directory_uri() . '/assets/images/emdief-home-logo.webp',
         'description' => 'Montessori felsefesine uygun, 1. sınıf kaliteli MDF çocuk odası mobilyaları ve Montessori ürünleri koleksiyonu.',
         'telephone' => get_theme_mod('mis360_phone', '+90 537 477 87 66'),
         'priceRange' => 'TL',

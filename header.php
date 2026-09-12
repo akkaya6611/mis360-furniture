@@ -59,7 +59,7 @@ if (!defined('ABSPATH')) {
                     <?php the_custom_logo(); ?>
                 <?php else: ?>
                     <a href="<?php echo esc_url(home_url('/')); ?>" class="brand-link">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/emdief-home-logo-01.webp" alt="<?php bloginfo('name'); ?>" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/emdief-home-logo.webp'); ?>" alt="<?php bloginfo('name'); ?>" class="brand-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
                         <span class="brand-text-fallback" style="display:none; font-weight:800; font-size:1.5rem; color:var(--emd-text-main);">Emdief<span style="color:var(--emd-primary);">Home</span></span>
                     </a>
                 <?php endif; ?>
