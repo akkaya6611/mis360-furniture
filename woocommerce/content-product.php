@@ -56,7 +56,7 @@ if (empty($product) || !$product->is_visible()) {
                 ?>
             </div>
             <h3 class="card-product-title">
-                <a href="<?php echo esc_url($product->get_permalink()); ?>"><?php the_title(); ?></a>
+                <a href="<?php echo esc_url($product->get_permalink()); ?>" title="<?php echo esc_attr(get_the_title()); ?>"><?php the_title(); ?></a>
             </h3>
             <div class="card-rating">
                 <span class="stars">★★★★★</span>
