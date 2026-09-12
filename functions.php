@@ -7,7 +7,6 @@
  * @since 1.0.0
  */
 
-declare(strict_types=1);
 
 if (!defined('ABSPATH')) {
     exit;
@@ -113,15 +112,4 @@ function mis360_check_woocommerce_dependency(): void {
 add_action('admin_init', 'mis360_check_woocommerce_dependency');
 
 
-/**
- * WooCommerce Türkçe Dil Desteği Yükleyici
- */
-function mis360_load_woocommerce_turkish_translations(): void {
-    if (!is_admin() && get_locale() === 'tr_TR') {
-        $mo_file = MIS360_FURNITURE_DIR . '/languages/woocommerce-tr_TR.mo';
-        if (file_exists($mo_file)) {
-            load_textdomain('woocommerce', $mo_file);
-        }
-    }
-}
-add_action('init', 'mis360_load_woocommerce_turkish_translations', 1);
+
