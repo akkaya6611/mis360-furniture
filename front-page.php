@@ -682,7 +682,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                             <div class="pillar-icon">🛡️</div>
                             <div class="pillar-content">
                                 <h4>1. Sınıf MDF</h4>
-                                <p>Avrupa standartlarında çocuk sağlığına zararsız, pürüzsüz ve uzun ömürlü 1. sınıf MDF malzeme.</p>
+                                <p>Çocuk odalarına özel pürüzsüz, sağlam ve uzun ömürlü 1. sınıf kaliteli MDF malzeme.</p>
                             </div>
                         </div>
                         <div class="pillar">

@@ -64,7 +64,7 @@ function mis360_render_trust_badges() {
                     </div>
                     <div class="emdief-trust-text">
                         <strong>1. Sınıf MDF</strong>
-                        <span>Avrupa çocuk sağlığı normlarında, pürüzsüz ve dayanıklı</span>
+                        <span>Çocuk odalarına özel, pürüzsüz ve dayanıklı ahşap gövde</span>
                     </div>
                 </div>
                 <div class="emdief-trust-item">
@@ -72,8 +72,8 @@ function mis360_render_trust_badges() {
                         <?php echo mis360_icon('shield-check', 22); ?>
                     </div>
                     <div class="emdief-trust-text">
-                        <strong>EN71-3 Sertifikalı</strong>
-                        <span>Avrupa çocuk sağlığı normlarına uygun</span>
+                        <strong>Yuvarlatılmış Güvenli Köşeler</strong>
+                        <span>Sivri kenar barındırmayan, çocuk güvenliğine uygun emniyetli hatlar</span>
                     </div>
                 </div>
                 <div class="emdief-trust-item">

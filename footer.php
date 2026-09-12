@@ -26,11 +26,11 @@ if (!defined('ABSPATH')) {
                     <span class="footer-logo-fallback" style="display:none; font-weight:800; font-size:1.4rem; color:var(--emd-text-main);">Emdief<span style="color:var(--emd-primary);">Home</span></span>
                 </div>
                 <p class="footer-desc">
-                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve öğrenme heveslerini destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları üreticisidir. Tüm ürünlerimiz çocuk sağlığına %100 uygun 1. sınıf MDF malzemeden, özel yuvarlatılmış güvenli kenarlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
+                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve öğrenme heveslerini destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları üreticisidir. Tüm ürünlerimiz çocuk odalarına özel 1. sınıf MDF malzemeden, sivri kenar barındırmayan yuvarlatılmış güvenli hatlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
                 </p>
                 <div class="footer-cert-badges">
                     <span class="cert-pill">🛡️ 1. Sınıf MDF</span>
-                    <span class="cert-pill">🛡️ EN71-3 Belgeli</span>
+                    <span class="cert-pill">🛡️ Yuvarlatılmış Güvenli Köşeler</span>
                     <span class="cert-pill">👶 Montessori Ergonomisi</span>
                 </div>
             </div>

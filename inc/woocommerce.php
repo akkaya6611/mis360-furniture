@@ -223,7 +223,7 @@ function mis360_single_product_trust_box() {
         </div>
         <div class="trust-pill">
             <span class="pill-icon">🛡️</span>
-            <div class="pill-text"><strong>EN71-3 Belgeli:</strong> Çocuk sağlığına %100 uygun su bazlı koruyucu</div>
+            <div class="pill-text"><strong>Yuvarlatılmış Köşeler:</strong> Çocuk güvenliği için sivri kenarsız, pürüzsüz hatlar</div>
         </div>
         <div class="trust-pill">
             <span class="pill-icon">👶</span>
