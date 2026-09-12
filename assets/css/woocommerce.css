@@ -2022,4 +2022,128 @@ ul.products {
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* --------------------------------------------------------------------------
+   5. HESAP ENDPOINT VE WOOCOMMERCE ALT SAYFA DÜZENİ (v1.3.8)
+   -------------------------------------------------------------------------- */
+.account-wc-endpoint-wrapper {
+  background: #ffffff;
+  width: 100%;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-MyAccount-content {
+  float: none !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-orders-table,
+.account-wc-endpoint-wrapper .woocommerce-table--order-details,
+.account-wc-endpoint-wrapper table.shop_table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid #e5ddd3;
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  background: #ffffff;
+}
+
+.account-wc-endpoint-wrapper table.shop_table th {
+  background: #faf8f5;
+  color: #1e293b;
+  font-weight: 800;
+  font-size: 0.88rem;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e5ddd3;
+  text-align: left;
+}
+
+.account-wc-endpoint-wrapper table.shop_table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1ece7;
+  color: #334155;
+  font-size: 0.92rem;
+  vertical-align: middle;
+}
+
+.account-wc-endpoint-wrapper table.shop_table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.account-wc-endpoint-wrapper table.shop_table tbody tr:hover {
+  background-color: #faf8f5;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-button,
+.account-wc-endpoint-wrapper .button,
+.account-wc-endpoint-wrapper input[type="submit"].button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  background: #8c6246 !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  padding: 9px 18px !important;
+  border-radius: 10px !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+  text-decoration: none !important;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(140, 98, 70, 0.15) !important;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-button:hover,
+.account-wc-endpoint-wrapper .button:hover,
+.account-wc-endpoint-wrapper input[type="submit"].button:hover {
+  background: #734f36 !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(140, 98, 70, 0.25) !important;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-order-details__title,
+.account-wc-endpoint-wrapper .woocommerce-column__title,
+.account-wc-endpoint-wrapper h2,
+.account-wc-endpoint-wrapper h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-customer-details address {
+  background: #faf8f5;
+  border: 1px solid #e5ddd3;
+  border-radius: 12px;
+  padding: 1.25rem 1.5rem;
+  font-style: normal;
+  line-height: 1.6;
+  color: #475569;
+}
+
+.account-wc-endpoint-wrapper mark.order-number {
+  background: #fef3c7;
+  color: #b45309;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.account-wc-endpoint-wrapper mark.order-status {
+  background: #dcfce7;
+  color: #15803d;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.account-wc-endpoint-wrapper .woocommerce-pagination {
+  margin-top: 1.5rem;
+}
+
+
 
