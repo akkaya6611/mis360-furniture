@@ -3,8 +3,8 @@
  * Vanilla ES6+ - Zero jQuery Dependency
  */
 
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Mobil Men? Y?netimi
+function mis360Init() {
+    // 1. Mobil Menü Yönetimi
     const mobileTrigger = document.getElementById('emdief-mobile-menu-trigger');
     const mobileDrawer = document.getElementById('emdief-mobile-drawer');
     const mobileClose = document.getElementById('emdief-mobile-close');
@@ -218,12 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
-});
 
-/* ==========================================================================
-   TRENDYOL HERO SLIDER & PRODUCT CAROUSEL LOGIC
-   ========================================================================== */
-document.addEventListener('DOMContentLoaded', function () {
+    /* ==========================================================================
+       TRENDYOL HERO SLIDER & PRODUCT CAROUSEL LOGIC
+       ========================================================================== */
     // 1. Trendyol Hero Slider
     const heroSlider = document.getElementById('emdiefMainHeroSlider');
     if (heroSlider) {
@@ -439,10 +437,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 8. Adet Arttırma & Azaltma (+/-) Butonları (Quantity Stepper)
+    function showStockNotice(wrapper, maxQty) {
+        const form = wrapper.closest('form.cart') || wrapper.closest('tr.cart_item') || wrapper.parentElement;
+        if (!form) return;
+
+        let notice = form.querySelector('.emdief-qty-limit-notice');
+        if (!notice) {
+            notice = document.createElement('div');
+            notice.className = 'emdief-qty-limit-notice';
+            form.appendChild(notice);
+        }
+
+        const count = parseInt(maxQty) || 1;
+        const message = (count === 1) 
+            ? 'Maalesef bu üründen sadece 1 adet kaldı.' 
+            : `Maalesef bu üründen sadece ${count} adet kaldı.`;
+
+        notice.innerHTML = '<span class="notice-icon">⚠️</span> ' + message;
+        notice.style.display = 'flex';
+
+        wrapper.classList.remove('is-shaking');
+        void wrapper.offsetWidth;
+        wrapper.classList.add('is-shaking');
+
+        clearTimeout(wrapper._noticeTimer);
+        wrapper._noticeTimer = setTimeout(() => {
+            notice.style.display = 'none';
+            wrapper.classList.remove('is-shaking');
+        }, 3500);
+    }
+
     function ensureQtyButtons(root = document) {
-        root.querySelectorAll('.quantity:not(.emdief-qty-stepper)').forEach(qty => {
-            const input = qty.querySelector('input.qty');
-            if (!input || qty.querySelector('.emdief-qty-btn')) return;
+        root.querySelectorAll('.quantity').forEach(qty => {
+            let input = qty.querySelector('input.qty');
+            if (!input) return;
+
+            // Eğer WooCommerce min=max durumunda gizli input bastıysa görünür number'a çevir
+            if (input.type === 'hidden') {
+                input.type = 'number';
+            }
+            if (!input.value || input.value === '0') {
+                input.value = '1';
+            }
+
+            if (qty.classList.contains('emdief-qty-stepper') && qty.querySelector('.emdief-qty-btn')) return;
             qty.classList.add('emdief-qty-stepper');
 
             const minus = document.createElement('button');
@@ -481,25 +519,56 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!input || input.disabled || input.readOnly) return;
 
         let currentVal = parseFloat(input.value);
-        if (isNaN(currentVal)) currentVal = 1;
+        if (isNaN(currentVal) || currentVal < 1) currentVal = 1;
 
         const step = parseFloat(input.getAttribute('step')) || 1;
         const minAttr = input.getAttribute('min');
         const maxAttr = input.getAttribute('max');
         const min = (minAttr !== '' && minAttr !== null) ? parseFloat(minAttr) : 1;
-        const max = (maxAttr !== '' && maxAttr !== null) ? parseFloat(maxAttr) : Infinity;
+        const max = (maxAttr !== '' && maxAttr !== null && !isNaN(parseFloat(maxAttr))) ? parseFloat(maxAttr) : Infinity;
 
         if (btn.classList.contains('qty-minus')) {
             let newVal = currentVal - step;
             if (newVal < min) newVal = min;
             input.value = newVal;
         } else if (btn.classList.contains('qty-plus')) {
+            if (currentVal >= max) {
+                showStockNotice(wrapper, max);
+                return;
+            }
             let newVal = currentVal + step;
-            if (newVal > max) newVal = max;
+            if (newVal > max) {
+                newVal = max;
+                showStockNotice(wrapper, max);
+            }
             input.value = newVal;
         }
 
         input.dispatchEvent(new Event('change', { bubbles: true }));
         input.dispatchEvent(new Event('input', { bubbles: true }));
     });
-});
+
+    document.addEventListener('change', function(e) {
+        if (!e.target.matches('input.qty')) return;
+        const input = e.target;
+        const wrapper = input.closest('.quantity');
+        if (!wrapper) return;
+
+        const maxAttr = input.getAttribute('max');
+        const max = (maxAttr !== '' && maxAttr !== null && !isNaN(parseFloat(maxAttr))) ? parseFloat(maxAttr) : Infinity;
+        let val = parseFloat(input.value);
+
+        if (isNaN(val) || val < 1) {
+            input.value = 1;
+        } else if (val > max) {
+            input.value = max;
+            showStockNotice(wrapper, max);
+        }
+    });
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mis360Init);
+} else {
+    mis360Init();
+}
