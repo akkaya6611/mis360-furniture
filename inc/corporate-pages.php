@@ -91,7 +91,7 @@ function mis360_get_corporate_pages_data() {
     <div class="prose-alert prose-alert-info">
         <span class="alert-icon">🛡️</span>
         <div class="alert-body">
-            <strong>Veri Sorumlusu:</strong> Emdief Home (Orhan TEBER), 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca kişisel verilerinizin güvenliğine ve gizliliğine azami hassasiyet göstermektedir.
+            <strong>Veri Sorumlusu:</strong> Emdief Home (Orhan TEBER) - Mobilya Kent Kırmızı Bloklar, Camikebir Mah. 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri; 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") uyarınca kişisel verilerinizin güvenliğine ve gizliliğine azami hassasiyet göstermektedir.
         </div>
     </div>
 
@@ -146,6 +146,7 @@ function mis360_get_corporate_pages_data() {
     <h2>MADDE 1 – TARAFLAR</h2>
     <p><strong>1.1. SATICI:</strong><br>
     Unvan: Emdief Home (Orhan TEBER)<br>
+    Adres: Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri<br>
     Telefon: +90 537 477 87 66<br>
     E-posta: info@emdiefhome.com.tr<br>
     Web: https://emdiefhome.com.tr</p>
@@ -284,8 +285,8 @@ function mis360_get_corporate_pages_data() {
         <div class="contact-info-card">
             <div class="card-icon">🏭</div>
             <h3>Fabrika Satış & Atölye</h3>
-            <p>1. Sınıf MDF Çocuk Mobilyaları İmalat ve Sevkiyat Merkezi</p>
-            <span class="contact-link text-muted">Türkiye Geneli Adrese Teslimat</span>
+            <p>Mobilya Kent Kırmızı Bloklar, Camikebir Mah. 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri</p>
+            <a href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111" target="_blank" rel="noopener" class="contact-link">📍 Haritada Aç & Yol Tarifi Al &rarr;</a>
         </div>
     </div>
 
@@ -329,6 +330,16 @@ function mis360_setup_corporate_pages() {
                     'ID'           => $existing->ID,
                     'post_content' => str_replace('MİS360 Teknoloji', 'Orhan TEBER', $existing->post_content),
                 ]);
+            }
+
+            // Eğer daha önce oluşturulan içerikte adres eksikse güncelle
+            if (!empty($existing->post_content) && strpos($existing->post_content, 'Mobilya Kent') === false) {
+                if (in_array($slug, ['mesafeli-satis-sozlesmesi', 'iletisim', 'gizlilik-ve-kvkk'], true)) {
+                    wp_update_post([
+                        'ID'           => $existing->ID,
+                        'post_content' => $page_data['content'],
+                    ]);
+                }
             }
 
             // Mevcut sayfa şablonunu kontrol et

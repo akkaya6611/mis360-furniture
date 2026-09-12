@@ -81,6 +81,15 @@ if (!defined('ABSPATH')) {
                         </a>
                     </div>
                 </div>
+                <div class="footer-contact-item">
+                    <span class="contact-icon"><?php echo mis360_icon('map-pin', 18); ?></span>
+                    <div>
+                        <small><?php esc_html_e('Fabrika Satış & Atölye:', 'mis360-mobilya'); ?></small>
+                        <a href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111" target="_blank" rel="noopener">
+                            <strong>Mobilya Kent, Kocasinan / Kayseri</strong>
+                        </a>
+                    </div>
+                </div>
                 <div class="footer-payment-icons">
                     <span class="pay-text">Güvenli 256-bit SSL Alışveriş</span>
                     <div class="pay-badges">
