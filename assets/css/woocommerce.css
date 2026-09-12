@@ -1245,32 +1245,82 @@ ul.products {
     flex-wrap: wrap !important;
 }
 
-/* Miktar Kutusu (Quantity) */
+/* Miktar Kutusu (Quantity Stepper with +/-) */
 .woocommerce div.product form.cart div.quantity,
-.woocommerce-page div.product form.cart div.quantity {
-    float: none !important;
+.woocommerce-page div.product form.cart div.quantity,
+.quantity.emdief-qty-stepper {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 112px !important;
+    height: 48px !important;
+    background: #f8fafc !important;
+    border: 1.5px solid #cbd5e1 !important;
+    border-radius: 12px !important;
+    padding: 3px !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
     margin: 0 !important;
+    float: none !important;
 }
 
-.woocommerce div.product form.cart div.quantity input.qty,
-.woocommerce-page div.product form.cart div.quantity input.qty {
-    width: 68px !important;
-    height: 46px !important;
-    border-radius: 10px !important;
-    border: 1.5px solid #cbd5e1 !important;
+.quantity.emdief-qty-stepper:focus-within {
+    border-color: #f27a1a !important;
+    box-shadow: 0 0 0 3px rgba(242, 122, 26, 0.12) !important;
+}
+
+.quantity.emdief-qty-stepper .emdief-qty-btn {
+    width: 32px !important;
+    height: 40px !important;
+    min-width: 32px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: all 0.15s ease !important;
+    line-height: 1 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+.quantity.emdief-qty-stepper .emdief-qty-btn:hover {
+    background: #f27a1a !important;
+    color: #ffffff !important;
+    border-color: #f27a1a !important;
+}
+
+.quantity.emdief-qty-stepper .emdief-qty-btn:active {
+    transform: scale(0.92) !important;
+}
+
+.quantity.emdief-qty-stepper input.qty {
+    width: 36px !important;
+    height: 100% !important;
+    border: none !important;
+    background: transparent !important;
     text-align: center !important;
     font-size: 16px !important;
     font-weight: 800 !important;
     color: #0f172a !important;
-    background: #ffffff !important;
+    padding: 0 !important;
+    margin: 0 !important;
     outline: none !important;
-    transition: all 0.2s ease !important;
-    box-sizing: border-box !important;
+    box-shadow: none !important;
+    -moz-appearance: textfield !important;
 }
 
-.woocommerce div.product form.cart div.quantity input.qty:focus {
-    border-color: #f27a1a !important;
-    box-shadow: 0 0 0 3px rgba(242, 122, 26, 0.15) !important;
+.quantity.emdief-qty-stepper input.qty::-webkit-inner-spin-button,
+.quantity.emdief-qty-stepper input.qty::-webkit-outer-spin-button {
+    -webkit-appearance: none !important;
+    margin: 0 !important;
 }
 
 /* Sepete Ekle Butonu */
@@ -1345,7 +1395,7 @@ ul.products {
     .woocommerce div.product form.cart,
     .woocommerce-page div.product form.cart {
         display: grid !important;
-        grid-template-columns: 68px minmax(0, 1fr) !important;
+        grid-template-columns: 112px minmax(0, 1fr) !important;
         gap: 10px !important;
         width: 100% !important;
         box-sizing: border-box !important;
@@ -1354,27 +1404,27 @@ ul.products {
 
     .woocommerce div.product form.cart div.quantity,
     .woocommerce-page div.product form.cart div.quantity {
-        width: 100% !important;
-        margin: 0 !important;
-    }
-
-    .woocommerce div.product form.cart div.quantity input.qty,
-    .woocommerce-page div.product form.cart div.quantity input.qty {
-        width: 100% !important;
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+        width: 112px !important;
         height: 48px !important;
+        margin: 0 !important;
     }
 
     .woocommerce div.product form.cart .single_add_to_cart_button,
     .woocommerce-page div.product form.cart .single_add_to_cart_button {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
         width: 100% !important;
         min-width: 0 !important;
-        flex: none !important;
         height: 48px !important;
+        margin: 0 !important;
     }
 
     .woocommerce div.product form.cart .emdief-single-wa-btn,
     .woocommerce-page div.product form.cart .emdief-single-wa-btn {
         grid-column: 1 / -1 !important;
+        grid-row: 2 !important;
         width: 100% !important;
         box-sizing: border-box !important;
         height: 46px !important;

@@ -437,4 +437,69 @@ document.addEventListener('DOMContentLoaded', function () {
             track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
         }
     });
+
+    // 8. Adet Arttırma & Azaltma (+/-) Butonları (Quantity Stepper)
+    function ensureQtyButtons(root = document) {
+        root.querySelectorAll('.quantity:not(.emdief-qty-stepper)').forEach(qty => {
+            const input = qty.querySelector('input.qty');
+            if (!input || qty.querySelector('.emdief-qty-btn')) return;
+            qty.classList.add('emdief-qty-stepper');
+
+            const minus = document.createElement('button');
+            minus.type = 'button';
+            minus.className = 'emdief-qty-btn qty-minus';
+            minus.setAttribute('aria-label', 'Azalt');
+            minus.setAttribute('tabindex', '-1');
+            minus.textContent = '−';
+
+            const plus = document.createElement('button');
+            plus.type = 'button';
+            plus.className = 'emdief-qty-btn qty-plus';
+            plus.setAttribute('aria-label', 'Arttır');
+            plus.setAttribute('tabindex', '-1');
+            plus.textContent = '+';
+
+            qty.insertBefore(minus, input);
+            qty.appendChild(plus);
+        });
+    }
+
+    ensureQtyButtons();
+    document.addEventListener('updated_wc_div', () => ensureQtyButtons());
+    document.addEventListener('wc_fragments_refreshed', () => ensureQtyButtons());
+    document.addEventListener('wc_fragments_loaded', () => ensureQtyButtons());
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.emdief-qty-btn');
+        if (!btn) return;
+        e.preventDefault();
+
+        const wrapper = btn.closest('.quantity');
+        if (!wrapper) return;
+
+        const input = wrapper.querySelector('input.qty');
+        if (!input || input.disabled || input.readOnly) return;
+
+        let currentVal = parseFloat(input.value);
+        if (isNaN(currentVal)) currentVal = 1;
+
+        const step = parseFloat(input.getAttribute('step')) || 1;
+        const minAttr = input.getAttribute('min');
+        const maxAttr = input.getAttribute('max');
+        const min = (minAttr !== '' && minAttr !== null) ? parseFloat(minAttr) : 1;
+        const max = (maxAttr !== '' && maxAttr !== null) ? parseFloat(maxAttr) : Infinity;
+
+        if (btn.classList.contains('qty-minus')) {
+            let newVal = currentVal - step;
+            if (newVal < min) newVal = min;
+            input.value = newVal;
+        } else if (btn.classList.contains('qty-plus')) {
+            let newVal = currentVal + step;
+            if (newVal > max) newVal = max;
+            input.value = newVal;
+        }
+
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
 });
