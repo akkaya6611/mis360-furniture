@@ -325,9 +325,16 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         </div>
 
         <div class="trendyol-card-content">
-            <!-- Kargo Bedava & Hızlı Teslimat -->
+            <!-- Kargo Kuralı: 1.500 ₺ ve Üzeri Bedava Kontrolü -->
             <div class="trendyol-pills-row">
-                <span class="pill-cargo">Kargo Bedava</span>
+                <?php
+                $free_shipping_limit = (float)get_theme_mod('mis360_free_shipping_limit', 1500);
+                if ($current_price >= $free_shipping_limit):
+                ?>
+                    <span class="pill-cargo">Kargo Bedava</span>
+                <?php else: ?>
+                    <span class="pill-cargo-info"><?php echo number_format($free_shipping_limit, 0, ',', '.'); ?> ₺ Üzeri Bedava</span>
+                <?php endif; ?>
                 <span class="pill-fast-shipping">
                     <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
                     Hızlı Teslimat
@@ -419,6 +426,36 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
     return $prods;
 }
 ?>
+
+<!-- =========================================================================
+     ÖZEL KAMPANYA: 1.500 ₺ ÜZERİ ÜCRETSİZ KARGO BANNER'I
+     ========================================================================= -->
+<section class="emdief-cargo-promo-banner">
+    <div class="emdief-container">
+        <div class="cargo-promo-card">
+            <div class="cargo-promo-left">
+                <div class="cargo-truck-icon-wrap">
+                    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                </div>
+                <div class="cargo-promo-text">
+                    <span class="cargo-badge-pill">🚚 EMDIEF HOME SEVKİYAT GÜVENCESİ</span>
+                    <h3 class="cargo-headline">1.500 ₺ ve Üzeri Tüm Siparişlerinizde <span>Kargo Tamamen Ücretsiz!</span></h3>
+                    <p class="cargo-sub">1. Sınıf E1 Kalite MDF Montessori ürünleriniz darbe emici özel straforlu ambalajlarla %100 sigortalı teslim edilir.</p>
+                </div>
+            </div>
+            <div class="cargo-promo-right">
+                <div class="cargo-benefit-tag">
+                    <span class="benefit-icon">⏱️</span>
+                    <span>13:00'a Kadar <strong>Aynı Gün İmalat</strong></span>
+                </div>
+                <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="btn-cargo-shop">
+                    <span>Fırsatları İncele</span>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- =========================================================================
      4. BÖLÜM: TRENDYOL SLIDER 1 - FLAŞ ÜRÜNLER (TURUNCU / MERCAN TEMA)
