@@ -565,3 +565,34 @@ function mis360_bear_empty_cart(int $width = 200, int $height = 110, string $cla
         $style_attr
     );
 }
+
+/**
+ * Montessori Kategori veya Akıllı Arama Bağlantısı Çözücü (404 Hatasını Önler)
+ *
+ * @param string $slug            Kategori slug'ı veya terim adı
+ * @param string $fallback_search Kategori bulunamazsa kullanılacak akıllı arama terimi
+ * @return string
+ */
+function mis360_get_category_url($slug, $fallback_search = '') {
+    if (taxonomy_exists('product_cat')) {
+        $term = get_term_by('slug', $slug, 'product_cat');
+        if ($term && !is_wp_error($term)) {
+            return get_term_link($term);
+        }
+        $term_by_name = get_term_by('name', $slug, 'product_cat');
+        if ($term_by_name && !is_wp_error($term_by_name)) {
+            return get_term_link($term_by_name);
+        }
+    }
+
+    if (class_exists('WooCommerce')) {
+        $shop_url = wc_get_page_permalink('shop');
+        if ($fallback_search) {
+            return add_query_arg(['s' => $fallback_search, 'post_type' => 'product'], $shop_url);
+        }
+        return $shop_url;
+    }
+
+    return home_url('/?s=' . urlencode($fallback_search ?: $slug) . '&post_type=product');
+}
+

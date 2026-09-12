@@ -39,6 +39,13 @@ function mis360Init() {
     if (mobileClose) mobileClose.addEventListener('click', closeMobileMenu);
     if (mobileOverlay) mobileOverlay.addEventListener('click', closeMobileMenu);
 
+    const mobileLinks = document.querySelectorAll('.emdief-mobile-menu-links a');
+    mobileLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            closeMobileMenu();
+        });
+    });
+
     // 2. Mobil Arama Toggle
     const searchToggle = document.getElementById('emdief-mobile-search-toggle');
     const searchBar = document.getElementById('emdief-mobile-search-bar');

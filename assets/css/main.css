@@ -313,6 +313,81 @@
   color: var(--emd-primary-hover);
 }
 
+/* Masaüstü Dropdown Açılır Menü Desteği */
+.emdief-nav-menu li.menu-item-has-children {
+  position: relative;
+}
+
+.emdief-nav-menu li.menu-item-has-children > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.emdief-nav-menu .sub-menu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 230px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.12), 0 8px 10px -6px rgba(0,0,0,0.06);
+  border: 1px solid #e2e8f0;
+  padding: 0.5rem;
+  list-style: none;
+  margin: 0.25rem 0 0;
+  z-index: 999;
+}
+
+.emdief-nav-menu li.menu-item-has-children:hover > .sub-menu,
+.emdief-nav-menu li.menu-item-has-children:focus-within > .sub-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  animation: emdiefDropdownFade 0.2s ease forwards;
+}
+
+@keyframes emdiefDropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emdief-nav-menu .sub-menu li {
+  width: 100%;
+}
+
+.emdief-nav-menu .sub-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--emd-text-main);
+  border-radius: 8px;
+  white-space: normal;
+  text-decoration: none;
+}
+
+.emdief-nav-menu .sub-menu li a:hover {
+  background-color: var(--emd-primary-light);
+  color: var(--emd-primary);
+}
+
+@media (min-width: 992px) {
+  .emdief-nav-menu {
+    overflow: visible;
+  }
+}
+
 .nav-extra-badge {
   flex-shrink: 0;
   margin-left: auto;
@@ -1304,6 +1379,28 @@
   background-color: var(--emd-primary-light);
   color: var(--emd-primary-hover);
   transform: translateX(4px);
+}
+
+.emdief-mobile-menu-links .sub-menu {
+  list-style: none;
+  padding: 0.25rem 0 0.25rem 0.75rem;
+  margin: 0.25rem 0 0.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  border-left: 2px solid var(--emd-primary-light);
+}
+
+.emdief-mobile-menu-links .sub-menu li a {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 0.75rem;
+  background-color: #f8fafc;
+}
+
+.emdief-mobile-menu-links .sub-menu li a:hover {
+  background-color: var(--emd-primary-light);
+  color: var(--emd-primary);
 }
 
 .drawer-contact-info {

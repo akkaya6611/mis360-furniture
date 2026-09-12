@@ -38,26 +38,52 @@ if (!defined('ABSPATH')) {
             <!-- Kolon 2: Popüler Kategoriler -->
             <div class="footer-col">
                 <h4 class="footer-heading"><?php esc_html_e('Montessori Ürünleri', 'mis360-mobilya'); ?></h4>
-                <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/shop/?s=kitaplik')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?category=ogrenme-kulesi')); ?>"><?php esc_html_e('Mutfak Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Çocuk Aktivite Masası & Sandalye', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Koleksiyonu', 'mis360-mobilya'); ?></a></li>
-                </ul>
+                <?php
+                if (has_nav_menu('footer_col_2')) {
+                    wp_nav_menu([
+                        'theme_location' => 'footer_col_2',
+                        'container'      => false,
+                        'menu_class'     => 'footer-links',
+                        'fallback_cb'    => false,
+                    ]);
+                } else {
+                    ?>
+                    <ul class="footer-links">
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>"><?php esc_html_e('Mutfak Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Çocuk Aktivite Masası & Sandalye', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyici', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Koleksiyonu', 'mis360-mobilya'); ?></a></li>
+                    </ul>
+                    <?php
+                }
+                ?>
             </div>
 
             <!-- Kolon 3: Müşteri Hizmetleri & Kurumsal -->
             <div class="footer-col">
                 <h4 class="footer-heading"><?php esc_html_e('Müşteri & Kurumsal', 'mis360-mobilya'); ?></h4>
-                <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>"><?php esc_html_e('Teslimat & İade Koşulları', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>"><?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></a></li>
-                </ul>
+                <?php
+                if (has_nav_menu('footer_col_1')) {
+                    wp_nav_menu([
+                        'theme_location' => 'footer_col_1',
+                        'container'      => false,
+                        'menu_class'     => 'footer-links',
+                        'fallback_cb'    => false,
+                    ]);
+                } else {
+                    ?>
+                    <ul class="footer-links">
+                        <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>"><?php esc_html_e('Teslimat & İade Koşulları', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>"><?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></a></li>
+                    </ul>
+                    <?php
+                }
+                ?>
             </div>
 
             <!-- Kolon 4: İletişim & Hızlı Destek -->
@@ -186,7 +212,7 @@ endif;
         <span class="nav-label"><?php esc_html_e('Sepetim', 'mis360-mobilya'); ?></span>
     </button>
     <?php if (is_user_logged_in()): ?>
-        <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="bottom-nav-item">
+        <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/my-account/')); ?>" class="bottom-nav-item">
             <span class="nav-icon">
                 <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             </span>

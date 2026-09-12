@@ -55,7 +55,7 @@ get_header();
                 </div>
                 <span class="story-name">Çok Satanlar</span>
             </a>
-            <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="story-item">
+            <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/my-account/')); ?>" class="story-item">
                 <div class="story-ring ring-gold">
                     <div class="story-inner">🚚</div>
                 </div>
