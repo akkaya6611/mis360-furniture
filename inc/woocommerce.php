@@ -674,13 +674,13 @@ function mis360_cart_free_shipping_popup() {
             <div class="fs-popup-quick-links">
                 <span class="quick-links-title"><?php esc_html_e('Sepeti Kolayca Tamamlayabileceğiniz Ürünler:', 'mis360-mobilya'); ?></span>
                 <div class="quick-links-chips">
-                    <a href="<?php echo esc_url(home_url('/montessori-kitapliklar/')); ?>" class="chip-item">
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('kitaplik', 'kitaplik') : home_url('/shop/?s=kitaplik')); ?>" class="chip-item">
                         <span>📚 Montessori Kitaplıklar</span>
                     </a>
-                    <a href="<?php echo esc_url(home_url('/ogrenme-kuleleri/')); ?>" class="chip-item">
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ogrenme-kulesi', 'kule') : home_url('/shop/?category=ogrenme-kulesi')); ?>" class="chip-item">
                         <span>🏰 Öğrenme Kuleleri</span>
                     </a>
-                    <a href="<?php echo esc_url(home_url('/cocuk-masa-sandalye/')); ?>" class="chip-item">
+                    <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('masa-sandalye', 'masa') : home_url('/shop/?category=masa-sandalye')); ?>" class="chip-item">
                         <span>🎨 Masa & Sandalye</span>
                     </a>
                 </div>

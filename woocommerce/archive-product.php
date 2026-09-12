@@ -26,7 +26,7 @@ mis360_breadcrumbs();
                 <div class="shop-banner-sub"><?php echo wp_kses_post($term_desc); ?></div>
             <?php else: ?>
                 <p class="shop-banner-sub">
-                    <?php esc_html_e('Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve eğitici kitaplık koleksiyonu.', 'mis360-mobilya'); ?>
+                    <?php esc_html_e('Montessori pedagojisine uygun, 1. sınıf MDF çocuk odası ve Montessori ürünleri koleksiyonu.', 'mis360-mobilya'); ?>
                 </p>
             <?php endif; ?>
         </div>
