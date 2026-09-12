@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
                     <span class="footer-logo-fallback" style="display:none; font-weight:800; font-size:1.4rem; color:var(--emd-text-main);">Emdief<span style="color:var(--emd-primary);">Home</span></span>
                 </div>
                 <p class="footer-desc">
-                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve öğrenme heveslerini destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları üreticisidir. Tüm ürünlerimiz çocuk odalarına özel 1. sınıf MDF malzemeden, sivri kenar barındırmayan yuvarlatılmış güvenli hatlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
+                    <?php esc_html_e('Emdief Home; çocukların bağımsız keşiflerini, özgüvenlerini ve öğrenme heveslerini destekleyen Montessori felsefeli 1. sınıf MDF çocuk odası mobilyaları üreticisidir. Montessori kitaplıklardan öğrenme kulelerine, aktivite masalarından düzenleyicilere tüm ürünlerimiz sivri kenar barındırmayan yuvarlatılmış güvenli hatlarla sevgiyle üretilmektedir.', 'mis360-mobilya'); ?>
                 </p>
                 <div class="footer-cert-badges">
                     <span class="cert-pill">🛡️ 1. Sınıf MDF</span>
@@ -37,13 +37,13 @@ if (!defined('ABSPATH')) {
 
             <!-- Kolon 2: Popüler Kategoriler -->
             <div class="footer-col">
-                <h4 class="footer-heading"><?php esc_html_e('Montessori Koleksiyonu', 'mis360-mobilya'); ?></h4>
+                <h4 class="footer-heading"><?php esc_html_e('Montessori Ürünleri', 'mis360-mobilya'); ?></h4>
                 <ul class="footer-links">
-                    <li><a href="<?php echo esc_url(home_url('/shop/?s=carmen')); ?>"><?php esc_html_e('Carmen Kitaplık Serisi', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?s=safir')); ?>"><?php esc_html_e('Safir 4 Raflı Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?s=melis')); ?>"><?php esc_html_e('Melis Eğitici Raflar', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/shop/?s=kitaplik')); ?>"><?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/shop/?category=ogrenme-kulesi')); ?>"><?php esc_html_e('Mutfak Öğrenme Kuleleri', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Çocuk Aktivite Masası', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/shop/?category=masa-sandalye')); ?>"><?php esc_html_e('Çocuk Aktivite Masası & Sandalye', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Koleksiyonu', 'mis360-mobilya'); ?></a></li>
                 </ul>
             </div>
 
@@ -91,12 +91,11 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
                 <div class="footer-payment-icons">
-                    <span class="pay-text">Güvenli 256-bit SSL Alışveriş</span>
+                    <span class="pay-text">🏦 Güvenli Banka Havalesi / EFT / FAST</span>
                     <div class="pay-badges">
-                        <span class="pay-card">Mastercard</span>
-                        <span class="pay-card">Visa</span>
-                        <span class="pay-card">Troy</span>
-                        <span class="pay-card">Taksit İmkanı</span>
+                        <span class="pay-card">Banka Havalesi</span>
+                        <span class="pay-card">EFT / FAST</span>
+                        <span class="pay-card">Sipariş Onaylı</span>
                     </div>
                 </div>
             </div>

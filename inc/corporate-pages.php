@@ -113,11 +113,11 @@ function mis360_get_corporate_pages_data() {
         <li><strong>İşlem Güvenliği Bilgileri:</strong> IP adresi, site giriş-çıkış log kayıtları, çerez kayıtları.</li>
     </ul>
 
-    <h2>3. Kredi Kartı ve Ödeme Güvenliği Taahhüdü</h2>
+    <h2>3. Güvenli Ödeme (Banka Havalesi / EFT / FAST) Taahhüdü</h2>
     <div class="prose-alert prose-alert-success">
-        <span class="alert-icon">🔒</span>
+        <span class="alert-icon">🏦</span>
         <div class="alert-body">
-            <strong>256-Bit SSL Güvencesi:</strong> Ödeme sayfamızda girdiğiniz kredi kartı / banka kartı bilgileri Emdief Home sunucularında <u>kesinlikle saklanmaz ve kaydedilmez</u>. Tüm ödeme işlemleri bankalar ve lisanslı ödeme kuruluşları altyapısıyla doğrudan 256-bit SSL şifreleme ve 3D Secure SMS doğrulama protokolüyle gerçekleşir.
+            <strong>Banka Havalesi / EFT Güvencesi:</strong> Sitemiz üzerinden verilen tüm siparişlerin ödemeleri doğrudan resmi şirket banka hesaplarımıza <u>Banka Havalesi, EFT veya FAST</u> yöntemiyle güvenli bir biçimde gerçekleştirilmektedir. Web sitemiz üzerinde müşterilerimizden herhangi bir kredi kartı veya banka kartı bilgisi <u>kesinlikle talep edilmemekte ve saklanmamaktadır</u>. Sipariş onaylandıktan sonra ödemeler, müşterinin kendi bankacılık kanalları (mobil bankacılık veya internet şubesi) üzerinden doğrudan şirket banka hesaplarımıza güvenle transfer edilir.
         </div>
     </div>
 
@@ -155,13 +155,13 @@ function mis360_get_corporate_pages_data() {
     Web sitesinden sipariş oluşturan, fatura ve teslimat bilgilerini giren gerçek veya tüzel kişi ("Alıcı").</p>
 
     <h2>MADDE 2 – SÖZLEŞMENİN KONUSU</h2>
-    <p>İşbu sözleşmenin konusu; Alıcı\'nın Satıcı\'ya ait web sitesi üzerinden elektronik ortamda siparişini verdiği, sitede nitelikleri ve satış fiyatı belirtilen 1. sınıf MDF Montessori çocuk mobilyası ve tamamlayıcı ürünlerin satışı ve teslimi ile ilgili olarak tarafların hak ve yükümlülüklerinin belirlenmesidir.</p>
+    <p>İşbu sözleşmenin konusu; Alıcı\'nın Satıcı\'ya ait web sitesi üzerinden elektronik ortamda siparişini verdiği, sitede nitelikleri ve satış fiyatı belirtilen 1. sınıf MDF Montessori çocuk mobilyaları (Montessori kitaplıklar, öğrenme kuleleri, çocuk aktivite masa ve sandalye takımları, oyuncak düzenleyiciler, açık askılıklar) ve tamamlayıcı çocuk odası ürünlerinin satışı ve teslimi ile ilgili olarak tarafların hak ve yükümlülüklerinin belirlenmesidir.</p>
 
     <h2>MADDE 3 – SİPARİŞ VE ÖDEME KOŞULLARI</h2>
     <ul>
         <li>Ürünlerin cinsi, modeli, rengi, adedi, KDV dahil satış bedeli ve kargo ücreti sipariş özeti ekranında ve sipariş onay e-postasında belirtildiği gibidir.</li>
         <li>Satıcı, sitede duyurulan kampanya koşullarına bağlı olarak 1.500 TL ve üzeri siparişlerde kargo ücretini üstlenmektedir.</li>
-        <li>Ödemeler kredi kartı, banka kartı (3D Secure) veya havale/EFT yöntemiyle yapılabilir.</li>
+        <li><strong>Ödeme Yöntemi:</strong> Sitemizde sipariş bedeli ödemeleri doğrudan Satıcı\'nın resmi banka hesabına <strong>Banka Havalesi, EFT veya FAST</strong> yöntemiyle gerçekleştirilmektedir. Sipariş tamamlandığında ekranda ve sipariş onay e-postasında Alıcı\'ya Satıcı\'nın IBAN ve banka hesap bilgileri sunulur. Alıcı, sipariş numarasını açıklama kısmına yazarak transferi tamamlar.</li>
     </ul>
 
     <h2>MADDE 4 – TESLİMAT ESASLARI</h2>
@@ -205,7 +205,7 @@ function mis360_get_corporate_pages_data() {
     </ul>
 
     <h2>2. Sipariş İptali</h2>
-    <p>Siparişinizi henüz kargoya teslim edilmeden önce iptal etmek isterseniz, <strong>+90 537 477 87 66</strong> numaralı destek hattımızı arayarak veya WhatsApp üzerinden sipariş numaranızı bildirerek anında ücretsiz iptal edebilirsiniz. Ödemeniz aynı gün kartınıza / hesabınıza iade edilmek üzere bankaya aktarılır.</p>
+    <p>Siparişinizi henüz kargoya teslim edilmeden önce iptal etmek isterseniz, <strong>+90 537 477 87 66</strong> numaralı destek hattımızı arayarak veya WhatsApp üzerinden sipariş numaranızı bildirerek anında ücretsiz iptal edebilirsiniz. Havale / EFT ile yapmış olduğunuz ödeme, bildireceğiniz banka IBAN hesabınıza aynı gün eksiksiz olarak geri transfer edilir.</p>
 
     <h2>3. İade ve Değişim Koşulları (14 Günlük Yasal Süreç)</h2>
     <p>Satın aldığınız ürünü teslim aldığınız tarihten itibaren <strong>14 gün içerisinde</strong> herhangi bir gerekçe göstermeksizin iade edebilirsiniz. İade işleminin sorunsuz tamamlanabilmesi için aşağıdaki kurallara dikkat edilmelidir:</p>
@@ -224,7 +224,7 @@ function mis360_get_corporate_pages_data() {
     </div>
 
     <h2>5. İade Ücretinin Geri Ödenmesi</h2>
-    <p>İade ettiğiniz ürün depomuza ulaştıktan sonra teknik ekibimizce incelenir ve onaylandığı gün bankanıza iade talimatı verilir. Kredi kartı iadeleri bankanızın prosedürüne bağlı olarak 2 ila 4 iş günü içinde, debit/hesap kartı iadeleri ise 5 ila 7 iş günü içinde hesabınıza yansımaktadır.</p>
+    <p>İade ettiğiniz ürün depomuza ulaştıktan sonra teknik ekibimizce incelenir ve iade koşullarına uygunluğu onaylandığı gün, ödemeyi yaptığınız banka hesabınıza (IBAN) Havale / EFT yöntemiyle eksiksiz olarak geri aktarılır.</p>
 </div>',
         ],
         'hakkimizda' => [
@@ -232,15 +232,17 @@ function mis360_get_corporate_pages_data() {
             'content' => '<div class="corporate-content-block">
     <div class="about-hero-box">
         <h2>Miniklerin Dünyasına Düzen, Özgüven ve Neşe Katıyoruz!</h2>
-        <p class="lead-p">Emdief Home; Dr. Maria Montessori\'nin <em>"Çocuğun kendi kendine yapabilmesi için ona rehberlik edin"</em> felsefesinden ilham alarak, miniklerin bağımsız keşiflerini destekleyen 1. sınıf MDF çocuk odası mobilyaları tasarlar ve üretir.</p>
+        <p class="lead-p">Emdief Home; Dr. Maria Montessori\'nin <em>"Çocuğun kendi kendine yapabilmesi için ona rehberlik edin"</em> felsefesinden ilham alarak, miniklerin bağımsız keşiflerini destekleyen 1. sınıf MDF çocuk odası mobilyaları ve Montessori ürünleri tasarlar ve üretir.</p>
     </div>
 
     <h2>Montessori Felsefesi Neden Bu Kadar Önemli?</h2>
-    <p>Geleneksel mobilyalar genellikle yetişkinlerin boyuna ve ihtiyaçlarına göre tasarlanır; bu durum çocukların istedikleri kitaba, oyuncağa veya çalışma alanına erişmek için sürekli bir büyükten yardım istemesine yol açar. Emdief Home olarak biz, mobilyalarımızın boyutlarını çocukların doğal ergonomisine göre planlıyoruz:</p>
+    <p>Geleneksel mobilyalar genellikle yetişkinlerin boyuna ve ihtiyaçlarına göre tasarlanır; bu durum çocukların istedikleri kitaba, oyuncağa veya çalışma alanına erişmek için sürekli bir büyükten yardım istemesine yol açar. Emdief Home olarak biz, mobilyalarımızın boyutlarını çocukların doğal ergonomisine ve bağımsız gelişim metoduna göre planlıyoruz:</p>
     <ul>
-        <li><strong>Erişilebilir Kitaplıklar:</strong> Kitapların kapaklarının doğrudan çocuğa baktığı ön yüzlü raflarımız sayesinde çocuklar henüz okuma yazma bilmeseler dahi kapak resmini görerek istedikleri kitabı kendi başlarına seçer ve yerine koyar.</li>
-        <li><strong>Öğrenme Kuleleri:</strong> Mutfakta ve lavaboda güvenli yükseklik sağlayarak miniklerin yemek hazırlamaya ve el yıkamaya bağımsız katılımını teşvik eder.</li>
-        <li><strong>Aktivite Masa ve Sandalyeleri:</strong> Omurga sağlığını destekleyen ergonomik oturumla çizim, boyama ve oyun saatlerini keyfe dönüştürür.</li>
+        <li><strong>Erişilebilir Montessori Kitaplıklar:</strong> Kitapların kapaklarının doğrudan çocuğa baktığı ön yüzlü raflarımız sayesinde çocuklar henüz okuma yazma bilmeseler dahi kapak resmini görerek istedikleri kitabı kendi başlarına seçer ve yerine koyar.</li>
+        <li><strong>Mutfak Öğrenme Kuleleri & Güvenli Basamaklar:</strong> Mutfakta tezgaha veya banyoda lavaboya güvenli yükseklik sağlayarak miniklerin yemek hazırlamaya, el yıkamaya ve aile içi aktivitelere bağımsız katılımını teşvik eder.</li>
+        <li><strong>Çocuk Aktivite Masaları ve Sandalye Takımları:</strong> Omurga sağlığını destekleyen ergonomik oturumla çizim, boyama, montaj ve oyun saatlerini keyifli bir öğrenme ortamına dönüştürür.</li>
+        <li><strong>Montessori Oyuncak Düzenleyiciler & Saklama Çözümleri:</strong> Çocukların kendi boy seviyesinde oyuncaklarını kategorize etmelerini ve odalarını toplama alışkanlığı kazanmalarını sağlayan fonksiyonel bölmeler.</li>
+        <li><strong>Montessori Çocuk Gardıropları & Açık Askılıklar:</strong> Çocukların kendi kıyafetlerini seçip asabilmelerine olanak tanıyan, bağımsız giyinme becerisini geliştiren alçak askı sistemleri.</li>
     </ul>
 
     <h2>Neden Sadece 1. Sınıf Kaliteli MDF?</h2>
@@ -324,22 +326,31 @@ function mis360_setup_corporate_pages() {
                 update_post_meta($page_id, '_wp_page_template', 'page-corporate.php');
             }
         } else {
-            // Eğer daha önce oluşturulan içerikte eski unvan varsa güncelle
-            if (!empty($existing->post_content) && strpos($existing->post_content, 'MİS360 Teknoloji') !== false) {
-                wp_update_post([
-                    'ID'           => $existing->ID,
-                    'post_content' => str_replace('MİS360 Teknoloji', 'Orhan TEBER', $existing->post_content),
-                ]);
+            // Eğer içerikte eski unvan, eksik adres veya eski Kredi Kartı ibaresi varsa ya da Banka Havalesi / geniş Montessori ürünleri eksikse güncelle
+            $needs_refresh = false;
+            if (!empty($existing->post_content)) {
+                if (strpos($existing->post_content, 'MİS360 Teknoloji') !== false) {
+                    $needs_refresh = true;
+                }
+                if (strpos($existing->post_content, 'Mobilya Kent') === false && in_array($slug, ['mesafeli-satis-sozlesmesi', 'iletisim', 'gizlilik-ve-kvkk'], true)) {
+                    $needs_refresh = true;
+                }
+                if (strpos($existing->post_content, 'Kredi Kartı') !== false && in_array($slug, ['gizlilik-ve-kvkk', 'mesafeli-satis-sozlesmesi', 'teslimat-ve-iade'], true)) {
+                    $needs_refresh = true;
+                }
+                if (strpos($existing->post_content, 'Banka Havalesi') === false && in_array($slug, ['gizlilik-ve-kvkk', 'mesafeli-satis-sozlesmesi', 'teslimat-ve-iade'], true)) {
+                    $needs_refresh = true;
+                }
+                if (strpos($existing->post_content, 'öğrenme kuleleri') === false && in_array($slug, ['hakkimizda', 'mesafeli-satis-sozlesmesi'], true)) {
+                    $needs_refresh = true;
+                }
             }
 
-            // Eğer daha önce oluşturulan içerikte adres eksikse güncelle
-            if (!empty($existing->post_content) && strpos($existing->post_content, 'Mobilya Kent') === false) {
-                if (in_array($slug, ['mesafeli-satis-sozlesmesi', 'iletisim', 'gizlilik-ve-kvkk'], true)) {
-                    wp_update_post([
-                        'ID'           => $existing->ID,
-                        'post_content' => $page_data['content'],
-                    ]);
-                }
+            if ($needs_refresh) {
+                wp_update_post([
+                    'ID'           => $existing->ID,
+                    'post_content' => $page_data['content'],
+                ]);
             }
 
             // Mevcut sayfa şablonunu kontrol et
