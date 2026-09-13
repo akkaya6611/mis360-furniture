@@ -74,6 +74,7 @@ if (!defined('ABSPATH')) {
                 } else {
                     ?>
                     <ul class="footer-links">
+                        <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🎬 <?php esc_html_e('Yardım & Kurulum Videoları', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>

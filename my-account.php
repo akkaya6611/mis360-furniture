@@ -50,7 +50,8 @@ $is_orders     = function_exists('is_wc_endpoint_url') && (is_wc_endpoint_url('o
 $is_address    = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('edit-address');
 $is_account    = function_exists('is_wc_endpoint_url') && is_wc_endpoint_url('edit-account');
 $is_coupons    = isset($_GET['tab']) && $_GET['tab'] === 'coupons';
-$is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons;
+$is_help       = isset($_GET['tab']) && in_array($_GET['tab'], ['yardim', 'kurulum', 'help'], true);
+$is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && !$is_help;
 ?>
 
 <div class="emdief-container py-8">
@@ -174,6 +175,13 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons;
                                 <span class="nav-tag-badge">%10</span>
                             </a>
                         </li>
+                        <li class="nav-item <?php echo $is_help ? 'is-active' : ''; ?>">
+                            <a href="<?php echo esc_url(add_query_arg('tab', 'yardim', wc_get_page_permalink('myaccount'))); ?>">
+                                <span class="nav-svg"><?php echo mis360_icon('video', 18); ?></span>
+                                <span class="nav-text"><?php esc_html_e('Kurulum & Yardım', 'mis360-mobilya'); ?></span>
+                                <span class="nav-tag-badge" style="background: #fef3c7; color: #b45309;">🎬 Video</span>
+                            </a>
+                        </li>
                         <li class="nav-item <?php echo $is_account ? 'is-active' : ''; ?>">
                             <a href="<?php echo esc_url(wc_get_account_endpoint_url('edit-account')); ?>">
                                 <span class="nav-svg"><?php echo mis360_icon('settings', 18); ?></span>
@@ -223,6 +231,111 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons;
                                         </button>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php elseif ($is_help): ?>
+                    <!-- Kurulum & Yardım Bölümü -->
+                    <div class="account-wc-endpoint-wrapper">
+                        <div class="panel-header" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h3 style="font-size: 1.35rem; font-weight: 800; color: #1e293b; margin: 0 0 4px 0;">Kurulum Videoları & Destek Merkezi</h3>
+                                <p style="color: #64748b; font-size: 0.88rem; margin: 0;">Sipariş ettiğiniz mobilyaların montaj adımlarını izleyin ve eksik parça taleplerinizi iletin.</p>
+                            </div>
+                            <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="emdief-btn btn-outline btn-sm">
+                                <span>Tüm Kılavuzlar</span>
+                                <?php echo mis360_icon('arrow-right', 14); ?>
+                            </a>
+                        </div>
+
+                        <div class="account-help-grid">
+                            <div class="account-video-item">
+                                <div class="account-video-thumb">
+                                    <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Carmen Kitaplık Kurulumu" loading="lazy">
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Carmen%20Kitaplık%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="account-play-btn" aria-label="Videoyu Oynat">
+                                        <?php echo mis360_icon('play', 20); ?>
+                                    </a>
+                                    <span class="video-duration">⏱️ 05:20</span>
+                                </div>
+                                <div class="account-video-info">
+                                    <h4>Carmen Montessori 4 Raflı Kitaplık</h4>
+                                    <p>Gizli vida bağlantıları, raf sıralaması ve duvara sabitleme aparatı montajı.</p>
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Carmen%20Kitaplık%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="btn-play-text">
+                                        <?php echo mis360_icon('play', 14); ?>
+                                        <span>Kurulum Videosunu İzle</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="account-video-item">
+                                <div class="account-video-thumb">
+                                    <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief2.jpg" alt="Safir Kitaplık Kurulumu" loading="lazy">
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Safir%20Kitaplık%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="account-play-btn" aria-label="Videoyu Oynat">
+                                        <?php echo mis360_icon('play', 20); ?>
+                                    </a>
+                                    <span class="video-duration">⏱️ 06:45</span>
+                                </div>
+                                <div class="account-video-info">
+                                    <h4>Safir Montessori 5 Raflı Geniş Kitaplık</h4>
+                                    <p>Geniş gövde birleşimi, arka destek kuşakları ve devrilme emniyet kiti.</p>
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Safir%20Kitaplık%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="btn-play-text">
+                                        <?php echo mis360_icon('play', 14); ?>
+                                        <span>Kurulum Videosunu İzle</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="account-video-item">
+                                <div class="account-video-thumb">
+                                    <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Ahşap Düzenleyici Kurulumu" loading="lazy">
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Ahşap%20Düzenleyici%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="account-play-btn" aria-label="Videoyu Oynat">
+                                        <?php echo mis360_icon('play', 20); ?>
+                                    </a>
+                                    <span class="video-duration">⏱️ 04:10</span>
+                                </div>
+                                <div class="account-video-info">
+                                    <h4>Montessori Kutu Düzenleyici & Oyuncaklık</h4>
+                                    <p>Ahşap kanallı kutu rayları montajı ve pratik kilit mekanizmaları.</p>
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Ahşap%20Düzenleyici%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="btn-play-text">
+                                        <?php echo mis360_icon('play', 14); ?>
+                                        <span>Kurulum Videosunu İzle</span>
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="account-video-item">
+                                <div class="account-video-thumb">
+                                    <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief2.jpg" alt="Duvar Rafı Kurulumu" loading="lazy">
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Duvar%20Rafı%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="account-play-btn" aria-label="Videoyu Oynat">
+                                        <?php echo mis360_icon('play', 20); ?>
+                                    </a>
+                                    <span class="video-duration">⏱️ 03:15</span>
+                                </div>
+                                <div class="account-video-info">
+                                    <h4>Montessori Bulut Duvar & Banyo Rafı</h4>
+                                    <p>Gizli dübel montajı, su terazisiyle hizalama ve güvenli taşıma kılavuzu.</p>
+                                    <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Duvar%20Rafı%20kurulum%20videosunu%20izlemek%20istiyorum." target="_blank" rel="noopener" class="btn-play-text">
+                                        <?php echo mis360_icon('play', 14); ?>
+                                        <span>Kurulum Videosunu İzle</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Canlı Destek & Eksik Parça Kutusu -->
+                        <div class="account-support-box">
+                            <div class="support-box-icon">
+                                <?php echo mis360_icon('wrench', 28); ?>
+                            </div>
+                            <div class="support-box-content">
+                                <h4>Kurulumda Bir Aksamaya mı Rastladınız?</h4>
+                                <p>Paketinizden eksik vida, alyan veya hasarlı parça çıktıysa anında ücretsiz yedek parça temin ediyoruz.</p>
+                            </div>
+                            <div class="support-box-action">
+                                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=<?php echo rawurlencode('Merhaba Emdief Home, siparişimdeki mobilyanın kurulumu / parça desteği hakkında yardım almak istiyorum.'); ?>" target="_blank" rel="noopener" class="emdief-btn btn-whatsapp btn-md">
+                                    <?php echo mis360_icon('whatsapp', 18); ?>
+                                    <span>WhatsApp Canlı Destek</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -376,6 +489,23 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons;
                                 </div>
                             </div>
                         <?php endif; ?>
+
+                        <!-- Kurulum & Montaj Destek Kartı -->
+                        <div class="account-quick-assembly-card">
+                            <div class="assembly-card-icon">
+                                🎬
+                            </div>
+                            <div class="assembly-card-content">
+                                <h4>Mobilyanızı Kurarken Yardıma mı İhtiyacınız Var?</h4>
+                                <p>Tüm 1. Sınıf MDF Montessori kitaplık ve mobilyalarımız için adım adım kurulum videolarını ve kılavuzlarını izleyin.</p>
+                            </div>
+                            <div class="assembly-card-action">
+                                <a href="<?php echo esc_url(add_query_arg('tab', 'yardim', wc_get_page_permalink('myaccount'))); ?>" class="emdief-btn btn-primary btn-sm">
+                                    <span>Kurulum Videolarını Aç</span>
+                                    <?php echo mis360_icon('arrow-right', 14); ?>
+                                </a>
+                            </div>
+                        </div>
 
                         <!-- Kupon ve Özel Sadakat Şeridi -->
                         <div class="account-promo-strip">

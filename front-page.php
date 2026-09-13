@@ -61,6 +61,12 @@ get_header();
                 </div>
                 <span class="story-name">Kargo Takip</span>
             </a>
+            <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="story-item">
+                <div class="story-ring ring-cyan">
+                    <div class="story-inner">🎬</div>
+                </div>
+                <span class="story-name">Kurulum & Yardım</span>
+            </a>
         </div>
     </div>
 </section>
@@ -658,7 +664,45 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     7. BÖLÜM: MONTESSORI & EMDIEF HOME EĞİTİCİ FELSEFE
+     7. BÖLÜM: YARDIM & KOLAY KURULUM MERKEZİ BANNERI (KARGO TAKİP & MONTAJ VİDEOLARI)
+     ========================================================================= -->
+<section class="emdief-help-banner-section">
+    <div class="emdief-container">
+        <div class="help-action-banner">
+            <div class="help-banner-visual">
+                <div class="banner-bear-bubble">
+                    <span class="bubble-icon">🛠️🧸</span>
+                </div>
+                <div class="banner-fast-tag">5 DAKİKADA MONTAJ</div>
+            </div>
+            <div class="help-banner-text">
+                <span class="banner-eyebrow">🎬 Adım Adım Rehber & Müşteri Desteği</span>
+                <h2 class="banner-heading">Montessori Mobilyanızı 5 Dakikada Kolayca Kurun!</h2>
+                <p class="banner-subtext">
+                    Tüm ürünlerimiz numaralı 1. sınıf MDF parçalar ve pratik alyan anahtarıyla gelir. Şarjlı matkaba gerek duymadan hazırladığımız montaj videolarıyla zahmetsizce kurun.
+                </p>
+                <div class="banner-perks-row">
+                    <span class="perk"><span class="check-icon">✓</span> Alyan Anahtarı Pakette</span>
+                    <span class="perk"><span class="check-icon">✓</span> Adım Adım Kurulum Videoları</span>
+                    <span class="perk"><span class="check-icon">✓</span> Ücretsiz Aynı Gün Yedek Parça</span>
+                </div>
+            </div>
+            <div class="help-banner-actions">
+                <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="emdief-btn btn-primary btn-lg banner-btn-main">
+                    <span>Kurulum Videolarını İzle</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+                </a>
+                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Merhaba,%20kurulum%20hakkında%20yardım%20almak%20istiyorum." target="_blank" rel="noopener" class="emdief-btn btn-outline btn-md banner-btn-wa">
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
+                    <span>Canlı Montaj Desteği</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     8. BÖLÜM: MONTESSORI & EMDIEF HOME EĞİTİCİ FELSEFE
      ========================================================================= -->
 <section class="emdief-philosophy-section" id="montessori-felsefesi">
     <div class="emdief-container">

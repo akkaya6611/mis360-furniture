@@ -300,6 +300,11 @@ function mis360_get_corporate_pages_data() {
     </div>
 </div>',
         ],
+        'yardim-merkezi' => [
+            'title'    => 'Yardım Merkezi & Kurulum Videoları',
+            'template' => 'page-help-center.php',
+            'content'  => '<div class="prose-alert prose-alert-info"><span class="alert-icon">🛠️</span><div class="alert-body"><strong>Emdief Home Yardım Merkezi:</strong> Montessori mobilyalarınızın 5 dakikalık pratik montaj videoları, kullanım rehberleri ve canlı destek alanı.</div></div>',
+        ],
     ];
 }
 
@@ -332,7 +337,8 @@ function mis360_setup_corporate_pages() {
             ]);
 
             if ($page_id && !is_wp_error($page_id)) {
-                update_post_meta($page_id, '_wp_page_template', 'page-corporate.php');
+                $target_template = isset($page_data['template']) ? $page_data['template'] : 'page-corporate.php';
+                update_post_meta($page_id, '_wp_page_template', $target_template);
             }
         } else {
             // Eğer içerikte eski unvan, eksik adres veya eski Kredi Kartı ibaresi varsa ya da Banka Havalesi / geniş Montessori ürünleri eksikse güncelle
@@ -418,6 +424,14 @@ add_filter('the_content', 'mis360_clean_corporate_content', 1);
  */
 function mis360_corporate_template_include($template) {
     if (is_page()) {
+        global $post;
+        if ($post && in_array($post->post_name, ['yardim-merkezi', 'help-center', 'kurulum-videolari'], true)) {
+            $help_template = locate_template(['page-help-center.php']);
+            if (!empty($help_template)) {
+                return $help_template;
+            }
+        }
+
         $corp_slugs = [
             'cerez-politikasi',
             'gizlilik-ve-kvkk',
@@ -429,7 +443,6 @@ function mis360_corporate_template_include($template) {
             'teslimat-iade',
             'kvkk'
         ];
-        global $post;
         if ($post && in_array($post->post_name, $corp_slugs, true)) {
             $corp_template = locate_template(['page-corporate.php']);
             if (!empty($corp_template)) {

@@ -5676,3 +5676,954 @@
     text-align: center;
   }
 }
+
+/* ==========================================================================
+   YARDIM MERKEZİ, KURULUM VİDEOLARI & MONTAJ DESTEK SİSTEMİ (v1.5.9)
+   ========================================================================== */
+
+/* 1. Yardım Merkezi Hero Alanı */
+.help-center-wrapper {
+  color: #1e293b;
+}
+
+.help-hero-banner {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 40%, #fef3c7 100%);
+  border-radius: 24px;
+  padding: 3.5rem 2rem;
+  text-align: center;
+  border: 1px solid #fed7aa;
+  box-shadow: 0 10px 30px rgba(249, 115, 22, 0.06);
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.help-hero-banner::before {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+  pointer-events: none;
+}
+
+.hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  color: #ea580c;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.12);
+  margin-bottom: 1rem;
+}
+
+.help-hero-banner .hero-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.25;
+}
+
+.help-hero-banner .hero-sub {
+  font-size: 1.05rem;
+  color: #475569;
+  max-width: 620px;
+  margin: 0 auto 1.75rem auto;
+  line-height: 1.6;
+}
+
+.hero-search-box {
+  max-width: 540px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.hero-search-input {
+  width: 100%;
+  padding: 14px 20px 14px 46px;
+  font-size: 0.95rem;
+  border-radius: 9999px;
+  border: 2px solid #fdba74;
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.hero-search-input:focus {
+  border-color: #ea580c;
+  box-shadow: 0 8px 25px rgba(234, 88, 12, 0.15);
+}
+
+.hero-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+/* 2. Hızlı Erişim Kartları Grid */
+.quick-access-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 3rem;
+}
+
+.quick-access-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #ffffff;
+  padding: 1.25rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quick-access-card:hover {
+  transform: translateY(-3px);
+  border-color: #fdba74;
+  box-shadow: 0 8px 20px rgba(249, 115, 22, 0.1);
+}
+
+.quick-card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.quick-access-card:nth-child(1) .quick-card-icon { background: #fee2e2; }
+.quick-access-card:nth-child(2) .quick-card-icon { background: #fef3c7; }
+.quick-access-card:nth-child(3) .quick-card-icon { background: #dbeafe; }
+.quick-access-card:nth-child(4) .quick-card-icon { background: #dcfce7; }
+
+.quick-card-info h4 {
+  margin: 0 0 2px 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.quick-card-info p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+/* 3. Kurulum Videoları Grid */
+.help-section-box {
+  margin-bottom: 3.5rem;
+}
+
+.help-section-box .section-heading-wrap {
+  margin-bottom: 1.75rem;
+}
+
+.help-section-box .sub-pill {
+  display: inline-block;
+  background: #ffedd5;
+  color: #c2410c;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.help-section-box .section-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
+}
+
+.help-section-box .section-sub {
+  font-size: 0.92rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.video-guides-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.video-guide-card {
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.video-guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  border-color: #fdba74;
+}
+
+.video-thumb-holder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0f172a;
+  overflow: hidden;
+}
+
+.video-cover-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.video-guide-card:hover .video-cover-img {
+  transform: scale(1.04);
+}
+
+.video-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+}
+
+.video-guide-card:hover .video-thumb-overlay {
+  background: rgba(15, 23, 42, 0.18);
+}
+
+.play-btn-pulse {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #ea580c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  padding-left: 3px;
+  box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.6);
+  transition: transform 0.25s ease;
+}
+
+.video-guide-card:hover .play-btn-pulse {
+  transform: scale(1.12);
+}
+
+.video-duration-badge {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.video-card-body {
+  padding: 1.4rem 1.4rem 1.25rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.video-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.65rem;
+}
+
+.pill-category {
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 0.74rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.pill-difficulty {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.video-title {
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.35;
+}
+
+.video-desc {
+  font-size: 0.88rem;
+  color: #64748b;
+  margin: 0 0 1.25rem 0;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.video-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1rem;
+}
+
+.btn-watch-modal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 7px 14px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.btn-watch-modal:hover {
+  background: #c2410c;
+}
+
+.tag-tools {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* 4. Adım Adım Kolay Montaj Şeması (İnfografik) */
+.help-infographic-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  margin-bottom: 3.5rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+}
+
+.infographic-title {
+  text-align: center;
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 2rem 0;
+}
+
+.infographic-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  position: relative;
+}
+
+.info-step {
+  text-align: center;
+  position: relative;
+  padding: 1.25rem 1rem;
+  background: #fafaf9;
+  border-radius: 16px;
+  border: 1px solid #f5f5f4;
+  transition: transform 0.25s ease;
+}
+
+.info-step:hover {
+  transform: translateY(-3px);
+  border-color: #fed7aa;
+}
+
+.step-num {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.3);
+}
+
+.step-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.info-step h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.4rem 0;
+}
+
+.info-step p {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 5. SSS Akordeon */
+.help-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.faq-item.is-open {
+  border-color: #fdba74;
+}
+
+.faq-toggle {
+  width: 100%;
+  padding: 1.15rem 1.25rem;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #1e293b;
+  cursor: pointer;
+  text-align: left;
+}
+
+.faq-icon {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #ea580c;
+  margin-left: 12px;
+}
+
+.faq-answer {
+  display: none;
+  padding: 0 1.25rem 1.25rem 1.25rem;
+  color: #475569;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.faq-answer p {
+  margin: 0;
+}
+
+/* 6. Yardım Merkezi WhatsApp Destek Şeridi */
+.help-action-banner {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  box-shadow: 0 10px 25px rgba(6, 95, 70, 0.15);
+}
+
+.action-banner-content h3 {
+  font-size: 1.45rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem 0;
+  color: #ffffff;
+}
+
+.action-banner-content p {
+  font-size: 0.92rem;
+  color: #a7f3d0;
+  margin: 0;
+  max-width: 520px;
+  line-height: 1.5;
+}
+
+.action-banner-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.btn-success {
+  background: #25d366;
+  color: #ffffff;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.btn-success:hover {
+  transform: translateY(-2px);
+  background: #20ba5a;
+}
+
+.support-phone {
+  font-size: 0.8rem;
+  color: #a7f3d0;
+}
+
+/* 7. Anasayfa Kurulum & Montaj Bannerı */
+.emdief-help-banner-section {
+  padding: 2.5rem 0 1rem 0;
+}
+
+.help-banner-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border-radius: 22px;
+  padding: 2.5rem 2.5rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.help-banner-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  right: -60px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  pointer-events: none;
+}
+
+.help-banner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(234, 88, 12, 0.2);
+  border: 1px solid rgba(234, 88, 12, 0.4);
+  color: #fb923c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.help-banner-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.6rem 0;
+  color: #ffffff;
+  line-height: 1.3;
+}
+
+.help-banner-desc {
+  font-size: 0.92rem;
+  color: #94a3b8;
+  margin: 0 0 1.25rem 0;
+  max-width: 540px;
+  line-height: 1.55;
+}
+
+.help-banner-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.help-banner-features .f-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e8f0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 8px;
+}
+
+.help-banner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  align-items: stretch;
+}
+
+.help-banner-actions .btn-primary {
+  background: #ea580c;
+  color: #ffffff;
+  padding: 12px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.help-banner-actions .btn-primary:hover {
+  background: #c2410c;
+  transform: translateY(-2px);
+}
+
+.help-banner-actions .btn-ghost-light {
+  background: transparent;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.86rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.help-banner-actions .btn-ghost-light:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* 8. Hesabım (My Account) Kurulum & Yardım Sekmesi */
+.account-help-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.account-video-item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.account-video-item:hover {
+  transform: translateY(-3px);
+  border-color: #fdba74;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+.account-video-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #1e293b;
+  overflow: hidden;
+}
+
+.account-video-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #ea580c;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.account-video-item:hover .account-play-btn {
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.account-video-thumb .video-duration {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.account-video-info {
+  padding: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.account-video-info h4 {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.35;
+}
+
+.account-video-info p {
+  font-size: 0.82rem;
+  color: #64748b;
+  margin: 0 0 1rem 0;
+  line-height: 1.45;
+  flex: 1;
+}
+
+.btn-play-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ea580c;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-play-text:hover {
+  color: #c2410c;
+}
+
+.account-support-box {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 16px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.support-box-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #fee2e2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.support-box-content h4 {
+  margin: 0 0 3px 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.support-box-content p {
+  margin: 0;
+  font-size: 0.84rem;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.support-box-action {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.btn-whatsapp:hover {
+  background: #20ba5a;
+}
+
+/* 9. Hesabım Dashboard Hızlı Kurulum Promosyon Kartı */
+.account-quick-assembly-card {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fde68a;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 2rem;
+}
+
+.assembly-card-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.assembly-card-content {
+  flex: 1;
+}
+
+.assembly-card-content h4 {
+  margin: 0 0 3px 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #92400e;
+}
+
+.assembly-card-content p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #b45309;
+  line-height: 1.4;
+}
+
+.assembly-card-action {
+  flex-shrink: 0;
+}
+
+/* 10. Mobil Duyarlılık (Responsive) */
+@media (max-width: 992px) {
+  .quick-access-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .infographic-steps {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem 1rem;
+  }
+  .help-action-banner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .action-banner-buttons {
+    align-items: center;
+  }
+  .help-banner-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2rem 1.5rem;
+  }
+  .help-banner-features {
+    justify-content: center;
+  }
+  .help-banner-actions {
+    width: 100%;
+  }
+  .account-support-box {
+    flex-direction: column;
+    text-align: center;
+  }
+  .support-box-action {
+    margin-left: 0;
+    width: 100%;
+  }
+  .support-box-action .btn-whatsapp {
+    width: 100%;
+    justify-content: center;
+  }
+  .account-quick-assembly-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .help-hero-banner {
+    padding: 2.5rem 1.25rem;
+  }
+  .help-hero-banner .hero-title {
+    font-size: 1.6rem;
+  }
+  .quick-access-grid {
+    grid-template-columns: 1fr;
+  }
+  .video-guides-grid {
+    grid-template-columns: 1fr;
+  }
+  .infographic-steps {
+    grid-template-columns: 1fr;
+  }
+  .account-help-grid {
+    grid-template-columns: 1fr;
+  }
+}

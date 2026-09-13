@@ -51,6 +51,10 @@ $current_slug = $post ? $post->post_name : '';
                             <span class="nav-ico">📦</span>
                             <span><?php esc_html_e('Teslimat ve İade Koşulları', 'mis360-mobilya'); ?></span>
                         </a>
+                        <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="corp-nav-link <?php echo ($current_slug === 'yardim-merkezi' || $current_slug === 'help-center') ? 'is-active' : ''; ?>">
+                            <span class="nav-ico">🛠️</span>
+                            <span><?php esc_html_e('Yardım & Kurulum Videoları', 'mis360-mobilya'); ?></span>
+                        </a>
                         <a href="<?php echo esc_url(home_url('/iletisim/')); ?>" class="corp-nav-link <?php echo ($current_slug === 'iletisim') ? 'is-active' : ''; ?>">
                             <span class="nav-ico">📞</span>
                             <span><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></span>
