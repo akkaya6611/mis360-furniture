@@ -7061,16 +7061,21 @@
 }
 
 .product-faq-q-text {
-  font-size: 1rem;
+  font-size: 1.02rem;
   font-weight: 800;
   color: #1e293b;
-  line-height: 1.4;
+  line-height: 1.45;
   transition: color 0.2s ease;
 }
 
-.product-faq-item.is-open .product-faq-q-text {
-  color: #c2410c;
+.product-faq-toggle:hover .product-faq-q-text {
+  color: #ea580c;
 }
+
+.product-faq-item.is-open .product-faq-q-text {
+  color: #0f172a;
+}
+
 
 .product-faq-icon {
   width: 32px;

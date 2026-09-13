@@ -506,14 +506,23 @@ function mis360_single_product_faq_accordion() {
     global $product;
     if (!$product) return;
 
-    $product_name = $product->get_name();
+    $raw_name = $product->get_name();
+    $split_name = preg_split('/[-–—|]/u', $raw_name);
+    $short_name = trim($split_name[0]);
+    if (mb_strlen($short_name) > 35) {
+        $short_name = wp_trim_words($short_name, 4, '');
+    }
+    if (empty($short_name)) {
+        $short_name = esc_html__('Bu ürün', 'mis360-mobilya');
+    }
+
     $wa_phone = get_theme_mod('mis360_whatsapp', '905374778766');
-    $wa_msg = rawurlencode("Merhaba Emdief Home, '" . $product_name . "' hakkında montaj ve teslimatla ilgili bir sorum olacaktı:");
+    $wa_msg = rawurlencode("Merhaba Emdief Home, '" . $short_name . "' hakkında montaj ve teslimatla ilgili bir sorum olacaktı:");
     $wa_link = "https://wa.me/" . esc_attr($wa_phone) . "?text=" . $wa_msg;
 
     $faqs = [
         [
-            'q' => sprintf(esc_html__('%s kurulumu için paketten alyan çıkıyor mu? Hangi aletlere ihtiyacım var?', 'mis360-mobilya'), esc_html($product_name)),
+            'q' => sprintf(esc_html__('%s kurulumu için paketten alyan çıkıyor mu? Hangi aletlere ihtiyacım var?', 'mis360-mobilya'), esc_html($short_name)),
             'a' => 'Paket içerisinde alyan anahtarı gönderilmemektedir. Ürünlerimizin tüm parçalarında CNC tezgahlarda milimetrik hazır montaj delikleri açılmıştır. Kitaplığınızı birleştirmek ve duvara güvenle asmak için yalnızca bir <strong>şarjlı matkaba</strong> ihtiyacınız vardır. Ortalama 5 dakikada tek başınıza zahmetsizce kurabilirsiniz.'
         ],
         [
@@ -545,7 +554,7 @@ function mis360_single_product_faq_accordion() {
                 <?php esc_html_e('MERAK EDİLENLER & MONTAJ REHBERİ', 'mis360-mobilya'); ?>
             </span>
             <h2 class="product-faq-title"><?php esc_html_e('Sıkça Sorulan Sorular', 'mis360-mobilya'); ?></h2>
-            <p class="product-faq-desc"><?php printf(esc_html__('%s hakkında en çok merak edilen montaj, malzeme güvenliği ve kargo süreçleri.', 'mis360-mobilya'), esc_html($product_name)); ?></p>
+            <p class="product-faq-desc"><?php printf(esc_html__('%s hakkında en çok merak edilen montaj, malzeme güvenliği ve kargo süreçleri.', 'mis360-mobilya'), esc_html($short_name)); ?></p>
         </div>
 
         <div class="product-faq-accordion">

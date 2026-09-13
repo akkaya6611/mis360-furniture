@@ -454,7 +454,13 @@ function mis360_output_json_ld(): void {
         if (class_exists('WooCommerce') && is_product()) {
             global $product;
             if ($product instanceof WC_Product) {
-                $product_title_prefix = $product->get_name() . ' ';
+                $raw_pname = $product->get_name();
+                $split_pname = preg_split('/[-–—|]/u', $raw_pname);
+                $short_pname = trim($split_pname[0]);
+                if (mb_strlen($short_pname) > 35) {
+                    $short_pname = wp_trim_words($short_pname, 4, '');
+                }
+                $product_title_prefix = $short_pname ? $short_pname . ' ' : '';
             }
         }
 
