@@ -3974,54 +3974,37 @@
     white-space: nowrap;
 }
 
-/* 2. Trendyol Hero Banner Alanı (1fr 340px) */
-.trendyol-hero-section {
+/* ==========================================================================
+   2. MODERN BENTO HERO VİTRİN (SOL GENİŞ VİTRİN + SAĞ 2'Lİ KATEGORİ)
+   ========================================================================== */
+.emdief-bento-section {
     margin-bottom: 36px;
 }
-.trendyol-hero-grid {
+.emdief-bento-grid {
     display: grid;
-    grid-template-columns: 1fr 340px;
+    grid-template-columns: 1.65fr 1fr;
     gap: 20px;
     align-items: stretch;
 }
 @media (max-width: 991px) {
-    .trendyol-hero-grid {
+    .emdief-bento-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 }
 
-/* Sol Geniş Slider Kutusu */
-.trendyol-main-slider {
+/* Sol Ana Vitrin */
+.bento-hero-showcase {
     position: relative;
-    border-radius: 20px;
+    border-radius: 22px;
     overflow: hidden;
-    min-height: 380px;
+    min-height: 430px;
     background: #0f172a;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
 }
-.hero-slides-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 380px;
-}
-.hero-slide-item {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.5s ease;
-    z-index: 1;
-    overflow: hidden;
-}
-.hero-slide-item.active {
-    opacity: 1;
-    visibility: visible;
-    z-index: 2;
-}
-.slide-bg-cover {
+.bento-hero-bg {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -4031,85 +4014,112 @@
     z-index: 1;
     display: block !important;
 }
-.slide-overlay-gradient {
+.bento-hero-scrim {
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, rgba(15, 23, 42, 0.92) 0%, rgba(15, 23, 42, 0.75) 45%, rgba(15, 23, 42, 0.1) 100%);
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.94) 0%, rgba(15, 23, 42, 0.78) 55%, rgba(15, 23, 42, 0.2) 100%);
     z-index: 2;
 }
 @media (max-width: 768px) {
-    .slide-overlay-gradient {
-        background: linear-gradient(180deg, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.95) 100%);
+    .bento-hero-scrim {
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.95) 100%);
     }
 }
-.slide-caption-box {
+.bento-hero-content {
     position: relative;
     z-index: 3;
     padding: 44px 48px;
-    max-width: 600px;
+    max-width: 620px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     height: 100%;
 }
 @media (max-width: 768px) {
-    .slide-caption-box {
-        padding: 30px 22px;
+    .bento-hero-content {
+        padding: 34px 22px;
         max-width: 100%;
     }
 }
-.slide-tag-pill {
+
+.bento-pill-badge {
     display: inline-flex;
     align-items: center;
-    padding: 5px 14px;
-    border-radius: 999px;
-    font-size: 11.5px;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    color: #ffffff;
+    font-size: 11px;
     font-weight: 800;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.8px;
+    padding: 6px 14px;
+    border-radius: 999px;
     width: fit-content;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
 }
-.badge-primary { background: #f27a1a; color: #ffffff; }
-.badge-emerald { background: #10b981; color: #ffffff; }
-.badge-blue { background: #3b82f6; color: #ffffff; }
+.bento-pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    display: inline-block;
+}
 
-.slide-headline {
+.bento-hero-title {
     font-size: 34px;
     font-weight: 900;
     color: #ffffff;
-    line-height: 1.18;
-    margin: 0 0 12px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    line-height: 1.2;
+    margin: 0 0 14px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 @media (max-width: 768px) {
-    .slide-headline {
-        font-size: 24px;
+    .bento-hero-title {
+        font-size: 25px;
     }
 }
-.slide-lead {
+
+.bento-hero-desc {
     font-size: 14.5px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 16px;
-    line-height: 1.5;
-    max-width: 480px;
+    color: rgba(255, 255, 255, 0.92);
+    line-height: 1.55;
+    margin: 0 0 20px;
+    max-width: 490px;
 }
-.slide-highlights {
+
+.bento-hero-highlights {
     display: flex;
     align-items: center;
-    gap: 12px;
-    font-size: 12.5px;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 26px;
+}
+.highlight-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
     font-weight: 700;
-    color: #cbd5e1;
-    margin-bottom: 22px;
-    flex-wrap: wrap;
+    color: #f1f5f9;
+    background: rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    padding: 5px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
 }
-.slide-cta-group {
+
+.bento-hero-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 14px;
     flex-wrap: wrap;
 }
-.btn-hero-action {
+.bento-btn-primary {
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -4117,267 +4127,150 @@
     color: #0f172a;
     font-size: 14px;
     font-weight: 800;
-    padding: 12px 26px;
+    padding: 13px 28px;
     border-radius: 999px;
     text-decoration: none;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-    transition: all 0.2s ease;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transition: all 0.25s ease;
 }
-.btn-hero-action:hover {
+.bento-btn-primary:hover {
     background: #f8fafc;
     color: #f27a1a;
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
 }
-.slide-price-bubble {
-    font-size: 13px;
-    font-weight: 800;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.18);
+.bento-btn-subtle {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.14);
     backdrop-filter: blur(8px);
-    padding: 8px 16px;
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 13.5px;
+    font-weight: 700;
+    padding: 12px 22px;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.25);
-}
-
-/* Slider Kontrol Okları & Noktalar */
-.hero-nav-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
-    border: none;
-    color: #0f172a;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
     transition: all 0.2s ease;
 }
-.hero-nav-arrow:hover {
-    background: #ffffff;
-    transform: translateY(-50%) scale(1.08);
-}
-.hero-nav-arrow.arrow-left { left: 16px; }
-.hero-nav-arrow.arrow-right { right: 16px; }
-
-.hero-dots-indicator {
-    position: absolute;
-    bottom: 18px;
-    left: 48px;
-    display: flex;
-    gap: 8px;
-    z-index: 10;
-}
-.hero-dots-indicator .dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.4);
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.hero-dots-indicator .dot.active {
-    width: 26px;
-    background: #ffffff;
+.bento-btn-subtle:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
 }
 
-/* Sağ Yan Kampanya Kutuları */
-.trendyol-side-banners {
+/* Sağ Yan 2'li Bento Kategori Kartları */
+.bento-side-cards {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
-.side-deal-card {
-    border-radius: 20px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+@media (max-width: 991px) {
+    .bento-side-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 14px;
+    }
+}
+.bento-subcard {
     flex: 1;
-    position: relative;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-}
-.card-flash-deal {
-    background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-    border: 1px solid #fed7aa;
-}
-.card-coupon-deal {
-    background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-    border: 1px solid #bbf7d0;
-}
-.deal-badge-row {
+    border-radius: 20px;
+    padding: 24px 26px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-}
-.badge-flash {
-    font-size: 11px;
-    font-weight: 900;
-    color: #ffffff;
-    background: #ea580c;
-    padding: 4px 10px;
-    border-radius: 999px;
-}
-.countdown-pill {
-    font-size: 11.5px;
-    font-weight: 800;
-    color: #ea580c;
-    background: #ffffff;
-    padding: 3px 8px;
-    border-radius: 6px;
-    box-shadow: 0 2px 4px rgba(234, 88, 12, 0.12);
-}
-.deal-product-row {
-    display: flex;
-    gap: 14px;
-    align-items: center;
-    margin-bottom: 14px;
-}
-.deal-thumb {
-    width: 72px;
-    height: 72px;
-    border-radius: 12px;
-    object-fit: cover;
-    background: #ffffff;
-    border: 1px solid #ffedd5;
-    flex-shrink: 0;
-}
-.deal-details {
-    display: flex;
-    flex-direction: column;
-}
-.deal-title {
-    font-size: 13.5px;
-    font-weight: 800;
-    color: #1f2937;
-    margin: 0 0 4px;
-    line-height: 1.25;
-}
-.deal-pricing {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    margin-bottom: 3px;
-}
-.deal-pricing del {
-    font-size: 12px;
-    color: #9ca3af;
-}
-.deal-price {
-    font-size: 16px;
-    font-weight: 900;
-    color: #ea580c;
-}
-.deal-stock-tag {
-    font-size: 11px;
-    font-weight: 800;
-    color: #dc2626;
-}
-.deal-cta-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    background: #ea580c;
-    color: #ffffff;
-    font-size: 12.5px;
-    font-weight: 800;
-    padding: 9px 16px;
-    border-radius: 10px;
     text-decoration: none;
-    transition: background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
-.deal-cta-btn:hover {
-    background: #c2410c;
-    color: #ffffff;
+.bento-subcard:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+.card-warm {
+    background: linear-gradient(135deg, #fbf7f2 0%, #f4ede2 100%);
+    border: 1px solid #ebd9c4;
+}
+.card-warm:hover {
+    border-color: #f27a1a;
+}
+.card-mint {
+    background: linear-gradient(135deg, #f2f8f5 0%, #e5f0ea 100%);
+    border: 1px solid #cce2d6;
+}
+.card-mint:hover {
+    border-color: #10b981;
 }
 
-/* Kupon Kutusu Detayları */
-.badge-coupon {
-    font-size: 11px;
-    font-weight: 900;
-    color: #ffffff;
-    background: #16a34a;
-    padding: 4px 10px;
-    border-radius: 999px;
+.subcard-text {
+    flex: 1;
+    min-width: 0;
+    z-index: 2;
 }
-.coupon-discount-text {
-    font-size: 14px;
-    font-weight: 900;
-    color: #16a34a;
+.subcard-eyebrow {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    text-transform: uppercase;
 }
-.coupon-content-box {
-    margin-bottom: 12px;
+.eyebrow-orange {
+    color: #ea580c;
 }
-.coupon-title {
-    font-size: 14.5px;
+.eyebrow-green {
+    color: #059669;
+}
+.subcard-title {
+    font-size: 19px;
     font-weight: 800;
     color: #1f2937;
-    margin: 0 0 4px;
+    line-height: 1.25;
+    margin: 0 0 5px;
 }
-.coupon-desc {
-    font-size: 12px;
-    color: #4b5563;
-    margin: 0 0 10px;
-    line-height: 1.35;
+.subcard-subtitle {
+    font-size: 12.5px;
+    color: #64748b;
+    margin: 0 0 14px;
+    font-weight: 500;
 }
-.coupon-code-clipboard {
-    display: flex;
+.subcard-cta {
+    display: inline-flex;
     align-items: center;
-    justify-content: space-between;
-    background: #ffffff;
-    border: 1.5px dashed #16a34a;
-    border-radius: 10px;
-    padding: 6px 12px;
-}
-.coupon-code-clipboard code {
-    font-size: 14px;
-    font-weight: 900;
-    color: #16a34a;
-    letter-spacing: 1px;
-}
-.btn-copy-code {
-    background: #16a34a;
-    color: #ffffff;
-    border: none;
-    font-size: 11px;
-    font-weight: 800;
-    padding: 5px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-.btn-copy-code:hover {
-    background: #15803d;
-}
-.coupon-account-link {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     gap: 6px;
-    background: #ffffff;
-    color: #16a34a;
-    border: 1.5px solid #16a34a;
     font-size: 12.5px;
     font-weight: 800;
-    padding: 8px 16px;
-    border-radius: 10px;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    color: #1f2937;
+    transition: gap 0.2s ease, color 0.2s ease;
 }
-.coupon-account-link:hover {
-    background: #16a34a;
-    color: #ffffff;
+.card-warm:hover .subcard-cta {
+    color: #f27a1a;
+    gap: 9px;
+}
+.card-mint:hover .subcard-cta {
+    color: #059669;
+    gap: 9px;
+}
+.subcard-visual {
+    width: 105px;
+    height: 105px;
+    flex-shrink: 0;
+    margin-left: 14px;
+    position: relative;
+    z-index: 1;
+}
+.subcard-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.bento-subcard:hover .subcard-img {
+    transform: scale(1.08) rotate(2deg);
 }
 
 /* 3. Güven Rozetleri Çubuğu */

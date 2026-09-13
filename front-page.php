@@ -72,184 +72,73 @@ get_header();
 </section>
 
 <!-- =========================================================================
-     2. BÖLÜM: TRENDYOL TARZI HERO BANNER (SOL SLIDER + SAĞ 2'Lİ KAMPANYA)
+     2. BÖLÜM: MODERN BENTO VİTRİN (SOL GENİŞ VİTRİN + SAĞ 2'Lİ KATEGORİ)
      ========================================================================= -->
-<section class="trendyol-hero-section">
+<section class="emdief-bento-section">
     <div class="emdief-container">
-        <div class="trendyol-hero-grid">
-            <!-- Sol Geniş Alan: Çoklu Slide Hero Banner -->
-            <div class="trendyol-main-slider" id="emdiefMainHeroSlider">
-                <div class="hero-slides-wrapper">
-                    <!-- Slayt 1: Büyük Sezon İndirimi -->
-                    <div class="hero-slide-item active">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Montessori Kitaplık" class="slide-bg-cover">
-                        <div class="slide-overlay-gradient"></div>
-                        <div class="slide-caption-box">
-                            <span class="slide-tag-pill badge-primary">⚡ BÜYÜK MONTESSORI SEZON FIRSATI</span>
-                            <h2 class="slide-headline">Çocuk Odası Eğitici<br>Montessori Kitaplıklar</h2>
-                            <p class="slide-lead">Kendi kitabını kendi seçen özgüvenli minikler için 1. Sınıf MDF tasarımlar.</p>
-                            <div class="slide-highlights">
-                                <span>🛡️ 1. Sınıf MDF</span>
-                                <span>🌿 360° Yuvarlak Hatlar</span>
-                                <span>🔧 Kolay Kurulum</span>
-                            </div>
-                            <div class="slide-cta-group">
-                                <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="btn-hero-action">
-                                    <span>Fırsatları İncele</span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                </a>
-                                <span class="slide-price-bubble">800 TL'den Başlayan Fiyatlarla</span>
-                            </div>
-                        </div>
+        <div class="emdief-bento-grid">
+            <!-- Sol Geniş Vitrin: Büyük Prestij Karşılama Sahnesi -->
+            <div class="bento-hero-showcase">
+                <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Montessori Çocuk Mobilyaları" class="bento-hero-bg">
+                <div class="bento-hero-scrim"></div>
+                <div class="bento-hero-content">
+                    <span class="bento-pill-badge">
+                        <span class="bento-pill-dot"></span>
+                        %100 YERLİ ÜRETİM • 1. SINIF MDF
+                    </span>
+                    <h1 class="bento-hero-title">Çocukların Kendi Dünyasını<br>Keşfetmesi İçin</h1>
+                    <p class="bento-hero-desc">Kendi kitabını kendi seçen özgüvenli minikler için 1. sınıf MDF, sivri köşesiz yuvarlatılmış güvenli Montessori mobilyaları.</p>
+                    <div class="bento-hero-highlights">
+                        <span class="highlight-chip">🛡️ 1. Sınıf MDF</span>
+                        <span class="highlight-chip">🌿 360° Güvenli Hatlar</span>
+                        <span class="highlight-chip">🚚 1.500 TL Üzeri Ücretsiz Kargo</span>
                     </div>
-
-                    <!-- Slayt 2: Eğitici Ahşap Oyuncaklar -->
-                    <div class="hero-slide-item">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Eğitici Ahşap Oyuncaklar" class="slide-bg-cover">
-                        <div class="slide-overlay-gradient"></div>
-                        <div class="slide-caption-box">
-                            <span class="slide-tag-pill badge-emerald">🧸 DOĞAL &amp; EĞİTİCİ OYUNCAKLAR</span>
-                            <h2 class="slide-headline">Doğal Ahşap Eğitici<br>Çocuk Oyuncakları</h2>
-                            <p class="slide-lead">Çocukların motor becerilerini ve hayal gücünü geliştiren, sağlığa zararsız %100 doğal ahşap tasarımlar.</p>
-                            <div class="slide-highlights">
-                                <span>🌿 Doğal Ahşap Doku</span>
-                                <span>✨ Yuvarlak Güvenli Hatlar</span>
-                            </div>
-                            <div class="slide-cta-group">
-                                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="btn-hero-action">
-                                    <span>Oyuncak Koleksiyonunu Gör</span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                </a>
-                            </div>
-                        </div>
+                    <div class="bento-hero-actions">
+                        <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="bento-btn-primary">
+                            <span>Koleksiyonu Keşfet</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="bento-btn-subtle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            <span>Kurulum &amp; Yardım</span>
+                        </a>
                     </div>
-
-                    <!-- Slayt 3: Ücretsiz Kargo & Hızlı İmalat -->
-                    <div class="hero-slide-item">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-448-300x300.jpg" alt="Hızlı Kargo" class="slide-bg-cover">
-                        <div class="slide-overlay-gradient"></div>
-                        <div class="slide-caption-box">
-                            <span class="slide-tag-pill badge-blue">🚚 1.500 TL ÜZERİ KARGO BEDAVA</span>
-                            <h2 class="slide-headline">13:00'a Kadar Verilen Siparişler<br>Öncelikli İmalatta!</h2>
-                            <p class="slide-lead">Özel straforlu koruma ambalajıyla tüm Türkiye'ye sigortalı kapıdan teslimat güvencesi.</p>
-                            <div class="slide-highlights">
-                                <span>⚡ Hızlı Gönderim</span>
-                                <span>📦 Hasarsız Teslimat</span>
-                            </div>
-                            <div class="slide-cta-group">
-                                <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="btn-hero-action">
-                                    <span>Alışverişe Başla</span>
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Slider Gezinme Okları & Noktalar -->
-                <button type="button" class="hero-nav-arrow arrow-left" id="heroPrevBtn" aria-label="Önceki Slayt">&#10094;</button>
-                <button type="button" class="hero-nav-arrow arrow-right" id="heroNextBtn" aria-label="Sonraki Slayt">&#10095;</button>
-                <div class="hero-dots-indicator" id="heroDotsNav">
-                    <button type="button" class="dot active" data-index="0" aria-label="Slayt 1"></button>
-                    <button type="button" class="dot" data-index="1" aria-label="Slayt 2"></button>
-                    <button type="button" class="dot" data-index="2" aria-label="Slayt 3"></button>
                 </div>
             </div>
 
-            <!-- Sağ Yan 2'li Trendyol Kampanya Kutuları -->
-            <div class="trendyol-side-banners">
-                <!-- Kutu 1: Günün Flaş Fırsatı -->
-                <?php
-                $flash_product = null;
-                if (class_exists('WooCommerce')) {
-                    // Carmen 3 Raflı ürününü dinamik bul
-                    $carmen_found = wc_get_products([
-                        'limit'  => 1,
-                        'status' => 'publish',
-                        's'      => 'Carmen 3 Raflı',
-                    ]);
-                    if (!empty($carmen_found)) {
-                        $flash_product = $carmen_found[0];
-                    } else {
-                        $fallback_prods = wc_get_products([
-                            'limit'   => 1,
-                            'status'  => 'publish',
-                            'orderby' => 'date',
-                            'order'   => 'DESC',
-                        ]);
-                        if (!empty($fallback_prods)) {
-                            $flash_product = $fallback_prods[0];
-                        }
-                    }
-                }
+            <!-- Sağ Yan 2'li Bento Kategori Kartları -->
+            <div class="bento-side-cards">
+                <!-- 1. Kutu: Çok Satan Montessori Kitaplıklar (Carmen & Safir) -->
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="bento-subcard card-warm">
+                    <div class="subcard-text">
+                        <span class="subcard-eyebrow eyebrow-orange">⭐ EN ÇOK SATAN</span>
+                        <h3 class="subcard-title">Montessori<br>Kitaplıklar</h3>
+                        <p class="subcard-subtitle">Carmen &amp; Safir Serisi</p>
+                        <span class="subcard-cta">
+                            <span>Koleksiyonu İncele</span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </span>
+                    </div>
+                    <div class="subcard-visual">
+                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Montessori Kitaplık" class="subcard-img">
+                    </div>
+                </a>
 
-                if ($flash_product instanceof WC_Product) {
-                    $flash_link       = $flash_product->get_permalink();
-                    $flash_title      = $flash_product->get_name();
-                    $flash_img_id     = $flash_product->get_image_id();
-                    $flash_img        = $flash_img_id ? wp_get_attachment_image_url($flash_img_id, 'medium') : '';
-                    if (!$flash_img) {
-                        $flash_img = 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
-                    }
-                    $flash_reg_price  = (float) $flash_product->get_regular_price();
-                    $flash_curr_price = (float) $flash_product->get_price();
-                    if ($flash_reg_price <= $flash_curr_price || $flash_reg_price <= 0) {
-                        $flash_reg_price = round($flash_curr_price * 1.25);
-                    }
-                } else {
-                    $flash_link       = class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/');
-                    $flash_title      = 'Carmen 3 Raflı Eğitici Kitaplık';
-                    $flash_img        = 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
-                    $flash_reg_price  = 950.0;
-                    $flash_curr_price = 800.0;
-                }
-                ?>
-                <div class="side-deal-card card-flash-deal">
-                    <div class="deal-badge-row">
-                        <span class="badge-flash">⚡ GÜNÜN FIRSATI</span>
-                        <div class="countdown-pill">
-                            <span>Bitiş:</span>
-                            <strong id="flashDealCountdown">07:28:14</strong>
-                        </div>
+                <!-- 2. Kutu: Eğitici Ahşap Oyuncaklar & Duvar Rafları -->
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="bento-subcard card-mint">
+                    <div class="subcard-text">
+                        <span class="subcard-eyebrow eyebrow-green">🧸 DOĞAL &amp; EĞİTİCİ</span>
+                        <h3 class="subcard-title">Ahşap Oyuncaklar<br>&amp; Duvar Rafları</h3>
+                        <p class="subcard-subtitle">%100 Doğal &amp; Sağlığa Zararsız</p>
+                        <span class="subcard-cta">
+                            <span>Modelleri Keşfet</span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </span>
                     </div>
-                    <a href="<?php echo esc_url($flash_link); ?>" class="deal-product-row-link" style="text-decoration:none; color:inherit;">
-                        <div class="deal-product-row">
-                            <img src="<?php echo esc_url($flash_img); ?>" alt="<?php echo esc_attr($flash_title); ?>" class="deal-thumb">
-                            <div class="deal-details">
-                                <h4 class="deal-title"><?php echo esc_html($flash_title); ?></h4>
-                                <div class="deal-pricing">
-                                    <del><?php echo number_format($flash_reg_price, 0, ',', '.'); ?> TL</del>
-                                    <strong class="deal-price"><?php echo number_format($flash_curr_price, 2, ',', '.'); ?> TL</strong>
-                                </div>
-                                <div class="deal-stock-tag">🔥 Son 4 Adet Kaldı!</div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="<?php echo esc_url($flash_link); ?>" class="deal-cta-btn">
-                        <span>Fırsatı Yakala</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
-
-                <!-- Kutu 2: Montessori Kulüp Kuponu -->
-                <div class="side-deal-card card-coupon-deal">
-                    <div class="deal-badge-row">
-                        <span class="badge-coupon">🎟️ KULÜP AYRICALIĞI</span>
-                        <span class="coupon-discount-text">%10 İNDİRİM</span>
+                    <div class="subcard-visual">
+                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-448-300x300.jpg" alt="Eğitici Ahşap Oyuncaklar" class="subcard-img">
                     </div>
-                    <div class="coupon-content-box">
-                        <h4 class="coupon-title">İlk Siparişinize Özel</h4>
-                        <p class="coupon-desc">1. Sınıf MDF Montessori ürünlerinde sepette geçerli kupon kodunuz:</p>
-                        <div class="coupon-code-clipboard">
-                            <code id="emdiefCouponCode">EMDIEF10</code>
-                            <button type="button" class="btn-copy-code" id="btnCopyCode" title="Kodu Kopyala">Kopyala</button>
-                        </div>
-                    </div>
-                    <a href="<?php echo esc_url(home_url('/my-account/')); ?>" class="coupon-account-link">
-                        <span>Hesabım Sayfasında Kullan</span>
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                    </a>
-                </div>
+                </a>
             </div>
         </div>
     </div>
