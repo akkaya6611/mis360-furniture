@@ -106,6 +106,21 @@ if (function_exists('mis360_breadcrumbs')) {
 @media (max-width: 991px) { .support-card-right { align-items: center; } }
 .support-phone { font-size: 0.82rem; color: #a7f3d0; }
 .support-phone strong { color: #ffffff; }
+
+/* YouTube Video Modal */
+.help-video-modal { position: fixed; inset: 0; z-index: 99999; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+.help-video-modal.is-open { display: flex; }
+.video-modal-backdrop { position: absolute; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); }
+.video-modal-dialog { position: relative; z-index: 2; background: #0f172a; border-radius: 20px; width: 100%; max-width: 860px; overflow: hidden; box-shadow: 0 25px 60px rgba(0, 0, 0, 0.55); border: 1px solid rgba(255, 255, 255, 0.15); animation: modalFadeIn 0.25s ease; }
+@keyframes modalFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+.video-modal-close { position: absolute; top: 12px; right: 14px; z-index: 10; background: rgba(15, 23, 42, 0.75); border: 1px solid rgba(255, 255, 255, 0.25); color: #ffffff; width: 38px; height: 38px; border-radius: 50%; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; cursor: pointer; line-height: 1; transition: all 0.2s ease; }
+.video-modal-close:hover { background: #ea580c; border-color: #ea580c; transform: scale(1.1); }
+.video-modal-frame-wrap { position: relative; width: 100%; padding-top: 56.25%; background: #000000; }
+.video-modal-frame-wrap iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.video-modal-footer { padding: 1.25rem 1.75rem; background: #1e293b; display: flex; align-items: center; justify-content: space-between; gap: 1rem; color: #ffffff; }
+@media (max-width: 640px) { .video-modal-footer { flex-direction: column; align-items: flex-start; padding: 1rem 1.25rem; } }
+.video-modal-footer h4 { margin: 0; font-size: 1.05rem; font-weight: 800; color: #f8fafc; }
+.video-thumb-holder { cursor: pointer; }
 </style>
 
 <div class="emdief-help-center-page py-8">
@@ -174,117 +189,130 @@ if (function_exists('mis360_breadcrumbs')) {
         </div>
 
         <!-- 3. KURULUM VİDEOLARI BÖLÜMÜ -->
+        <?php
+        $installation_videos = [
+            [
+                'youtube_id' => 'R434l8wOYBY',
+                'title'      => 'Carmen Serisi Montessori Kitaplık Kurulumu',
+                'desc'       => 'Carmen 3 ve 4 raflı çocuk kitaplıklarımızın CNC hazır deliklerle şarjlı matkap kullanarak kolayca birleştirilmesi ve duvara emniyetli montajı.',
+                'category'   => 'Montessori Kitaplık',
+                'difficulty' => 'Zorluk: Kolay ⭐',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Şarjlı Matkap',
+                'keywords'   => 'carmen kitaplık montaj montessori 3 raflı 4 raflı karmen raf kurulum ahşap çocuk odası',
+                'badge'      => ''
+            ],
+            [
+                'youtube_id' => '-nYJfPdr9vw',
+                'title'      => 'Askı Aparatı Duvara Nasıl Montajlanır? (Zorunlu Güvenlik)',
+                'desc'       => 'Yerden olan modellerimiz hariç hemen hemen tüm Montessori mobilyalarımızda miniklerin güvenliği ve devrilmeyi önlemek için bu montaj adımı zorunludur.',
+                'category'   => 'Güvenlik & Duvar Montajı',
+                'difficulty' => 'Zorunlu Adım 🛡️',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Matkap + Dübel + Vida',
+                'keywords'   => 'askı aparatı duvara montaj sabitleme l aparatı emniyet devrilme önleyici vida dübel sabitleme zorunlu',
+                'badge'      => '⚠️ Yerden olan modeller hariç tüm ürünlerimizde zorunludur'
+            ],
+            [
+                'youtube_id' => 'Uko45KVzhhs',
+                'title'      => 'Melis 2 Raflı Montessori Kitaplık Kurulumu',
+                'desc'       => 'Melis 2 raflı çocuk kitaplığımızın CNC hazır montaj delikleriyle şarjlı matkap ile zahmetsizce birleştirilmesi ve duvara sabitlenmesi.',
+                'category'   => 'Montessori Kitaplık',
+                'difficulty' => 'Zorluk: Kolay ⭐',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Şarjlı Matkap',
+                'keywords'   => 'melis 2 raf raflı kitaplık montaj montessori çocuk kitaplığı kurulum ahşap',
+                'badge'      => ''
+            ],
+            [
+                'youtube_id' => 'J7qaETlymr0',
+                'title'      => 'Carmen 3 Raflı Montessori Kitaplık Kurulumu',
+                'desc'       => 'Carmen 3 raflı çocuk kitaplığımızın numaralandırılmış MDF parçalarının şarjlı matkap ile birleştirilmesi ve sağlam montajı.',
+                'category'   => 'Montessori Kitaplık',
+                'difficulty' => 'Zorluk: Kolay ⭐',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Şarjlı Matkap',
+                'keywords'   => 'carmen 3 raf raflı kitaplık montaj montessori çocuk kitaplığı kurulum ahşap',
+                'badge'      => ''
+            ],
+            [
+                'youtube_id' => 'bpHA-jND33Q',
+                'title'      => 'Safir & Carmen Tek Raflı Modellerimizin Kurulumu',
+                'desc'       => 'Safir ve Carmen serisi tek raflı duvar ve banyo raflarımızın gizli askı aparatlarıyla duvara sıfır ve sallantısız montaj rehberi.',
+                'category'   => 'Duvar & Raf Grubu',
+                'difficulty' => 'Zorluk: Çok Kolay ⚡',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Matkap + Dübel + Vida',
+                'keywords'   => 'safir carmen tek raf raflı 1 raflı duvar rafı banyo rafı montaj kurulum ahşap',
+                'badge'      => ''
+            ],
+            [
+                'youtube_id' => 'LBBww08uTcI',
+                'title'      => 'Melis Serisi Montessori Kitaplık Kurulumu',
+                'desc'       => 'Melis serisi çok raflı çocuk kitaplıklarımızın geniş tabanlı gövde birleşimi, raf dizilimi ve duvara emniyet sabitlemesi.',
+                'category'   => 'Montessori Kitaplık',
+                'difficulty' => 'Zorluk: Kolay ⭐',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Şarjlı Matkap',
+                'keywords'   => 'melis serisi kitaplık montaj montessori 3 raflı 4 raflı çocuk kitaplığı kurulum ahşap',
+                'badge'      => ''
+            ],
+            [
+                'youtube_id' => '4fUzzzdXXgQ',
+                'title'      => 'Safir Serisi Montessori Kitaplık Kurulumu',
+                'desc'       => 'Safir serisi Montessori çocuk kitaplıklarımızın önü açık kitap sergileme kanalları, gövde montajı ve duvara sabitleme kılavuzu.',
+                'category'   => 'Eğitici Kitaplık',
+                'difficulty' => 'Zorluk: Kolay ⭐',
+                'duration'   => '⏱️ Video Anlatım',
+                'tools'      => 'Şarjlı Matkap',
+                'keywords'   => 'safir serisi kitaplık montaj montessori çocuk kitaplığı kurulum ahşap beyaz mdf',
+                'badge'      => ''
+            ]
+        ];
+        ?>
         <div class="help-section-box" id="kurulum-videolari">
             <div class="section-heading-wrap">
                 <span class="sub-pill">🎥 Pratik Montaj Rehberleri</span>
                 <h2 class="section-title">Ürün Kurulum Videoları</h2>
-                <p class="section-desc">Satın aldığınız Montessori mobilyasını seçin, şarjlı matkabınızla 5 dakikada adım adım kurun.</p>
+                <p class="section-desc">Satın aldığınız Montessori mobilyasını seçin, şarjlı matkabınızla birkaç dakikada adım adım kurun.</p>
             </div>
 
             <div class="video-guides-grid">
-                <!-- Video 1: Carmen Montessori Kitaplık -->
-                <div class="video-guide-card" data-keywords="carmen kitaplık montaj montessori 3 raflı 4 raflı">
-                    <div class="video-thumb-holder">
-                        <div class="video-thumb-overlay">
-                            <span class="play-btn-pulse">▶</span>
+                <?php foreach ($installation_videos as $video): 
+                    $yt_id = !empty($video['youtube_id']) ? esc_attr($video['youtube_id']) : '';
+                    $yt_watch = $yt_id ? 'https://www.youtube.com/watch?v=' . $yt_id : '#';
+                    $yt_thumb = $yt_id ? 'https://img.youtube.com/vi/' . $yt_id . '/hqdefault.jpg' : 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg';
+                ?>
+                    <div class="video-guide-card" data-keywords="<?php echo esc_attr($video['keywords']); ?>">
+                        <div class="video-thumb-holder js-open-video-modal" data-youtube-id="<?php echo $yt_id; ?>" data-video-title="<?php echo esc_attr($video['title']); ?>" title="<?php esc_attr_e('Videoyu Oynat', 'mis360-mobilya'); ?>">
+                            <div class="video-thumb-overlay">
+                                <span class="play-btn-pulse">▶</span>
+                            </div>
+                            <img src="<?php echo esc_url($yt_thumb); ?>" alt="<?php echo esc_attr($video['title']); ?>" class="video-cover-img" loading="lazy">
+                            <span class="video-duration-badge"><?php echo esc_html($video['duration']); ?></span>
                         </div>
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Carmen Kitaplık Kurulumu" class="video-cover-img">
-                        <span class="video-duration-badge">⏱️ 04:45</span>
-                    </div>
-                    <div class="video-card-body">
-                        <div class="video-meta">
-                            <span class="pill-category">Montessori Kitaplık</span>
-                            <span class="pill-difficulty">Zorluk: Kolay ⭐</span>
-                        </div>
-                        <h3 class="video-title">Carmen 3 & 4 Raflı Montessori Kitaplık Kurulumu</h3>
-                        <p class="video-desc">Numaralandırılmış 1. sınıf MDF parçaların şarjlı matkap ile vidalanması ve duvara sabitleme adımları.</p>
-                        <div class="video-card-footer">
-                            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Carmen%20Kitaplık%20kurulum%20videosu%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-watch-modal">
-                                <span>Videoyu İzle</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
-                            </a>
-                            <span class="tag-tools">Şarjlı Matkap</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Video 2: Safir Montessori Kitaplık -->
-                <div class="video-guide-card" data-keywords="safir kitaplık montessori ahşap beyaz mdf">
-                    <div class="video-thumb-holder">
-                        <div class="video-thumb-overlay">
-                            <span class="play-btn-pulse">▶</span>
-                        </div>
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Safir Kitaplık Kurulumu" class="video-cover-img">
-                        <span class="video-duration-badge">⏱️ 05:20</span>
-                    </div>
-                    <div class="video-card-body">
-                        <div class="video-meta">
-                            <span class="pill-category">Eğitici Kitaplık</span>
-                            <span class="pill-difficulty">Zorluk: Kolay ⭐</span>
-                        </div>
-                        <h3 class="video-title">Safir Montessori Çocuk Kitaplığı Kurulumu</h3>
-                        <p class="video-desc">Geniş tabanlı dengeli gövde, ön yüzü açık eğimli kitap rafları ve çocuk güvenliği için duvara sabitleme kitinin montajı.</p>
-                        <div class="video-card-footer">
-                            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Safir%20Kitaplık%20kurulum%20videosu%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-watch-modal">
-                                <span>Videoyu İzle</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
-                            </a>
-                            <span class="tag-tools">Şarjlı Matkap</span>
+                        <div class="video-card-body">
+                            <div class="video-meta">
+                                <span class="pill-category"><?php echo esc_html($video['category']); ?></span>
+                                <span class="pill-difficulty"><?php echo esc_html($video['difficulty']); ?></span>
+                            </div>
+                            <?php if (!empty($video['badge'])): ?>
+                                <div style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; border-radius:8px; padding:6px 10px; font-size:0.78rem; font-weight:800; margin-bottom:0.75rem; display:flex; align-items:center; gap:6px;">
+                                    <span><?php echo esc_html($video['badge']); ?></span>
+                                </div>
+                            <?php endif; ?>
+                            <h3 class="video-title"><?php echo esc_html($video['title']); ?></h3>
+                            <p class="video-desc"><?php echo esc_html($video['desc']); ?></p>
+                            <div class="video-card-footer">
+                                <button type="button" class="btn-watch-modal js-open-video-modal" data-youtube-id="<?php echo $yt_id; ?>" data-video-title="<?php echo esc_attr($video['title']); ?>">
+                                    <span>Videoyu İzle</span>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+                                </button>
+                                <span class="tag-tools"><?php echo esc_html($video['tools']); ?></span>
+                            </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Video 3: Ahşap Oyuncak & Düzenleyici -->
-                <div class="video-guide-card" data-keywords="oyuncak düzenleyici kutu ahşap dolap">
-                    <div class="video-thumb-holder">
-                        <div class="video-thumb-overlay">
-                            <span class="play-btn-pulse">▶</span>
-                        </div>
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-448-300x300.jpg" alt="Ahşap Oyuncak Düzenleyici" class="video-cover-img">
-                        <span class="video-duration-badge">⏱️ 03:50</span>
-                    </div>
-                    <div class="video-card-body">
-                        <div class="video-meta">
-                            <span class="pill-category">Oda Düzenleyici</span>
-                            <span class="pill-difficulty">Zorluk: Çok Kolay ⚡</span>
-                        </div>
-                        <h3 class="video-title">Montessori Ahşap Oyuncak & Eşya Düzenleyici</h3>
-                        <p class="video-desc">Çocukların oyuncaklarını bağımsız toplayabilmesi için tasarlanan modüler ahşap düzenleyici ünitelerin hızlı birleştirilmesi.</p>
-                        <div class="video-card-footer">
-                            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Düzenleyici%20kurulum%20videosu%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-watch-modal">
-                                <span>Videoyu İzle</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
-                            </a>
-                            <span class="tag-tools">Pratik Geçmeli</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Video 4: Duvar & Banyo Rafları -->
-                <div class="video-guide-card" data-keywords="duvar rafı banyo rafı montaj sabitleme">
-                    <div class="video-thumb-holder">
-                        <div class="video-thumb-overlay">
-                            <span class="play-btn-pulse">▶</span>
-                        </div>
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Duvar Rafı Kurulumu" class="video-cover-img">
-                        <span class="video-duration-badge">⏱️ 03:15</span>
-                    </div>
-                    <div class="video-card-body">
-                        <div class="video-meta">
-                            <span class="pill-category">Duvar & Raf Grubu</span>
-                            <span class="pill-difficulty">Zorluk: Çok Kolay ⚡</span>
-                        </div>
-                        <h3 class="video-title">Montessori Duvar & Banyo Rafı Montajı</h3>
-                        <p class="video-desc">Gizli askı elemanları, dübel ve vida şablonuyla duvara sıfır, sallantısız ve güvenli sabitleme kılavuzu.</p>
-                        <div class="video-card-footer">
-                            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Duvar%20Rafı%20kurulumu%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-watch-modal">
-                                <span>Videoyu İzle</span>
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
-                            </a>
-                            <span class="tag-tools">Matkap + Dübel + Vida</span>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
 
@@ -400,6 +428,24 @@ if (function_exists('mis360_breadcrumbs')) {
     </div>
 </div>
 
+<!-- Video Popup Modal -->
+<div id="videoModal" class="help-video-modal" aria-hidden="true">
+    <div class="video-modal-backdrop" id="videoModalBackdrop"></div>
+    <div class="video-modal-dialog">
+        <button type="button" class="video-modal-close" id="videoModalClose" aria-label="Kapat">&times;</button>
+        <div class="video-modal-frame-wrap">
+            <iframe id="videoModalIframe" src="" title="Kurulum Videosu" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+        <div class="video-modal-footer">
+            <h4 id="videoModalTitle">Video Başlığı</h4>
+            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Kurulum%20hakkında%20sorum%20var" target="_blank" rel="noopener" class="emdief-btn btn-sm btn-primary">
+                <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
+                <span>Montaj Desteği Al</span>
+            </a>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // FAQ Akordeon Etkileşimi
@@ -444,6 +490,47 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
+
+    // Video Modal Etkileşimi
+    const videoModal = document.getElementById('videoModal');
+    const videoIframe = document.getElementById('videoModalIframe');
+    const videoTitle = document.getElementById('videoModalTitle');
+    const modalClose = document.getElementById('videoModalClose');
+    const modalBackdrop = document.getElementById('videoModalBackdrop');
+
+    function openVideoModal(ytId, title) {
+        if (!ytId || !videoModal || !videoIframe) return;
+        videoIframe.src = 'https://www.youtube.com/embed/' + ytId + '?autoplay=1&rel=0';
+        if (videoTitle) videoTitle.textContent = title || 'Kurulum Videosu';
+        videoModal.classList.add('is-open');
+        videoModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoModal() {
+        if (!videoModal || !videoIframe) return;
+        videoModal.classList.remove('is-open');
+        videoModal.setAttribute('aria-hidden', 'true');
+        videoIframe.src = '';
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.js-open-video-modal').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const ytId = this.getAttribute('data-youtube-id');
+            const title = this.getAttribute('data-video-title');
+            openVideoModal(ytId, title);
+        });
+    });
+
+    if (modalClose) modalClose.addEventListener('click', closeVideoModal);
+    if (modalBackdrop) modalBackdrop.addEventListener('click', closeVideoModal);
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && videoModal && videoModal.classList.contains('is-open')) {
+            closeVideoModal();
+        }
+    });
 });
 </script>
 
