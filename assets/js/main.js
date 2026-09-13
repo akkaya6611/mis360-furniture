@@ -696,7 +696,6 @@ function mis360Init() {
         productFaqItems.forEach(item => {
             const toggle = item.querySelector('.product-faq-toggle');
             const answer = item.querySelector('.product-faq-answer');
-            const icon = item.querySelector('.product-faq-icon');
             if (!toggle || !answer) return;
 
             toggle.addEventListener('click', () => {
@@ -707,17 +706,14 @@ function mis360Init() {
                     other.classList.remove('is-open');
                     const otherToggle = other.querySelector('.product-faq-toggle');
                     const otherAnswer = other.querySelector('.product-faq-answer');
-                    const otherIcon = other.querySelector('.product-faq-icon');
                     if (otherToggle) otherToggle.setAttribute('aria-expanded', 'false');
                     if (otherAnswer) otherAnswer.style.display = 'none';
-                    if (otherIcon) otherIcon.textContent = '+';
                 });
 
                 if (!isOpen) {
                     item.classList.add('is-open');
                     toggle.setAttribute('aria-expanded', 'true');
                     answer.style.display = 'block';
-                    if (icon) icon.textContent = '−';
                 }
             });
         });
