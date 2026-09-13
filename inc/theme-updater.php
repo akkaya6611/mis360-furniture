@@ -24,7 +24,7 @@ class Mis360_Theme_Updater {
         $this->github_user   = 'akkaya6611';
         $this->github_repo   = 'mis360-furniture';
         $this->github_branch = 'main';
-        $this->github_token  = defined('MIS360_GITHUB_TOKEN') ? MIS360_GITHUB_TOKEN : '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';
+        $this->github_token  = defined('MIS360_GITHUB_TOKEN') ? MIS360_GITHUB_TOKEN : '';
 
         // WordPress tema güncelleme kancaları
         add_filter('pre_set_site_transient_update_themes', [$this, 'check_theme_update']);
@@ -58,11 +58,15 @@ class Mis360_Theme_Updater {
             $this->github_branch
         );
 
+        $headers = [
+            'User-Agent' => 'WordPress-Theme-Updater',
+        ];
+        if (!empty($this->github_token)) {
+            $headers['Authorization'] = 'Bearer ' . $this->github_token;
+        }
+
         $args = [
-            'headers'   => [
-                'Authorization' => 'Bearer ' . $this->github_token,
-                'User-Agent'    => 'WordPress-Theme-Updater',
-            ],
+            'headers'   => $headers,
             'timeout'   => 15,
             'sslverify' => false,
         ];
@@ -85,7 +89,7 @@ class Mis360_Theme_Updater {
         $data = [
             'version'     => $remote_version,
             'package_url' => sprintf(
-                'https://api.github.com/repos/%s/%s/zipball/%s',
+                'https://github.com/%s/%s/archive/refs/heads/%s.zip',
                 $this->github_user,
                 $this->github_repo,
                 $this->github_branch
@@ -186,7 +190,7 @@ class Mis360_Theme_Updater {
      * GitHub private repo indirmeleri için HTTP isteğine Bearer Token ekler
      */
     public function authenticate_github_request($args, $url) {
-        if (strpos($url, 'api.github.com/repos/' . $this->github_user . '/' . $this->github_repo) !== false) {
+        if (!empty($this->github_token) && strpos($url, 'api.github.com/repos/' . $this->github_user . '/' . $this->github_repo) !== false) {
             $args['headers']['Authorization'] = 'Bearer ' . $this->github_token;
             $args['headers']['Accept']        = 'application/vnd.github+json';
             $args['sslverify']                = false;
