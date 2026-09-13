@@ -1752,6 +1752,20 @@ ul.products {
 }
 
 /* --------------------------------------------------------------------------
+   3.5 TEKİL ÜRÜN SSS (FAQ) ACCORDION
+   -------------------------------------------------------------------------- */
+.woocommerce div.product .single-product-faq-section,
+.woocommerce-page div.product .single-product-faq-section,
+.single-product-faq-section {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    clear: both !important;
+    box-sizing: border-box !important;
+}
+
+/* --------------------------------------------------------------------------
    4. AKILLI URUN SLIDERI (Son Gezilenler & Ilgili Urunler)
    -------------------------------------------------------------------------- */
 .emdief-smart-product-section {
