@@ -171,7 +171,7 @@ if (!defined('ABSPATH')) {
                             <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>">📝 <?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
                         </ul>
                     </li>
-                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim & Fabrika', 'mis360-mobilya'); ?></a></li>
+                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim', 'mis360-mobilya'); ?></a></li>
                 </ul>
                 <?php
             }
@@ -368,8 +368,8 @@ if (!defined('ABSPATH')) {
                         </li>
                         <li>
                             <a href="<?php echo esc_url(home_url('/iletisim/')); ?>">
-                                <span class="link-bullet">🏭</span>
-                                <span>İletişim & Fabrika Adresi</span>
+                                <span class="link-bullet">📞</span>
+                                <span><?php esc_html_e('İletişim', 'mis360-mobilya'); ?></span>
                             </a>
                         </li>
                     </ul>

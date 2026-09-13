@@ -57,7 +57,7 @@ $current_slug = $post ? $post->post_name : '';
                         </a>
                         <a href="<?php echo esc_url(home_url('/iletisim/')); ?>" class="corp-nav-link <?php echo ($current_slug === 'iletisim') ? 'is-active' : ''; ?>">
                             <span class="nav-ico">📞</span>
-                            <span><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></span>
+                            <span><?php esc_html_e('İletişim', 'mis360-mobilya'); ?></span>
                         </a>
                     </nav>
 

@@ -80,7 +80,7 @@ if (!defined('ABSPATH')) {
                         <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>"><?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>"><?php esc_html_e('Teslimat & İade Koşulları', 'mis360-mobilya'); ?></a></li>
                         <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>"><?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
-                        <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>"><?php esc_html_e('İletişim', 'mis360-mobilya'); ?></a></li>
                     </ul>
                     <?php
                 }
