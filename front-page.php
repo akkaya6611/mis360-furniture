@@ -278,8 +278,8 @@ get_header();
             <div class="guarantee-item">
                 <div class="guar-icon-box guar-blue">🔧</div>
                 <div class="guar-info">
-                    <h5>10 Dk Kolay Kurulum</h5>
-                    <p>Numaralı parçalar, alyan dahil pratik montaj</p>
+                    <h5>5 Dk Kolay Kurulum</h5>
+                    <p>Numaralı parçalar, şarjlı matkapla hızlı montaj</p>
                 </div>
             </div>
             <div class="guarantee-item">
@@ -677,14 +677,14 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
             </div>
             <div class="help-banner-text">
                 <span class="banner-eyebrow">🎬 Adım Adım Rehber & Müşteri Desteği</span>
-                <h2 class="banner-heading">Montessori Mobilyanızı 5 Dakikada Kolayca Kurun!</h2>
+                <h2 class="banner-heading">Montessori Mobilyanızı Şarjlı Matkap ile 5 Dakikada Kurun!</h2>
                 <p class="banner-subtext">
-                    Tüm ürünlerimiz numaralı 1. sınıf MDF parçalar ve pratik alyan anahtarıyla gelir. Şarjlı matkaba gerek duymadan hazırladığımız montaj videolarıyla zahmetsizce kurun.
+                    Tüm parçalarımız CNC tezgahlarda milimetrik açılmış delikleriyle gelir. Şarjlı matkabınızla vidaları saniyeler içinde sıkıp kitaplığınızı kurabilir ve duvara delik delerek güvenle sabitleyebilirsiniz.
                 </p>
                 <div class="banner-perks-row">
-                    <span class="perk"><span class="check-icon">✓</span> Alyan Anahtarı Pakette</span>
+                    <span class="perk"><span class="check-icon">✓</span> Şarjlı Matkap ile Hızlı Montaj</span>
+                    <span class="perk"><span class="check-icon">✓</span> Duvara Delik Delip Sabitleme Emniyeti</span>
                     <span class="perk"><span class="check-icon">✓</span> Adım Adım Kurulum Videoları</span>
-                    <span class="perk"><span class="check-icon">✓</span> Ücretsiz Aynı Gün Yedek Parça</span>
                 </div>
             </div>
             <div class="help-banner-actions">

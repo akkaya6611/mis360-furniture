@@ -329,7 +329,7 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                             </div>
                             <div class="support-box-content">
                                 <h4>Kurulumda Bir Aksamaya mı Rastladınız?</h4>
-                                <p>Paketinizden eksik vida, alyan veya hasarlı parça çıktıysa anında ücretsiz yedek parça temin ediyoruz.</p>
+                                <p>Paketinizden eksik vida, dübel veya hasarlı parça çıktıysa anında ücretsiz yedek parça temin ediyoruz.</p>
                             </div>
                             <div class="support-box-action">
                                 <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=<?php echo rawurlencode('Merhaba Emdief Home, siparişimdeki mobilyanın kurulumu / parça desteği hakkında yardım almak istiyorum.'); ?>" target="_blank" rel="noopener" class="emdief-btn btn-whatsapp btn-md">

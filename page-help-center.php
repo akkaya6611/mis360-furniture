@@ -67,7 +67,7 @@ if (function_exists('mis360_breadcrumbs')) {
                 <div class="topic-icon-wrap bg-emerald">🔧</div>
                 <div class="topic-text">
                     <h3>Yedek Parça Talebi</h3>
-                    <p>Alyan, vida veya raf pimi için ücretsiz aynı gün gönderim.</p>
+                    <p>Vida, dübel veya montaj aparatları için aynı gün ücretsiz gönderim.</p>
                 </div>
                 <span class="topic-arrow">↗</span>
             </a>
@@ -75,7 +75,7 @@ if (function_exists('mis360_breadcrumbs')) {
                 <div class="topic-icon-wrap bg-blue">❓</div>
                 <div class="topic-text">
                     <h3>Sıkça Sorulan Sorular</h3>
-                    <p>Duvara sabitleme, temizlik ve Montessori güvenliği.</p>
+                    <p>Duvara sabitleme, şarjlı matkap kullanımı ve güvenlik.</p>
                 </div>
                 <span class="topic-arrow">↓</span>
             </a>
@@ -86,7 +86,7 @@ if (function_exists('mis360_breadcrumbs')) {
             <div class="section-heading-wrap">
                 <span class="sub-pill">🎥 Pratik Montaj Rehberleri</span>
                 <h2 class="section-title">Ürün Kurulum Videoları</h2>
-                <p class="section-desc">Satın aldığınız Montessori mobilyasını seçin, ustalarımızın hazırladığı 5 dakikalık pratik videoyla kolayca kurun.</p>
+                <p class="section-desc">Satın aldığınız Montessori mobilyasını seçin, şarjlı matkabınızla 5 dakikada adım adım kurun.</p>
             </div>
 
             <div class="video-guides-grid">
@@ -105,13 +105,13 @@ if (function_exists('mis360_breadcrumbs')) {
                             <span class="pill-difficulty">Zorluk: Kolay ⭐</span>
                         </div>
                         <h3 class="video-title">Carmen 3 & 4 Raflı Montessori Kitaplık Kurulumu</h3>
-                        <p class="video-desc">Numaralandırılmış 1. sınıf MDF yan paneller, raf çıtaları ve paket içinden çıkan alyan anahtarı ile 5 dakikada eksiksiz montaj adımları.</p>
+                        <p class="video-desc">Numaralandırılmış 1. sınıf MDF parçaların şarjlı matkap ile vidalanması ve duvara sabitleme adımları.</p>
                         <div class="video-card-footer">
                             <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Carmen%20Kitaplık%20kurulum%20videosu%20hakkında%20bilgi%20almak%20istiyorum." target="_blank" rel="noopener" class="btn-watch-modal">
                                 <span>Videoyu İzle</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
                             </a>
-                            <span class="tag-tools">Alyan + Tornavida</span>
+                            <span class="tag-tools">Şarjlı Matkap</span>
                         </div>
                     </div>
                 </div>
@@ -137,7 +137,7 @@ if (function_exists('mis360_breadcrumbs')) {
                                 <span>Videoyu İzle</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
                             </a>
-                            <span class="tag-tools">Alyan Anahtarı</span>
+                            <span class="tag-tools">Şarjlı Matkap</span>
                         </div>
                     </div>
                 </div>
@@ -208,15 +208,15 @@ if (function_exists('mis360_breadcrumbs')) {
                 </div>
                 <div class="info-step">
                     <div class="step-num">2</div>
-                    <div class="step-icon">🔧</div>
-                    <h4>Alyan ile Vidaları Tutturun</h4>
-                    <p>Paketten çıkan alyan anahtarı yeterlidir. Vidaları önce gevşek tutturun, tüm raflar oturunca sıkın.</p>
+                    <div class="step-icon">⚡</div>
+                    <h4>Şarjlı Matkap ile Kolayca Vidalayın</h4>
+                    <p>Vida delikleri CNC tezgahlarda milimetrik açılmıştır. Şarjlı matkabınızla vidaları saniyeler içinde sıkıp gövdeyi birleştirin.</p>
                 </div>
                 <div class="info-step">
                     <div class="step-num">3</div>
                     <div class="step-icon">🛡️</div>
-                    <h4>Duvara Sabitleme Kiti</h4>
-                    <p>Çocuk güvenliği için matkap ile duvara dübel deliği açıp paketten çıkan L-sabitleme aparatını monte edin.</p>
+                    <h4>Duvara Delik Delip Sabitleyin</h4>
+                    <p>Aynı şarjlı matkap ile duvara delik delin; paketten çıkan dübel ve L-aparat ile kitaplığınızı güvenle duvara sabitleyin.</p>
                 </div>
                 <div class="info-step">
                     <div class="step-num">4</div>
@@ -237,11 +237,11 @@ if (function_exists('mis360_breadcrumbs')) {
             <div class="help-faq-accordion">
                 <div class="faq-item is-open">
                     <button type="button" class="faq-toggle">
-                        <span>Kurulum için matkaba ihtiyacım var mı?</span>
+                        <span>Kurulum için hangi aletlere ihtiyacım var? Paket içinde alyan var mı?</span>
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer" style="display:block;">
-                        <p>Mobilyanın kendi ahşap gövde ve raf parçalarını birleştirmek için matkaba gerek yoktur; vida delikleri CNC tezgahlarda milimetrik açılmıştır ve paket içerisinden çıkan alyan anahtarı yeterlidir. <strong>Ancak</strong> çocuk odası emniyeti standartları gereği kitaplığı duvara sabitlemek veya duvar raflarını monte etmek amacıyla duvarda dübel deliği açmak için bir <strong>matkaba</strong> ihtiyaç duyulmaktadır (dübel ve montaj vidaları paket içerisindedir).</p>
+                        <p>Paket içerisinde alyan anahtarı gönderilmemektedir. Kurulum için ihtiyacınız olan alet <strong>şarjlı matkaptır</strong>. Parçalarımızın tüm vida delikleri CNC tezgahlarda milimetrik olarak hazır açılmıştır. Şarjlı matkabınız sayesinde hem kitaplığımızın ahşap parçalarını dakikalar içinde yorulmadan vidalayabilir, hem de duvara delik delerek paket içeriğindeki dübel ve sabitleme aparatıyla kitaplığınızı duvara güvenle monte edebilirsiniz.</p>
                     </div>
                 </div>
 

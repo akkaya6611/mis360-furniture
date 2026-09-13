@@ -255,8 +255,8 @@ function mis360_single_product_trust_box() {
             <div class="pill-text"><strong>Montessori Boyutları:</strong> Çocuğun bağımsız erişebileceği ergonomik yükseklik</div>
         </div>
         <div class="trust-pill">
-            <span class="pill-icon">🔧</span>
-            <div class="pill-text"><strong>Kolay Kurulum:</strong> 10 dakikada alyan dahil pratik montaj</div>
+            <span class="pill-icon">⚡</span>
+            <div class="pill-text"><strong>Pratik Kurulum:</strong> Şarjlı matkapla dakikalar içinde kolay montaj</div>
         </div>
     </div>
     <?php
