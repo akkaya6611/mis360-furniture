@@ -6943,3 +6943,266 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   7. TEKİL ÜRÜN SSS & MONTAJ/KARGO REHBERİ (SINGLE PRODUCT FAQ ACCORDION)
+   ========================================================================== */
+.single-product-faq-section {
+  margin: 3.5rem 0 2rem 0;
+  padding: 2.5rem;
+  background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.04);
+}
+
+.product-faq-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 2.2rem auto;
+}
+
+.product-faq-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: 1px solid #ffedd5;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.product-faq-badge .faq-badge-dot {
+  width: 7px;
+  height: 7px;
+  background: #ea580c;
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+.product-faq-title {
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.02em;
+}
+
+.product-faq-desc {
+  font-size: 0.95rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.55;
+}
+
+.product-faq-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.product-faq-item {
+  background: #fdfbf7;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.product-faq-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.product-faq-item.is-open {
+  background: #ffffff;
+  border-color: #fdba74;
+  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.08);
+}
+
+.product-faq-toggle {
+  width: 100%;
+  padding: 1.15rem 1.4rem;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+}
+
+.product-faq-q-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.product-faq-q-num {
+  font-size: 0.8rem;
+  font-weight: 900;
+  color: #ea580c;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  padding: 3px 8px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.product-faq-q-text {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1e293b;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.product-faq-item.is-open .product-faq-q-text {
+  color: #c2410c;
+}
+
+.product-faq-icon {
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ea580c;
+  flex-shrink: 0;
+  transition: all 0.25s ease;
+}
+
+.product-faq-item.is-open .product-faq-icon {
+  background: #ea580c;
+  color: #ffffff;
+  border-color: #ea580c;
+}
+
+.product-faq-answer {
+  padding: 0 1.4rem 1.35rem 3.4rem;
+  color: #475569;
+  font-size: 0.94rem;
+  line-height: 1.68;
+}
+
+.product-faq-answer p {
+  margin: 0;
+}
+
+.product-faq-answer strong {
+  color: #1e293b;
+  font-weight: 700;
+}
+
+/* WhatsApp Destek ve Danışma Bandı */
+.product-faq-support-bar {
+  max-width: 860px;
+  margin: 2rem auto 0 auto;
+  padding: 1.35rem 1.8rem;
+  background: linear-gradient(135deg, #064e3b 0%, #047857 100%);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  color: #ffffff;
+  box-shadow: 0 10px 25px rgba(6, 95, 70, 0.16);
+}
+
+.support-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.support-bar-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.support-bar-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.support-bar-text strong {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.support-bar-text span {
+  font-size: 0.85rem;
+  color: #d1fae5;
+}
+
+.support-bar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #065f46;
+  font-size: 0.92rem;
+  font-weight: 800;
+  padding: 10px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.support-bar-btn:hover {
+  background: #ecfdf5;
+  color: #047857;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 768px) {
+  .single-product-faq-section {
+    padding: 1.5rem 1rem;
+    margin: 2rem 0;
+    border-radius: 18px;
+  }
+  .product-faq-title {
+    font-size: 1.45rem;
+  }
+  .product-faq-toggle {
+    padding: 1rem;
+  }
+  .product-faq-answer {
+    padding: 0 1rem 1rem 1rem;
+    font-size: 0.88rem;
+  }
+  .product-faq-support-bar {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+  .support-bar-left {
+    flex-direction: column;
+  }
+  .support-bar-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

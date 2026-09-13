@@ -450,24 +450,40 @@ function mis360_output_json_ld(): void {
     // E) FAQPage Şeması (Google Arama Sonuçlarında Açılır Soru-Cevap Akordeonu)
     // -------------------------------------------------------------------------
     if (is_page('yardim-merkezi') || is_page_template('page-help-center.php') || is_page_template('page-yardim-merkezi.php') || (class_exists('WooCommerce') && is_product())) {
+        $product_title_prefix = '';
+        if (class_exists('WooCommerce') && is_product()) {
+            global $product;
+            if ($product instanceof WC_Product) {
+                $product_title_prefix = $product->get_name() . ' ';
+            }
+        }
+
         $faq_schema = [
             '@context'   => 'https://schema.org',
             '@type'      => 'FAQPage',
             'mainEntity' => [
                 [
                     '@type'          => 'Question',
-                    'name'           => 'Montessori mobilya kurulumu için hangi aletlere ihtiyacım var? Paket içinde alyan var mı?',
+                    'name'           => $product_title_prefix . 'kurulumu için hangi aletlere ihtiyacım var? Paket içinde alyan var mı?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Paket içerisinde alyan anahtarı gönderilmemektedir. Kurulum için ihtiyacınız olan tek alet şarjlı matkaptır. Tüm vida delikleri CNC tezgahlarda milimetrik hazır açılmıştır. Şarjlı matkabınızla parçaları dakikalar içinde yorulmadan vidalayabilir ve duvara delik delerek güvenle sabitleyebilirsiniz.',
+                        'text'  => 'Paket içerisinde alyan anahtarı gönderilmemektedir. Ürünlerimizin tüm parçalarında CNC tezgahlarda milimetrik hazır montaj delikleri açılmıştır. Kitaplığınızı birleştirmek ve duvara güvenle asmak için yalnızca bir şarjlı matkaba ihtiyacınız vardır. Ortalama 5 dakikada tek başınıza zahmetsizce kurabilirsiniz.',
                     ],
                 ],
                 [
                     '@type'          => 'Question',
-                    'name'           => 'Eksik veya hasarlı parça çıkarsa ne yapmalıyım?',
+                    'name'           => 'Kargo ücreti ne kadar ve siparişim ne zaman kargoya verilir?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Emdief Home olarak %100 Koşulsuz Parça Garantisi sunuyoruz. Kargo sürecinde hasar gören veya eksik çıkan herhangi bir vida ya da ahşap parça durumunda WhatsApp destek hattımıza iletmeniz halinde aynı gün ücretsiz kargolanır.',
+                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo tamamen ücretsizdir. Ürünlerimiz atölyemizde siparişinize özel özenle üretildiği için siparişleriniz ortalama 3 iş günü içerisinde kargoya teslim edilir. Ancak siparişini verdiğiniz ürün stoklarımızda hazır bulunuyorsa aynı gün / hemen kargoya verilir. Kargonuz yola çıktığında SMS ve e-posta ile anlık kargo takip numaranız iletilir.',
+                    ],
+                ],
+                [
+                    '@type'          => 'Question',
+                    'name'           => 'Çocuk sağlığına uygun mu? Boya, vernik veya koku var mı?',
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text'  => 'Evet, %100 çocuk dostudur. E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sivri köşe barındırmayan pürüzsüz yuvarlatılmış güvenli hatlar kullanılır. Çocuk odalarına özel, kokusuz, toksik madde içermeyen ve sağlığa tamamen zararsız su bazlı kaplama uygulanır.',
                     ],
                 ],
                 [
@@ -475,7 +491,15 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Montessori kitaplıkları duvara sabitlemek zorunlu mu?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Mobilyalarımızın taban ağırlık merkezi devrilmeye karşı dayanıklıdır. Ancak küçük çocukların raflara tırmanma riskine karşı paket içerisinden çıkan L-sabitleme aparatı ile duvara delik delinerek sabitlenmesini önemle tavsiye ederiz.',
+                        'text'  => 'Montessori felsefesinde çocuğun kitaplarına özgürce ve güvenle uzanması esastır. Miniklerin tırmanma veya çekme ihtimaline karşı devrilmeyi önlemek amacıyla, paket içerisinden çıkan emniyet sabitleme aparatlarıyla kitaplığın duvara delik delinerek sabitlenmesini önemle tavsiye ederiz.',
+                    ],
+                ],
+                [
+                    '@type'          => 'Question',
+                    'name'           => 'Kargoda parça kırılır veya hasar görürse ne yapmalıyım?',
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text'  => 'Tüm ürünlerimiz darbe emici özel straforlar ve koruyucu ambalajlarla sigortalı olarak gönderilir. Taşıma sırasında oluşabilecek en ufak hasarda veya eksik parçada %100 koşulsuz ve ücretsiz anında yeni parça temini ve değişim garantimiz vardır. WhatsApp destek hattımıza bir fotoğraf iletmeniz yeterlidir.',
                     ],
                 ],
                 [
@@ -483,15 +507,7 @@ function mis360_output_json_ld(): void {
                     'name'           => '1. Sınıf MDF mobilyaların bakımı ve temizliği nasıl yapılmalıdır?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Ürünlerimizin yüzeyi pürüzsüz ve leke tutmaz yapıdadır. Hafif nemli mikrofiber bir bez ile kolayca temizlenebilir. Ağır kimyasal ve çamaşır suyu kullanılması önerilmez.',
-                    ],
-                ],
-                [
-                    '@type'          => 'Question',
-                    'name'           => 'Kargo ücreti ne kadar ve teslimat kaç gün sürer?',
-                    'acceptedAnswer' => [
-                        '@type' => 'Answer',
-                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo tamamen ücretsizdir. 13:00\'a kadar verilen siparişler aynı gün öncelikli imalata alınır ve özel straforlu ambalajlarla sigortalı olarak teslim edilir.',
+                        'text'  => 'Ürünlerimizin yüzeyi pürüzsüz ve leke tutmaz yapıdadır. Hafif nemli ve yumuşak bir mikrofiber bez ile kolayca temizlenebilir. Ağır kimyasal ve çamaşır suyu gibi aşındırıcı temizleyiciler kullanılması önerilmez.',
                     ],
                 ],
             ],

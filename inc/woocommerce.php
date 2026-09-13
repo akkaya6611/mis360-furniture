@@ -496,7 +496,94 @@ function mis360_single_product_smart_slider() {
 }
 // Varsayılan ilgili ürünleri kaldır, akıllı slider ekle
 remove_action('woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20);
+add_action('woocommerce_after_single_product_summary', 'mis360_single_product_faq_accordion', 22);
 add_action('woocommerce_after_single_product_summary', 'mis360_single_product_smart_slider', 25);
+
+/**
+ * Tekil Ürün Sayfasında SSS & Montaj/Kargo Rehberi Akordeonu
+ */
+function mis360_single_product_faq_accordion() {
+    global $product;
+    if (!$product) return;
+
+    $product_name = $product->get_name();
+    $wa_phone = get_theme_mod('mis360_whatsapp', '905374778766');
+    $wa_msg = rawurlencode("Merhaba Emdief Home, '" . $product_name . "' hakkında montaj ve teslimatla ilgili bir sorum olacaktı:");
+    $wa_link = "https://wa.me/" . esc_attr($wa_phone) . "?text=" . $wa_msg;
+
+    $faqs = [
+        [
+            'q' => sprintf(esc_html__('%s kurulumu için paketten alyan çıkıyor mu? Hangi aletlere ihtiyacım var?', 'mis360-mobilya'), esc_html($product_name)),
+            'a' => 'Paket içerisinde alyan anahtarı gönderilmemektedir. Ürünlerimizin tüm parçalarında CNC tezgahlarda milimetrik hazır montaj delikleri açılmıştır. Kitaplığınızı birleştirmek ve duvara güvenle asmak için yalnızca bir <strong>şarjlı matkaba</strong> ihtiyacınız vardır. Ortalama 5 dakikada tek başınıza zahmetsizce kurabilirsiniz.'
+        ],
+        [
+            'q' => esc_html__('Kargo ücreti ne kadar ve siparişim ne zaman kargoya verilir?', 'mis360-mobilya'),
+            'a' => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo <strong>tamamen ücretsizdir</strong>. Ürünlerimiz atölyemizde siparişinize özel özenle üretildiği için siparişleriniz ortalama <strong>3 iş günü</strong> içerisinde kargoya teslim edilir. Ancak siparişini verdiğiniz ürün <strong>stoklarımızda hazır bulunuyorsa aynı gün / hemen kargoya teslim edilir</strong>. Kargonuz yola çıktığında SMS ve e-posta ile anlık kargo takip numaranız iletilir.'
+        ],
+        [
+            'q' => esc_html__('Çocuk sağlığına uygun mu? Boya, vernik veya koku var mı?', 'mis360-mobilya'),
+            'a' => 'Evet, %100 çocuk dostudur. E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sivri köşe barındırmayan pürüzsüz yuvarlatılmış güvenli hatlar kullanılır. Çocuk odalarına özel, kokusuz, toksik madde içermeyen ve sağlığa tamamen zararsız su bazlı kaplama uygulanır.'
+        ],
+        [
+            'q' => esc_html__('Montessori kitaplığı duvara sabitlemek zorunlu mu?', 'mis360-mobilya'),
+            'a' => 'Montessori felsefesinde çocuğun kitaplarına özgürce ve güvenle uzanması esastır. Miniklerin tırmanma veya çekme ihtimaline karşı devrilmeyi önlemek amacıyla, paket içerisinden çıkan emniyet sabitleme aparatlarıyla kitaplığın duvara delik delinerek sabitlenmesini önemle tavsiye ederiz.'
+        ],
+        [
+            'q' => esc_html__('Kargoda parça kırılır veya hasar görürse ne yapmalıyım?', 'mis360-mobilya'),
+            'a' => 'Tüm ürünlerimiz darbe emici özel straforlar ve koruyucu ambalajlarla sigortalı olarak gönderilir. Taşıma sırasında oluşabilecek en ufak hasarda veya eksik parçada <strong>%100 koşulsuz ve ücretsiz anında yeni parça temini ve değişim garantimiz</strong> vardır. WhatsApp destek hattımıza bir fotoğraf iletmeniz yeterlidir.'
+        ],
+        [
+            'q' => esc_html__('Temizliği ve bakımı nasıl yapılmalıdır?', 'mis360-mobilya'),
+            'a' => 'Hafif nemli ve yumuşak bir mikrofiber bezle silinmesi yeterlidir. Pürüzsüz MDF yüzeyi leke tutmaz. Ağır kimyasal ve aşındırıcı çamaşır suyu gibi temizlik maddeleri kullanılmamalıdır.'
+        ]
+    ];
+    ?>
+    <section class="single-product-faq-section" id="product-faq-accordion">
+        <div class="product-faq-header">
+            <span class="product-faq-badge">
+                <span class="faq-badge-dot"></span>
+                <?php esc_html_e('MERAK EDİLENLER & MONTAJ REHBERİ', 'mis360-mobilya'); ?>
+            </span>
+            <h2 class="product-faq-title"><?php esc_html_e('Sıkça Sorulan Sorular', 'mis360-mobilya'); ?></h2>
+            <p class="product-faq-desc"><?php printf(esc_html__('%s hakkında en çok merak edilen montaj, malzeme güvenliği ve kargo süreçleri.', 'mis360-mobilya'), esc_html($product_name)); ?></p>
+        </div>
+
+        <div class="product-faq-accordion">
+            <?php foreach ($faqs as $i => $item): 
+                $is_first = ($i === 0);
+            ?>
+                <div class="product-faq-item <?php echo $is_first ? 'is-open' : ''; ?>">
+                    <button type="button" class="product-faq-toggle" aria-expanded="<?php echo $is_first ? 'true' : 'false'; ?>">
+                        <span class="product-faq-q-wrap">
+                            <span class="product-faq-q-num">0<?php echo $i + 1; ?></span>
+                            <span class="product-faq-q-text"><?php echo $item['q']; ?></span>
+                        </span>
+                        <span class="product-faq-icon"><?php echo $is_first ? '−' : '+'; ?></span>
+                    </button>
+                    <div class="product-faq-answer" style="<?php echo $is_first ? 'display:block;' : 'display:none;'; ?>">
+                        <p><?php echo $item['a']; ?></p>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <div class="product-faq-support-bar">
+            <div class="support-bar-left">
+                <span class="support-bar-icon">💬</span>
+                <div class="support-bar-text">
+                    <strong><?php esc_html_e('Aklınıza takılan farklı bir soru mu var?', 'mis360-mobilya'); ?></strong>
+                    <span><?php esc_html_e('Atölye ve montaj uzmanlarımıza anında WhatsApp üzerinden danışabilirsiniz.', 'mis360-mobilya'); ?></span>
+                </div>
+            </div>
+            <a href="<?php echo esc_url($wa_link); ?>" target="_blank" rel="noopener" class="support-bar-btn">
+                <span><?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 18) : '💬'; ?></span>
+                <span><?php esc_html_e('WhatsApp\'tan Danışın', 'mis360-mobilya'); ?></span>
+            </a>
+        </div>
+    </section>
+    <?php
+}
+
 
 /**
  * Tekil Ürün Sayfasında Maskottan Canlı Kargo Tavsiyesi (Mascot Advice Pill)
