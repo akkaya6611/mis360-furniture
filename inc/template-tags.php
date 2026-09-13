@@ -84,8 +84,8 @@ function mis360_render_trust_badges() {
                         <?php echo mis360_icon('wrench', 22); ?>
                     </div>
                     <div class="emdief-trust-text">
-                        <strong>Kolay & Aletsiz Kurulum</strong>
-                        <span>10 dakikada montaj hazır numaralandırılmış parçalar</span>
+                        <strong>Kolay Montaj & Kurulum</strong>
+                        <span>Alyan pakete dahil, numaralandırılmış pratik parçalar</span>
                     </div>
                 </div>
                 <div class="emdief-trust-item">

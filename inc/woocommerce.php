@@ -256,7 +256,7 @@ function mis360_single_product_trust_box() {
         </div>
         <div class="trust-pill">
             <span class="pill-icon">🔧</span>
-            <div class="pill-text"><strong>Kolay Kurulum:</strong> 10 dakikada aletsiz pratik montaj</div>
+            <div class="pill-text"><strong>Kolay Kurulum:</strong> 10 dakikada alyan dahil pratik montaj</div>
         </div>
     </div>
     <?php

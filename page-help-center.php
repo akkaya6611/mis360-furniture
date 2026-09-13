@@ -189,7 +189,7 @@ if (function_exists('mis360_breadcrumbs')) {
                                 <span>Videoyu İzle</span>
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
                             </a>
-                            <span class="tag-tools">Dübel + Vida</span>
+                            <span class="tag-tools">Matkap + Dübel + Vida</span>
                         </div>
                     </div>
                 </div>
@@ -216,7 +216,7 @@ if (function_exists('mis360_breadcrumbs')) {
                     <div class="step-num">3</div>
                     <div class="step-icon">🛡️</div>
                     <h4>Duvara Sabitleme Kiti</h4>
-                    <p>Miniklerimizin tırmanma güvenliği için paketten çıkan L-sabitleme aparatını duvara monte edin.</p>
+                    <p>Çocuk güvenliği için matkap ile duvara dübel deliği açıp paketten çıkan L-sabitleme aparatını monte edin.</p>
                 </div>
                 <div class="info-step">
                     <div class="step-num">4</div>
@@ -237,11 +237,11 @@ if (function_exists('mis360_breadcrumbs')) {
             <div class="help-faq-accordion">
                 <div class="faq-item is-open">
                     <button type="button" class="faq-toggle">
-                        <span>Kurulum için şarjlı matkaba ihtiyacım var mı?</span>
+                        <span>Kurulum için matkaba ihtiyacım var mı?</span>
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer" style="display:block;">
-                        <p>Hayır, kesinlikle gerek yoktur. Tüm mobilyalarımızın vida delikleri CNC tezgahlarda milimetrik olarak açılmıştır. Paket içerisinden çıkan özel alyan anahtarı ve el tornavidası ile 5-10 dakika içerisinde elinizle kolayca sıkabilirsiniz.</p>
+                        <p>Mobilyanın kendi ahşap gövde ve raf parçalarını birleştirmek için matkaba gerek yoktur; vida delikleri CNC tezgahlarda milimetrik açılmıştır ve paket içerisinden çıkan alyan anahtarı yeterlidir. <strong>Ancak</strong> çocuk odası emniyeti standartları gereği kitaplığı duvara sabitlemek veya duvar raflarını monte etmek amacıyla duvarda dübel deliği açmak için bir <strong>matkaba</strong> ihtiyaç duyulmaktadır (dübel ve montaj vidaları paket içerisindedir).</p>
                     </div>
                 </div>
 
@@ -261,7 +261,7 @@ if (function_exists('mis360_breadcrumbs')) {
                         <span class="faq-icon">+</span>
                     </button>
                     <div class="faq-answer">
-                        <p>Mobilyalarımızın taban genişliği ve ağırlık merkezi devrilmeye karşı dayanıklı olarak tasarlanmıştır. Ancak küçük çocukların raflara asılma veya tırmanma ihtimaline karşı çocuk odası güvenliği standartları gereği paket içerisinden çıkan sabitleme aparatıyla duvara sabitlenmesini önemle tavsiye ederiz.</p>
+                        <p>Mobilyalarımızın taban dengesi ve ağırlık merkezi devrilmeye karşı dayanıklı olarak tasarlanmıştır. Ancak küçük çocukların raflara tutunup tırmanma ihtimaline karşı çocuk odası güvenliği standartları gereği paket içerisinden çıkan L-sabitleme aparatı ile duvara matkapla delik açılarak sabitlenmesini önemle tavsiye ederiz.</p>
                     </div>
                 </div>
 

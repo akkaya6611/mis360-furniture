@@ -279,7 +279,7 @@ get_header();
                 <div class="guar-icon-box guar-blue">🔧</div>
                 <div class="guar-info">
                     <h5>10 Dk Kolay Kurulum</h5>
-                    <p>Numaralı parçalar, aletsiz pratik montaj</p>
+                    <p>Numaralı parçalar, alyan dahil pratik montaj</p>
                 </div>
             </div>
             <div class="guarantee-item">
