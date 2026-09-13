@@ -33,6 +33,17 @@ class Mis360_Theme_Updater {
         add_filter('upgrader_source_selection', [$this, 'fix_unpacked_theme_directory'], 10, 3);
         add_filter('themes_api', [$this, 'theme_popup_details'], 10, 3);
         add_action('admin_notices', [$this, 'render_update_notice']);
+        add_action('admin_init', [$this, 'force_check_listener']);
+    }
+
+    /**
+     * Güncellemeyi anında zorlamak için transient temizleyici
+     */
+    public function force_check_listener() {
+        if (isset($_GET['force-check']) && current_user_can('update_themes')) {
+            delete_transient('mis360_github_update_data');
+            delete_site_transient('update_themes');
+        }
     }
 
     /**
@@ -89,10 +100,10 @@ class Mis360_Theme_Updater {
         $data = [
             'version'     => $remote_version,
             'package_url' => sprintf(
-                'https://github.com/%s/%s/archive/refs/heads/%s.zip',
+                'https://github.com/%s/%s/releases/download/v%s/mis360-mobilya.zip',
                 $this->github_user,
                 $this->github_repo,
-                $this->github_branch
+                $remote_version
             ),
             'repo_url'    => sprintf('https://github.com/%s/%s', $this->github_user, $this->github_repo),
         ];
@@ -142,15 +153,14 @@ class Mis360_Theme_Updater {
     }
 
     /**
-     * Güncelleme sayfalarında doğrudan bildirim ve tek tıkla güncelleme butonu sunar
+     * Yönetim panelinde bildirim ve tek tıkla güncelleme butonu sunar
      */
     public function render_update_notice() {
-        global $pagenow;
-        if (!current_user_can('update_themes') || !in_array($pagenow, ['update-core.php', 'themes.php'])) {
+        if (!current_user_can('update_themes')) {
             return;
         }
 
-        $remote_data = $this->get_remote_theme_data(true);
+        $remote_data = $this->get_remote_theme_data();
         if (!$remote_data) {
             return;
         }
