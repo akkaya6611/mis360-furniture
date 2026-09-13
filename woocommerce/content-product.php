@@ -22,7 +22,9 @@ if (empty($product) || !$product->is_visible()) {
         <div class="card-thumb-wrap">
             <?php
             // Rozetler
-            mis360_product_badges();
+            if (function_exists('mis360_product_badges')) {
+                mis360_product_badges();
+            }
             ?>
             <a href="<?php echo esc_url($product->get_permalink()); ?>" class="card-image-link">
                 <?php

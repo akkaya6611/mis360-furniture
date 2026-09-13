@@ -11,7 +11,9 @@ if (!defined('ABSPATH')) {
 }
 
 get_header('shop');
-mis360_breadcrumbs();
+if (function_exists('mis360_breadcrumbs')) {
+    mis360_breadcrumbs();
+}
 ?>
 
 <div class="emdief-single-product-page">

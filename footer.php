@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 </main><!-- #primary -->
 
 <!-- Güven Rozetleri Şeridi (E1, 1. Sınıf MDF, Kolay Montaj, Hızlı Kargo) -->
-<?php mis360_render_trust_badges(); ?>
+<?php if (function_exists('mis360_render_trust_badges')) { mis360_render_trust_badges(); } ?>
 
 <!-- Ana Footer Bölümü -->
 <footer id="colophon" class="emdief-footer">
@@ -90,7 +90,7 @@ if (!defined('ABSPATH')) {
             <div class="footer-col footer-contact-col">
                 <h4 class="footer-heading"><?php esc_html_e('Bize Ulaşın', 'mis360-mobilya'); ?></h4>
                 <div class="footer-contact-item">
-                    <span class="contact-icon"><?php echo mis360_icon('phone', 18); ?></span>
+                    <span class="contact-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('phone', 18) : '📞'; ?></span>
                     <div>
                         <small><?php esc_html_e('Müşteri Destek Hattı:', 'mis360-mobilya'); ?></small>
                         <a href="tel:<?php echo esc_attr(str_replace(' ', '', get_theme_mod('mis360_phone', '+90 537 477 87 66'))); ?>">
@@ -99,7 +99,7 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
                 <div class="footer-contact-item">
-                    <span class="contact-icon"><?php echo mis360_icon('whatsapp', 18); ?></span>
+                    <span class="contact-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 18) : '💬'; ?></span>
                     <div>
                         <small><?php esc_html_e('Doğrudan WhatsApp Hattı:', 'mis360-mobilya'); ?></small>
                         <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener">
@@ -108,7 +108,7 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
                 <div class="footer-contact-item">
-                    <span class="contact-icon"><?php echo mis360_icon('map-pin', 18); ?></span>
+                    <span class="contact-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('map-pin', 18) : '📍'; ?></span>
                     <div>
                         <small><?php esc_html_e('Fabrika Satış & Atölye:', 'mis360-mobilya'); ?></small>
                         <a href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111" target="_blank" rel="noopener">
@@ -148,7 +148,7 @@ if (!defined('ABSPATH')) {
 
 <!-- Canlı WhatsApp Butonu (Sabit Sağ Alt - Mobilde Bar Üstüne Hizalanır) -->
 <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" class="emdief-floating-wa" target="_blank" rel="noopener" aria-label="<?php esc_attr_e('WhatsApp Sipariş ve Destek', 'mis360-mobilya'); ?>">
-    <span class="wa-icon"><?php echo mis360_icon('whatsapp', 28); ?></span>
+    <span class="wa-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 28) : '💬'; ?></span>
     <span class="wa-tooltip">Montessori ürünleri hakkında bilgi alın! 🧸</span>
 </a>
 

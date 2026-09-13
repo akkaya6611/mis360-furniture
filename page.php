@@ -11,7 +11,9 @@ if (!defined('ABSPATH')) {
 }
 
 get_header();
-mis360_breadcrumbs();
+if (function_exists('mis360_breadcrumbs')) {
+    mis360_breadcrumbs();
+}
 ?>
 
 <div class="emdief-container py-8">

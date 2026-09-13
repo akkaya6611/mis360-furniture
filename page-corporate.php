@@ -11,7 +11,9 @@ if (!defined('ABSPATH')) {
 }
 
 get_header();
-mis360_breadcrumbs();
+if (function_exists('mis360_breadcrumbs')) {
+    mis360_breadcrumbs();
+}
 
 // Mevcut sayfa slug'ı
 global $post;
@@ -60,7 +62,7 @@ $current_slug = $post ? $post->post_name : '';
                         <div class="support-title">Yardıma mı ihtiyacınız var?</div>
                         <p class="support-desc">Montessori mobilyalarımız veya siparişiniz hakkında bize dilediğiniz an ulaşabilirsiniz.</p>
                         <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener" class="emdief-btn btn-outline btn-block btn-sm">
-                            <?php echo mis360_icon('whatsapp', 16); ?>
+                            <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
                             <span>WhatsApp Destek</span>
                         </a>
                     </div>

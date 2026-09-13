@@ -32,11 +32,11 @@ if (!defined('ABSPATH')) {
             </div>
             <div class="topbar-right">
                 <a href="tel:<?php echo esc_attr(str_replace(' ', '', get_theme_mod('mis360_phone', '+90 537 477 87 66'))); ?>" class="topbar-link">
-                    <?php echo mis360_icon('phone', 14); ?>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('phone', 14) : '📞'; ?>
                     <span><?php echo esc_html(get_theme_mod('mis360_phone', '+90 537 477 87 66')); ?></span>
                 </a>
                 <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener" class="topbar-link topbar-wa">
-                    <?php echo mis360_icon('whatsapp', 14); ?>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 14) : '💬'; ?>
                     <span>WhatsApp Sipariş</span>
                 </a>
             </div>
@@ -50,7 +50,7 @@ if (!defined('ABSPATH')) {
         <div class="header-main">
             <!-- Mobil Menü Butonu -->
             <button type="button" class="emdief-mobile-toggle" id="emdief-mobile-menu-trigger" aria-label="<?php esc_attr_e('Menüyü Aç', 'mis360-mobilya'); ?>">
-                <?php echo mis360_icon('menu', 26); ?>
+                <?php echo function_exists('mis360_icon') ? mis360_icon('menu', 26) : '☰'; ?>
             </button>
 
             <!-- Logo -->
@@ -72,7 +72,7 @@ if (!defined('ABSPATH')) {
                         <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, ahşap oyuncak veya ürün adı arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
                         <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
-                            <?php echo mis360_icon('search', 20); ?>
+                            <?php echo function_exists('mis360_icon') ? mis360_icon('search', 20) : '🔍'; ?>
                         </button>
                     </div>
                 </form>
@@ -89,13 +89,13 @@ if (!defined('ABSPATH')) {
             <div class="emdief-header-actions">
                 <!-- Mobil Arama Butonu -->
                 <button type="button" class="action-btn action-search-mobile" id="emdief-mobile-search-toggle" aria-label="<?php esc_attr_e('Arama Aç', 'mis360-mobilya'); ?>">
-                    <span class="action-icon"><?php echo mis360_icon('search', 20); ?></span>
+                    <span class="action-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('search', 20) : '🔍'; ?></span>
                 </button>
 
                 <!-- Hesabım / Giriş Butonu (Giriş Yapılmamışsa Popup Açar) -->
                 <?php if (is_user_logged_in()): ?>
                     <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/my-account/')); ?>" class="action-btn action-account" title="<?php esc_attr_e('Hesabım', 'mis360-mobilya'); ?>">
-                        <span class="action-icon"><?php echo mis360_icon('user', 22); ?></span>
+                        <span class="action-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('user', 22) : '👤'; ?></span>
                         <span class="action-label">
                             <small><?php esc_html_e('Hoş Geldiniz', 'mis360-mobilya'); ?></small>
                             <strong><?php echo esc_html(wp_get_current_user()->display_name); ?></strong>
@@ -103,7 +103,7 @@ if (!defined('ABSPATH')) {
                     </a>
                 <?php else: ?>
                     <button type="button" class="action-btn action-account" id="emdief-login-trigger" aria-label="<?php esc_attr_e('Giriş Yap', 'mis360-mobilya'); ?>">
-                        <span class="action-icon"><?php echo mis360_icon('user', 22); ?></span>
+                        <span class="action-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('user', 22) : '👤'; ?></span>
                         <span class="action-label">
                             <small><?php esc_html_e('Giriş Yapın', 'mis360-mobilya'); ?></small>
                             <strong><?php esc_html_e('Hesabım', 'mis360-mobilya'); ?></strong>
@@ -114,7 +114,7 @@ if (!defined('ABSPATH')) {
                 <!-- Sepet Butonu (Daima Görünür) -->
                 <button type="button" class="action-btn action-cart" id="emdief-cart-trigger" aria-label="<?php esc_attr_e('Sepeti Aç', 'mis360-mobilya'); ?>">
                     <span class="action-icon">
-                        <?php echo mis360_icon('cart', 22); ?>
+                        <?php echo function_exists('mis360_icon') ? mis360_icon('cart', 22) : '🛒'; ?>
                         <span class="emdief-cart-count" id="emdief-cart-count">
                             <?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?>
                         </span>
@@ -134,7 +134,7 @@ if (!defined('ABSPATH')) {
                     <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, ahşap oyuncak...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                     <input type="hidden" name="post_type" value="product">
                     <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
-                        <?php echo mis360_icon('search', 18); ?>
+                        <?php echo function_exists('mis360_icon') ? mis360_icon('search', 18) : '🔍'; ?>
                     </button>
                 </div>
             </form>
@@ -192,7 +192,7 @@ if (!defined('ABSPATH')) {
         <div class="drawer-header">
             <h3><?php esc_html_e('Menü', 'mis360-mobilya'); ?></h3>
             <button type="button" class="drawer-close" id="emdief-mobile-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
-                <?php echo mis360_icon('close', 20); ?>
+                <?php echo function_exists('mis360_icon') ? mis360_icon('close', 20) : '✕'; ?>
             </button>
         </div>
         <div class="drawer-content">
@@ -202,7 +202,7 @@ if (!defined('ABSPATH')) {
                         <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori ürünü arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
                         <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
-                            <?php echo mis360_icon('search', 16); ?>
+                            <?php echo function_exists('mis360_icon') ? mis360_icon('search', 16) : '🔍'; ?>
                         </button>
                     </div>
                 </form>
@@ -235,11 +235,11 @@ if (!defined('ABSPATH')) {
             ?>
             <div class="drawer-contact-info">
                 <a href="tel:<?php echo esc_attr(str_replace(' ', '', get_theme_mod('mis360_phone', '+90 537 477 87 66'))); ?>" class="contact-pill">
-                    <?php echo mis360_icon('phone', 16); ?>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('phone', 16) : '📞'; ?>
                     <span><?php echo esc_html(get_theme_mod('mis360_phone', '+90 537 477 87 66')); ?></span>
                 </a>
                 <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener" class="contact-pill wa-pill">
-                    <?php echo mis360_icon('whatsapp', 16); ?>
+                    <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
                     <span>WhatsApp Canlı Destek</span>
                 </a>
             </div>
@@ -257,7 +257,7 @@ if (!defined('ABSPATH')) {
                 <span class="drawer-count-badge" id="emdief-drawer-count-badge"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?> <?php esc_html_e('ürün', 'mis360-mobilya'); ?></span>
             </div>
             <button type="button" class="drawer-close" id="emdief-cart-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
-                <?php echo mis360_icon('close', 20); ?>
+                <?php echo function_exists('mis360_icon') ? mis360_icon('close', 20) : '✕'; ?>
             </button>
         </div>
         <?php
@@ -284,7 +284,7 @@ if (!defined('ABSPATH')) {
     <div class="emdief-modal-overlay" id="emdief-auth-overlay"></div>
     <div class="emdief-modal-dialog">
         <button type="button" class="emdief-modal-close" id="emdief-auth-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
-            <?php echo mis360_icon('close', 20); ?>
+            <?php echo function_exists('mis360_icon') ? mis360_icon('close', 20) : '✕'; ?>
         </button>
 
         <div class="auth-modal-header">
@@ -325,7 +325,7 @@ if (!defined('ABSPATH')) {
                     <input type="hidden" name="redirect_to" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
                     <button type="submit" class="emdief-btn btn-primary btn-block btn-lg auth-submit-btn">
                         <span><?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?></span>
-                        <?php echo mis360_icon('arrow-right', 18); ?>
+                        <?php echo function_exists('mis360_icon') ? mis360_icon('arrow-right', 18) : '→'; ?>
                     </button>
                 </form>
             </div>
@@ -355,7 +355,7 @@ if (!defined('ABSPATH')) {
                     </p>
                     <button type="submit" class="emdief-btn btn-primary btn-block btn-lg auth-submit-btn">
                         <span><?php esc_html_e('Ücretsiz Hesap Oluştur', 'mis360-mobilya'); ?></span>
-                        <?php echo mis360_icon('sparkles', 18); ?>
+                        <?php echo function_exists('mis360_icon') ? mis360_icon('sparkles', 18) : '✨'; ?>
                     </button>
                 </form>
             </div>
