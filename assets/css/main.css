@@ -6535,133 +6535,258 @@
   color: #a7f3d0;
 }
 
-/* 7. Anasayfa Kurulum & Montaj Bannerı */
+/* 7. Anasayfa Şık Montaj & Kurulum Rehberi Kartı (Assembly Banner Card) */
 .emdief-help-banner-section {
-  padding: 2.5rem 0 1rem 0;
+  padding: 3rem 0 1.5rem 0;
 }
 
-.help-banner-card {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border-radius: 22px;
-  padding: 2.5rem 2.5rem;
+.emdief-assembly-banner-card {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #064e3b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 26px;
+  padding: 2.2rem 2.8rem;
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 2rem;
-  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 2.2rem;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
   position: relative;
   overflow: hidden;
 }
 
-.help-banner-card::after {
+.emdief-assembly-banner-card::before {
   content: '';
   position: absolute;
-  bottom: -60px;
-  right: -60px;
-  width: 220px;
-  height: 220px;
+  top: -80px;
+  right: 15%;
+  width: 240px;
+  height: 240px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(234, 88, 12, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+  background: radial-gradient(circle, rgba(234, 88, 12, 0.22) 0%, rgba(234, 88, 12, 0) 70%);
   pointer-events: none;
 }
 
-.help-banner-badge {
-  display: inline-flex;
+.emdief-assembly-banner-card::after {
+  content: '';
+  position: absolute;
+  bottom: -60px;
+  left: 30%;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, rgba(16, 185, 129, 0) 70%);
+  pointer-events: none;
+}
+
+/* Sol İkon & Rozet Kolonu */
+.assembly-badge-col {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
-  background: rgba(234, 88, 12, 0.2);
-  border: 1px solid rgba(234, 88, 12, 0.4);
-  color: #fb923c;
-  font-size: 0.75rem;
-  font-weight: 800;
+  gap: 8px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.assembly-icon-box {
+  width: 76px;
+  height: 76px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  position: relative;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.assembly-icon-box .assembly-mascot {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  font-size: 1.25rem;
+}
+
+.assembly-time-tag {
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 9999px;
-  margin-bottom: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.4);
 }
 
-.help-banner-title {
-  font-size: 1.6rem;
+/* Orta İçerik */
+.assembly-banner-content {
+  flex: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.assembly-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(234, 88, 12, 0.18);
+  border: 1px solid rgba(234, 88, 12, 0.4);
+  color: #fed7aa;
+  font-size: 0.74rem;
   font-weight: 800;
-  margin: 0 0 0.6rem 0;
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  margin-bottom: 0.65rem;
+}
+
+.assembly-live-dot {
+  width: 7px;
+  height: 7px;
+  background: #ea580c;
+  border-radius: 50%;
+  animation: pulse-dot 1.8s infinite;
+}
+
+.assembly-title {
+  font-size: 1.55rem;
+  font-weight: 900;
   color: #ffffff;
+  margin: 0 0 0.5rem 0;
   line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
-.help-banner-desc {
+.assembly-desc {
   font-size: 0.92rem;
-  color: #94a3b8;
-  margin: 0 0 1.25rem 0;
-  max-width: 540px;
-  line-height: 1.55;
+  color: #cbd5e1;
+  margin: 0 0 1rem 0;
+  line-height: 1.6;
+  max-width: 640px;
 }
 
-.help-banner-features {
+.assembly-perks {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.help-banner-features .f-pill {
+.assembly-perk {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e2e8f0;
-  font-size: 0.78rem;
-  font-weight: 600;
+  color: #f1f5f9;
+  font-size: 0.8rem;
+  font-weight: 700;
   padding: 5px 12px;
-  border-radius: 8px;
+  border-radius: 9999px;
 }
 
-.help-banner-actions {
+/* Sağ Aksiyon Butonları */
+.assembly-banner-actions {
   display: flex;
   flex-direction: column;
   gap: 10px;
   flex-shrink: 0;
-  align-items: stretch;
+  min-width: 220px;
+  position: relative;
+  z-index: 2;
 }
 
-.help-banner-actions .btn-primary {
-  background: #ea580c;
-  color: #ffffff;
-  padding: 12px 22px;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  text-decoration: none;
+.assembly-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
-  transition: transform 0.2s ease, background 0.2s ease;
+  background: #ea580c;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 13px 22px;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.38);
 }
 
-.help-banner-actions .btn-primary:hover {
+.assembly-btn-primary:hover {
   background: #c2410c;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(234, 88, 12, 0.45);
+}
+
+.assembly-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 11px 20px;
+  border-radius: 14px;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+.assembly-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-2px);
 }
 
-.help-banner-actions .btn-ghost-light {
-  background: transparent;
-  color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.86rem;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.2s ease;
+/* Mobil & Tablet Uyumu */
+@media (max-width: 1024px) {
+  .emdief-assembly-banner-card {
+    padding: 2rem 2rem;
+    gap: 1.5rem;
+  }
+  .assembly-title {
+    font-size: 1.35rem;
+  }
 }
 
-.help-banner-actions .btn-ghost-light:hover {
-  border-color: #ffffff;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+@media (max-width: 860px) {
+  .emdief-assembly-banner-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 2.2rem 1.5rem;
+    border-radius: 22px;
+    gap: 1.5rem;
+  }
+  .assembly-badge-col {
+    margin-bottom: 0.2rem;
+  }
+  .assembly-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .assembly-perks {
+    justify-content: center;
+  }
+  .assembly-banner-actions {
+    width: 100%;
+    min-width: 0;
+  }
+  .assembly-btn-primary,
+  .assembly-btn-secondary {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
 /* 8. Hesabım (My Account) Kurulum & Yardım Sekmesi */

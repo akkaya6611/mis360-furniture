@@ -553,37 +553,43 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     7. BÖLÜM: YARDIM & KOLAY KURULUM MERKEZİ BANNERI (KARGO TAKİP & MONTAJ VİDEOLARI)
+     7. BÖLÜM: YARDIM & KOLAY KURULUM MERKEZİ BANNERI
      ========================================================================= -->
 <section class="emdief-help-banner-section">
     <div class="emdief-container">
-        <div class="help-action-banner">
-            <div class="help-banner-visual">
-                <div class="banner-bear-bubble">
-                    <span class="bubble-icon">🛠️🧸</span>
+        <div class="emdief-assembly-banner-card">
+            <div class="assembly-badge-col">
+                <div class="assembly-icon-box">
+                    <span class="assembly-icon">🛠️</span>
+                    <span class="assembly-mascot">🧸</span>
                 </div>
-                <div class="banner-fast-tag">5 DAKİKADA MONTAJ</div>
+                <span class="assembly-time-tag">5 Dk Montaj</span>
             </div>
-            <div class="help-banner-text">
-                <span class="banner-eyebrow">🎬 Adım Adım Rehber & Müşteri Desteği</span>
-                <h2 class="banner-heading">Montessori Mobilyanızı Şarjlı Matkap ile 5 Dakikada Kurun!</h2>
-                <p class="banner-subtext">
-                    Tüm parçalarımız CNC tezgahlarda milimetrik açılmış delikleriyle gelir. Şarjlı matkabınızla vidaları saniyeler içinde sıkıp kitaplığınızı kurabilir ve duvara delik delerek güvenle sabitleyebilirsiniz.
+
+            <div class="assembly-banner-content">
+                <div class="assembly-eyebrow">
+                    <span class="assembly-live-dot"></span>
+                    <span><?php esc_html_e('PRATİK VİDEOLAR & CANLI DESTEK', 'mis360-mobilya'); ?></span>
+                </div>
+                <h3 class="assembly-title"><?php esc_html_e('Montessori Mobilyanızı Şarjlı Matkap ile 5 Dakikada Kurun!', 'mis360-mobilya'); ?></h3>
+                <p class="assembly-desc">
+                    <?php esc_html_e('Tüm parçalarımız CNC tezgahlarda milimetrik açılmış delikleriyle gelir. Şarjlı matkabınızla vidaları saniyeler içinde sıkıp kitaplığınızı birleştirebilir ve duvara güvenle sabitleyebilirsiniz.', 'mis360-mobilya'); ?>
                 </p>
-                <div class="banner-perks-row">
-                    <span class="perk"><span class="check-icon">✓</span> Şarjlı Matkap ile Hızlı Montaj</span>
-                    <span class="perk"><span class="check-icon">✓</span> Duvara Delik Delip Sabitleme Emniyeti</span>
-                    <span class="perk"><span class="check-icon">✓</span> Adım Adım Kurulum Videoları</span>
+                <div class="assembly-perks">
+                    <span class="assembly-perk">⚡ <?php esc_html_e('Şarjlı Matkapla Hızlı Montaj', 'mis360-mobilya'); ?></span>
+                    <span class="assembly-perk">🔒 <?php esc_html_e('Duvara Sabitleme Emniyeti', 'mis360-mobilya'); ?></span>
+                    <span class="assembly-perk">🎥 <?php esc_html_e('7 Adet Ürün Kurulum Videosu', 'mis360-mobilya'); ?></span>
                 </div>
             </div>
-            <div class="help-banner-actions">
-                <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="emdief-btn btn-primary btn-lg banner-btn-main">
-                    <span>Kurulum Videolarını İzle</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 3l14 9-14 9V3z"/></svg>
+
+            <div class="assembly-banner-actions">
+                <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="assembly-btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    <span><?php esc_html_e('Kurulum Videolarını İzle', 'mis360-mobilya'); ?></span>
                 </a>
-                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Merhaba,%20kurulum%20hakkında%20yardım%20almak%20istiyorum." target="_blank" rel="noopener" class="emdief-btn btn-outline btn-md banner-btn-wa">
+                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=Merhaba,%20kurulum%20ve%20montaj%20hakkında%20canlı%20destek%20almak%20istiyorum." target="_blank" rel="noopener" class="assembly-btn-secondary">
                     <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
-                    <span>Canlı Montaj Desteği</span>
+                    <span><?php esc_html_e('Canlı Montaj Desteği', 'mis360-mobilya'); ?></span>
                 </a>
             </div>
         </div>
