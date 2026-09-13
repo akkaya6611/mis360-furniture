@@ -1270,3 +1270,348 @@ function mis360_turkish_search_expansion($search, $wp_query) {
     return $search;
 }
 add_filter('posts_search', 'mis360_turkish_search_expansion', 20, 2);
+
+/**
+ * --------------------------------------------------------------------------
+ * TEKİL ÜRÜN KURULUM VİDEOLARI VE DUVARA MONTAJ SİSTEMİ (v1.7.4)
+ * --------------------------------------------------------------------------
+ */
+
+/**
+ * YouTube URL veya ID'sinden 11 haneli video kodunu ayıkla
+ */
+function mis360_extract_youtube_id($url) {
+    if (empty($url)) {
+        return '';
+    }
+    $url = trim($url);
+    if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i', $url, $match)) {
+        return $match[1];
+    }
+    if (strlen($url) === 11 && preg_match('/^[a-zA-Z0-9_-]{11}$/', $url)) {
+        return $url;
+    }
+    return '';
+}
+
+/**
+ * Ürüne uygun kurulum videosunu başlık, slug ve kategorilere göre akıllı eşleştir
+ */
+function mis360_get_product_installation_video($product) {
+    if (!$product || !is_a($product, 'WC_Product')) {
+        return null;
+    }
+
+    $product_id = $product->get_id();
+
+    // 1. Manuel Özel Video Tanımı (Post Meta)
+    $custom_video = get_post_meta($product_id, '_emdief_installation_video', true);
+    if (empty($custom_video)) {
+        $custom_video = get_post_meta($product_id, '_installation_video', true);
+    }
+    if (!empty($custom_video)) {
+        $custom_yt = mis360_extract_youtube_id($custom_video);
+        if ($custom_yt) {
+            return [
+                'youtube_id'  => $custom_yt,
+                'title'       => sprintf(esc_html__('%s Kurulum Videosu', 'mis360-mobilya'), $product->get_name()),
+                'series_name' => esc_html__('Özel Ürün Kurulumu', 'mis360-mobilya'),
+                'tools'       => esc_html__('Şarjlı Matkap', 'mis360-mobilya'),
+            ];
+        }
+    }
+
+    // 2. Başlık, Slug ve Kategori İsimlerini Birleştirip Normalize Et
+    $name = mb_strtolower($product->get_name(), 'UTF-8');
+    $slug = strtolower((string) $product->get_slug());
+    
+    // Kategori isimlerini de dahil et
+    $cats_str = '';
+    $terms = get_the_terms($product_id, 'product_cat');
+    if (!empty($terms) && !is_wp_error($terms)) {
+        foreach ($terms as $term) {
+            $cats_str .= ' ' . mb_strtolower($term->name, 'UTF-8');
+        }
+    }
+
+    $haystack = $name . ' ' . $slug . ' ' . $cats_str;
+
+    // Türkçe karakterleri normalize et
+    $normalized = str_replace(
+        ['ı', 'ç', 'ş', 'ğ', 'ü', 'ö', 'İ', 'Ç', 'Ş', 'Ğ', 'Ü', 'Ö'],
+        ['i', 'c', 's', 'g', 'u', 'o', 'i', 'c', 's', 'g', 'u', 'o'],
+        $haystack
+    );
+
+    // EŞLEŞTİRME KURALLARI:
+    
+    // A) Carmen 3 Raf (J7qaETlymr0)
+    if ((strpos($normalized, 'carmen') !== false || strpos($normalized, 'karmen') !== false) &&
+        (strpos($normalized, '3 raf') !== false || strpos($normalized, '3-raf') !== false || strpos($normalized, '3raf') !== false || strpos($normalized, 'uc raf') !== false)) {
+        return [
+            'youtube_id'  => 'J7qaETlymr0',
+            'title'       => 'Carmen 3 Raflı Montessori Kitaplık Kurulumu',
+            'series_name' => 'Carmen 3 Raf Serisi',
+            'tools'       => 'Şarjlı Matkap',
+        ];
+    }
+
+    // B) Melis 2 Raf (Uko45KVzhhs)
+    if (strpos($normalized, 'melis') !== false &&
+        (strpos($normalized, '2 raf') !== false || strpos($normalized, '2-raf') !== false || strpos($normalized, '2raf') !== false || strpos($normalized, 'iki raf') !== false)) {
+        return [
+            'youtube_id'  => 'Uko45KVzhhs',
+            'title'       => 'Melis 2 Raflı Montessori Kitaplık Kurulumu',
+            'series_name' => 'Melis 2 Raf Serisi',
+            'tools'       => 'Şarjlı Matkap',
+        ];
+    }
+
+    // C) Safir & Carmen Tek Raflı Modeller / Duvar & Banyo Rafı (bpHA-jND33Q)
+    if (strpos($normalized, 'tek raf') !== false || 
+        strpos($normalized, 'tek-raf') !== false || 
+        strpos($normalized, 'tekraf') !== false || 
+        strpos($normalized, '1 raf') !== false || 
+        strpos($normalized, '1-raf') !== false || 
+        strpos($normalized, 'bir raf') !== false || 
+        strpos($normalized, 'duvar raf') !== false || 
+        strpos($normalized, 'banyo raf') !== false) {
+        return [
+            'youtube_id'  => 'bpHA-jND33Q',
+            'title'       => 'Safir & Carmen Tek Raflı Modellerimizin Kurulumu',
+            'series_name' => 'Duvar & Banyo Rafı Grubu',
+            'tools'       => 'Matkap + Dübel + Vida',
+        ];
+    }
+
+    // D) Melis Serisi Kitaplıklar (LBBww08uTcI)
+    if (strpos($normalized, 'melis') !== false) {
+        return [
+            'youtube_id'  => 'LBBww08uTcI',
+            'title'       => 'Melis Serisi Montessori Kitaplık Kurulumu',
+            'series_name' => 'Melis Serisi',
+            'tools'       => 'Şarjlı Matkap',
+        ];
+    }
+
+    // E) Safir Serisi Kitaplıklar (4fUzzzdXXgQ)
+    if (strpos($normalized, 'safir') !== false) {
+        return [
+            'youtube_id'  => '4fUzzzdXXgQ',
+            'title'       => 'Safir Serisi Montessori Kitaplık Kurulumu',
+            'series_name' => 'Safir Serisi',
+            'tools'       => 'Şarjlı Matkap',
+        ];
+    }
+
+    // F) Carmen Serisi Kitaplıklar (R434l8wOYBY)
+    if (strpos($normalized, 'carmen') !== false || strpos($normalized, 'karmen') !== false) {
+        return [
+            'youtube_id'  => 'R434l8wOYBY',
+            'title'       => 'Carmen Serisi Montessori Kitaplık Kurulumu',
+            'series_name' => 'Carmen Serisi',
+            'tools'       => 'Şarjlı Matkap',
+        ];
+    }
+
+    // G) Varsayılan Montessori Kurulum Rehberi (R434l8wOYBY)
+    return [
+        'youtube_id'  => 'R434l8wOYBY',
+        'title'       => sprintf(esc_html__('%s Kurulum ve Montaj Rehberi', 'mis360-mobilya'), $product->get_name()),
+        'series_name' => 'Montessori Mobilya Serisi',
+        'tools'       => 'Şarjlı Matkap',
+    ];
+}
+
+/**
+ * WooCommerce Ürün Sayfasına "Kurulum Videosu 🎬" Sekmesi Ekle
+ */
+function mis360_add_installation_video_tab($tabs) {
+    global $product;
+    if (!$product) {
+        return $tabs;
+    }
+
+    $video_info = mis360_get_product_installation_video($product);
+    if ($video_info && !empty($video_info['youtube_id'])) {
+        $tabs['installation_video'] = [
+            'title'    => esc_html__('Kurulum Videosu', 'mis360-mobilya') . ' <span class="tab-video-icon">🎬</span>',
+            'priority' => 15,
+            'callback' => 'mis360_render_product_installation_video_tab',
+        ];
+    }
+
+    return $tabs;
+}
+add_filter('woocommerce_product_tabs', 'mis360_add_installation_video_tab', 20);
+
+/**
+ * "Kurulum Videosu" Sekmesi İçerik HTML'i
+ */
+function mis360_render_product_installation_video_tab() {
+    global $product;
+    if (!$product) return;
+
+    $video_info = mis360_get_product_installation_video($product);
+    if (!$video_info) return;
+
+    $product_name = $product->get_name();
+    $split_name = preg_split('/[-–—|]/u', $product_name);
+    $short_name = trim($split_name[0]);
+    if (mb_strlen($short_name) > 35) {
+        $short_name = wp_trim_words($short_name, 4, '');
+    }
+
+    $main_yt_id = esc_attr($video_info['youtube_id']);
+    $wall_yt_id = '-nYJfPdr9vw'; // Askı Aparatı Duvara Nasıl Montajlanır?
+
+    $wa_phone = get_theme_mod('mis360_whatsapp', '905374778766');
+    $wa_msg = rawurlencode("Merhaba Emdief Home, '" . $short_name . "' ürününün montajı ve kurulumu ile ilgili ustalarınızdan canlı destek almak istiyorum:");
+    $wa_link = "https://wa.me/" . esc_attr($wa_phone) . "?text=" . $wa_msg;
+    ?>
+    <div class="product-assembly-tab-content">
+        <!-- Başlık ve Giriş -->
+        <div class="assembly-tab-header">
+            <div class="assembly-tab-badge">
+                <span class="tab-badge-dot"></span>
+                <?php esc_html_e('KOLAY & PRATİK MONTAJ REHBERİ', 'mis360-mobilya'); ?>
+            </div>
+            <h3 class="assembly-tab-title">
+                <?php printf(esc_html__('%s Kurulum ve Duvara Sabitleme Rehberi', 'mis360-mobilya'), esc_html($short_name)); ?>
+            </h3>
+            <p class="assembly-tab-lead">
+                <?php esc_html_e('Ürünlerimizin tüm parçaları CNC tezgahlarda milimetrik montaj delikleri ve geçme kanallarıyla hazırlanmıştır. Alyan gerekmez, yalnızca bir şarjlı matkap yeterlidir! Aşağıdaki adım adım videoları izleyerek 5-10 dakika içinde tek başınıza kolayca kurabilirsiniz.', 'mis360-mobilya'); ?>
+            </p>
+        </div>
+
+        <!-- 2 Sütunlu Video Kartları Izgarası -->
+        <div class="product-assembly-videos-grid">
+            <!-- 1. Ürünün Kendi Kurulum Videosu -->
+            <div class="product-video-card main-video-card">
+                <div class="p-card-header">
+                    <div class="p-card-tags">
+                        <span class="p-tag p-tag-orange">🎬 <?php echo esc_html($video_info['series_name']); ?></span>
+                        <span class="p-tag">⏱️ 5-10 Dk Hızlı Montaj</span>
+                        <span class="p-tag">⚡ <?php echo esc_html($video_info['tools']); ?></span>
+                    </div>
+                    <h4 class="p-card-title"><?php echo esc_html($video_info['title']); ?></h4>
+                </div>
+                <div class="p-video-frame-wrap">
+                    <iframe 
+                        src="https://www.youtube-nocookie.com/embed/<?php echo $main_yt_id; ?>?rel=0" 
+                        title="<?php echo esc_attr($video_info['title']); ?>" 
+                        loading="lazy" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="p-card-footer">
+                    <span class="footer-tip-icon">💡</span>
+                    <span class="footer-tip-text">
+                        <strong>İpucu:</strong> <?php esc_html_e('Parçaları numaralarına göre düz bir zemine serin. Şarjlı matkabınızla vidaları aşırı zorlamadan CNC yuvalarına sırayla monte edin.', 'mis360-mobilya'); ?>
+                    </span>
+                </div>
+            </div>
+
+            <!-- 2. Askı Aparatı Duvara Montaj Videosu (Zorunlu Güvenlik) -->
+            <div class="product-video-card safety-video-card">
+                <div class="p-card-header">
+                    <div class="p-card-tags">
+                        <span class="p-tag p-tag-danger">⚠️ ÇOCUK GÜVENLİĞİ İÇİN ZORUNLUDUR</span>
+                        <span class="p-tag">🛡️ Devrilme Önleyici</span>
+                        <span class="p-tag">🧱 Dübel & Vida Pakette</span>
+                    </div>
+                    <h4 class="p-card-title"><?php esc_html_e('Askı Aparatı Duvara Nasıl Montajlanır?', 'mis360-mobilya'); ?></h4>
+                </div>
+                <div class="p-video-frame-wrap">
+                    <iframe 
+                        src="https://www.youtube-nocookie.com/embed/<?php echo esc_attr($wall_yt_id); ?>?rel=0" 
+                        title="<?php esc_attr_e('Askı Aparatı Duvara Montaj', 'mis360-mobilya'); ?>" 
+                        loading="lazy" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="p-card-footer safety-footer">
+                    <span class="footer-tip-icon">🔒</span>
+                    <span class="footer-tip-text">
+                        <strong>Önemli Emniyet Notu:</strong> <?php esc_html_e('Yerden olan modellerimiz hariç hemen hemen tüm Montessori kitaplık ve mobilyalarımızda miniklerin güvenliği için paket içerisinden çıkan askı aparatıyla duvara sabitleme yapılması zorunludur.', 'mis360-mobilya'); ?>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alt Bilgi Şeridi ve Canlı WhatsApp Butonu -->
+        <div class="product-assembly-features-strip">
+            <div class="assembly-points-list">
+                <div class="assembly-point">
+                    <span class="point-icon">🎯</span>
+                    <div class="point-text">
+                        <strong>CNC Hazır Delikler</strong>
+                        <span>Ölçü alma yok, tüm vida yuvaları açılmıştır</span>
+                    </div>
+                </div>
+                <div class="assembly-point">
+                    <span class="point-icon">🔩</span>
+                    <div class="point-text">
+                        <strong>Eksiksiz Montaj Kiti</strong>
+                        <span>Vidalar, emniyet askı aparatları ve dübeller kutuda</span>
+                    </div>
+                </div>
+                <div class="assembly-point">
+                    <span class="point-icon">⏱️</span>
+                    <div class="point-text">
+                        <strong>5-10 Dakikada Hazır</strong>
+                        <span>Tek başınıza şarjlı matkapla zahmetsizce kurun</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="assembly-action-col">
+                <a href="<?php echo esc_url($wa_link); ?>" target="_blank" rel="noopener noreferrer" class="assembly-wa-live-btn" title="<?php esc_attr_e('WhatsApp Canlı Destek', 'mis360-mobilya'); ?>">
+                    <span class="wa-btn-svg"><?php echo mis360_icon('whatsapp', 18); ?></span>
+                    <span class="wa-btn-label">
+                        <strong>Ustaya WhatsApp'tan Danış</strong>
+                        <small>Canlı Montaj Desteği</small>
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Tekil Ürün Özet Alanında (Fiyat / Sepet Yanında) Hızlı Kurulum Videosu Rozeti
+ */
+function mis360_single_product_video_quick_badge() {
+    global $product;
+    if (!$product) return;
+
+    $video_info = mis360_get_product_installation_video($product);
+    if (!$video_info || empty($video_info['youtube_id'])) return;
+    ?>
+    <div class="product-video-quick-badge-wrap">
+        <a href="#tab-installation_video" class="product-video-quick-badge" id="btn-scroll-to-video" aria-label="<?php esc_attr_e('Kurulum Videosunu İzle', 'mis360-mobilya'); ?>">
+            <span class="pv-badge-play-icon">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><polygon points="7 4 20 12 7 20 7 4"></polygon></svg>
+            </span>
+            <span class="pv-badge-content">
+                <span class="pv-badge-title-row">
+                    <span class="pv-title-text"><?php esc_html_e('5 Dk Kurulum Videosu', 'mis360-mobilya'); ?></span>
+                    <span class="pv-tag-pulse-pill"><?php esc_html_e('VİDEOYU İZLE 🎬', 'mis360-mobilya'); ?></span>
+                </span>
+                <span class="pv-badge-sub">
+                    <?php esc_html_e('CNC hazır delikler & şarjlı matkap ile adım adım montaj', 'mis360-mobilya'); ?>
+                </span>
+            </span>
+            <span class="pv-badge-arrow">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+            </span>
+        </a>
+    </div>
+    <?php
+}
+add_action('woocommerce_single_product_summary', 'mis360_single_product_video_quick_badge', 28);

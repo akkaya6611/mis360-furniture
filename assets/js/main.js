@@ -718,6 +718,43 @@ function mis360Init() {
             });
         });
     }
+
+    // 9. Tekil Ürün Hızlı Kurulum Videosu Butonu Etkileşimi
+    const videoQuickBadge = document.querySelector('.product-video-quick-badge');
+    if (videoQuickBadge) {
+        videoQuickBadge.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // WooCommerce Kurulum Videosu sekmesini bul ve tetikle
+            const tabBtn = document.querySelector('.woocommerce-tabs ul.tabs li.installation_video_tab a') || 
+                           document.querySelector('.woocommerce-tabs ul.tabs a[href*="tab-installation_video"]');
+
+            if (tabBtn) {
+                tabBtn.click();
+            }
+
+            // Sekme paneline yumuşak kaydır
+            const targetPanel = document.getElementById('tab-installation_video') || 
+                                document.querySelector('.installation_video_tab') ||
+                                document.querySelector('.woocommerce-tabs');
+
+            if (targetPanel) {
+                // Eğer sekme kapalıysa görünür yap
+                targetPanel.style.display = 'block';
+
+                const targetOffset = targetPanel.getBoundingClientRect().top + window.pageYOffset - 90;
+                window.scrollTo({
+                    top: targetOffset,
+                    behavior: 'smooth'
+                });
+
+                targetPanel.classList.add('pv-tab-highlight');
+                setTimeout(() => {
+                    targetPanel.classList.remove('pv-tab-highlight');
+                }, 1600);
+            }
+        });
+    }
 }
 
 

@@ -3121,6 +3121,432 @@ ul.products {
   }
 }
 
+/* --------------------------------------------------------------------------
+   3.6 TEKİL ÜRÜN KURULUM VİDEOSU SEKMESİ VE HIZLI ROZET (v1.7.4)
+   -------------------------------------------------------------------------- */
+
+/* Tab Başlığında Video Rozeti */
+.woocommerce div.product .woocommerce-tabs ul.tabs li.installation_video_tab a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.woocommerce div.product .woocommerce-tabs ul.tabs li.installation_video_tab a .tab-video-icon {
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Ürün Özet Alanında Hızlı Kurulum Videosu Rozeti */
+.product-video-quick-badge-wrap {
+    margin: 14px 0 18px 0;
+    width: 100%;
+}
+
+.product-video-quick-badge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #fffcf7 0%, #fff7ed 100%);
+    border: 1.5px solid #fed7aa;
+    border-radius: 14px;
+    padding: 10px 16px;
+    text-decoration: none !important;
+    color: inherit;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 3px 10px rgba(242, 122, 26, 0.08);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-video-quick-badge:hover {
+    border-color: #f97316;
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(242, 122, 26, 0.16);
+}
+
+.pv-badge-play-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(234, 88, 12, 0.35);
+    transition: transform 0.25s ease;
+}
+
+.product-video-quick-badge:hover .pv-badge-play-icon {
+    transform: scale(1.08);
+}
+
+.pv-badge-play-icon svg {
+    margin-left: 2px;
+}
+
+.pv-badge-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex-grow: 1;
+}
+
+.pv-badge-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pv-title-text {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.pv-tag-pulse-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    background: #ea580c;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 6px rgba(234, 88, 12, 0.25);
+    animation: pvPulseGlow 2s infinite;
+}
+
+@keyframes pvPulseGlow {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.pv-badge-sub {
+    font-size: 0.78rem;
+    color: #64748b;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.pv-badge-arrow {
+    color: #ea580c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.product-video-quick-badge:hover .pv-badge-arrow {
+    transform: translateY(2px);
+}
+
+/* Tab İçerik Alanı */
+.product-assembly-tab-content {
+    width: 100%;
+}
+
+.assembly-tab-header {
+    margin-bottom: 22px;
+}
+
+.assembly-tab-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffedd5;
+    color: #c2410c;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.03em;
+    margin-bottom: 10px;
+}
+
+.tab-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ea580c;
+}
+
+.assembly-tab-title {
+    font-size: 1.25rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 0 8px 0 !important;
+    line-height: 1.35 !important;
+}
+
+.assembly-tab-lead {
+    font-size: 0.92rem !important;
+    color: #475569 !important;
+    line-height: 1.65 !important;
+    margin: 0 !important;
+}
+
+/* Video Kartları Izgarası (2 Sütun) */
+.product-assembly-videos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 860px) {
+    .product-assembly-videos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.product-video-card {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    display: flex;
+    flex-direction: column;
+    transition: all 0.25s ease;
+}
+
+.product-video-card:hover {
+    border-color: #fdba74;
+    box-shadow: 0 8px 24px rgba(242, 122, 26, 0.1);
+    transform: translateY(-2px);
+}
+
+.safety-video-card {
+    border-color: #fee2e2;
+}
+
+.safety-video-card:hover {
+    border-color: #fca5a5;
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.08);
+}
+
+.p-card-header {
+    padding: 14px 16px 10px 16px;
+}
+
+.p-card-tags {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+}
+
+.p-tag {
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    color: #334155;
+    line-height: 1.2;
+}
+
+.p-tag-orange {
+    background: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #ffedd5;
+}
+
+.p-tag-danger {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fee2e2;
+}
+
+.p-card-title {
+    font-size: 0.98rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    line-height: 1.35 !important;
+}
+
+/* 16:9 Oranlı Responsive Video Sarmalayıcı */
+.p-video-frame-wrap {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #0f172a;
+    overflow: hidden;
+}
+
+.p-video-frame-wrap iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Kart Altı İpucu / Güvenlik Şeridi */
+.p-card-footer {
+    padding: 12px 16px;
+    background: #f8fafc;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: #475569;
+    line-height: 1.5;
+    margin-top: auto;
+}
+
+.safety-footer {
+    background: #fffafa;
+    border-top-color: #fee2e2;
+    color: #7f1d1d;
+}
+
+.footer-tip-icon {
+    font-size: 1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* Alt Özellikler ve WhatsApp Butonu */
+.product-assembly-features-strip {
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.assembly-points-list {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    flex-grow: 1;
+}
+
+.assembly-point {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.point-icon {
+    font-size: 1.3rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.point-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.point-text strong {
+    font-size: 0.84rem;
+    color: #0f172a;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.point-text span {
+    font-size: 0.76rem;
+    color: #64748b;
+    line-height: 1.2;
+}
+
+.assembly-action-col {
+    flex-shrink: 0;
+}
+
+.assembly-wa-live-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    color: #ffffff !important;
+    padding: 10px 18px;
+    border-radius: 999px;
+    text-decoration: none !important;
+    font-size: 0.86rem;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28);
+    transition: all 0.25s ease;
+}
+
+.assembly-wa-live-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(37, 211, 102, 0.38);
+    color: #ffffff !important;
+}
+
+.assembly-wa-live-btn .wa-btn-svg {
+    display: flex;
+    align-items: center;
+}
+
+.assembly-wa-live-btn .wa-btn-label {
+    display: flex;
+    flex-direction: column;
+}
+
+.assembly-wa-live-btn .wa-btn-label strong {
+    font-size: 0.84rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.assembly-wa-live-btn .wa-btn-label small {
+    font-size: 0.72rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 600;
+}
+
+@media (max-width: 640px) {
+    .product-assembly-features-strip {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 16px;
+        gap: 14px;
+    }
+    .assembly-points-list {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .assembly-wa-live-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Tab Geçişi Vurgu Efekti */
+@keyframes pvHighlightPulse {
+    0% { box-shadow: 0 0 0 0 rgba(242, 122, 26, 0.45); }
+    70% { box-shadow: 0 0 0 10px rgba(242, 122, 26, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(242, 122, 26, 0); }
+}
+
+.pv-tab-highlight {
+    animation: pvHighlightPulse 1.2s ease-out;
+    border-color: #f97316 !important;
+}
+
 
 
 
