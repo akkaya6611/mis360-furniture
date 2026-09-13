@@ -1361,64 +1361,380 @@
   display: none;
 }
 
-.drawer-mobile-search {
-  padding: 1.25rem 1.25rem 0.5rem 1.25rem;
-}
-
-.emdief-mobile-menu-links {
-  list-style: none;
-  padding: 0.75rem 1.25rem;
-  margin: 0;
+.drawer-header-brand {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
 }
 
-.emdief-mobile-menu-links li a {
+.drawer-brand-name {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.02em;
+}
+
+.drawer-brand-name strong {
+  color: #ea580c;
+}
+
+.drawer-brand-sub {
+  font-size: 0.72rem;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* 1. Öne Çıkan WhatsApp Destek Kartı (Mobil Menü Üst Alanı) */
+.drawer-wa-card-wrap {
+  padding: 1rem 1.15rem 0.5rem 1.15rem;
+}
+
+.drawer-whatsapp-btn {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.65rem 0.9rem;
-  font-size: 0.92rem;
+  gap: 12px;
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  color: #ffffff !important;
+  padding: 12px 14px;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.drawer-whatsapp-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4);
+}
+
+.drawer-whatsapp-btn::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+}
+
+.wa-icon-bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.wa-text-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.wa-top-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wa-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.wa-online-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 1px 6px;
+  border-radius: 9999px;
+  font-size: 0.68rem;
   font-weight: 700;
-  color: var(--emd-text-main);
-  background-color: var(--emd-bg-warm);
-  border-radius: var(--emd-radius-md);
+  color: #a7f3d0;
+}
+
+.wa-online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+  animation: waPulse 1.8s infinite;
+}
+
+@keyframes waPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.wa-sub {
+  font-size: 0.75rem;
+  color: #d1fae5;
+  margin-top: 1px;
+}
+
+.wa-arrow {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 800;
+}
+
+/* 2. Hızlı Arama Kutusu */
+.drawer-mobile-search {
+  padding: 0.5rem 1.15rem 0.75rem 1.15rem;
+}
+
+.drawer-mobile-search .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.drawer-mobile-search .search-field {
+  width: 100%;
+  padding: 9px 38px 9px 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 0.86rem;
+  color: #1e293b;
+  outline: none;
   transition: all 0.2s ease;
 }
 
-.emdief-mobile-menu-links li a:hover {
-  background-color: var(--emd-primary-light);
-  color: var(--emd-primary-hover);
-  transform: translateX(4px);
+.drawer-mobile-search .search-field:focus {
+  background: #ffffff;
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
 }
 
-.emdief-mobile-menu-links .sub-menu {
-  list-style: none;
-  padding: 0.25rem 0 0.25rem 0.75rem;
-  margin: 0.25rem 0 0.25rem 0.5rem;
+.drawer-mobile-search .search-submit {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* 3. Hızlı Menü Çipleri (Pills) */
+.drawer-quick-pills {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding: 0 1.15rem 0.85rem 1.15rem;
+}
+
+.quick-pill {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 4px;
+  text-align: center;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #334155;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.quick-pill:hover {
+  background: #fff7ed;
+  color: #ea580c;
+  border-color: #fdba74;
+}
+
+.quick-pill.pill-sale {
+  background: #fff1f2;
+  border-color: #fecdd3;
+  color: #e11d48;
+}
+
+.quick-pill.pill-video {
+  background: #fefce8;
+  border-color: #fef08a;
+  color: #a16207;
+}
+
+/* 4. Kategorize Edilmiş Akordeon Menü Grupları */
+.drawer-categorized-nav {
+  padding: 0 1.15rem;
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  border-left: 2px solid var(--emd-primary-light);
+  gap: 8px;
+  margin-bottom: 1.5rem;
 }
 
-.emdief-mobile-menu-links .sub-menu li a {
-  font-size: 0.85rem;
+.drawer-group {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.drawer-group.is-open {
+  border-color: #fdba74;
+}
+
+.drawer-group-toggle {
+  width: 100%;
+  padding: 11px 14px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  text-align: left;
+}
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  color: #1e293b;
+}
+
+.group-emoji {
+  font-size: 1.1rem;
+}
+
+.group-toggle-icon {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  transition: transform 0.2s ease;
+}
+
+.drawer-group.is-open .group-toggle-icon {
+  color: #ea580c;
+}
+
+.drawer-group-links {
+  list-style: none;
+  margin: 0;
+  padding: 0 0.75rem 0.75rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.drawer-group-links li a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.86rem;
   font-weight: 600;
-  padding: 0.5rem 0.75rem;
-  background-color: #f8fafc;
+  color: #475569;
+  text-decoration: none;
+  background: #fafaf9;
+  transition: all 0.2s ease;
 }
 
-.emdief-mobile-menu-links .sub-menu li a:hover {
-  background-color: var(--emd-primary-light);
-  color: var(--emd-primary);
+.drawer-group-links li a:hover {
+  background: #fff7ed;
+  color: #ea580c;
+  transform: translateX(3px);
 }
 
+.link-bullet {
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.link-badge {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.link-badge.badge-video {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.group-all-link a {
+  background: #f8fafc !important;
+  color: #ea580c !important;
+  font-weight: 700 !important;
+  justify-content: space-between;
+  border: 1px dashed #fdba74;
+  margin-top: 4px;
+}
+
+/* 5. Kullanıcı Hesabı & Giriş Satırı */
+.drawer-account-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.drawer-acc-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.drawer-acc-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.drawer-logout-btn {
+  width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.drawer-logout-btn:hover {
+  background: #fca5a5;
+  color: #991b1b;
+}
+
+/* 6. Alt İletişim Bilgileri */
 .drawer-contact-info {
   margin-top: auto;
-  padding: 1.25rem;
-  border-top: 1px solid var(--emd-border);
+  padding: 1rem 1.15rem 1.25rem 1.15rem;
+  border-top: 1px solid #e2e8f0;
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
@@ -1427,18 +1743,22 @@
 .contact-pill {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.65rem 0.9rem;
-  background-color: var(--emd-bg-warm);
-  border-radius: var(--emd-radius-md);
-  font-size: 0.88rem;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.86rem;
   font-weight: 700;
-  color: var(--emd-text-main);
+  color: #1e293b;
+  text-decoration: none;
+  transition: all 0.2s ease;
 }
 
-.contact-pill.wa-pill {
-  background-color: #d1fae5;
-  color: #065f46;
+.contact-pill:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
 }
 
 /* Responsive Media Queries Güncellemesi */

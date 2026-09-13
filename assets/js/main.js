@@ -39,12 +39,53 @@ function mis360Init() {
     if (mobileClose) mobileClose.addEventListener('click', closeMobileMenu);
     if (mobileOverlay) mobileOverlay.addEventListener('click', closeMobileMenu);
 
-    const mobileLinks = document.querySelectorAll('.emdief-mobile-menu-links a');
-    mobileLinks.forEach(link => {
-        link.addEventListener('click', () => {
-            closeMobileMenu();
+    const allDrawerNavLinks = document.querySelectorAll('.drawer-content a');
+    allDrawerNavLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // WhatsApp dış bağlantıları hariç menüyü kapat
+            if (!link.getAttribute('href') || !link.getAttribute('href').startsWith('https://wa.me')) {
+                closeMobileMenu();
+            }
         });
     });
+
+    // Mobil Menü Kategorize Akordeon Grupları
+    const drawerGroupToggles = document.querySelectorAll('.drawer-group-toggle');
+    drawerGroupToggles.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const group = btn.closest('.drawer-group');
+            if (!group) return;
+            const links = group.querySelector('.drawer-group-links');
+            const icon = btn.querySelector('.group-toggle-icon');
+            const isOpen = group.classList.contains('is-open');
+
+            if (isOpen) {
+                group.classList.remove('is-open');
+                btn.setAttribute('aria-expanded', 'false');
+                if (links) links.style.display = 'none';
+                if (icon) icon.textContent = '▾';
+            } else {
+                group.classList.add('is-open');
+                btn.setAttribute('aria-expanded', 'true');
+                if (links) links.style.display = 'flex';
+                if (icon) icon.textContent = '▴';
+            }
+        });
+    });
+
+    // Mobil Menü Giriş Butonu
+    const drawerLoginBtn = document.getElementById('drawer-login-trigger');
+    if (drawerLoginBtn) {
+        drawerLoginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeMobileMenu();
+            const headerLogin = document.getElementById('emdief-login-trigger');
+            if (headerLogin) {
+                headerLogin.click();
+            }
+        });
+    }
 
     // 1.1. Masaüstü Dropdown Menü Tıklama Desteği
     const dropdownParents = document.querySelectorAll('.emdief-nav-menu li.menu-item-has-children');

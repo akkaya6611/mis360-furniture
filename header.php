@@ -191,16 +191,37 @@ if (!defined('ABSPATH')) {
     <div class="emdief-drawer-overlay" id="emdief-mobile-overlay"></div>
     <div class="emdief-drawer-panel drawer-left">
         <div class="drawer-header">
-            <h3><?php esc_html_e('Menü', 'mis360-mobilya'); ?></h3>
+            <div class="drawer-header-brand">
+                <span class="drawer-brand-name">Emdief<strong>Home</strong></span>
+                <span class="drawer-brand-sub">Montessori Çocuk Odası</span>
+            </div>
             <button type="button" class="drawer-close" id="emdief-mobile-close" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">
                 <?php echo function_exists('mis360_icon') ? mis360_icon('close', 20) : '✕'; ?>
             </button>
         </div>
         <div class="drawer-content">
+            <!-- 1. Öne Çıkan WhatsApp Canlı Destek Butonu -->
+            <div class="drawer-wa-card-wrap">
+                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=<?php echo rawurlencode('Merhaba Emdief Home, siparişim ve mobilyalar hakkında destek almak istiyorum.'); ?>" target="_blank" rel="noopener" class="drawer-whatsapp-btn">
+                    <div class="wa-icon-bubble">
+                        <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 22) : '💬'; ?>
+                    </div>
+                    <div class="wa-text-col">
+                        <div class="wa-top-row">
+                            <span class="wa-title">WhatsApp Canlı Destek</span>
+                            <span class="wa-online-pill"><span class="wa-online-dot"></span> Canlı</span>
+                        </div>
+                        <span class="wa-sub">Sipariş, Kurulum & Özel Ölçü Hattı</span>
+                    </div>
+                    <span class="wa-arrow">➜</span>
+                </a>
+            </div>
+
+            <!-- 2. Hızlı Arama Kutusu -->
             <div class="drawer-mobile-search">
                 <form role="search" method="get" class="emdief-search-form" action="<?php echo esc_url(home_url('/')); ?>">
                     <div class="search-input-wrapper">
-                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori ürünü arayın...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
+                        <input type="search" class="search-field" placeholder="<?php esc_attr_e('Montessori kitaplık, raf, oyuncak...', 'mis360-mobilya'); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off">
                         <input type="hidden" name="post_type" value="product">
                         <button type="submit" class="search-submit" aria-label="<?php esc_attr_e('Ara', 'mis360-mobilya'); ?>">
                             <?php echo function_exists('mis360_icon') ? mis360_icon('search', 16) : '🔍'; ?>
@@ -208,41 +229,175 @@ if (!defined('ABSPATH')) {
                     </div>
                 </form>
             </div>
-            <?php
-            if (has_nav_menu('mobile')) {
-                wp_nav_menu([
-                    'theme_location' => 'mobile',
-                    'container'      => false,
-                    'menu_class'     => 'emdief-mobile-menu-links',
-                ]);
-            } else {
-                ?>
-                <ul class="emdief-mobile-menu-links">
-                    <li><a href="<?php echo esc_url(home_url('/')); ?>">🏠 <?php esc_html_e('Anasayfa', 'mis360-mobilya'); ?></a></li>
-                    <?php if (class_exists('WooCommerce')): ?>
-                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>">🛍️ <?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
+
+            <!-- 3. Hızlı Menü Çipleri -->
+            <div class="drawer-quick-pills">
+                <a href="<?php echo esc_url(home_url('/')); ?>" class="quick-pill">
+                    <span>🏠 Anasayfa</span>
+                </a>
+                <?php if (class_exists('WooCommerce')): ?>
+                    <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="quick-pill">
+                        <span>🛍️ Tüm Ürünler</span>
+                    </a>
+                    <a href="<?php echo esc_url(wc_get_page_permalink('shop') . '?on_sale=1'); ?>" class="quick-pill pill-sale">
+                        <span>🔥 İndirimler</span>
+                    </a>
+                <?php endif; ?>
+                <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="quick-pill pill-video">
+                    <span>🎬 Kurulum</span>
+                </a>
+            </div>
+
+            <!-- 4. Kategorize Edilmiş Akordeon Menü Grupları -->
+            <div class="drawer-categorized-nav">
+                <!-- Grup 1: Montessori Ürün Kategorileri (Varsayılan Açık) -->
+                <div class="drawer-group is-open">
+                    <button type="button" class="drawer-group-toggle" aria-expanded="true">
+                        <span class="group-title">
+                            <span class="group-emoji">🧸</span>
+                            <strong>Montessori Ürünleri</strong>
+                        </span>
+                        <span class="group-toggle-icon">▾</span>
+                    </button>
+                    <ul class="drawer-group-links">
+                        <li>
+                            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>">
+                                <span class="link-bullet">📚</span>
+                                <span>Montessori Kitaplıklar</span>
+                                <span class="link-badge">Popüler</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>">
+                                <span class="link-bullet">🧩</span>
+                                <span>Eğitici Ahşap Oyuncaklar</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">
+                                <span class="link-bullet">📦</span>
+                                <span>Oyuncak & Eşya Düzenleyiciler</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/shop/?s=raf')); ?>">
+                                <span class="link-bullet">🪟</span>
+                                <span>Duvar & Banyo Rafları</span>
+                            </a>
+                        </li>
+                        <li class="group-all-link">
+                            <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>">
+                                <span>Tüm Montessori Koleksiyonunu Gör</span>
+                                <span>➜</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Grup 2: Kurulum & Yardım Merkezi -->
+                <div class="drawer-group">
+                    <button type="button" class="drawer-group-toggle" aria-expanded="false">
+                        <span class="group-title">
+                            <span class="group-emoji">🎬</span>
+                            <strong>Yardım & Kurulum</strong>
+                        </span>
+                        <span class="group-toggle-icon">▾</span>
+                    </button>
+                    <ul class="drawer-group-links" style="display: none;">
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">
+                                <span class="link-bullet">🎥</span>
+                                <span>Montaj & Kurulum Videoları</span>
+                                <span class="link-badge badge-video">Video</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/yardim-merkezi/#sikca-sorulan-sorular')); ?>">
+                                <span class="link-bullet">❓</span>
+                                <span>Sıkça Sorulan Sorular (SSS)</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">
+                                <span class="link-bullet">🚚</span>
+                                <span>Teslimat & İade Koşulları</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=<?php echo rawurlencode('Eksik parça / vida talebinde bulunmak istiyorum.'); ?>" target="_blank" rel="noopener">
+                                <span class="link-bullet">🛠️</span>
+                                <span>Eksik Parça & Garanti Talebi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Grup 3: Kurumsal Bilgiler -->
+                <div class="drawer-group">
+                    <button type="button" class="drawer-group-toggle" aria-expanded="false">
+                        <span class="group-title">
+                            <span class="group-emoji">ℹ️</span>
+                            <strong>Kurumsal</strong>
+                        </span>
+                        <span class="group-toggle-icon">▾</span>
+                    </button>
+                    <ul class="drawer-group-links" style="display: none;">
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">
+                                <span class="link-bullet">🧸</span>
+                                <span>Hakkımızda & Montessori Felsefesi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>">
+                                <span class="link-bullet">🛡️</span>
+                                <span>Gizlilik Politikası & KVKK</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>">
+                                <span class="link-bullet">🍪</span>
+                                <span>Çerez Politikası</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>">
+                                <span class="link-bullet">📝</span>
+                                <span>Mesafeli Satış Sözleşmesi</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/iletisim/')); ?>">
+                                <span class="link-bullet">🏭</span>
+                                <span>İletişim & Fabrika Adresi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Grup 4: Üyelik & Hesap Alanı -->
+                <div class="drawer-account-row">
+                    <?php if (is_user_logged_in()): ?>
+                        <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/hesabim/')); ?>" class="drawer-acc-btn">
+                            <span class="acc-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('user', 18) : '👤'; ?></span>
+                            <span>Hesabım (<?php echo esc_html(wp_get_current_user()->display_name); ?>)</span>
+                        </a>
+                        <a href="<?php echo esc_url(wc_logout_url(home_url('/'))); ?>" class="drawer-logout-btn" title="<?php esc_attr_e('Çıkış Yap', 'mis360-mobilya'); ?>">
+                            <?php echo function_exists('mis360_icon') ? mis360_icon('logout', 18) : '🚪'; ?>
+                        </a>
+                    <?php else: ?>
+                        <button type="button" class="drawer-acc-btn" id="drawer-login-trigger">
+                            <span class="acc-icon"><?php echo function_exists('mis360_icon') ? mis360_icon('user', 18) : '👤'; ?></span>
+                            <span>Giriş Yap / Kayıt Ol</span>
+                        </button>
                     <?php endif; ?>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>">📚 <?php esc_html_e('Montessori Kitaplıklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>">🧸 <?php esc_html_e('Ahşap Oyuncaklar', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">📦 <?php esc_html_e('Oyuncak & Eşya Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🎬 <?php esc_html_e('Yardım & Kurulum Videoları', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">ℹ️ <?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('Teslimat ve İade Koşulları', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>">🛡️ <?php esc_html_e('Gizlilik Politikası & KVKK', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>">📝 <?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
-                    <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📞 <?php esc_html_e('İletişim & Fabrika Satış', 'mis360-mobilya'); ?></a></li>
-                </ul>
-                <?php
-            }
-            ?>
+                </div>
+            </div>
+
             <div class="drawer-contact-info">
                 <a href="tel:<?php echo esc_attr(str_replace(' ', '', get_theme_mod('mis360_phone', '+90 537 477 87 66'))); ?>" class="contact-pill">
                     <?php echo function_exists('mis360_icon') ? mis360_icon('phone', 16) : '📞'; ?>
                     <span><?php echo esc_html(get_theme_mod('mis360_phone', '+90 537 477 87 66')); ?></span>
-                </a>
-                <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener" class="contact-pill wa-pill">
-                    <?php echo function_exists('mis360_icon') ? mis360_icon('whatsapp', 16) : '💬'; ?>
-                    <span>WhatsApp Canlı Destek</span>
                 </a>
             </div>
         </div>
