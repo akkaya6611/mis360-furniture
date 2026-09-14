@@ -791,7 +791,7 @@ function mis360_auto_image_seo_attributes(array $attr, WP_Post $attachment, $siz
 add_filter('wp_get_attachment_image_attributes', 'mis360_auto_image_seo_attributes', 10, 3);
 
 /**
- * 4. DİNAMİK ROBOTS.TXT DİREKTİFLERİ VE SITEMAP BİLDİRİMİ
+ * 4. DİNAMİK ROBOTS.TXT DİREKTİFLERİ VE SITEMAP / LLMS BİLDİRİMİ
  */
 function mis360_custom_robots_txt($output, $public) {
     if ('0' === (string) $public) {
@@ -799,8 +799,9 @@ function mis360_custom_robots_txt($output, $public) {
     }
 
     $sitemap_url = home_url('/wp-sitemap.xml');
+    $llms_url    = home_url('/llms.txt');
 
-    $rules  = "\n# Emdief Home Advanced E-Commerce SEO Rules\n";
+    $rules  = "\n# Emdief Home Advanced E-Commerce SEO & AI Directives\n";
     $rules .= "User-agent: *\n";
     $rules .= "Disallow: /wp-admin/\n";
     $rules .= "Allow: /wp-admin/admin-ajax.php\n";
@@ -812,9 +813,37 @@ function mis360_custom_robots_txt($output, $public) {
     $rules .= "Disallow: /*?*min_price=\n";
     $rules .= "Disallow: /*?*max_price=\n";
     $rules .= "Disallow: /*?*add-to-cart=\n";
-    $rules .= "\n# Arama Motoru Harita Bildirimi (XML Sitemap)\n";
+    $rules .= "\n# XML Site Haritası & LLMs Standartları\n";
     $rules .= "Sitemap: " . esc_url($sitemap_url) . "\n";
+    $rules .= "# LLMs Context: " . esc_url($llms_url) . "\n";
 
     return $output . $rules;
 }
 add_filter('robots_txt', 'mis360_custom_robots_txt', 20, 2);
+
+/**
+ * 5. LLMS.TXT DİNAMİK SERVİS MOTORU (AI / LLM Modelleri İçin Doğrudan Uç Nokta)
+ * 
+ * https://emdiefhome.com.tr/llms.txt adresine gelen istekleri yakalayarak
+ * ChatGPT, Claude, Perplexity ve Google Gemini gibi yapay zeka modellerine
+ * optimize edilmiş Markdown metnini döner.
+ */
+function mis360_serve_llms_txt() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
+
+    if ($path === 'llms.txt' || $path === 'llms') {
+        header('Content-Type: text/plain; charset=utf-8');
+        header('X-Robots-Tag: all');
+        header('Cache-Control: public, max-age=86400');
+
+        $theme_file = get_template_directory() . '/llms.txt';
+        if (file_exists($theme_file)) {
+            echo file_get_contents($theme_file);
+        } else {
+            echo "# Emdief Home\n\nMontessori çocuk mobilyaları ve eğitici ahşap kitaplık üreticisi.\nWeb: " . home_url('/');
+        }
+        exit;
+    }
+}
+add_action('init', 'mis360_serve_llms_txt', 1);
