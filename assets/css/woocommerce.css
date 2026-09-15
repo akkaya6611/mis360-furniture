@@ -3550,3 +3550,391 @@ ul.products {
 
 
 
+
+/* ==========================================================================
+   v1.8.0 PREMIUM MONTESSORI DÖNÜŞÜM & SATIŞ ODAKLI GELİŞTİRMELER
+   ========================================================================== */
+
+/* Neden Bizi Tercih Etmelisiniz Bölümü */
+.emdief-why-us-section {
+    padding: 64px 0;
+    background: linear-gradient(180deg, #fdfbf7 0%, #ffffff 100%);
+    border-top: 1px solid #f1ede4;
+    border-bottom: 1px solid #f1ede4;
+}
+.why-us-heading {
+    text-align: center;
+    margin-bottom: 40px;
+}
+.why-us-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.6px;
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+.why-us-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 6px 0 10px;
+    letter-spacing: -0.02em;
+}
+.why-us-subtitle {
+    font-size: 1.05rem;
+    color: #64748b;
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+.why-us-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+.why-us-card {
+    background: #ffffff;
+    border: 1px solid #eef2f6;
+    border-radius: 18px;
+    padding: 26px 22px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+.why-us-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.07);
+    border-color: #fed7aa;
+}
+.why-us-icon-wrap {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 18px;
+}
+.why-us-icon-wrap.bg-mint { background: #ecfdf5; }
+.why-us-icon-wrap.bg-amber { background: #fef3c7; }
+.why-us-icon-wrap.bg-blue { background: #eff6ff; }
+.why-us-icon-wrap.bg-coral { background: #fff1f2; }
+.why-us-info h4 {
+    font-size: 1.12rem;
+    font-weight: 750;
+    color: #1e293b;
+    margin-bottom: 8px;
+}
+.why-us-info p {
+    font-size: 0.88rem;
+    color: #64748b;
+    line-height: 1.55;
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .why-us-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+}
+@media (max-width: 575px) {
+    .why-us-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .why-us-title {
+        font-size: 1.6rem;
+    }
+}
+
+/* Satış Odaklı Ürün Fayda Açıklaması (Kartlar) */
+.trendyol-benefit-tagline,
+.card-benefit-tagline {
+    display: block;
+    margin: 6px 0 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #b45309;
+    background: #fffbeb;
+    border-left: 3px solid #f59e0b;
+    padding: 5px 8px;
+    border-radius: 4px;
+    line-height: 1.35;
+}
+
+/* Tekil Ürün Detayında Başlık Altı Vurucu Fayda */
+.emdief-single-benefit-tagline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin: 10px 0 18px;
+}
+.emdief-single-benefit-tagline .benefit-highlight-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.emdief-single-benefit-tagline .benefit-highlight-text {
+    font-size: 0.94rem;
+    font-weight: 650;
+    color: #92400e;
+    line-height: 1.45;
+}
+
+/* 4 Öğeli Belirgin Güven Rozetleri (Tekil Ürün) */
+.emdief-single-trust-badges {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 22px 0;
+    padding: 16px 18px;
+    background: #fafaf9;
+    border: 1px solid #e7e5e4;
+    border-radius: 14px;
+}
+.trust-badge-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.trust-badge-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #10b981;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+.trust-badge-content {
+    display: flex;
+    flex-direction: column;
+}
+.trust-badge-content .badge-title {
+    font-size: 0.88rem;
+    font-weight: 750;
+    color: #1e293b;
+}
+.trust-badge-content .badge-sub {
+    font-size: 0.74rem;
+    color: #64748b;
+}
+
+@media (max-width: 480px) {
+    .emdief-single-trust-badges {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+/* Çekmece Sepet Güven İpuçları */
+.drawer-trust-check-list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px 14px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed #e2e8f0;
+}
+.drawer-trust-badge {
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+/* Teknik Özellikler & Ölçüler Sekmesi */
+.emdief-specs-tab-content {
+    padding: 18px 0;
+}
+.specs-intro-box {
+    margin-bottom: 20px;
+}
+.specs-intro-box .specs-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: 6px;
+}
+.specs-intro-box p {
+    font-size: 0.92rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+.emdief-specs-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+.emdief-specs-table th {
+    width: 30%;
+    padding: 14px 18px;
+    background: #f8fafc;
+    font-size: 0.88rem;
+    font-weight: 750;
+    color: #334155;
+    border-bottom: 1px solid #e2e8f0;
+    border-right: 1px solid #e2e8f0;
+    vertical-align: top;
+    text-align: left;
+}
+.emdief-specs-table td {
+    padding: 14px 18px;
+    font-size: 0.88rem;
+    color: #475569;
+    border-bottom: 1px solid #e2e8f0;
+    line-height: 1.6;
+}
+.emdief-specs-table tr:last-child th,
+.emdief-specs-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* SSS Sekmesi */
+.emdief-faq-tab-content {
+    padding: 18px 0;
+}
+.faq-accordion-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.faq-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    transition: all 0.2s ease;
+}
+.faq-item[open] {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+.faq-question {
+    padding: 15px 20px;
+    font-size: 0.95rem;
+    font-weight: 750;
+    color: #1e293b;
+    cursor: pointer;
+    background: #fcfbf9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+}
+.faq-question::-webkit-details-marker {
+    display: none;
+}
+.faq-chevron {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    transition: transform 0.2s ease;
+}
+.faq-item[open] .faq-chevron {
+    transform: rotate(180deg);
+}
+.faq-answer {
+    padding: 16px 20px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 0.9rem;
+    color: #475569;
+    line-height: 1.65;
+    background: #ffffff;
+}
+.faq-answer p {
+    margin: 0;
+}
+
+/* Mobilde Yapışkan Sepete Ekle Çubuğu */
+.emdief-mobile-sticky-bar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    padding: 10px 16px;
+    z-index: 9999;
+}
+.sticky-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    max-width: 540px;
+    margin: 0 auto;
+}
+.sticky-product-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+.sticky-thumb {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+.sticky-title-price {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.sticky-title {
+    font-size: 0.82rem;
+    font-weight: 750;
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sticky-price {
+    font-size: 0.88rem;
+    font-weight: 800;
+    color: #ea580c;
+}
+.sticky-btn-action {
+    flex-shrink: 0;
+}
+.sticky-btn-cart {
+    padding: 9px 18px !important;
+    font-size: 0.88rem !important;
+    font-weight: 750 !important;
+    border-radius: 10px !important;
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28) !important;
+}
+
+@media (max-width: 768px) {
+    .emdief-mobile-sticky-bar {
+        display: block;
+    }
+    /* Tekil ürün sayfasında alt çubuk için padding ekle */
+    body.single-product {
+        padding-bottom: 70px;
+    }
+}

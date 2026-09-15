@@ -84,13 +84,13 @@ get_header();
                 <div class="bento-hero-content">
                     <span class="bento-pill-badge">
                         <span class="bento-pill-dot"></span>
-                        %100 YERLİ ÜRETİM • 1. SINIF MDF
+                        %100 YERLİ İMALAT • DOĞAL AHŞAP & 1. SINIF MDF
                     </span>
-                    <h1 class="bento-hero-title">Çocukların Kendi Dünyasını<br>Keşfetmesi İçin</h1>
-                    <p class="bento-hero-desc">Kendi kitabını kendi seçen özgüvenli minikler için 1. sınıf MDF, sivri köşesiz yuvarlatılmış güvenli Montessori mobilyaları.</p>
+                    <h1 class="bento-hero-title">Çocukların Özgürce Öğrendiği<br>Alanlar Tasarlıyoruz</h1>
+                    <p class="bento-hero-desc">Montessori yaklaşımından ilham alan, çocukların bağımsızlığını destekleyen estetik ve fonksiyonel mobilyalar.</p>
                     <div class="bento-hero-highlights">
-                        <span class="highlight-chip">🛡️ 1. Sınıf MDF</span>
-                        <span class="highlight-chip">🌿 360° Güvenli Hatlar</span>
+                        <span class="highlight-chip">🛡️ E1 Standartı 1. Sınıf MDF</span>
+                        <span class="highlight-chip">🌿 360° Sivri Köşesiz Hatlar</span>
                         <span class="highlight-chip">🚚 1.500 TL Üzeri Ücretsiz Kargo</span>
                     </div>
                     <div class="bento-hero-actions">
@@ -145,37 +145,42 @@ get_header();
 </section>
 
 <!-- =========================================================================
-     3. BÖLÜM: GÜVEN ROZETLERİ (1. SINIF MDF & ÜCRETSİZ KARGO)
+     3. BÖLÜM: NEDEN BİZİ TERCİH ETMELİSİNİZ? (4 İKONLU GÜVEN ALANI)
      ========================================================================= -->
-<section class="emdief-guarantee-bar">
+<section class="emdief-why-us-section" id="neden-bizi-tercih-etmelisiniz">
     <div class="emdief-container">
-        <div class="guarantee-grid">
-            <div class="guarantee-item">
-                <div class="guar-icon-box guar-mint">🛡️</div>
-                <div class="guar-info">
-                    <h5>1. Sınıf MDF</h5>
-                    <p>Çocuk sağlığına dost, pürüzsüz dayanıklı yüzey</p>
+        <div class="why-us-heading text-center">
+            <span class="why-us-badge">⭐ EMDİEF HOME KALİTE GÜVENCESİ</span>
+            <h2 class="why-us-title"><?php esc_html_e('Neden Bizi Tercih Etmelisiniz?', 'mis360-mobilya'); ?></h2>
+            <p class="why-us-subtitle"><?php esc_html_e('Çocukların güvenliği, ebeveynlerin huzuru için her ayrıntıyı özenle tasarlıyoruz.', 'mis360-mobilya'); ?></p>
+        </div>
+        <div class="why-us-grid">
+            <div class="why-us-card">
+                <div class="why-us-icon-wrap bg-mint">👶</div>
+                <div class="why-us-info">
+                    <h4><?php esc_html_e('Çocuk Odaklı Tasarım', 'mis360-mobilya'); ?></h4>
+                    <p><?php esc_html_e('Çocuk ergonomisine ve boy hizasına uygun, bağımsız erişim sağlayan güvenli ve sivri kenarsız yuvarlatılmış kavisler.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
-            <div class="guarantee-item">
-                <div class="guar-icon-box guar-amber">🌿</div>
-                <div class="guar-info">
-                    <h5>360° Güvenli Hatlar</h5>
-                    <p>Sivri kenarsız, yuvarlatılmış kavisler</p>
+            <div class="why-us-card">
+                <div class="why-us-icon-wrap bg-amber">🛡️</div>
+                <div class="why-us-info">
+                    <h4><?php esc_html_e('Kaliteli Malzeme', 'mis360-mobilya'); ?></h4>
+                    <p><?php esc_html_e('E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sağlığa zararsız kokusuz su bazlı çocuk dostu kaplama.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
-            <div class="guarantee-item">
-                <div class="guar-icon-box guar-blue">🔧</div>
-                <div class="guar-info">
-                    <h5>5 Dk Kolay Kurulum</h5>
-                    <p>Numaralı parçalar, şarjlı matkapla hızlı montaj</p>
+            <div class="why-us-card">
+                <div class="why-us-icon-wrap bg-blue">⚡</div>
+                <div class="why-us-info">
+                    <h4><?php esc_html_e('Kolay Kurulum', 'mis360-mobilya'); ?></h4>
+                    <p><?php esc_html_e('CNC tezgahlarda milimetrik açılmış hazır montaj yuvaları; alyan gerekmeden şarjlı matkap ile 5-10 dakikada montaj.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
-            <div class="guarantee-item">
-                <div class="guar-icon-box guar-coral">🚚</div>
-                <div class="guar-info">
-                    <h5>Ücretsiz & Sigortalı Kargo</h5>
-                    <p>1.500 TL üzeri kapıya kadar güvenli teslimat</p>
+            <div class="why-us-card">
+                <div class="why-us-icon-wrap bg-coral">📦</div>
+                <div class="why-us-info">
+                    <h4><?php esc_html_e('Güvenli Paketleme', 'mis360-mobilya'); ?></h4>
+                    <p><?php esc_html_e('Yüksek yoğunluklu darbe emici straforlar ve koruyucu ambalajlarla %100 sigortalı kapıya kadar teslimat.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
         </div>
@@ -290,14 +295,16 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                 <span><?php echo esc_html($social_text); ?></span>
             </div>
 
+            <!-- Satış Odaklı Fayda Açıklaması -->
+            <div class="trendyol-benefit-tagline">
+                <span class="benefit-tagline-text"><?php echo esc_html(function_exists('mis360_get_product_benefit_tagline') ? mis360_get_product_benefit_tagline($prod) : '1. Sınıf E1 MDF • CNC Hazır Delikler • Güvenli Kavisler'); ?></span>
+            </div>
+
             <!-- Yıldız & Yorum Satırı -->
             <div class="trendyol-rating-row">
                 <span class="rating-score"><?php echo esc_html($rating_val); ?></span>
                 <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(<?php echo esc_html($review_count); ?>)</span>
-                <span class="camera-icon" title="Fotoğraflı Değerlendirmeler">
-                    <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                </span>
+                <span class="rating-count">(<?php echo esc_html($review_count); ?> Değerlendirme)</span>
             </div>
 
             <!-- En Düşük Fiyat Etiketi -->
@@ -604,10 +611,13 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
         <div class="philosophy-card">
             <div class="philosophy-grid">
                 <div class="philosophy-text">
-                    <span class="section-subtitle color-amber">Montessori Pedagojisi & 1. Sınıf MDF</span>
-                    <h2 class="section-title">"Bana Kendi Başıma Yapabilmem İçin Yardım Et"</h2>
+                    <span class="section-subtitle color-amber"><?php esc_html_e('Pedagojik Yaklaşım & 1. Sınıf Doğal Ahşap', 'mis360-mobilya'); ?></span>
+                    <h2 class="section-title"><?php esc_html_e('Montessori Felsefesinden İlham Alan Tasarımlar', 'mis360-mobilya'); ?></h2>
+                    <p class="philosophy-lead-desc">
+                        <strong><?php esc_html_e('Çocukların kendi alanlarında özgürce hareket edebilmesi, seçim yapabilmesi ve gelişimini destekleyen mobilyalar tasarlıyoruz.', 'mis360-mobilya'); ?></strong>
+                    </p>
                     <p>
-                        Maria Montessori'nin temel felsefesi; çocuğun kendi boyuna ve erişimine uygun bir çevrede büyümesidir. Geleneksel yüksek raflar çocuğun yetişkine bağımlı olmasına yol açarken, <strong>Emdief Home Montessori Kitaplıkları</strong> kitapların ön yüzünü çocuğa çevirir.
+                        Maria Montessori'nin temel felsefesi; çocuğun kendi boyuna ve erişimine uygun bir çevrede büyümesidir. Geleneksel yüksek raflar çocuğun yetişkine bağımlı olmasına yol açarken, <strong>Emdief Home Montessori Kitaplıkları</strong> kitapların ön yüzünü çocuğa çevirerek bağımsız kitap seçme ve düzenleme alışkanlığı kazandırır.
                     </p>
                     <div class="philosophy-pillars">
                         <div class="pillar">
