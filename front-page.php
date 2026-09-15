@@ -86,8 +86,8 @@ get_header();
                         <span class="bento-pill-dot"></span>
                         %100 YERLİ İMALAT • DOĞAL AHŞAP & 1. SINIF MDF
                     </span>
-                    <h1 class="bento-hero-title">Çocukların Özgürce Öğrendiği<br>Alanlar Tasarlıyoruz</h1>
-                    <p class="bento-hero-desc">Montessori yaklaşımından ilham alan, çocukların bağımsızlığını destekleyen estetik ve fonksiyonel mobilyalar.</p>
+                    <h1 class="bento-hero-title">Çocukların Özgürce Öğrendiği Alanlar</h1>
+                    <p class="bento-hero-desc">Montessori felsefesinden ilham alan, çocukların bağımsızlığını destekleyen özel tasarım mobilyalar.</p>
                     <div class="bento-hero-highlights">
                         <span class="highlight-chip">🛡️ E1 Standartı 1. Sınıf MDF</span>
                         <span class="highlight-chip">🌿 360° Sivri Köşesiz Hatlar</span>
@@ -95,7 +95,7 @@ get_header();
                     </div>
                     <div class="bento-hero-actions">
                         <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="bento-btn-primary">
-                            <span>Koleksiyonu Keşfet</span>
+                            <span>Ürünleri Keşfet</span>
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
                         <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="bento-btn-subtle">
@@ -159,28 +159,32 @@ get_header();
                 <div class="why-us-icon-wrap bg-mint">👶</div>
                 <div class="why-us-info">
                     <h4><?php esc_html_e('Çocuk Odaklı Tasarım', 'mis360-mobilya'); ?></h4>
-                    <p><?php esc_html_e('Çocuk ergonomisine ve boy hizasına uygun, bağımsız erişim sağlayan güvenli ve sivri kenarsız yuvarlatılmış kavisler.', 'mis360-mobilya'); ?></p>
+                    <strong class="why-us-lead"><?php esc_html_e('Montessori yaklaşımına uygun ürünler', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('Çocuk boy hizasına göre ergonomik boyutlar, bağımsız erişim ve sivri kenarsız yuvarlatılmış kavisler.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-amber">🛡️</div>
                 <div class="why-us-info">
                     <h4><?php esc_html_e('Kaliteli Malzeme', 'mis360-mobilya'); ?></h4>
-                    <p><?php esc_html_e('E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sağlığa zararsız kokusuz su bazlı çocuk dostu kaplama.', 'mis360-mobilya'); ?></p>
+                    <strong class="why-us-lead"><?php esc_html_e('Uzun ömürlü ve sağlam kullanım', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sağlığa zararsız kokusuz çocuk dostu kaplama.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-blue">⚡</div>
                 <div class="why-us-info">
                     <h4><?php esc_html_e('Kolay Kurulum', 'mis360-mobilya'); ?></h4>
-                    <p><?php esc_html_e('CNC tezgahlarda milimetrik açılmış hazır montaj yuvaları; alyan gerekmeden şarjlı matkap ile 5-10 dakikada montaj.', 'mis360-mobilya'); ?></p>
+                    <strong class="why-us-lead"><?php esc_html_e('Pratik montaj çözümleri', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('CNC tezgahlarda milimetrik açılmış vida delikleri ile şarjlı matkap kullanarak 5-10 dakikada montaj.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-coral">📦</div>
                 <div class="why-us-info">
                     <h4><?php esc_html_e('Güvenli Paketleme', 'mis360-mobilya'); ?></h4>
-                    <p><?php esc_html_e('Yüksek yoğunluklu darbe emici straforlar ve koruyucu ambalajlarla %100 sigortalı kapıya kadar teslimat.', 'mis360-mobilya'); ?></p>
+                    <strong class="why-us-lead"><?php esc_html_e('Özenli gönderim', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('Yüksek yoğunluklu darbe emici straforlar ve koruyucu ambalajlarla kapıya kadar %100 sigortalı teslimat.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
         </div>
@@ -554,6 +558,41 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                     ?>
                 </div>
                 <button type="button" class="trendyol-nav-arrow trendyol-nav-next" data-target="trackFavorited" aria-label="Sonraki Ürünler">&#10095;</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- =========================================================================
+     MARKA HİKAYESİ ALANI: ÇOCUKLARIN DÜNYASINA UYGUN TASARIMLAR
+     ========================================================================= -->
+<section class="emdief-brand-story-strip">
+    <div class="emdief-container">
+        <div class="brand-story-box">
+            <div class="brand-story-header">
+                <span class="story-mini-badge">🌱 EMDİEF HOME MONTESSORİ YAKLAŞIMI</span>
+                <h2 class="brand-story-title"><?php esc_html_e('Çocukların Dünyasına Uygun Tasarımlar', 'mis360-mobilya'); ?></h2>
+            </div>
+            <p class="brand-story-desc">
+                <?php esc_html_e('Çocukların kendi alanlarında özgürce hareket edebilmesi ve gelişimlerini destekleyen ortamlar oluşturmak için Montessori yaklaşımından ilham alan mobilyalar tasarlıyoruz.', 'mis360-mobilya'); ?>
+            </p>
+            <div class="brand-story-features">
+                <div class="story-feat-item">
+                    <span class="feat-icon">🌿</span>
+                    <span class="feat-text"><strong>Doğal &amp; Güvenli</strong> 1. Sınıf E1 MDF</span>
+                </div>
+                <div class="story-feat-item">
+                    <span class="feat-icon">👶</span>
+                    <span class="feat-text"><strong>Bağımsız Keşif</strong> Ergonomik Boyutlar</span>
+                </div>
+                <div class="story-feat-item">
+                    <span class="feat-icon">🛡️</span>
+                    <span class="feat-text"><strong>360° Korumalı</strong> Yuvarlatılmış Hatlar</span>
+                </div>
+                <div class="story-feat-item">
+                    <span class="feat-icon">⚡</span>
+                    <span class="feat-text"><strong>Zahmetsiz Montaj</strong> CNC Açılmış Yuvalar</span>
+                </div>
             </div>
         </div>
     </div>

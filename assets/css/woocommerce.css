@@ -3938,3 +3938,263 @@ ul.products {
         padding-bottom: 70px;
     }
 }
+
+/* ==========================================================================
+   v1.8.5 BRAND STORY, EXTENDED TABS & SOCIAL MEDIA STYLING
+   ========================================================================== */
+
+/* Marka Hikayesi Şeridi */
+.emdief-brand-story-strip {
+    padding: 50px 0;
+    background: #fdfbf7;
+    border-top: 1px solid #f1ede4;
+    border-bottom: 1px solid #f1ede4;
+    margin: 20px 0 30px;
+}
+.brand-story-box {
+    text-align: center;
+    max-width: 840px;
+    margin: 0 auto;
+}
+.brand-story-header .story-mini-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+}
+.brand-story-title {
+    font-size: 2rem;
+    font-weight: 850;
+    color: #1e293b;
+    margin: 0 0 14px;
+    letter-spacing: -0.02em;
+}
+.brand-story-desc {
+    font-size: 1.08rem;
+    color: #475569;
+    line-height: 1.7;
+    margin: 0 auto 28px;
+    max-width: 720px;
+}
+.brand-story-features {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.story-feat-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 10px 18px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+    color: #334155;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+.story-feat-item strong {
+    color: #0f172a;
+    display: block;
+}
+
+/* Why Us Lead Text */
+.why-us-lead {
+    display: block;
+    font-size: 0.88rem;
+    color: #b45309;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+/* Tekil Ürün Detayı Bullet Avantajlar */
+.emdief-single-benefit-block {
+    margin: 12px 0 18px;
+}
+.single-product-bullet-perks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+.perk-badge {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    color: #334155;
+    font-size: 0.8rem;
+    font-weight: 650;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+/* Footer Sosyal Medya */
+.footer-social-block {
+    margin-bottom: 18px;
+}
+.social-title {
+    display: block;
+    font-size: 0.84rem;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 10px;
+}
+.footer-social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.social-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.social-btn.btn-ig {
+    background: #fdf2f8;
+    color: #be185d;
+    border: 1px solid #fbcfe8;
+}
+.social-btn.btn-ig:hover {
+    background: #db2777;
+    color: #ffffff;
+}
+.social-btn.btn-yt {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.social-btn.btn-yt:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+.social-btn.btn-wa {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+.social-btn.btn-wa:hover {
+    background: #10b981;
+    color: #ffffff;
+}
+
+/* Yeni Sekmeler: Hikaye & Kullanım */
+.emdief-story-tab-content,
+.emdief-dimensions-tab-content,
+.emdief-usage-tab-content {
+    padding: 16px 0;
+}
+.story-tab-intro {
+    margin-bottom: 24px;
+}
+.story-badge {
+    display: inline-block;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+.story-title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 4px 0 10px;
+}
+.story-desc {
+    font-size: 0.94rem;
+    color: #475569;
+    line-height: 1.65;
+    margin: 0;
+}
+.story-values-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+}
+.story-val-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 18px;
+}
+.story-val-box .val-icon {
+    font-size: 1.8rem;
+    display: block;
+    margin-bottom: 10px;
+}
+.story-val-box h4 {
+    font-size: 0.96rem;
+    font-weight: 750;
+    color: #1e293b;
+    margin: 0 0 6px;
+}
+.story-val-box p {
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.usage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+.usage-col {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 22px;
+}
+.usage-col-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.usage-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.usage-list li {
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.55;
+    margin-bottom: 10px;
+    position: relative;
+    padding-left: 18px;
+}
+.usage-list li::before {
+    content: "•";
+    color: #f97316;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+@media (max-width: 768px) {
+    .story-values-grid,
+    .usage-grid {
+        grid-template-columns: 1fr;
+    }
+    .brand-story-title {
+        font-size: 1.5rem;
+    }
+}
