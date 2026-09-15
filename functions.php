@@ -24,6 +24,7 @@ $mis360_includes = [
     '/inc/seo-schema.php',     // Schema.org Product ve Organization
     '/inc/theme-updater.php',  // GitHub Otomatik Güncelleyici
     '/inc/corporate-pages.php',// Kurumsal sayfalar ve yasal metinler motoru
+    '/inc/montessori-features.php', // Özel Montessori Satış & Dönüşüm Modülleri (v1.9.0)
 ];
 
 foreach ($mis360_includes as $inc_file) {

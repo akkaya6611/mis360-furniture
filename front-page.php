@@ -599,6 +599,11 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
+     MUTLU MİNİKLER KÖŞESİ (MÜŞTERİ DENEYİMLERİ & GERÇEK KURULUM GALERİSİ)
+     ========================================================================= -->
+<?php if (function_exists('mis360_render_happy_kids_gallery')) { mis360_render_happy_kids_gallery('front'); } ?>
+
+<!-- =========================================================================
      7. BÖLÜM: YARDIM & KOLAY KURULUM MERKEZİ BANNERI
      ========================================================================= -->
 <section class="emdief-help-banner-section">

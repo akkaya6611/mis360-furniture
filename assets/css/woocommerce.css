@@ -4198,3 +4198,844 @@ ul.products {
         font-size: 1.5rem;
     }
 }
+
+/* ==========================================================================
+   v1.9.0 MONTESSORI SATIŞ & DÖNÜŞÜM MODÜLLERİ STİLLERİ
+   ========================================================================== */
+
+/* 1. İmalat Geri Sayım Sayacı */
+.emdief-production-countdown-wrap {
+    margin: 14px 0 16px;
+}
+.countdown-badge-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 12px;
+    padding: 10px 16px;
+}
+.countdown-badge-inner.is-today {
+    border-color: #fed7aa;
+    background: linear-gradient(135deg, #fff7ed 0%, #fffbeb 100%);
+}
+.countdown-badge-inner.is-next-day {
+    border-color: #e2e8f0;
+    background: #f8fafc;
+}
+.countdown-icon-box {
+    position: relative;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+.countdown-pulse-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 8px;
+    height: 8px;
+    background: #ea580c;
+    border-radius: 50%;
+    animation: pulseOrange 1.5s infinite;
+}
+@keyframes pulseOrange {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(234, 88, 12, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(234, 88, 12, 0); }
+}
+.countdown-content-col {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.countdown-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+.countdown-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #92400e;
+}
+.countdown-status-pill {
+    font-size: 0.68rem;
+    font-weight: 800;
+    background: #ea580c;
+    color: #ffffff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    text-transform: uppercase;
+}
+.countdown-timer-display {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: monospace, sans-serif;
+}
+.timer-segment {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    background: #ffffff;
+    border: 1px solid #fed7aa;
+    padding: 2px 6px;
+    border-radius: 6px;
+}
+.timer-segment .t-val {
+    font-size: 1.1rem;
+    font-weight: 850;
+    color: #c2410c;
+}
+.timer-segment small {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: #78350f;
+    font-family: sans-serif;
+}
+.timer-sep {
+    font-weight: 800;
+    color: #ea580c;
+}
+
+/* 2. "Bu Seti Tamamla" Modülü */
+.emdief-bundle-section {
+    margin: 28px 0 36px;
+}
+.bundle-box-card {
+    background: #ffffff;
+    border: 2px solid #fed7aa;
+    border-radius: 18px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(234, 88, 12, 0.05);
+}
+.bundle-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px dashed #fed7aa;
+}
+.bundle-eyebrow {
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: #ea580c;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: block;
+    margin-bottom: 4px;
+}
+.bundle-title {
+    font-size: 1.28rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 4px;
+}
+.bundle-subtitle {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+}
+.bundle-discount-badge {
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 0.74rem;
+    font-weight: 850;
+    padding: 6px 12px;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+.bundle-grid-row {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 24px;
+    align-items: center;
+}
+.bundle-items-col {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+}
+.bundle-item-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    min-width: 220px;
+    flex: 1;
+}
+.bundle-item-card.is-main-item {
+    background: #fffbeb;
+    border-color: #fde68a;
+}
+.bundle-checkbox-wrap {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+.bundle-checkbox-wrap input {
+    display: none;
+}
+.chk-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #cbd5e1;
+    border-radius: 6px;
+    display: inline-block;
+    position: relative;
+    background: #ffffff;
+}
+.chk-custom.is-checked {
+    background: #ea580c;
+    border-color: #ea580c;
+}
+.chk-custom.is-checked::after {
+    content: "✓";
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 900;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+}
+.bundle-item-thumb {
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #ffffff;
+    flex-shrink: 0;
+}
+.bundle-item-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.bundle-item-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.bundle-item-tag {
+    font-size: 0.68rem;
+    font-weight: 750;
+    color: #92400e;
+    text-transform: uppercase;
+}
+.bundle-item-tag.complement-tag {
+    color: #059669;
+}
+.bundle-item-title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.bundle-item-title a {
+    color: inherit;
+    text-decoration: none;
+}
+.bundle-item-price {
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: #ea580c;
+}
+.bundle-item-plus-sign {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+
+.bundle-summary-col {
+    background: #fdfbf7;
+    border: 1px solid #fed7aa;
+    border-radius: 14px;
+    padding: 18px;
+    text-align: center;
+}
+.summary-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #64748b;
+}
+.bundle-total-price {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: #1e293b;
+    display: block;
+    margin: 4px 0 8px;
+}
+.summary-shipping-note {
+    font-size: 0.74rem;
+    color: #059669;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+.btn-add-bundle-cart {
+    padding: 10px 16px !important;
+    font-size: 0.9rem !important;
+    font-weight: 750 !important;
+    border-radius: 10px !important;
+}
+.bundle-ajax-status {
+    margin-top: 8px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #059669;
+}
+
+@media (max-width: 991px) {
+    .bundle-grid-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 3. Mutlu Minikler Köşesi & Lightbox */
+.emdief-happy-kids-section {
+    padding: 60px 0;
+    background: #ffffff;
+}
+.happy-kids-header {
+    margin-bottom: 36px;
+}
+.happy-badge {
+    background: #fdf2f8;
+    color: #be185d;
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 8px;
+}
+.happy-title {
+    font-size: 2.1rem;
+    font-weight: 850;
+    color: #1e293b;
+    margin: 0 0 8px;
+}
+.happy-subtitle {
+    font-size: 1.05rem;
+    color: #64748b;
+    margin: 0;
+}
+.happy-kids-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+.happy-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+.happy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+    border-color: #fed7aa;
+}
+.happy-thumb-wrap {
+    position: relative;
+    padding-top: 75%;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+.happy-thumb-wrap img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+.happy-card:hover .happy-thumb-wrap img {
+    transform: scale(1.05);
+}
+.happy-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.happy-card:hover .happy-overlay {
+    opacity: 1;
+}
+.happy-zoom-icon {
+    background: #ffffff;
+    color: #1e293b;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 6px 12px;
+    border-radius: 999px;
+}
+.happy-product-pill {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+.happy-card-footer {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.happy-user-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+.happy-stars {
+    color: #f59e0b;
+    font-size: 0.82rem;
+}
+.happy-user-info strong {
+    font-size: 0.85rem;
+    color: #1e293b;
+}
+.happy-user-info small {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+.happy-quote {
+    font-size: 0.84rem;
+    color: #475569;
+    font-style: italic;
+    line-height: 1.45;
+    margin: 0;
+}
+
+@media (max-width: 991px) {
+    .happy-kids-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 575px) {
+    .happy-kids-grid { grid-template-columns: 1fr; }
+    .happy-title { font-size: 1.6rem; }
+}
+
+/* Lightbox Modal */
+.happy-lightbox-modal,
+.emdief-planner-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+.lightbox-overlay,
+.planner-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+}
+.lightbox-dialog,
+.planner-dialog {
+    position: relative;
+    background: #ffffff;
+    border-radius: 20px;
+    max-width: 780px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 2;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+.lightbox-close-btn,
+.planner-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: #f1f5f9;
+    border: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lightbox-body {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+}
+.lightbox-img-col img {
+    width: 100%;
+    height: 100%;
+    min-height: 340px;
+    object-fit: cover;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+}
+.lightbox-info-col {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.lb-verified-badge {
+    background: #ecfdf5;
+    color: #059669;
+    font-size: 0.74rem;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 999px;
+    display: inline-block;
+    margin-bottom: 10px;
+    align-self: flex-start;
+}
+.lightbox-info-col h3 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 10px;
+}
+.lb-product-tag-wrap {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin-bottom: 16px;
+}
+.lb-product-tag-wrap strong {
+    color: #ea580c;
+}
+.lb-quote {
+    font-size: 0.96rem;
+    color: #334155;
+    line-height: 1.6;
+    font-style: italic;
+    background: #fdfbf7;
+    border-left: 3px solid #f59e0b;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 0 0 24px;
+}
+
+@media (max-width: 640px) {
+    .lightbox-body { grid-template-columns: 1fr; }
+    .lightbox-img-col img { border-radius: 20px 20px 0 0; min-height: 220px; max-height: 260px; }
+}
+
+/* 4. Ölçü & Yerleşim Butonu ve Simülatör */
+.emdief-room-fit-launcher-wrap {
+    margin: 12px 0 16px;
+}
+.btn-open-room-planner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+.btn-open-room-planner:hover {
+    background: #f1f5f9;
+    border-color: #f97316;
+}
+.planner-icon {
+    font-size: 1.5rem;
+}
+.planner-text-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.planner-title {
+    font-size: 0.9rem;
+    font-weight: 750;
+    color: #1e293b;
+}
+.planner-sub {
+    font-size: 0.74rem;
+    color: #64748b;
+}
+.planner-arrow {
+    color: #f97316;
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+
+.planner-dialog {
+    max-width: 740px;
+    padding: 28px;
+}
+.planner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+.pl-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 3px 8px;
+    border-radius: 6px;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+.planner-header-title h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0;
+}
+.planner-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+.input-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 14px;
+    margin-bottom: 12px;
+}
+.input-card h4 {
+    font-size: 0.88rem;
+    font-weight: 750;
+    color: #1e293b;
+    margin: 0 0 10px;
+}
+.inputs-row {
+    display: flex;
+    gap: 12px;
+}
+.field-group {
+    flex: 1;
+}
+.field-group label {
+    font-size: 0.76rem;
+    font-weight: 650;
+    color: #475569;
+    display: block;
+    margin-bottom: 4px;
+}
+.field-group input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+.selected-furn-info strong {
+    display: block;
+    font-size: 0.84rem;
+    color: #1e293b;
+}
+.selected-furn-info span {
+    font-size: 0.78rem;
+    color: #64748b;
+}
+.pedagogy-tip-card {
+    display: flex;
+    gap: 10px;
+    background: #fffbeb;
+    border: 1px solid #fef3c7;
+    border-radius: 10px;
+    padding: 12px;
+}
+.pedagogy-tip-card .tip-icon { font-size: 1.3rem; flex-shrink: 0; }
+.pedagogy-tip-card strong { font-size: 0.82rem; color: #92400e; display: block; }
+.pedagogy-tip-card p { font-size: 0.78rem; color: #78350f; margin: 2px 0 0; line-height: 1.4; }
+
+.floorplan-container {
+    background: #f1f5f9;
+    border: 2px dashed #cbd5e1;
+    border-radius: 14px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+.floorplan-room {
+    background: #ffffff;
+    border: 2px solid #0f172a;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+.furniture-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #ea580c;
+    color: #ffffff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 4px;
+    padding: 2px;
+}
+.play-area-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #10b981;
+    text-align: center;
+}
+.planner-stats-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+.stat-pill {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 6px;
+    border-radius: 8px;
+    font-size: 0.74rem;
+    text-align: center;
+    color: #64748b;
+}
+.stat-pill strong {
+    display: block;
+    color: #1e293b;
+    font-size: 0.85rem;
+}
+.stat-pill.highlight-pill strong {
+    color: #059669;
+}
+
+@media (max-width: 640px) {
+    .planner-body-grid { grid-template-columns: 1fr; }
+}
+
+/* 5. Dönüşüm Butonları: Wishlist & Eşe WhatsApp Gönder */
+.emdief-single-action-addon-btns {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 16px;
+}
+.btn-single-wishlist {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 14px;
+    background: #fdf2f8;
+    border: 1px solid #fbcfe8;
+    border-radius: 10px;
+    color: #be185d;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-single-wishlist:hover,
+.btn-single-wishlist.is-favorited {
+    background: #f43f5e;
+    color: #ffffff;
+    border-color: #f43f5e;
+}
+.btn-single-wishlist.is-favorited .heart-svg {
+    fill: currentColor;
+}
+.btn-spouse-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+    color: #166534;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    flex: 1;
+}
+.btn-spouse-share:hover {
+    background: #22c55e;
+    color: #ffffff;
+    border-color: #22c55e;
+}
+.spouse-share-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+.spouse-btn-text {
+    display: flex;
+    flex-direction: column;
+}
+.spouse-btn-text strong {
+    font-size: 0.82rem;
+    line-height: 1.2;
+}
+.spouse-btn-text small {
+    font-size: 0.72rem;
+    opacity: 0.85;
+}
+
+/* Wishlist Toast */
+.emdief-wishlist-toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.86rem;
+    font-weight: 700;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 999999;
+}
