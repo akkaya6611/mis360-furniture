@@ -204,7 +204,7 @@ function mis360_teddy_bear_avatar(int $size = 72, string $class = ''): string {
           <!-- Alın Işık Vurgusu -->
           <ellipse cx="60" cy="48" rx="18" ry="7" fill="#FFFFFF" opacity="0.16"/>
 
-          <!-- Montessori Huş Ağacı Ağız/Burun Bölgesi -->
+          <!-- Montessori Ağız/Burun Bölgesi -->
           <ellipse cx="60" cy="74.5" rx="20" ry="15" fill="#FAF7F2"/>
 
           <!-- Burun -->

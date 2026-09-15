@@ -275,7 +275,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
 
             <!-- Güven & Malzeme Vurgusu -->
             <div class="trendyol-benefit-tagline">
-                <span class="benefit-tagline-text">🌿 %100 Huş &amp; E1 MDF • Kolay Montaj</span>
+                <span class="benefit-tagline-text">🛡️ 1. Sınıf E1 Kalite MDF • Kolay Montaj</span>
             </div>
 
             <!-- Yıldız & Değerlendirme Satırı -->
