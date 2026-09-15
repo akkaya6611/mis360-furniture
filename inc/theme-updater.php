@@ -63,10 +63,11 @@ class Mis360_Theme_Updater {
         }
 
         $raw_url = sprintf(
-            'https://raw.githubusercontent.com/%s/%s/%s/style.css',
+            'https://raw.githubusercontent.com/%s/%s/%s/style.css?t=%d',
             $this->github_user,
             $this->github_repo,
-            $this->github_branch
+            $this->github_branch,
+            time()
         );
 
         $headers = [
