@@ -1012,16 +1012,6 @@ ul.products {
     top: auto !important;
 }
 
-@media (min-width: 992px) {
-    .woocommerce div.product div.images,
-    .woocommerce-page div.product div.images {
-        position: sticky !important;
-        top: 95px !important;
-        align-self: start !important;
-        z-index: 10 !important;
-    }
-}
-
 /* İndirim Rozeti: Doğrudan görselin sol üstüne oturur, havada boşlukta kalmaz */
 .woocommerce div.product span.onsale,
 .woocommerce-page div.product span.onsale {
