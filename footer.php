@@ -150,7 +150,7 @@ if (!defined('ABSPATH')) {
         <!-- Alt Telif Hakkı Şeridi -->
         <div class="footer-bottom">
             <div class="footer-copy">
-                &copy; <?php echo date('Y'); ?> <strong>Emdief Home</strong>. <?php esc_html_e('Tüm hakları saklıdır. Çocuklar için sevgiyle üretilmiştir.', 'mis360-mobilya'); ?>
+                &copy; <?php echo date('Y'); ?> <strong>Emdief Home</strong>. <?php esc_html_e('Tüm hakları saklıdır. Çocuklar için sevgiyle üretilmiştir ❤️', 'mis360-mobilya'); ?>
             </div>
             <div class="footer-legal-links">
                 <a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerezler', 'mis360-mobilya'); ?></a>
