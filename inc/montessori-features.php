@@ -485,7 +485,7 @@ function mis360_render_room_fit_launcher() {
     </div>
     <?php
 }
-add_action('woocommerce_single_product_summary', 'mis360_render_room_fit_launcher', 31);
+add_action('mis360_under_product_gallery', 'mis360_render_room_fit_launcher', 10);
 
 /**
  * Modal: Kuşbakışı Montessori Oda & Mobilya Simülatörü

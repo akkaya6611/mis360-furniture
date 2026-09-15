@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.7
+Version: 1.9.8
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -780,5 +780,75 @@ button, input, select, textarea {
     box-sizing: border-box !important;
 }
 
+/* ==========================================================================
+   v1.9.8: Urun Detay Sol ve Sag Sutun Dengeleme (Balanced Single Product Grid)
+   ========================================================================== */
+.emdief-product-media-col {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+}
 
+@media (max-width: 991px) {
+    .emdief-product-media-col {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+    }
+}
 
+.woocommerce div.product div.images,
+.woocommerce-page div.product div.images {
+    float: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    position: relative !important;
+    top: auto !important;
+}
+
+.woocommerce div.product span.onsale,
+.woocommerce-page div.product span.onsale,
+.emdief-product-media-col span.onsale {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 20 !important;
+    margin: 0 !important;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+    color: #ffffff !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+    padding: 5px 12px !important;
+    border-radius: 999px !important;
+    min-height: auto !important;
+    min-width: auto !important;
+    line-height: 1.3 !important;
+    box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3) !important;
+    width: fit-content !important;
+    height: fit-content !important;
+}
+
+.emdief-under-gallery-widgets {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.emdief-under-gallery-widgets .emdief-room-fit-launcher-wrap,
+.emdief-under-gallery-widgets .emdief-single-trust-badges,
+.emdief-under-gallery-widgets .mascot-speech-bubble-box {
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}

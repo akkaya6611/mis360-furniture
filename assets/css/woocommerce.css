@@ -998,12 +998,30 @@ ul.products {
 }
 
 /* --------------------------------------------------------------------------
-   1. SOL SUTUN: Urun Gorseli & Galerisi (Kompakt & Orantılı)
+   1. SOL SUTUN: Urun Gorseli & Galerisi + Guven & Bilgi Rozetleri (Dengeli Duzen)
    -------------------------------------------------------------------------- */
-.woocommerce div.product div.images,
-.woocommerce-page div.product div.images {
+.emdief-product-media-col {
     grid-column: 1 !important;
     grid-row: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 991px) {
+    .emdief-product-media-col {
+        grid-column: 1 !important;
+        grid-row: 1 !important;
+    }
+}
+
+.woocommerce div.product div.images,
+.woocommerce-page div.product div.images {
     float: none !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -1012,16 +1030,15 @@ ul.products {
     top: auto !important;
 }
 
-/* İndirim Rozeti: Doğrudan görselin sol üstüne oturur, havada boşlukta kalmaz */
+/* Indirim Rozeti: Dogrudan gorselin sol ustune oturur */
 .woocommerce div.product span.onsale,
-.woocommerce-page div.product span.onsale {
-    grid-column: 1 !important;
-    grid-row: 1 !important;
-    position: relative !important;
-    z-index: 10 !important;
-    align-self: start !important;
-    justify-self: start !important;
-    margin: 12px 0 0 12px !important;
+.woocommerce-page div.product span.onsale,
+.emdief-product-media-col span.onsale {
+    position: absolute !important;
+    top: 12px !important;
+    left: 12px !important;
+    z-index: 20 !important;
+    margin: 0 !important;
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
     color: #ffffff !important;
     font-size: 11.5px !important;
@@ -1036,6 +1053,23 @@ ul.products {
     box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3) !important;
     width: fit-content !important;
     height: fit-content !important;
+}
+
+/* Sol Sutun: Galeri Alti Dengeleme Bilesenleri */
+.emdief-under-gallery-widgets {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.emdief-under-gallery-widgets .emdief-room-fit-launcher-wrap,
+.emdief-under-gallery-widgets .emdief-single-trust-badges,
+.emdief-under-gallery-widgets .mascot-speech-bubble-box {
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 /* Zorunlu Görünürlük & Sıkı Galeri Çerçevesi */

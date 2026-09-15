@@ -1214,9 +1214,23 @@ function mis360_single_product_trust_box() {
 
 }
 
+add_action('mis360_under_product_gallery', 'mis360_single_product_trust_box', 15);
 
+/**
+ * Ürün Detay Sol Sütun Kapsayıcısı (Galeri + Sol Bilgi ve Güven Rozetleri)
+ */
+function mis360_open_product_media_col() {
+    echo '<div class="emdief-product-media-col">';
+}
+add_action('woocommerce_before_single_product_summary', 'mis360_open_product_media_col', 5);
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_trust_box', 35);
+function mis360_close_product_media_col() {
+    echo '<div class="emdief-under-gallery-widgets">';
+    do_action('mis360_under_product_gallery');
+    echo '</div>';
+    echo '</div><!-- .emdief-product-media-col -->';
+}
+add_action('woocommerce_before_single_product_summary', 'mis360_close_product_media_col', 35);
 
 
 
@@ -2836,7 +2850,7 @@ function mis360_single_product_mascot_advice() {
 
 
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_mascot_advice', 35);
+add_action('mis360_under_product_gallery', 'mis360_single_product_mascot_advice', 20);
 
 
 
