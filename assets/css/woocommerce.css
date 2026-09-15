@@ -1012,6 +1012,16 @@ ul.products {
     top: auto !important;
 }
 
+@media (min-width: 992px) {
+    .woocommerce div.product div.images,
+    .woocommerce-page div.product div.images {
+        position: sticky !important;
+        top: 95px !important;
+        align-self: start !important;
+        z-index: 10 !important;
+    }
+}
+
 /* İndirim Rozeti: Doğrudan görselin sol üstüne oturur, havada boşlukta kalmaz */
 .woocommerce div.product span.onsale,
 .woocommerce-page div.product span.onsale {
@@ -4301,9 +4311,16 @@ ul.products {
     color: #ea580c;
 }
 
-/* 2. "Bu Seti Tamamla" Modülü */
+/* 2. "Bu Seti Tamamla" Modülü (Full Width Grid Span) */
+.woocommerce div.product .emdief-bundle-section,
+.woocommerce-page div.product .emdief-bundle-section,
 .emdief-bundle-section {
-    margin: 28px 0 36px;
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    clear: both !important;
+    margin: 32px 0 28px 0 !important;
+    box-sizing: border-box !important;
 }
 .bundle-box-card {
     background: #ffffff;
