@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.8
+Version: 1.9.9
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -851,4 +851,112 @@ button, input, select, textarea {
     margin: 0 !important;
     width: 100% !important;
     box-sizing: border-box !important;
+}
+
+/* ==========================================================================
+   v1.9.9: Mobil Ekranda Favori & Esine WhatsApp Butonlari Sigdirma & Duzenleme
+   ========================================================================== */
+.woocommerce div.product form.cart .emdief-single-action-addon-btns,
+.woocommerce-page div.product form.cart .emdief-single-action-addon-btns,
+.emdief-single-action-addon-btns {
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    margin: 10px 0 16px 0 !important;
+}
+
+.btn-single-wishlist {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+    background: #fdf2f8 !important;
+    border: 1px solid #fbcfe8 !important;
+    border-radius: 10px !important;
+    color: #be185d !important;
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
+}
+
+.btn-spouse-share {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 14px !important;
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 10px !important;
+    color: #166534 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    flex: 1 1 200px !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    box-sizing: border-box !important;
+}
+
+@media (max-width: 600px) {
+    .woocommerce div.product form.cart .emdief-single-action-addon-btns,
+    .woocommerce-page div.product form.cart .emdief-single-action-addon-btns,
+    .emdief-single-action-addon-btns {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        margin: 6px 0 12px 0 !important;
+    }
+
+    .btn-single-wishlist {
+        width: 100% !important;
+        min-height: 44px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        font-size: 0.84rem !important;
+    }
+
+    .btn-spouse-share {
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 8px 12px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+    .spouse-btn-text {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    .spouse-btn-text strong {
+        font-size: 0.82rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .spouse-btn-text small {
+        font-size: 0.74rem !important;
+        opacity: 0.85 !important;
+    }
 }

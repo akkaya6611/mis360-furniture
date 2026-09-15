@@ -1617,6 +1617,58 @@ ul.products {
         height: 46px !important;
         margin-top: 2px !important;
     }
+
+    .woocommerce div.product form.cart .emdief-single-action-addon-btns,
+    .woocommerce-page div.product form.cart .emdief-single-action-addon-btns,
+    .emdief-single-action-addon-btns {
+        grid-column: 1 / -1 !important;
+        grid-row: 3 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        margin: 6px 0 12px 0 !important;
+    }
+
+    .btn-single-wishlist {
+        width: 100% !important;
+        min-height: 44px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+        font-size: 0.84rem !important;
+    }
+
+    .btn-spouse-share {
+        width: 100% !important;
+        min-height: 44px !important;
+        padding: 8px 12px !important;
+        justify-content: center !important;
+        text-align: center !important;
+        box-sizing: border-box !important;
+    }
+
+    .spouse-btn-text {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: center !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    .spouse-btn-text strong {
+        font-size: 0.82rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .spouse-btn-text small {
+        font-size: 0.74rem !important;
+        opacity: 0.85 !important;
+    }
 }
 
 /* Guven Rozetleri Kutusu (100% MDF Guvencesi): Derli Toplu */
@@ -4999,67 +5051,83 @@ ul.products {
 
 /* 5. Dönüşüm Butonları: Wishlist & Eşe WhatsApp Gönder */
 .emdief-single-action-addon-btns {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 12px 0 16px;
+    grid-column: 1 / -1 !important;
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    margin: 10px 0 16px 0 !important;
 }
 .btn-single-wishlist {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 10px 14px;
-    background: #fdf2f8;
-    border: 1px solid #fbcfe8;
-    border-radius: 10px;
-    color: #be185d;
-    font-size: 0.84rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+    background: #fdf2f8 !important;
+    border: 1px solid #fbcfe8 !important;
+    border-radius: 10px !important;
+    color: #be185d !important;
+    font-size: 0.84rem !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-sizing: border-box !important;
+    min-height: 44px !important;
+    white-space: nowrap !important;
 }
 .btn-single-wishlist:hover,
 .btn-single-wishlist.is-favorited {
-    background: #f43f5e;
-    color: #ffffff;
-    border-color: #f43f5e;
+    background: #f43f5e !important;
+    color: #ffffff !important;
+    border-color: #f43f5e !important;
 }
 .btn-single-wishlist.is-favorited .heart-svg {
-    fill: currentColor;
+    fill: currentColor !important;
 }
 .btn-spouse-share {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    background: #f0fdf4;
-    border: 1px solid #bbf7d0;
-    border-radius: 10px;
-    color: #166534;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    flex: 1;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 8px 14px !important;
+    background: #f0fdf4 !important;
+    border: 1px solid #bbf7d0 !important;
+    border-radius: 10px !important;
+    color: #166534 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    flex: 1 1 200px !important;
+    min-width: 0 !important;
+    min-height: 44px !important;
+    box-sizing: border-box !important;
 }
 .btn-spouse-share:hover {
-    background: #22c55e;
-    color: #ffffff;
-    border-color: #22c55e;
+    background: #22c55e !important;
+    color: #ffffff !important;
+    border-color: #22c55e !important;
 }
 .spouse-share-icon {
-    font-size: 1.2rem;
-    flex-shrink: 0;
+    font-size: 1.2rem !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
 }
 .spouse-btn-text {
-    display: flex;
-    flex-direction: column;
+    display: flex !important;
+    flex-direction: column !important;
+    min-width: 0 !important;
 }
 .spouse-btn-text strong {
-    font-size: 0.82rem;
-    line-height: 1.2;
+    font-size: 0.82rem !important;
+    line-height: 1.2 !important;
 }
 .spouse-btn-text small {
-    font-size: 0.72rem;
-    opacity: 0.85;
+    font-size: 0.72rem !important;
+    opacity: 0.85 !important;
 }
 
 /* Wishlist Toast */
