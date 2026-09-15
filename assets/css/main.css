@@ -1116,7 +1116,8 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 9999;
+  height: 100dvh;
+  z-index: 99999;
   visibility: hidden;
   pointer-events: none;
   overflow: hidden !important;
@@ -1139,6 +1140,7 @@
   backdrop-filter: blur(4px);
   opacity: 0;
   transition: opacity 0.3s ease;
+  z-index: 1;
 }
 
 .emdief-drawer.is-active .emdief-drawer-overlay {
@@ -1149,13 +1151,18 @@
   position: absolute;
   top: 0;
   bottom: 0;
+  height: 100%;
+  max-height: 100vh;
+  max-height: 100dvh;
   width: 100%;
   max-width: 420px;
   background-color: #ffffff;
   box-shadow: var(--emd-shadow-hover);
   display: flex;
   flex-direction: column;
+  overflow: hidden !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 2;
 }
 
 .drawer-left {
@@ -1182,6 +1189,8 @@
   justify-content: space-between;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--emd-border);
+  flex-shrink: 0;
+  background-color: #ffffff;
 }
 
 .drawer-title-group h3 {
@@ -1210,6 +1219,36 @@
 .drawer-close:hover {
   background-color: var(--emd-bg-warm);
   color: var(--emd-text-main);
+}
+
+/* Mobil Menü İçerik Kaydırma Alanı (Scrollable Drawer Content) */
+.drawer-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior-y: contain !important;
+  overscroll-behavior: contain !important;
+  touch-action: pan-y !important;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 60px 0;
+}
+
+.drawer-content::-webkit-scrollbar {
+  width: 5px;
+}
+.drawer-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.drawer-content::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.drawer-content::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 
 /* Sabit Butonlar (WhatsApp & Back to Top) */

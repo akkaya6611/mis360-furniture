@@ -24,6 +24,10 @@ function mis360Init() {
             mobileDrawer.classList.add('is-active');
             mobileDrawer.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
+            const drawerContent = mobileDrawer.querySelector('.drawer-content');
+            if (drawerContent) {
+                drawerContent.scrollTop = 0;
+            }
         }
     }
 
