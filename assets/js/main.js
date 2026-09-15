@@ -470,26 +470,64 @@ function mis360Init() {
         }, 1000);
     }
 
-    // 6. WooCommerce Tekil Urun Galerisi Gorunurluk & Kucuk Resim Destegi
+    // 6. WooCommerce Tekil Urun Galerisi Otomatik Slayt & Kucuk Resim Destegi
     const galleryEl = document.querySelector('.woocommerce-product-gallery');
     if (galleryEl) {
         galleryEl.style.opacity = '1';
         galleryEl.style.visibility = 'visible';
 
         const mainImg = galleryEl.querySelector('.woocommerce-product-gallery__image img, .wp-post-image');
-        const thumbs = galleryEl.querySelectorAll('.flex-control-thumbs img, div.thumbnails a img');
-        thumbs.forEach(thumb => {
-            thumb.addEventListener('click', (e) => {
-                e.preventDefault();
-                const fullSrc = thumb.getAttribute('data-large_image') || thumb.getAttribute('src');
-                if (mainImg && fullSrc) {
-                    mainImg.src = fullSrc;
-                    if (mainImg.parentElement && mainImg.parentElement.tagName === 'A') {
-                        mainImg.parentElement.href = fullSrc;
+        const thumbs = galleryEl.querySelectorAll('.flex-control-thumbs li, .flex-control-thumbs img, div.thumbnails a img');
+
+        // Otomatik Slayt Geçişi (3.5 Saniyede Bir)
+        if (thumbs.length > 1) {
+            let currentSlideIdx = 0;
+            let slideInterval = null;
+            let isPaused = false;
+
+            const nextSlide = () => {
+                if (isPaused) return;
+
+                // 1. FlexSlider API mevcutsa doğrudan tetikle
+                if (window.jQuery && typeof jQuery.fn.flexslider === 'function') {
+                    const $slider = jQuery(galleryEl).data('flexslider');
+                    if ($slider && typeof $slider.flexAnimate === 'function') {
+                        const target = ($slider.currentSlide + 1) % $slider.count;
+                        $slider.flexAnimate(target);
+                        return;
                     }
                 }
+
+                // 2. Fallback: Küçük resim tıklaması
+                currentSlideIdx = (currentSlideIdx + 1) % thumbs.length;
+                const targetThumb = thumbs[currentSlideIdx];
+                if (targetThumb) {
+                    targetThumb.click();
+                }
+            };
+
+            const startSlideTimer = () => {
+                if (slideInterval) clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 3500);
+            };
+
+            // Fare üzerine gelince duraklat, ayrılınca devam et
+            galleryEl.addEventListener('mouseenter', () => { isPaused = true; });
+            galleryEl.addEventListener('mouseleave', () => { isPaused = false; });
+            galleryEl.addEventListener('touchstart', () => { isPaused = true; }, { passive: true });
+            galleryEl.addEventListener('touchend', () => {
+                setTimeout(() => { isPaused = false; }, 3000);
+            }, { passive: true });
+
+            // Kullanıcı bir küçük resme tıkladığında indeksi senkronize et
+            thumbs.forEach((t, i) => {
+                t.addEventListener('click', () => {
+                    currentSlideIdx = i;
+                });
             });
-        });
+
+            startSlideTimer();
+        }
 
         // Galeri görsellerine tıklandığında doğrudan browser'da ham görsel dosyasının (.jpg/.png) açılmasını engelle
         galleryEl.addEventListener('click', function(e) {

@@ -73,3 +73,18 @@ function mis360_mobilya_setup() {
     add_theme_support('align-wide');
 }
 add_action('after_setup_theme', 'mis360_mobilya_setup');
+
+/**
+ * WooCommerce Tekil Ürün Galeri Slaytı (Otomatik Geçiş & Gezinme Okları)
+ */
+function mis360_single_product_carousel_options($options) {
+    $options['slideshow']      = true;  // Sayfaya girince slayt halinde otomatik değişsin
+    $options['slideshowSpeed'] = 3500;  // 3.5 saniye aralıkla sonraki görsele geçsin
+    $options['animationSpeed'] = 600;   // Yumuşak kayma hızı
+    $options['animationLoop']  = true;  // Sürekli başa dönerek döngüye girsin
+    $options['pauseOnHover']   = true;  // Müşteri görseli incelerken dursun
+    $options['directionNav']   = true;  // Sağ / Sol gezinme okları görünsün
+    $options['smoothHeight']   = true;
+    return $options;
+}
+add_filter('woocommerce_single_product_carousel_options', 'mis360_single_product_carousel_options');
