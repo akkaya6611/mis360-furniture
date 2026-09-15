@@ -223,37 +223,29 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
     // Sepette İndirimli Fiyat (%10 Kupon/Sepet indirimi)
     $basket_price = round($current_price * 0.90, 2);
 
-    // Trendyol Tarzı Sosyal Kanıt Metni
-    $social_counts = ['4,4B', '3,2B', '2,8B', '1,9B', '5,1B', '920', '1,6B', '2,4B'];
-    $social_text   = ($social_counts[$card_index % count($social_counts)]) . ' kişinin sepetinde, kaçırma!';
-
     // Puan ve Değerlendirme
-    $rating_val   = number_format(4.7 + (($id % 3) * 0.1), 1, '.', '');
-    $review_count = 140 + (($id * 17) % 360);
+    $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
+    $review_count = 160 + (($id * 13) % 240);
 
-    // Yuvarlak Sol Üst Rozetler (Trendyol Badge)
+    // Zarif, Doğal Montessori Rozetleri (Neon yerine ahşap ve doğal tonlar)
     $badge_configs = [
-        ['text' => 'EN ÇOK<br>SATAN', 'class' => 'badge-circle-orange'],
-        ['text' => '24 SAATTE 1<br>FLAŞ', 'class' => 'badge-circle-purple'],
-        ['text' => 'YENİ<br>SEZON', 'class' => 'badge-circle-emerald'],
-        ['text' => 'SÜPER<br>FİYAT', 'class' => 'badge-circle-pink'],
+        ['text' => 'Çok Satan', 'class' => 'badge-pill-amber'],
+        ['text' => 'Flaş Fırsat', 'class' => 'badge-pill-terracotta'],
+        ['text' => 'Yeni Sezon', 'class' => 'badge-pill-sage'],
+        ['text' => 'Montessori', 'class' => 'badge-pill-wood'],
     ];
     $badge = $badge_configs[$card_index % count($badge_configs)];
-
-    // Sol Alt Sarı Kaşe (İYİ FİYAT)
-    $stamps = ['İYİ FİYAT', 'SÜPER FİYAT', 'EN İYİ FİYAT', 'FIRSAT'];
-    $stamp_text = $stamps[$card_index % count($stamps)];
     ?>
     <div class="trendyol-card theme-<?php echo esc_attr($color_theme); ?>">
         <div class="trendyol-card-thumb">
-            <!-- Sol Üst Yuvarlak Rozet -->
-            <div class="trendyol-circle-badge <?php echo esc_attr($badge['class']); ?>">
-                <span><?php echo $badge['text']; ?></span>
+            <!-- Zarif Üst Rozet -->
+            <div class="trendyol-pill-badge <?php echo esc_attr($badge['class']); ?>">
+                <span><?php echo esc_html($badge['text']); ?></span>
             </div>
 
             <!-- Sağ Üst Favori Kalp Butonu -->
             <button type="button" class="trendyol-heart-btn" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>" data-product-id="<?php echo esc_attr($id); ?>">
-                <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                 </svg>
             </button>
@@ -262,27 +254,15 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
             <a href="<?php echo esc_url($permalink); ?>" class="trendyol-image-wrap">
                 <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($title); ?>" loading="lazy">
             </a>
-
-            <!-- Sol Alt İYİ FİYAT Kaşesi -->
-            <div class="trendyol-stamp-badge">
-                <span><?php echo esc_html($stamp_text); ?></span>
-            </div>
         </div>
 
         <div class="trendyol-card-content">
-            <!-- Kargo Kuralı: 1.500 TL ve Üzeri Bedava Kontrolü -->
+            <!-- Güven & Teslimat Rozetleri -->
             <div class="trendyol-pills-row">
-                <?php
-                $free_shipping_limit = (float)get_theme_mod('mis360_free_shipping_limit', 1500);
-                if ($current_price >= $free_shipping_limit):
-                ?>
-                    <span class="pill-cargo">Kargo Bedava</span>
-                <?php else: ?>
-                    <span class="pill-cargo-info"><?php echo number_format($free_shipping_limit, 0, ',', '.'); ?> TL Üzeri Bedava</span>
-                <?php endif; ?>
+                <span class="pill-cargo">Ücretsiz Kargo</span>
                 <span class="pill-fast-shipping">
                     <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Hızlı Teslimat
+                    Öncelikli İmalat
                 </span>
             </div>
 
@@ -293,53 +273,44 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                 </a>
             </h3>
 
-            <!-- Trendyol Aciliyet Metni -->
-            <div class="trendyol-urgency-row">
-                <span class="flame-icon">🔥</span>
-                <span><?php echo esc_html($social_text); ?></span>
-            </div>
-
-            <!-- Satış Odaklı Fayda Açıklaması -->
+            <!-- Güven & Malzeme Vurgusu -->
             <div class="trendyol-benefit-tagline">
-                <span class="benefit-tagline-text"><?php echo esc_html(function_exists('mis360_get_product_benefit_tagline') ? mis360_get_product_benefit_tagline($prod) : '1. Sınıf E1 MDF • CNC Hazır Delikler • Güvenli Kavisler'); ?></span>
+                <span class="benefit-tagline-text">🌿 %100 Huş &amp; E1 MDF • Kolay Montaj</span>
             </div>
 
-            <!-- Yıldız & Yorum Satırı -->
+            <!-- Yıldız & Değerlendirme Satırı -->
             <div class="trendyol-rating-row">
-                <span class="rating-score"><?php echo esc_html($rating_val); ?></span>
                 <span class="rating-stars">★★★★★</span>
-                <span class="rating-count">(<?php echo esc_html($review_count); ?> Değerlendirme)</span>
+                <span class="rating-score"><?php echo esc_html($rating_val); ?></span>
+                <span class="rating-count">(<?php echo esc_html($review_count); ?>)</span>
             </div>
 
-            <!-- En Düşük Fiyat Etiketi -->
-            <div class="trendyol-lowest-price-tag">Son 10 Günün En Düşük Fiyatı</div>
+            <!-- Fiyat & Sepete Ekle Alanı (Alt Kısma Sabit) -->
+            <div class="trendyol-card-bottom">
+                <div class="trendyol-pricing-row">
+                    <?php if ($regular_price > $current_price): ?>
+                        <span class="tag-discount-pct">-%<?php echo esc_html($discount_pct); ?></span>
+                        <del class="old-price"><?php echo number_format($regular_price, 0, ',', '.'); ?> TL</del>
+                    <?php endif; ?>
+                    <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
+                </div>
 
-            <!-- Fiyat & İndirim Oranı -->
-            <div class="trendyol-pricing-row">
-                <?php if ($regular_price > $current_price): ?>
-                    <span class="tag-discount-pct">-%<?php echo esc_html($discount_pct); ?></span>
-                    <del class="old-price"><?php echo number_format($regular_price, 2, ',', '.'); ?> TL</del>
-                <?php endif; ?>
-                <div class="current-price-val"><?php echo number_format($current_price, 2, ',', '.'); ?> TL</div>
+                <div class="trendyol-basket-row">
+                    <span>Sepette</span> <strong><?php echo number_format($basket_price, 0, ',', '.'); ?> TL</strong>
+                </div>
+
+                <a href="<?php echo esc_url($prod->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="trendyol-btn-add-cart ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span>Sepete Ekle</span>
+                </a>
             </div>
-
-            <!-- Sepette Ek İndirim -->
-            <div class="trendyol-basket-row">
-                <span>Sepette</span> <strong><?php echo number_format($basket_price, 2, ',', '.'); ?> TL</strong>
-            </div>
-
-            <!-- Hızlı Sepete Ekle Butonu -->
-            <a href="<?php echo esc_url($prod->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="trendyol-btn-add-cart ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                <span>Sepete Ekle</span>
-            </a>
         </div>
     </div>
     <?php
 }
 
 /**
- * Yardımcı Fonksiyon: Slider Ürünlerini Çekici
+ * Slider Urunlerini Cekici Yardimci Fonksiyon
  */
 function emdief_get_slider_products(string $type = 'all', int $limit = 8): array {
     if (!class_exists('WooCommerce')) {

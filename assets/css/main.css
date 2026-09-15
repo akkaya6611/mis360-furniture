@@ -4465,7 +4465,7 @@
 .shelf-thumb-wrap {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 165px;
     background: #f8fafc;
     overflow: hidden;
 }
@@ -4625,16 +4625,20 @@
 
 /* Farklı Farklı Renk Temaları */
 .banner-theme-orange {
-    background: linear-gradient(90deg, #ff5e00 0%, #ff7a18 45%, #ff2e63 100%);
+    background: linear-gradient(135deg, #9a3412 0%, #c2410c 45%, #ea580c 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .banner-theme-purple {
-    background: linear-gradient(90deg, #6d28d9 0%, #8b5cf6 45%, #ec4899 100%);
+    background: linear-gradient(135deg, #2d241e 0%, #453428 45%, #5a4536 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .banner-theme-emerald {
-    background: linear-gradient(90deg, #047857 0%, #059669 45%, #06b6d4 100%);
+    background: linear-gradient(135deg, #1e3a2f 0%, #284e3f 45%, #366352 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 .banner-theme-blue {
-    background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 45%, #4f46e5 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 45%, #475569 100%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* Header Row */
@@ -4798,7 +4802,7 @@
 .trendyol-card-thumb {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 165px;
     background: #ffffff;
     overflow: hidden;
     display: flex;
@@ -7545,4 +7549,81 @@
     box-sizing: border-box;
     justify-content: center;
   }
+}
+/* v1.9.1 Pill Badges & Sizing */
+.trendyol-pill-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    color: #ffffff;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.badge-pill-amber { background: #d97706; }
+.badge-pill-terracotta { background: #ea580c; }
+.badge-pill-sage { background: #059669; }
+.badge-pill-wood { background: #78350f; }
+
+.trendyol-card-bottom {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.trendyol-benefit-tagline {
+    font-size: 10px;
+    color: #78350f;
+    background: #fef3c7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 600;
+}
+
+/* Nav Collision Prevention */
+.emdief-nav-bar {
+    min-width: 0;
+    gap: 0.5rem;
+}
+.emdief-nav-menu {
+    min-width: 0;
+    flex: 1 1 auto;
+    gap: 0.1rem;
+}
+.emdief-nav-menu li a {
+    padding: 0.4rem 0.52rem;
+    font-size: 0.82rem;
+}
+.nav-extra-badge {
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 0.35rem;
+}
+@media (max-width: 1240px) {
+    .emdief-nav-menu li a {
+        padding: 0.35rem 0.42rem;
+        font-size: 0.78rem;
+    }
+    .nav-extra-badge .badge-link {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+@media (max-width: 1050px) {
+    .emdief-nav-bar {
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+    .emdief-nav-bar::-webkit-scrollbar {
+        display: none;
+    }
 }

@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.0
+Version: 1.9.1
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -132,17 +132,22 @@ button, input, select, textarea {
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
     margin: 15px 0 25px !important;
 }
+/* İskandinav & Montessori Doğal Ahşap & Doğal Tonlar */
 .banner-theme-orange {
-    background: linear-gradient(90deg, #ff5e00 0%, #ff7a18 45%, #ff2e63 100%) !important;
+    background: linear-gradient(135deg, #9a3412 0%, #c2410c 45%, #ea580c 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 .banner-theme-purple {
-    background: linear-gradient(90deg, #6d28d9 0%, #8b5cf6 45%, #ec4899 100%) !important;
+    background: linear-gradient(135deg, #2d241e 0%, #453428 45%, #5a4536 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 .banner-theme-emerald {
-    background: linear-gradient(90deg, #047857 0%, #059669 45%, #06b6d4 100%) !important;
+    background: linear-gradient(135deg, #1e3a2f 0%, #284e3f 45%, #366352 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 .banner-theme-blue {
-    background: linear-gradient(90deg, #1e3a8a 0%, #2563eb 45%, #4f46e5 100%) !important;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 45%, #475569 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
 .trendyol-banner-header {
@@ -259,7 +264,7 @@ button, input, select, textarea {
 .trendyol-card-thumb {
     position: relative !important;
     width: 100% !important;
-    height: 185px !important;
+    height: 165px !important;
     background: #ffffff !important;
     overflow: hidden !important;
     display: flex !important;
@@ -573,4 +578,80 @@ button, input, select, textarea {
     border-radius: 4px !important;
     white-space: nowrap !important;
     border: 1px solid #e2e8f0 !important;
+}
+/* v1.9.1 Montessori Pill Badges & Layout Enhancements */
+.trendyol-pill-badge {
+    position: absolute !important;
+    top: 8px !important;
+    left: 8px !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    z-index: 5 !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.3px !important;
+}
+.badge-pill-amber { background: #d97706 !important; }
+.badge-pill-terracotta { background: #ea580c !important; }
+.badge-pill-sage { background: #059669 !important; }
+.badge-pill-wood { background: #78350f !important; }
+
+.trendyol-card-bottom {
+    margin-top: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+.trendyol-benefit-tagline {
+    font-size: 10px !important;
+    color: #78350f !important;
+    background: #fef3c7 !important;
+    padding: 2px 6px !important;
+    border-radius: 4px !important;
+    margin-bottom: 5px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-weight: 600 !important;
+}
+
+/* Nav Collision Prevention */
+.emdief-nav-bar {
+    min-width: 0 !important;
+    gap: 0.5rem !important;
+}
+.emdief-nav-menu {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+    gap: 0.1rem !important;
+}
+.emdief-nav-menu li a {
+    padding: 0.4rem 0.52rem !important;
+    font-size: 0.82rem !important;
+}
+.nav-extra-badge {
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+    padding-left: 0.35rem !important;
+}
+@media (max-width: 1240px) {
+    .emdief-nav-menu li a {
+        padding: 0.35rem 0.42rem !important;
+        font-size: 0.78rem !important;
+    }
+    .nav-extra-badge .badge-link {
+        padding: 0.3rem 0.5rem !important;
+        font-size: 0.75rem !important;
+    }
+}
+@media (max-width: 1050px) {
+    .emdief-nav-bar {
+        overflow-x: auto !important;
+        scrollbar-width: none !important;
+    }
+    .emdief-nav-bar::-webkit-scrollbar {
+        display: none !important;
+    }
 }
