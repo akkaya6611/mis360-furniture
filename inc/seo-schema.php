@@ -247,7 +247,7 @@ function mis360_output_json_ld(): void {
         'image'           => 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg',
         'description'     => 'Montessori felsefesine uygun 1. sınıf kaliteli MDF çocuk odası kitaplıkları, eğitici ahşap mobilyalar ve montaj kolaylığı sağlayan yerli üretim mobilya atölyesi.',
         'telephone'       => $phone,
-        'email'           => 'info@emdiefhome.com.tr',
+        'email'           => 'emdiefmobilya@gmail.com',
         'priceRange'      => '₺₺',
         'currenciesAccepted' => 'TRY',
         'paymentAccepted' => 'Kredi Kartı, Banka Kartı, Havale/EFT, Peşin',

@@ -82,7 +82,7 @@ function mis360_get_corporate_pages_data() {
     </div>
 
     <h2>5. İletişim ve Haklarınız</h2>
-    <p>Çerez politikamız ile ilgili her türlü soru ve talepleriniz için <a href="mailto:info@emdiefhome.com.tr">info@emdiefhome.com.tr</a> e-posta adresimiz veya <strong>+90 537 477 87 66</strong> numaralı destek hattımız üzerinden bizimle iletişime geçebilirsiniz.</p>
+    <p>Çerez politikamız ile ilgili her türlü soru ve talepleriniz için <a href="mailto:emdiefmobilya@gmail.com">emdiefmobilya@gmail.com</a> e-posta adresimiz veya <strong>+90 537 477 87 66</strong> numaralı destek hattımız üzerinden bizimle iletişime geçebilirsiniz.</p>
 </div>',
         ],
         'gizlilik-ve-kvkk' => [
@@ -130,7 +130,7 @@ function mis360_get_corporate_pages_data() {
     </ul>
 
     <h2>5. KVKK Madde 11 Kapsamındaki Haklarınız</h2>
-    <p>KVKK\'nın 11. maddesi gereğince veri sahibi olarak; verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, eksik veya yanlış işlenmişse düzeltilmesini isteme ve silinmesini talep etme hakkına sahipsiniz. Başvurularınızı <a href="mailto:info@emdiefhome.com.tr">info@emdiefhome.com.tr</a> adresine iletebilirsiniz.</p>
+    <p>KVKK\'nın 11. maddesi gereğince veri sahibi olarak; verilerinizin işlenip işlenmediğini öğrenme, işlenmişse bilgi talep etme, eksik veya yanlış işlenmişse düzeltilmesini isteme ve silinmesini talep etme hakkına sahipsiniz. Başvurularınızı <a href="mailto:emdiefmobilya@gmail.com">emdiefmobilya@gmail.com</a> adresine iletebilirsiniz.</p>
 </div>',
         ],
         'mesafeli-satis-sozlesmesi' => [
@@ -148,7 +148,7 @@ function mis360_get_corporate_pages_data() {
     Unvan: Emdief Home (Orhan TEBER)<br>
     Adres: Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri<br>
     Telefon: +90 537 477 87 66<br>
-    E-posta: info@emdiefhome.com.tr<br>
+    E-posta: emdiefmobilya@gmail.com<br>
     Web: https://emdiefhome.com.tr</p>
 
     <p><strong>1.2. ALICI:</strong><br>
@@ -281,7 +281,7 @@ function mis360_get_corporate_pages_data() {
             <div class="card-icon">✉️</div>
             <h3>Kurumsal E-Posta</h3>
             <p>Resmi yazışmalar, kurumsal teklif ve toptan satış talepleriniz için.</p>
-            <a href="mailto:info@emdiefhome.com.tr" class="contact-link">info@emdiefhome.com.tr</a>
+            <a href="mailto:emdiefmobilya@gmail.com" class="contact-link">emdiefmobilya@gmail.com</a>
         </div>
 
         <div class="contact-info-card">
