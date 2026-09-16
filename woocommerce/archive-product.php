@@ -111,4 +111,5 @@ if (function_exists('mis360_breadcrumbs')) {
 </div>
 
 <?php
+if (function_exists('mis360_render_seo_topical_silo')) { mis360_render_seo_topical_silo(); }
 get_footer('shop');

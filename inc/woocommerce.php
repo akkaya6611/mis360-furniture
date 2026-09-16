@@ -6828,3 +6828,56 @@ function mis360_render_product_usage_tab() {
 
 }
 
+/**
+ * Montessori Çocuk Odası SEO Kategori & Otorite Silosu (Topical Authority Silo - v2.0)
+ */
+function mis360_render_seo_topical_silo() {
+    ?>
+    <section class="emdief-seo-silo-section" aria-label="<?php esc_attr_e('Montessori Çocuk Odası Rehberi', 'mis360-mobilya'); ?>">
+        <div class="emdief-container">
+            <div class="seo-silo-card">
+                <div class="silo-header">
+                    <span class="silo-badge"><?php esc_html_e('EMDİEF HOME MONTESSORİ REHBERİ', 'mis360-mobilya'); ?></span>
+                    <h3 class="silo-title"><?php esc_html_e('1. Sınıf MDF & Masif Ahşap Montessori Çocuk Odası Mobilyaları', 'mis360-mobilya'); ?></h3>
+                    <p class="silo-desc"><?php esc_html_e('Emdief Home; çocukların kendi başlarına öğrenmelerini, keşfetmelerini ve özgüven kazanmalarını destekleyen Montessori felsefesine uygun ergonomik çocuk mobilyaları üreticisidir. Sivri köşesiz %100 yuvarlatılmış kavisler, E1 Avrupa hijyen standartlarında 1. sınıf dayanıklı MDF ve doğal masif kayın ağacı ile Kayseri Mobilya Kent atölyemizde sevgiyle üretiyoruz.', 'mis360-mobilya'); ?></p>
+                </div>
+
+                <div class="silo-grid">
+                    <div class="silo-col">
+                        <h4>📚 <?php esc_html_e('Popüler Montessori Kategorileri', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>"><?php esc_html_e('Montessori Çocuk Kitaplıkları (Carmen, Melis, Safir)', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>"><?php esc_html_e('Eğitici Ahşap Oyuncaklar & Motor Beceri Setleri', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler (Açık Bölmeli)', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/shop/?s=raf')); ?>"><?php esc_html_e('Çocuk Odası, Banyo & Salon Duvar Rafları', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Mobilya Koleksiyonu & Fiyatları', 'mis360-mobilya'); ?></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="silo-col">
+                        <h4>🛡️ <?php esc_html_e('Üretim & Kalite Standartlarımız', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><strong><?php esc_html_e('1. Sınıf E1 Kalite MDF:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Sağlığa zararsız su bazlı kaplama, formaldehit içermez.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('%100 Yuvarlatılmış Hatlar:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Sivri köşe barındırmayan çocuk emniyetli CNC kavisler.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('Şarjlı Matkap ile 5 Dk Montaj:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Parçalarda CNC hazır delikler açılmıştır, alyan gerekmez.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('Zorunlu Duvar Sabitleme:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Devrilmeyi önleyici emniyet askı aparatı paket içinde hediye.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('13:00 Öncelikli İmalat:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Saat 13:00'a kadar verilen siparişler aynı gün üretim sırasına girer.', 'mis360-mobilya'); ?></li>
+                        </ul>
+                    </div>
+
+                    <div class="silo-col">
+                        <h4>🚚 <?php esc_html_e('Teslimat & Kurumsal Destek', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🎬 <?php esc_html_e('Adım Adım Video Kurulum Kılavuzları & Yardım', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('1.500 TL Üzeri Ücretsiz Kargo & Taşıma Güvencesi', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">🔄 <?php esc_html_e('%100 Kargo Hasar Garantisi & 14 Gün Koşulsuz İade', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📍 <?php esc_html_e('Fabrika Satış & Atölye: Mobilya Kent, Kocasinan / Kayseri', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener">💬 <?php esc_html_e('WhatsApp Canlı Danışma & Sipariş Destek Hattı', 'mis360-mobilya'); ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php
+}

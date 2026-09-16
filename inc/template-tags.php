@@ -104,52 +104,101 @@ function mis360_render_trust_badges() {
 }
 
 /**
- * Ekmek Kırıntısı (Breadcrumbs)
+ * Ekmek Kırıntısı (Breadcrumbs - Schema.org Microdata Zenginleştirilmiş)
  */
 function mis360_breadcrumbs() {
     if (is_front_page()) {
         return;
     }
 
+    $pos = 1;
     echo '<nav class="emdief-breadcrumbs" aria-label="' . esc_attr__('Ekmek Kırıntısı', 'mis360-mobilya') . '">';
-    echo '<div class="emdief-container">';
-    echo '<a href="' . esc_url(home_url('/')) . '">' . esc_html__('Anasayfa', 'mis360-mobilya') . '</a>';
-    echo '<span class="separator">/</span>';
+    echo '<div class="emdief-container" itemscope itemtype="https://schema.org/BreadcrumbList">';
+    
+    // 1. Anasayfa
+    echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+    echo '<a itemprop="item" href="' . esc_url(home_url('/')) . '"><span itemprop="name">' . esc_html__('Anasayfa', 'mis360-mobilya') . '</span></a>';
+    echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+    echo '</span>';
+    echo '<span class="separator" aria-hidden="true">/</span>';
 
     if (class_exists('WooCommerce') && (is_woocommerce() || is_cart() || is_checkout())) {
         $shop_page_id = wc_get_page_id('shop');
         if ($shop_page_id && !is_shop()) {
-            echo '<a href="' . esc_url(get_permalink($shop_page_id)) . '">' . esc_html(get_the_title($shop_page_id)) . '</a>';
-            echo '<span class="separator">/</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<a itemprop="item" href="' . esc_url(get_permalink($shop_page_id)) . '"><span itemprop="name">' . esc_html(get_the_title($shop_page_id)) . '</span></a>';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
+            echo '<span class="separator" aria-hidden="true">/</span>';
         }
         if (is_product()) {
             $terms = get_the_terms(get_the_ID(), 'product_cat');
             if ($terms && !is_wp_error($terms)) {
                 $term = current($terms);
-                echo '<a href="' . esc_url(get_term_link($term)) . '">' . esc_html($term->name) . '</a>';
-                echo '<span class="separator">/</span>';
+                echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+                echo '<a itemprop="item" href="' . esc_url(get_term_link($term)) . '"><span itemprop="name">' . esc_html($term->name) . '</span></a>';
+                echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+                echo '</span>';
+                echo '<span class="separator" aria-hidden="true">/</span>';
             }
-            echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_product_taxonomy()) {
-            echo '<span class="current">' . esc_html(single_term_title('', false)) . '</span>';
+            $term = get_queried_object();
+            $term_url = ($term && !is_wp_error($term)) ? get_term_link($term) : '';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(single_term_title('', false)) . '</span>';
+            if ($term_url) echo '<meta itemprop="item" content="' . esc_url($term_url) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_cart()) {
-            echo '<span class="current">' . esc_html__('Sepet', 'mis360-mobilya') . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html__('Sepet', 'mis360-mobilya') . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(wc_get_cart_url()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_checkout()) {
-            echo '<span class="current">' . esc_html__('Ödeme', 'mis360-mobilya') . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html__('Ödeme', 'mis360-mobilya') . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(wc_get_checkout_url()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } else {
-            echo '<span class="current">' . esc_html(get_the_title($shop_page_id)) . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(get_the_title($shop_page_id)) . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(get_permalink($shop_page_id)) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         }
     } elseif (is_single()) {
         $categories = get_the_category();
         if ($categories) {
-            echo '<a href="' . esc_url(get_category_link($categories[0]->term_id)) . '">' . esc_html($categories[0]->name) . '</a>';
-            echo '<span class="separator">/</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<a itemprop="item" href="' . esc_url(get_category_link($categories[0]->term_id)) . '"><span itemprop="name">' . esc_html($categories[0]->name) . '</span></a>';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
+            echo '<span class="separator" aria-hidden="true">/</span>';
         }
-        echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     } elseif (is_page()) {
-        echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     } elseif (is_category() || is_tag()) {
-        echo '<span class="current">' . esc_html(single_cat_title('', false)) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(single_cat_title('', false)) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(home_url(add_query_arg([], null))) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     }
     echo '</div>';
     echo '</nav>';

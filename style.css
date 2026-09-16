@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.11
+Version: 1.9.12
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -964,4 +964,117 @@ button, input, select, textarea {
 /* v1.9.10: Cift Sepete Ekle Cubugu Temizligi */
 .emdief-mobile-sticky-bar {
     display: none !important;
+}
+
+/* ==========================================================================
+   v1.9.12: Montessori Cocuk Odasi SEO Kategori & Otorite Silosu (Topical Authority)
+   ========================================================================== */
+.emdief-seo-silo-section {
+    padding: 24px 0 36px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.seo-silo-card {
+    background: #ffffff;
+    border: 1.5px solid #f1f5f9;
+    border-radius: 20px;
+    padding: 28px 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    box-sizing: border-box;
+}
+
+.silo-header {
+    margin-bottom: 24px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 18px;
+}
+
+.silo-badge {
+    display: inline-block;
+    background: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #fed7aa;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+}
+
+.silo-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 6px 0 8px 0;
+    line-height: 1.35;
+}
+
+.silo-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #64748b;
+    margin: 0;
+}
+
+.silo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.silo-col h4 {
+    font-size: 0.94rem;
+    font-weight: 750;
+    color: #1e293b;
+    margin: 0 0 14px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.silo-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.silo-col ul li {
+    font-size: 0.84rem;
+    line-height: 1.45;
+    color: #475569;
+}
+
+.silo-col ul li a {
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: inline-block;
+}
+
+.silo-col ul li a:hover {
+    color: #ea580c;
+    text-decoration: underline;
+    transform: translateX(2px);
+}
+
+.silo-col ul li strong {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+@media (max-width: 991px) {
+    .silo-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .seo-silo-card {
+        padding: 20px;
+        border-radius: 16px;
+    }
 }
