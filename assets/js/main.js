@@ -282,24 +282,43 @@ function mis360Init() {
     if (stickyBuyBar) {
         const mainAddToCartBtn = document.querySelector('form.cart .single_add_to_cart_button') || document.querySelector('button[name="add-to-cart"]');
 
-        window.addEventListener('scroll', () => {
-            if (window.innerWidth <= 768) {
-                if (mainAddToCartBtn) {
-                    const rect = mainAddToCartBtn.getBoundingClientRect();
-                    if (rect.bottom < 0) {
-                        stickyBuyBar.classList.add('is-visible');
-                    } else {
-                        stickyBuyBar.classList.remove('is-visible');
-                    }
-                } else if (window.scrollY > 350) {
-                    stickyBuyBar.classList.add('is-visible');
+        if ('IntersectionObserver' in window && mainAddToCartBtn) {
+            const observer = new IntersectionObserver((entries) => {
+                if (window.innerWidth <= 768) {
+                    entries.forEach(entry => {
+                        // When main button is scrolled past viewport, reveal sticky bar
+                        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                            stickyBuyBar.classList.add('is-visible');
+                        } else {
+                            stickyBuyBar.classList.remove('is-visible');
+                        }
+                    });
                 } else {
                     stickyBuyBar.classList.remove('is-visible');
                 }
-            } else {
-                stickyBuyBar.classList.remove('is-visible');
-            }
-        }, { passive: true });
+            }, { threshold: 0 });
+
+            observer.observe(mainAddToCartBtn);
+        } else {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        if (window.innerWidth <= 768) {
+                            if (window.scrollY > 400) {
+                                stickyBuyBar.classList.add('is-visible');
+                            } else {
+                                stickyBuyBar.classList.remove('is-visible');
+                            }
+                        } else {
+                            stickyBuyBar.classList.remove('is-visible');
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
 
         if (triggerStickyAddToCart && mainAddToCartBtn) {
             triggerStickyAddToCart.addEventListener('click', (e) => {
@@ -585,8 +604,9 @@ function mis360Init() {
         notice.style.display = 'flex';
 
         wrapper.classList.remove('is-shaking');
-        void wrapper.offsetWidth;
-        wrapper.classList.add('is-shaking');
+        requestAnimationFrame(() => {
+            wrapper.classList.add('is-shaking');
+        });
 
         clearTimeout(wrapper._noticeTimer);
         wrapper._noticeTimer = setTimeout(() => {

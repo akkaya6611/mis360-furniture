@@ -19,6 +19,7 @@ define('MIS360_MOBILYA_URI', get_template_directory_uri());
 $mis360_includes = [
     '/inc/theme-setup.php',    // Tema desteği, menüler, görsel boyutları
     '/inc/enqueue.php',        // CSS, Google Fonts ve defer scriptler
+    '/inc/performance.php',    // Core Web Vitals, WebP, Defer JS, LCP ve Tarayıcı Önbellekleme (v1.9.13)
     '/inc/template-tags.php',  // SVG ikonlar, rozetler ve yardımcı fonksiyonlar
     '/inc/customizer.php',     // Tema ayarları (Duyuru çubuğu, telefon, kargo limiti)
     '/inc/seo-schema.php',     // Schema.org Product ve Organization

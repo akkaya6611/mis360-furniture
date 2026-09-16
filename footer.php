@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
             <!-- Kolon 1: Marka & Montessori Felsefesi -->
             <div class="footer-col footer-about">
                 <div class="footer-brand">
-                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/emdief-home-logo.webp'); ?>" alt="Emdief Home" class="footer-logo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/emdief-home-logo.webp'); ?>" alt="Emdief Home" class="footer-logo" width="160" height="49" loading="lazy" decoding="async" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
                     <span class="footer-logo-fallback" style="display:none; font-weight:800; font-size:1.4rem; color:var(--emd-text-main);">Emdief<span style="color:var(--emd-primary);">Home</span></span>
                 </div>
                 <p class="footer-desc">

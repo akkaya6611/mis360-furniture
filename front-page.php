@@ -79,7 +79,18 @@ get_header();
         <div class="emdief-bento-grid">
             <!-- Sol Geniş Vitrin: Büyük Prestij Karşılama Sahnesi -->
             <div class="bento-hero-showcase">
-                <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg" alt="Montessori Çocuk Mobilyaları" class="bento-hero-bg">
+                <picture class="bento-hero-picture">
+                    <source media="(max-width: 480px)" srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/images/banner-emdief-mobile.webp'); ?>" type="image/webp">
+                    <source srcset="<?php echo esc_url(get_template_directory_uri() . '/assets/images/banner-emdief.webp'); ?>" type="image/webp">
+                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/banner-emdief.webp'); ?>" 
+                         alt="Montessori Çocuk Mobilyaları - Emdief Home" 
+                         class="bento-hero-bg" 
+                         width="800" 
+                         height="626" 
+                         fetchpriority="high" 
+                         loading="eager" 
+                         decoding="async">
+                </picture>
                 <div class="bento-hero-scrim"></div>
                 <div class="bento-hero-content">
                     <span class="bento-pill-badge">
