@@ -120,11 +120,6 @@ if (!function_exists('mis360_render_trust_badges')) {
     }
 }
 
-if (!function_exists('mis360_product_badges')) {
-    function mis360_product_badges($product = null) {
-        return '';
-    }
-}
 
 if (!function_exists('mis360_get_category_url')) {
     function mis360_get_category_url($slug, $fallback_search = '') {

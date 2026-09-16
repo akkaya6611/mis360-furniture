@@ -931,7 +931,7 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Kargo ücreti ne kadar ve siparişim ne zaman kargoya verilir?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye'ye kargo tamamen ücretsizdir. Saat 13:00'a kadar verilen siparişler aynı gün öncelikli imalat sırasına alınır. Stokta hazır bulunan ürünler hemen aynı gün, özel üretimler ise ortalama 3 iş günü içinde sevk edilir. Kargonuz yola çıktığında anlık SMS ve e-posta takip kodu iletilir.',
+                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo tamamen ücretsizdir. Saat 13:00\'a kadar verilen siparişler aynı gün öncelikli imalat sırasına alınır. Stokta hazır bulunan ürünler hemen aynı gün, özel üretimler ise ortalama 3 iş günü içinde sevk edilir. Kargonuz yola çıktığında anlık SMS ve e-posta takip kodu iletilir.',
                     ],
                 ],
                 [

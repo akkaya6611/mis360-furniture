@@ -818,6 +818,7 @@ add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_it
 
 
 
+if (!function_exists('mis360_product_badges')) {
 function mis360_product_badges() {
 
 
@@ -890,6 +891,7 @@ function mis360_product_badges() {
 
 
 
+}
 }
 
 
@@ -6861,7 +6863,7 @@ function mis360_render_seo_topical_silo() {
                             <li><strong><?php esc_html_e('%100 Yuvarlatılmış Hatlar:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Sivri köşe barındırmayan çocuk emniyetli CNC kavisler.', 'mis360-mobilya'); ?></li>
                             <li><strong><?php esc_html_e('Şarjlı Matkap ile 5 Dk Montaj:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Parçalarda CNC hazır delikler açılmıştır, alyan gerekmez.', 'mis360-mobilya'); ?></li>
                             <li><strong><?php esc_html_e('Zorunlu Duvar Sabitleme:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Devrilmeyi önleyici emniyet askı aparatı paket içinde hediye.', 'mis360-mobilya'); ?></li>
-                            <li><strong><?php esc_html_e('13:00 Öncelikli İmalat:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Saat 13:00'a kadar verilen siparişler aynı gün üretim sırasına girer.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('13:00 Öncelikli İmalat:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Saat 13:00\'a kadar verilen siparişler aynı gün üretim sırasına girer.', 'mis360-mobilya'); ?></li>
                         </ul>
                     </div>
 
