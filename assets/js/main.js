@@ -213,12 +213,12 @@ function mis360Init() {
 
             const modalTitle = modal.querySelector('.auth-modal-title');
             if (modalTitle) {
-                modalTitle.textContent = 'Sipariş İçin Üyelik Gerekmektedir';
+                modalTitle.textContent = 'Ödemeye Devam Edebilmek İçin';
             }
 
             const modalSub = modal.querySelector('.auth-modal-subtitle');
             if (modalSub) {
-                modalSub.innerHTML = '⚠️ <strong>Adres ve fatura bilgilerinizi girmeden önce</strong> kargo ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.';
+                modalSub.innerHTML = '⚠️ <strong>Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.</strong><br><span style="font-size:12px;color:#64748b;">(Giriş yaptığınızda veya yeni üyelik oluşturduğunuzda doğrudan siparişinize devam edebilirsiniz.)</span>';
             }
 
             openAuthModal('login');
@@ -251,14 +251,14 @@ function mis360Init() {
             gateBox.innerHTML = `
                 <div class="auth-gate-badge">
                     <span class="gate-pulse"></span>
-                    🔒 ADRES & FATURA ÖNCESİ ZORUNLU ADIM
+                    🔒 ÖDEME ÖNCESİ HESAP DOĞRULAMA
                 </div>
                 <div class="auth-gate-content">
                     <h3 class="auth-gate-title">
-                        ⚠️ Sipariş Oluşturabilmek İçin Üyelik Gerekmektedir!
+                        ⚠️ Ödemeye Devam Edebilmek İçin Hesabınıza Giriş Yapmalı ya da Üyelik Oluşturmalısınız
                     </h3>
                     <p class="auth-gate-desc">
-                        Değerli müşterimiz; fatura güvenliğiniz, yasal haklarınız ve kargo durumunuzu anlık takip edebilmeniz için <strong>adres ve fatura bilgilerinizi girmeden önce lütfen sisteme giriş yapın veya ücretsiz üye olun.</strong>
+                        Değerli müşterimiz; siparişinizi güvenle tamamlamak ve ödemeye devam edebilmek için lütfen <strong>hesabınıza giriş yapın ya da 10 saniyede ücretsiz üye olun.</strong> Adres ve fatura bilgileriniz hesabınıza güvenle kaydedilecektir.
                     </p>
                     <div class="auth-gate-buttons">
                         <button type="button" class="emdief-btn btn-primary auth-gate-btn-login" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');} return false;">
@@ -281,9 +281,13 @@ function mis360Init() {
         setTimeout(() => {
             const modal = document.getElementById('emdief-auth-modal');
             if (modal && !modal.classList.contains('is-active')) {
+                const modalTitle = modal.querySelector('.auth-modal-title');
+                if (modalTitle) {
+                    modalTitle.textContent = 'Ödemeye Devam Edebilmek İçin';
+                }
                 const modalSub = modal.querySelector('.auth-modal-subtitle');
                 if (modalSub) {
-                    modalSub.innerHTML = '⚠️ <strong>Adres ve fatura bilgilerinizi girmeden önce</strong> lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.';
+                    modalSub.innerHTML = '⚠️ <strong>Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.</strong>';
                 }
                 openAuthModal('login');
             }

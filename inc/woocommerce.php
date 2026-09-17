@@ -559,8 +559,9 @@ function mis360_render_drawer_cart_content() {
                             <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
                         </a>
                     <?php else: ?>
+                        <p class="drawer-auth-required-hint">🔒 <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?></p>
                         <button type="button" class="emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>">
-                            🔒 <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
+                            🔒 <?php esc_html_e('Siparişi Tamamla & Giriş Yap', 'mis360-mobilya'); ?>
                         </button>
                     <?php endif; ?>
 
@@ -7026,14 +7027,14 @@ function mis360_checkout_auth_required_gate() {
     <div class="emdief-checkout-auth-gate-box">
         <div class="auth-gate-badge">
             <span class="gate-pulse"></span>
-            🔒 <?php esc_html_e('ADRES & FATURA ÖNCESİ ZORUNLU ADIM', 'mis360-mobilya'); ?>
+            🔒 <?php esc_html_e('ÖDEME ÖNCESİ HESAP DOĞRULAMA', 'mis360-mobilya'); ?>
         </div>
         <div class="auth-gate-content">
             <h3 class="auth-gate-title">
-                ⚠️ <?php esc_html_e('Sipariş Oluşturabilmek İçin Üyelik Gerekmektedir!', 'mis360-mobilya'); ?>
+                ⚠️ <?php esc_html_e('Ödemeye Devam Edebilmek İçin Hesabınıza Giriş Yapmalı ya da Üyelik Oluşturmalısınız', 'mis360-mobilya'); ?>
             </h3>
             <p class="auth-gate-desc">
-                <?php _e('Değerli müşterimiz; fatura güvenliğiniz, yasal haklarınız ve kargo durumunuzu anlık takip edebilmeniz için <strong>adres ve fatura bilgilerinizi girmeden önce lütfen sisteme giriş yapın veya ücretsiz üye olun.</strong>', 'mis360-mobilya'); ?>
+                <?php _e('Değerli müşterimiz; siparişinizi güvenle tamamlamak ve ödemeye devam edebilmek için lütfen <strong>hesabınıza giriş yapın ya da 10 saniyede ücretsiz üye olun.</strong> Adres ve fatura bilgileriniz hesabınıza güvenle kaydedilecektir.', 'mis360-mobilya'); ?>
             </p>
             <div class="auth-gate-buttons">
                 <button type="button" class="emdief-btn btn-primary auth-gate-btn-login" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>';} return false;">
@@ -7056,7 +7057,7 @@ function mis360_before_billing_auth_reminder() {
     }
     ?>
     <div class="checkout-billing-auth-hint">
-        💡 <strong><?php esc_html_e('Önemli Hatırlatma:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Henüz giriş yapmadınız. Adresinizi doldururken veya tamamlamadan önce yukarıdaki "Giriş Yap" veya "Hızlı Üye Ol" butonundan hesabınızı oluşturabilirsiniz.', 'mis360-mobilya'); ?>
+        💡 <strong><?php esc_html_e('Bilgilendirme:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?>
     </div>
     <?php
 }
@@ -7076,8 +7077,8 @@ function mis360_button_proceed_to_checkout() {
         <button type="button" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_checkout_url()); ?>';}">
             🔒 <?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?>
         </button>
-        <p class="cart-auth-required-hint" style="text-align: center; margin-top: 8px; font-size: 12px; color: #b45309; font-weight: 600;">
-            ⚠️ <?php esc_html_e('Sipariş oluşturabilmek için lütfen üye olun veya giriş yapın.', 'mis360-mobilya'); ?>
+        <p class="cart-auth-required-hint" style="text-align: center; margin-top: 8px; font-size: 12.5px; color: #b45309; font-weight: 700;">
+            ⚠️ <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?>
         </p>
         <?php
     }
@@ -7093,8 +7094,8 @@ function mis360_cart_page_auth_notice() {
     <div class="cart-guest-auth-alert">
         <div class="cart-alert-icon">🔒</div>
         <div class="cart-alert-body">
-            <strong><?php esc_html_e('Sipariş verebilmek için üyelik gerekmektedir:', 'mis360-mobilya'); ?></strong>
-            <span><?php esc_html_e('Adres ve fatura bilgilerinizi girmeden önce kargo ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.', 'mis360-mobilya'); ?></span>
+            <strong><?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?></strong>
+            <span><?php esc_html_e('Sipariş ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.', 'mis360-mobilya'); ?></span>
         </div>
         <button type="button" class="emdief-btn btn-sm btn-primary cart-alert-btn" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');} return false;">
             🔑 <?php esc_html_e('Giriş Yap / Üye Ol', 'mis360-mobilya'); ?>
