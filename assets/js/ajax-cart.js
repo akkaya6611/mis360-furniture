@@ -564,6 +564,71 @@
 
                 return false;
             });
+
+            // 3. Tek Tıkla Sepeti Boşalt (Mini-Cart Çekmecesi & Sepet Sayfası)
+            $(document).on('click', '.emdief-empty-cart-trigger', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
+                if (!window.confirm('Sepetinizdeki tüm ürünler silinecek. Onaylıyor musunuz?')) {
+                    return false;
+                }
+
+                const $btn = $(this);
+                const originalHtml = $btn.html();
+                $btn.addClass('loading').css('pointer-events', 'none');
+                if ($btn.find('span').length) {
+                    $btn.find('span').text('Boşaltılıyor...');
+                }
+
+                const isCartPage = document.body.classList.contains('woocommerce-cart') || window.location.pathname.indexOf('/sepet') !== -1;
+
+                // Çekmece içeriğini hafif soldur
+                const $drawer = $('#emdief-drawer-cart-content');
+                if ($drawer.length) {
+                    $drawer.css({ opacity: '0.4', 'pointer-events': 'none' });
+                }
+
+                $.ajax({
+                    type: 'POST',
+                    url: ajaxUrl,
+                    data: {
+                        action: 'mis360_ajax_empty_cart',
+                        nonce: nonce
+                    },
+                    success: function(response) {
+                        $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
+
+                        if (response && response.success && response.data) {
+                            applyFragments(response.data);
+                            unblockDrawerCart();
+                            setTimeout(unblockDrawerCart, 100);
+                            setTimeout(unblockDrawerCart, 500);
+
+                            $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash]);
+                            $(document.body).trigger('wc_fragment_refresh');
+
+                            if (isCartPage) {
+                                window.location.reload();
+                            }
+                        } else {
+                            unblockDrawerCart();
+                            if (isCartPage) {
+                                window.location.reload();
+                            }
+                        }
+                    },
+                    error: function() {
+                        $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
+                        unblockDrawerCart();
+                        if (isCartPage) {
+                            window.location.reload();
+                        }
+                    }
+                });
+
+                return false;
+            });
         }
     }
 

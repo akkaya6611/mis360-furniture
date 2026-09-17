@@ -328,7 +328,13 @@ function mis360_render_drawer_cart_content() {
 
         <?php if ($cart && !$cart->is_empty()): ?>
 
-
+            <div class="drawer-items-header">
+                <span class="drawer-items-title"><?php esc_html_e('Sepetteki Ürünler', 'mis360-mobilya'); ?></span>
+                <button type="button" class="drawer-empty-cart-btn emdief-empty-cart-trigger" title="<?php esc_attr_e('Sepetteki tüm ürünleri temizle', 'mis360-mobilya'); ?>">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                    <span><?php esc_html_e('Sepeti Boşalt', 'mis360-mobilya'); ?></span>
+                </button>
+            </div>
 
             <div class="emdief-drawer-items">
 
@@ -723,6 +729,83 @@ function mis360_ajax_remove_cart_item() {
 }
 add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_mis360_ajax_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_nopriv_mis360_ajax_remove_cart_item', 'mis360_ajax_remove_cart_item');
+
+/**
+ * AJAX Empty Cart Handler (Tek Tıkla Sepeti Boşalt Motoru)
+ */
+function mis360_ajax_empty_cart() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
+
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+
+    if (function_exists('WC') && WC()->cart) {
+        WC()->cart->empty_cart();
+        WC()->cart->calculate_totals();
+    }
+
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
+
+    $count = '0';
+    $subtotal = function_exists('wc_price') ? wc_price(0) : '0,00 TL';
+
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">0</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">0</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), '0') . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
+
+    wp_send_json_success([
+        'fragments' => $fragments,
+        'count'     => '0',
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
+        'is_empty'  => true,
+    ]);
+}
+add_action('wp_ajax_mis360_ajax_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_nopriv_mis360_ajax_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_mis360_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_nopriv_mis360_empty_cart', 'mis360_ajax_empty_cart');
+
+/**
+ * Sepet Sayfası Tablo Altı Butonlarına "Sepeti Boşalt" Butonu Ekle
+ */
+add_action('woocommerce_cart_actions', 'mis360_add_empty_cart_button_to_cart_page');
+function mis360_add_empty_cart_button_to_cart_page() {
+    $nonce = wp_create_nonce('mis360_empty_cart_nonce');
+    $empty_url = add_query_arg(['mis360_empty_cart' => 1, '_wpnonce' => $nonce], wc_get_cart_url());
+    ?>
+    <a href="<?php echo esc_url($empty_url); ?>" class="button emdief-btn-empty-cart emdief-empty-cart-trigger" id="emdief-page-empty-cart-btn" title="<?php esc_attr_e('Sepetteki tüm ürünleri temizle', 'mis360-mobilya'); ?>">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 5px;"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+        <span><?php esc_html_e('Sepeti Boşalt', 'mis360-mobilya'); ?></span>
+    </a>
+    <?php
+}
+
+/**
+ * Sepet Sayfası URL Fallback ile Sepeti Boşaltma İşlemi
+ */
+add_action('template_redirect', 'mis360_handle_empty_cart_action');
+function mis360_handle_empty_cart_action() {
+    if (isset($_GET['mis360_empty_cart']) && wp_verify_nonce($_GET['_wpnonce'] ?? '', 'mis360_empty_cart_nonce')) {
+        if (function_exists('WC') && WC()->cart) {
+            WC()->cart->empty_cart();
+            wc_add_notice(__('Sepetinizdeki tüm ürünler başarıyla temizlendi.', 'mis360-mobilya'), 'notice');
+            wp_safe_redirect(wc_get_cart_url());
+            exit;
+        }
+    }
+}
 
 /**
  * AJAX Add to Cart Handler (Ultra Hızlı ve Güvenilir Sepete Ekle Motoru)
