@@ -315,7 +315,15 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                     </div>
                 <?php endif; ?>
 
-                <a href="<?php echo esc_url('?add-to-cart=' . $id . ($is_flash_deal ? '&flash_deal=1' : '')); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" data-flash-deal="<?php echo $is_flash_deal ? '1' : '0'; ?>" class="trendyol-btn-add-cart ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
+                <?php
+                $add_to_cart_url = $prod->add_to_cart_url();
+                if ($is_flash_deal) {
+                    $add_to_cart_url = add_query_arg('flash_deal', '1', $add_to_cart_url);
+                }
+                $is_simple = $prod->is_type('simple');
+                $btn_classes = 'trendyol-btn-add-cart add_to_cart_button' . ($is_simple ? ' ajax_add_to_cart' : '');
+                ?>
+                <a href="<?php echo esc_url($add_to_cart_url); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" <?php if ($is_flash_deal): ?>data-flash_deal="1" data-is_flash_deal="1"<?php endif; ?> class="<?php echo esc_attr($btn_classes); ?>" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>" rel="nofollow">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Sepete Ekle</span>
                 </a>

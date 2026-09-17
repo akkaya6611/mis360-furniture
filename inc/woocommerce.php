@@ -735,75 +735,50 @@ function mis360_render_drawer_cart_content() {
 
 
 function mis360_ajax_remove_cart_item() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
 
-
-
-    check_ajax_referer('mis360_cart_nonce', 'nonce');
-
-
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
 
     $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field(wp_unslash($_POST['cart_item_key'])) : '';
 
-
-
     if (!empty($cart_item_key) && function_exists('WC') && WC()->cart) {
-
-
-
         WC()->cart->remove_cart_item($cart_item_key);
-
-
-
         WC()->cart->calculate_totals();
-
-
-
     }
 
-
-
     $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
-
-
-
     $cart_hash = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '';
 
-
-
     wp_send_json_success([
-
-
-
         'fragments' => $fragments,
-
-
-
         'cart_hash' => $cart_hash,
-
-
-
     ]);
-
-
-
 }
-
-
-
 add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 
 /**
- * AJAX Add to Cart Handler (Tema Özel Sepete Ekle Motoru)
- * Ürünü AJAX ile sepete ekler, sepet çekmecesi fragmanlarını döndürür ve boş sepete yönlendirmeyi önler.
+ * AJAX Add to Cart Handler (Yedek & Özel Sepete Ekle Motoru)
  */
 function mis360_ajax_add_to_cart() {
     check_ajax_referer('mis360_cart_nonce', 'nonce', false);
 
-    $product_id        = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? 0));
-    $quantity          = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
-    $variation_id      = absint($_POST['variation_id'] ?? 0);
-    $variations        = [];
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+    if (!isset(WC()->cart) || null === WC()->cart) {
+        if (function_exists('WC') && method_exists(WC(), 'initialize_cart')) {
+            WC()->initialize_session();
+            WC()->initialize_cart();
+        }
+    }
+
+    $product_id   = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? 0));
+    $quantity     = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
+    $variation_id = absint($_POST['variation_id'] ?? 0);
+    $variations   = [];
 
     foreach ($_POST as $key => $value) {
         if (strpos($key, 'attribute_') === 0) {
@@ -812,13 +787,13 @@ function mis360_ajax_add_to_cart() {
     }
 
     $cart_item_data = [];
-    if (!empty($_POST['is_flash_deal']) || !empty($_GET['flash_deal'])) {
+    if (!empty($_POST['is_flash_deal']) || !empty($_POST['flash_deal']) || !empty($_GET['flash_deal'])) {
         $cart_item_data['is_flash_deal'] = 1;
     }
 
     $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations);
 
-    if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variations, $cart_item_data)) {
+    if ($passed_validation && function_exists('WC') && WC()->cart && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variations, $cart_item_data)) {
         do_action('woocommerce_ajax_added_to_cart', $product_id);
 
         WC()->cart->calculate_totals();
@@ -845,8 +820,42 @@ function mis360_ajax_add_to_cart() {
 add_action('wp_ajax_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
 
-// Sepete yönlendirmeyi önle - her zaman çekmece açılsın
-add_filter('woocommerce_add_to_cart_redirect', '__return_false', 99);
+/**
+ * AJAX ve Sepet Yönlendirme Kontrolleri
+ * - WooCommerce standart AJAX sepete eklemeyi daima zorunlu kılar
+ * - Sepete eklendikten sonra /sepet/ sayfasına yönlendirmeyi %100 engeller (Çekmece açılması için)
+ */
+add_filter('pre_option_woocommerce_enable_ajax_add_to_cart', function() { return 'yes'; });
+add_filter('option_woocommerce_enable_ajax_add_to_cart', function() { return 'yes'; });
+add_filter('pre_option_woocommerce_cart_redirect_after_add', function() { return 'no'; });
+add_filter('option_woocommerce_cart_redirect_after_add', function() { return 'no'; });
+add_filter('woocommerce_add_to_cart_redirect', '__return_false', 999);
+add_filter('woocommerce_get_script_data', function($params, $handle) {
+    if ($handle === 'wc-add-to-cart' && is_array($params)) {
+        $params['cart_redirect_after_add'] = 'no';
+    }
+    return $params;
+}, 10, 2);
+
+/**
+ * Flaş Ürünler için Cart Item Data ve İndirim Entegrasyonu
+ * Standart WooCommerce AJAX veya form ile eklense dahi Flaş etiketi sepette korunur
+ */
+function mis360_add_flash_deal_cart_item_data($cart_item_data, $product_id, $variation_id = 0, $quantity = 1) {
+    if (!empty($_REQUEST['flash_deal']) || !empty($_REQUEST['is_flash_deal']) || !empty($_POST['flash_deal']) || !empty($_POST['is_flash_deal'])) {
+        $cart_item_data['is_flash_deal'] = 1;
+    }
+    return $cart_item_data;
+}
+add_filter('woocommerce_add_cart_item_data', 'mis360_add_flash_deal_cart_item_data', 10, 4);
+
+function mis360_get_cart_item_from_session($cart_item, $values) {
+    if (!empty($values['is_flash_deal'])) {
+        $cart_item['is_flash_deal'] = 1;
+    }
+    return $cart_item;
+}
+add_filter('woocommerce_get_cart_item_from_session', 'mis360_get_cart_item_from_session', 10, 2);
 
 /**
  * Flaş Ürünler için Sepette 25 TL İndirim (Otomatik Flaş Fırsat İndirimi)
@@ -855,12 +864,12 @@ function mis360_apply_flash_deal_cart_discount($cart) {
     if (is_admin() && !defined('DOING_AJAX')) {
         return;
     }
-    if ($cart->is_empty()) {
+    if (!function_exists('WC') || !WC()->cart || WC()->cart->is_empty()) {
         return;
     }
 
     $flash_items = 0;
-    foreach ($cart->get_cart() as $cart_item) {
+    foreach (WC()->cart->get_cart() as $cart_item) {
         if (!empty($cart_item['is_flash_deal'])) {
             $flash_items += $cart_item['quantity'];
         }
