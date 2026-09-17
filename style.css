@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.25
+Version: 1.9.26
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -368,18 +368,21 @@ button, input, select, textarea {
     gap: 2px !important;
 }
 .trendyol-card-title {
-    font-size: 12px !important;
-    font-weight: 500 !important;
-    color: #334155 !important;
-    line-height: 1.35 !important;
-    margin: 0 0 5px !important;
-    height: 32px !important;
-    overflow: hidden !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #1e293b !important;
+    line-height: 1.4 !important;
+    margin: 0 0 6px !important;
+    height: auto !important;
+    min-height: 38px !important;
+    max-height: none !important;
+    overflow: visible !important;
+    display: block !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    word-break: break-word !important;
 }
-.trendyol-card-title a { color: inherit !important; text-decoration: none !important; }
+.trendyol-card-title a { color: inherit !important; text-decoration: none !important; display: block !important; overflow: visible !important; }
 .trendyol-card-title strong { color: #0f172a !important; font-weight: 800 !important; }
 .trendyol-urgency-row {
     color: #ea580c !important;
