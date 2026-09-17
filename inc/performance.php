@@ -221,6 +221,49 @@ function mis360_performance_send_cache_headers() {
 add_action('send_headers', 'mis360_performance_send_cache_headers');
 
 /**
+ * 10. Ensure WooCommerce Dynamic Pages (Cart, Checkout, Account) are NEVER cached
+ */
+function mis360_performance_prevent_ecommerce_caching() {
+    if (is_admin()) {
+        return;
+    }
+    $is_wc_dynamic = false;
+    if (function_exists('is_cart') && is_cart()) {
+        $is_wc_dynamic = true;
+    } elseif (function_exists('is_checkout') && is_checkout()) {
+        $is_wc_dynamic = true;
+    } elseif (function_exists('is_account_page') && is_account_page()) {
+        $is_wc_dynamic = true;
+    } elseif (!empty($_SERVER['REQUEST_URI'])) {
+        $uri = strtolower(strtok($_SERVER['REQUEST_URI'], '?'));
+        if (strpos($uri, '/sepet') !== false || strpos($uri, '/odeme') !== false || strpos($uri, '/my-account') !== false) {
+            $is_wc_dynamic = true;
+        }
+    }
+
+    if ($is_wc_dynamic) {
+        if (!defined('DONOTCACHEPAGE')) {
+            define('DONOTCACHEPAGE', true);
+        }
+        if (!defined('DONOTCACHEOBJECT')) {
+            define('DONOTCACHEOBJECT', true);
+        }
+        if (!defined('DONOTCACHEDB')) {
+            define('DONOTCACHEDB', true);
+        }
+        if (function_exists('nocache_headers')) {
+            nocache_headers();
+        }
+        header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0, private');
+        header('Pragma: no-cache');
+        header('Expires: Wed, 11 Jan 1984 05:00:00 GMT');
+        header('X-LiteSpeed-Cache-Control: no-cache');
+    }
+}
+add_action('template_redirect', 'mis360_performance_prevent_ecommerce_caching', 1);
+add_action('send_headers', 'mis360_performance_prevent_ecommerce_caching', 1);
+
+/**
  * Automatic .htaccess Browser Caching Injection (Safely guarded)
  */
 function mis360_performance_update_htaccess_rules() {
@@ -245,7 +288,6 @@ function mis360_performance_update_htaccess_rules() {
         $rules = [
             '<IfModule mod_expires.c>',
             '  ExpiresActive On',
-            '  ExpiresDefault "access plus 1 month"',
             '  ExpiresByType image/webp "access plus 1 year"',
             '  ExpiresByType image/jpeg "access plus 1 year"',
             '  ExpiresByType image/png "access plus 1 year"',
