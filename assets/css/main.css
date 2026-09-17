@@ -6560,11 +6560,10 @@
 .support-phone {
   font-size: 0.82rem;
   color: #a7f3d0;
+  line-height: 1.5;
 }
 .support-phone strong {
   color: #ffffff;
-}
-  line-height: 1.5;
 }
 
 .action-banner-buttons {
