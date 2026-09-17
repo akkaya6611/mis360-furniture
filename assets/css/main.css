@@ -5095,7 +5095,6 @@
     font-size: 12px;
 }
 
-/* Sepete Ekle Button */
 .trendyol-btn-add-cart {
     margin-top: 8px;
     background: #f8fafc;
@@ -5110,11 +5109,27 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-family: inherit;
+    box-sizing: border-box;
+    outline: none;
+    line-height: 1.4;
     transition: all 0.2s ease;
 }
 .trendyol-btn-add-cart:hover {
     background: #ea580c;
     border-color: #ea580c;
+    color: #ffffff;
+}
+.trendyol-btn-add-cart.loading {
+    opacity: 0.75;
+    cursor: wait;
+    pointer-events: none;
+}
+.trendyol-btn-add-cart.is-added {
+    background: #16a34a;
+    border-color: #16a34a;
     color: #ffffff;
 }
 /* Kargo Kampanya Banner & Kural Rozetleri */

@@ -791,6 +791,12 @@ function mis360_ajax_add_to_cart() {
         }
     }
 
+    if (function_exists('WC') && WC()->session) {
+        if (!WC()->session->has_session()) {
+            WC()->session->set_customer_session_cookie(true);
+        }
+    }
+
     $product_id   = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? 0));
     $quantity     = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
     $variation_id = absint($_POST['variation_id'] ?? 0);
@@ -814,6 +820,10 @@ function mis360_ajax_add_to_cart() {
 
         WC()->cart->calculate_totals();
 
+        if (WC()->session) {
+            WC()->session->set_customer_session_cookie(true);
+        }
+
         ob_start();
         mis360_render_drawer_cart_content();
         $drawer_html = ob_get_clean();
@@ -832,6 +842,11 @@ function mis360_ajax_add_to_cart() {
         $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
         $cart_hash = WC()->cart->get_cart_hash();
 
+        if (!headers_sent() && function_exists('wc_setcookie')) {
+            wc_setcookie('woocommerce_items_in_cart', $count);
+            wc_setcookie('woocommerce_cart_hash', $cart_hash);
+        }
+
         wp_send_json_success([
             'fragments' => $fragments,
             'count'     => $count,
@@ -841,10 +856,18 @@ function mis360_ajax_add_to_cart() {
             'message'   => __('Ürün sepete eklendi.', 'mis360-mobilya'),
         ]);
     } else {
+        $notices = function_exists('wc_get_notices') ? wc_get_notices('error') : [];
+        $msg = __('Ürün sepete eklenemedi.', 'mis360-mobilya');
+        if (!empty($notices)) {
+            $msg = wp_strip_all_tags($notices[0]['notice'] ?? $msg);
+            if (function_exists('wc_clear_notices')) {
+                wc_clear_notices();
+            }
+        }
         $data = [
             'error'       => true,
             'product_url' => apply_filters('woocommerce_cart_redirect_after_error', get_permalink($product_id), $product_id),
-            'message'     => __('Ürün sepete eklenemedi.', 'mis360-mobilya'),
+            'message'     => $msg,
         ];
         wp_send_json_error($data);
     }

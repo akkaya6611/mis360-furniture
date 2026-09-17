@@ -278,15 +278,10 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                     <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
                 </div>
 
-                <?php
-                $add_to_cart_url = $prod->add_to_cart_url();
-                $is_simple = $prod->is_type('simple');
-                $btn_classes = 'trendyol-btn-add-cart add_to_cart_button' . ($is_simple ? ' ajax_add_to_cart' : '');
-                ?>
-                <a href="<?php echo esc_url($add_to_cart_url); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($btn_classes); ?>" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>" rel="nofollow">
+                <button type="button" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="trendyol-btn-add-cart" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Sepete Ekle</span>
-                </a>
+                </button>
             </div>
         </div>
     </div>

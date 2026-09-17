@@ -232,10 +232,21 @@
 
             // 1. Ürün Kartlarından (Slider / Kategori / Anasayfa) Sepete Ekleme
             $(document).on('click', '.trendyol-btn-add-cart, .emdief-btn-add-cart, .ajax_add_to_cart', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
                 const $btn = $(this);
 
                 if ($btn.hasClass('product_type_variable') || $btn.hasClass('product_type_grouped') || $btn.hasClass('product_type_external')) {
-                    return;
+                    const dest = $btn.data('product_url') || $btn.attr('href');
+                    if (dest && dest !== '#' && !dest.startsWith('javascript:')) {
+                        window.location.href = dest;
+                    }
+                    return false;
+                }
+
+                if ($btn.hasClass('loading')) {
+                    return false;
                 }
 
                 let productId = $btn.data('product_id') || $btn.attr('data-product_id');
@@ -245,14 +256,7 @@
                     if (match) productId = match[1];
                 }
 
-                if (!productId) return;
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                if ($btn.hasClass('loading') || $btn.hasClass('is-added')) {
-                    return;
-                }
+                if (!productId) return false;
 
                 const qty = $btn.data('quantity') || 1;
                 const originalHtml = $btn.html();
@@ -286,35 +290,37 @@
                             // Sepet çekmecesini anında aç!
                             openCartDrawer();
 
-                            $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash, $btn]);
+                            $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash]);
                             $(document.body).trigger('wc_fragment_refresh');
 
                             setTimeout(() => {
                                 $btn.removeClass('is-added');
                                 $btn.html(originalHtml);
                             }, 2200);
-                        } else if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
+                        } else {
+                            $btn.html(originalHtml);
+                            const msg = (response && response.data && response.data.message) ? response.data.message : 'Ürün sepete eklenemedi.';
+                            console.warn('[mis360-mobilya] Sepete ekleme:', msg);
                         }
                     },
-                    error: function() {
+                    error: function(xhr, status, error) {
                         $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
-                        if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
-                        }
+                        console.error('[mis360-mobilya] AJAX Hatası:', status, error);
                     }
                 });
+
+                return false;
             });
 
             // 2. Çekmece İçinden Ürün Silme (Trash Butonu)
             $(document).on('click', '.remove-cart-item, a.remove', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+
                 const $btn = $(this);
                 const cartItemKey = $btn.data('cart_item_key') || $btn.attr('data-cart_item_key');
 
-                if (!cartItemKey) return;
-
-                e.preventDefault();
-                e.stopPropagation();
+                if (!cartItemKey) return false;
 
                 const $itemRow = $btn.closest('.emdief-cart-item, .cart-item-row');
                 if ($itemRow.length) {
@@ -332,21 +338,20 @@
                     success: function(response) {
                         if (response && response.success && response.data) {
                             applyFragments(response.data);
-                            $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash, $btn]);
+                            $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash]);
                             $(document.body).trigger('wc_fragment_refresh');
-                        } else if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
+                        } else if ($itemRow.length) {
+                            $itemRow.css({ opacity: '', 'pointer-events': '' });
                         }
                     },
                     error: function() {
                         if ($itemRow.length) {
                             $itemRow.css({ opacity: '', 'pointer-events': '' });
                         }
-                        if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
-                        }
                     }
                 });
+
+                return false;
             });
         }
     }

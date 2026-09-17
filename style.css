@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.24
+Version: 1.9.25
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -462,10 +462,27 @@ button, input, select, textarea {
     align-items: center !important;
     justify-content: center !important;
     gap: 6px !important;
+    cursor: pointer !important;
+    width: 100% !important;
+    font-family: inherit !important;
+    box-sizing: border-box !important;
+    outline: none !important;
+    line-height: 1.4 !important;
+    transition: all 0.2s ease !important;
 }
 .trendyol-btn-add-cart:hover {
     background: #ea580c !important;
     border-color: #ea580c !important;
+    color: #ffffff !important;
+}
+.trendyol-btn-add-cart.loading {
+    opacity: 0.75 !important;
+    cursor: wait !important;
+    pointer-events: none !important;
+}
+.trendyol-btn-add-cart.is-added {
+    background: #16a34a !important;
+    border-color: #16a34a !important;
     color: #ffffff !important;
 }
 @media (max-width: 768px) {
