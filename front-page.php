@@ -275,12 +275,6 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
             <!-- Fiyat & Sepete Ekle Alanı -->
             <div class="trendyol-card-bottom">
                 <div class="trendyol-pricing-row">
-                    <?php if ($is_on_sale && $regular_price > 0): 
-                        $real_pct = round((($regular_price - $current_price) / $regular_price) * 100);
-                    ?>
-                        <span class="tag-discount-pct">-%<?php echo esc_html($real_pct); ?></span>
-                        <del class="old-price"><?php echo number_format($regular_price, 0, ',', '.'); ?> TL</del>
-                    <?php endif; ?>
                     <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
                 </div>
 
@@ -376,13 +370,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                         <span class="title-icon">⚡</span>
                         <span>Öne Çıkan Modeller</span>
                     </h2>
-                    <div class="trendyol-countdown-box">
-                        <span class="countdown-digit countdown-hours">05</span>
-                        <span class="countdown-colon">:</span>
-                        <span class="countdown-digit countdown-mins">06</span>
-                        <span class="countdown-colon">:</span>
-                        <span class="countdown-digit countdown-secs">36</span>
-                    </div>
+
                 </div>
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="trendyol-view-all-link">
                     <span>Tümünü gör</span>
