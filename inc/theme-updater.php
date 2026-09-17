@@ -2,10 +2,11 @@
 /**
  * Mis360 Mobilya - GitHub Otomatik Tema Güncelleyici
  *
- * Bu modül, GitHub üzerindeki 'main' dalını kontrol ederek WordPress
- * panelinde yerel güncelleme bildirimleri sunar ve tek tıkla güncelleme sağlar.
+ * GitHub Releases API ve Main dalı üzerinden gerçek zamanlı kontrol sağlar.
+ * Hem 'mis360-mobilya' hem de 'mis360-furniture' klasör adlarını dinamik olarak destekler.
  *
  * @package Mis360-Mobilya
+ * @version 1.9.21
  */
 
 if (!defined('ABSPATH')) {
@@ -20,7 +21,9 @@ class Mis360_Theme_Updater {
     private $github_branch;
 
     public function __construct() {
-        $this->theme_slug    = 'mis360-mobilya';
+        // Aktif tema klasör adını dinamik olarak al
+        $active_theme        = wp_get_theme();
+        $this->theme_slug    = $active_theme->exists() ? $active_theme->get_stylesheet() : 'mis360-mobilya';
         $this->github_user   = 'akkaya6611';
         $this->github_repo   = 'mis360-furniture';
         $this->github_branch = 'main';
@@ -37,17 +40,20 @@ class Mis360_Theme_Updater {
     }
 
     /**
-     * Güncellemeyi anında zorlamak için transient temizleyici
+     * Güncellemeyi anında zorlamak için transient ve önbellek temizleyici
      */
     public function force_check_listener() {
         if (isset($_GET['force-check']) && current_user_can('update_themes')) {
             delete_transient('mis360_github_update_data');
             delete_site_transient('update_themes');
+            if (function_exists('wp_clean_themes_cache')) {
+                wp_clean_themes_cache();
+            }
         }
     }
 
     /**
-     * GitHub üzerinden en güncel sürüm bilgisini çeker
+     * GitHub Releases API üzerinden en güncel sürüm bilgisini çeker (0 CDN Gecikmesi)
      */
     private function get_remote_theme_data($force = false) {
         $transient_key = 'mis360_github_update_data';
@@ -57,60 +63,94 @@ class Mis360_Theme_Updater {
 
         if (!$force && !isset($_GET['force-check']) && !$is_update_page) {
             $cached = get_transient($transient_key);
-            if ($cached !== false) {
+            if ($cached !== false && is_array($cached)) {
                 return $cached;
             }
         }
 
-        $raw_url = sprintf(
-            'https://raw.githubusercontent.com/%s/%s/%s/style.css?t=%d',
-            $this->github_user,
-            $this->github_repo,
-            $this->github_branch,
-            time()
-        );
-
         $headers = [
             'User-Agent' => 'WordPress-Theme-Updater',
+            'Accept'     => 'application/vnd.github.v3+json',
         ];
         if (!empty($this->github_token)) {
             $headers['Authorization'] = 'Bearer ' . $this->github_token;
         }
 
-        $args = [
+        // 1. Önce doğrudan GitHub Releases API'yi dene (En güncel ve kesin yol)
+        $api_url = sprintf('https://api.github.com/repos/%s/%s/releases/latest', $this->github_user, $this->github_repo);
+        $response = wp_remote_get($api_url, [
             'headers'   => $headers,
-            'timeout'   => 15,
+            'timeout'   => 12,
             'sslverify' => false,
-        ];
+        ]);
 
-        $response = wp_remote_get($raw_url, $args);
+        $remote_version = null;
+        $package_url    = null;
 
-        if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+            $body = json_decode(wp_remote_retrieve_body($response), true);
+            if (!empty($body['tag_name'])) {
+                $remote_version = ltrim($body['tag_name'], 'vV');
+                
+                // Assetlerden uygun zip'i bul
+                if (!empty($body['assets']) && is_array($body['assets'])) {
+                    foreach ($body['assets'] as $asset) {
+                        if ($asset['name'] === $this->theme_slug . '.zip' || $asset['name'] === 'mis360-mobilya.zip') {
+                            $package_url = $asset['browser_download_url'];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 2. API yanıt vermezse style.css fallback
+        if (empty($remote_version)) {
+            $raw_url = sprintf(
+                'https://raw.githubusercontent.com/%s/%s/%s/style.css?t=%d',
+                $this->github_user,
+                $this->github_repo,
+                $this->github_branch,
+                time()
+            );
+
+            $raw_response = wp_remote_get($raw_url, [
+                'headers'   => ['User-Agent' => 'WordPress-Theme-Updater'],
+                'timeout'   => 12,
+                'sslverify' => false,
+            ]);
+
+            if (!is_wp_error($raw_response) && wp_remote_retrieve_response_code($raw_response) === 200) {
+                $style_content = wp_remote_retrieve_body($raw_response);
+                if (preg_match('/Version:\s*([^
+]+)/i', $style_content, $matches)) {
+                    $remote_version = trim($matches[1]);
+                }
+            }
+        }
+
+        if (empty($remote_version)) {
             return false;
         }
 
-        $style_content = wp_remote_retrieve_body($response);
-
-        // Version bilgisini ayrıştır
-        if (!preg_match('/Version:\s*([^\r\n]+)/i', $style_content, $matches)) {
-            return false;
+        if (empty($package_url)) {
+            $package_url = sprintf(
+                'https://github.com/%s/%s/releases/download/v%s/%s.zip',
+                $this->github_user,
+                $this->github_repo,
+                $remote_version,
+                $this->theme_slug
+            );
         }
-
-        $remote_version = trim($matches[1]);
 
         $data = [
             'version'     => $remote_version,
-            'package_url' => sprintf(
-                'https://github.com/%s/%s/releases/download/v%s/mis360-mobilya.zip',
-                $this->github_user,
-                $this->github_repo,
-                $remote_version
-            ),
+            'package_url' => $package_url,
             'repo_url'    => sprintf('https://github.com/%s/%s', $this->github_user, $this->github_repo),
         ];
 
-        // 10 dakika önbelleğe al
-        set_transient($transient_key, $data, 10 * MINUTE_IN_SECONDS);
+        // 5 dakika önbelleğe al
+        set_transient($transient_key, $data, 5 * MINUTE_IN_SECONDS);
 
         return $data;
     }
@@ -124,30 +164,28 @@ class Mis360_Theme_Updater {
         }
 
         $remote_data = $this->get_remote_theme_data();
-
         if (!$remote_data) {
             return $transient;
         }
 
-        // Hem aktif tema slug'ını hem de mis360-mobilya ve mis360-furniture'ı kontrol et
-        $current_slug = function_exists('get_template') ? get_template() : $this->theme_slug;
-        $target_slugs = array_unique([$this->theme_slug, $current_slug, 'mis360-mobilya', 'mis360-furniture']);
+        $active_theme  = wp_get_theme();
+        $active_slug   = $active_theme->exists() ? $active_theme->get_stylesheet() : $this->theme_slug;
+        $local_version = $active_theme->exists() ? $active_theme->get('Version') : '1.0.0';
 
-        foreach ($target_slugs as $slug) {
-            $theme = wp_get_theme($slug);
-            if ($theme->exists()) {
-                $local_version = $theme->get('Version');
-                if (version_compare($remote_data['version'], $local_version, '>')) {
-                    $transient->response[$slug] = [
-                        'theme'        => $slug,
-                        'new_version'  => $remote_data['version'],
-                        'url'          => $remote_data['repo_url'],
-                        'package'      => $remote_data['package_url'],
-                        'requires'     => '6.0',
-                        'requires_php' => '7.4',
-                    ];
-                }
-            }
+        if (version_compare($remote_data['version'], $local_version, '>')) {
+            $transient->response[$active_slug] = [
+                'theme'        => $active_slug,
+                'new_version'  => $remote_data['version'],
+                'url'          => $remote_data['repo_url'],
+                'package'      => $remote_data['package_url'],
+                'requires'     => '6.0',
+                'requires_php' => '7.4',
+            ];
+        } else {
+            // Sürüm zaten güncelse eski bildirimleri tamamen temizle
+            unset($transient->response[$active_slug]);
+            unset($transient->response['mis360-mobilya']);
+            unset($transient->response['mis360-furniture']);
         }
 
         return $transient;
@@ -161,40 +199,43 @@ class Mis360_Theme_Updater {
             return;
         }
 
+        $active_theme = wp_get_theme();
+        $active_slug  = $active_theme->exists() ? $active_theme->get_stylesheet() : $this->theme_slug;
+        $local_ver    = $active_theme->exists() ? $active_theme->get('Version') : '1.0.0';
+
         $remote_data = $this->get_remote_theme_data();
         if (!$remote_data) {
             return;
         }
 
-        $current_slug = function_exists('get_template') ? get_template() : $this->theme_slug;
-        $theme = wp_get_theme($current_slug);
-        $local_ver = $theme->exists() ? $theme->get('Version') : '1.0.0';
-
-        if (version_compare($remote_data['version'], $local_ver, '>')) {
-            $update_url = wp_nonce_url(
-                admin_url('update.php?action=upgrade-theme&theme=' . urlencode($current_slug)),
-                'upgrade-theme_' . $current_slug
-            );
-            ?>
-            <div class="notice notice-warning is-dismissible" style="border-left-color: #ff6000; padding: 14px 18px; margin-top: 15px;">
-                <p style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 8px;">
-                    🚀 Mis360-Mobilya Tema Güncellemesi Mevcut!
-                </p>
-                <p style="margin: 0 0 10px; color: #475569;">
-                    GitHub üzerinde yeni bir sürüm yayınlandı (<strong>v<?php echo esc_html($remote_data['version']); ?></strong>). Mevcut yüklü sürümünüz: <code>v<?php echo esc_html($local_ver); ?></code>.
-                </p>
-                <p style="margin: 0;">
-                    <a href="<?php echo esc_url($update_url); ?>" class="button button-primary" style="background: #ff6000; border-color: #e05300; font-weight: 700; padding: 4px 16px; height: auto;">
-                        Şimdi Tek Tıkla Temayı Güncelle
-                    </a>
-                    &nbsp;
-                    <a href="<?php echo esc_url(admin_url('update-core.php?force-check=1')); ?>" class="button button-secondary">
-                        🔄 Kontrolü Yenile
-                    </a>
-                </p>
-            </div>
-            <?php
+        // Eğer mevcut sürüm zaten uzaktaki sürüme eşit ya da daha büyükse bildirim gösterme
+        if (version_compare($remote_data['version'], $local_ver, '<=')) {
+            return;
         }
+
+        $update_url = wp_nonce_url(
+            admin_url('update.php?action=upgrade-theme&theme=' . urlencode($active_slug)),
+            'upgrade-theme_' . $active_slug
+        );
+        ?>
+        <div class="notice notice-warning is-dismissible" style="border-left-color: #ff6000; padding: 14px 18px; margin-top: 15px;">
+            <p style="font-size: 15px; font-weight: 700; color: #1e293b; margin: 0 0 8px;">
+                🚀 Mis360-Mobilya Tema Güncellemesi Mevcut!
+            </p>
+            <p style="margin: 0 0 10px; color: #475569;">
+                GitHub üzerinde yeni bir sürüm yayınlandı (<strong>v<?php echo esc_html($remote_data['version']); ?></strong>). Mevcut yüklü sürümünüz: <code>v<?php echo esc_html($local_ver); ?></code>.
+            </p>
+            <p style="margin: 0;">
+                <a href="<?php echo esc_url($update_url); ?>" class="button button-primary" style="background: #ff6000; border-color: #e05300; font-weight: 700; padding: 4px 16px; height: auto;">
+                    Şimdi Tek Tıkla Temayı Güncelle
+                </a>
+                &nbsp;
+                <a href="<?php echo esc_url(admin_url('update-core.php?force-check=1')); ?>" class="button button-secondary">
+                    🔄 Kontrolü Yenile
+                </a>
+            </p>
+        </div>
+        <?php
     }
 
     /**
@@ -210,17 +251,18 @@ class Mis360_Theme_Updater {
     }
 
     /**
-     * GitHub zipball açıldığında oluşan 'user-repo-sha' klasör adını 'mis360-furniture' olarak düzeltir
+     * GitHub zip açıldığında oluşan klasör adını aktif tema dizinine ('mis360-mobilya' veya 'mis360-furniture') eşitler
      */
     public function fix_unpacked_theme_directory($source, $remote_source, $upgrader) {
         global $wp_filesystem;
 
-        $target_dir_name = $this->theme_slug;
+        $active_theme    = wp_get_theme();
+        $target_dir_name = $active_theme->exists() ? $active_theme->get_stylesheet() : $this->theme_slug;
         $is_our_theme    = false;
 
-        if (isset($upgrader->skin->theme) && in_array($upgrader->skin->theme, ['mis360-mobilya', 'mis360-furniture'], true)) {
+        if (isset($upgrader->skin->theme) && in_array($upgrader->skin->theme, ['mis360-mobilya', 'mis360-furniture', $target_dir_name], true)) {
             $is_our_theme = true;
-        } elseif (isset($upgrader->skin->theme_info) && is_object($upgrader->skin->theme_info) && in_array($upgrader->skin->theme_info->get_stylesheet(), ['mis360-mobilya', 'mis360-furniture'], true)) {
+        } elseif (isset($upgrader->skin->theme_info) && is_object($upgrader->skin->theme_info)) {
             $is_our_theme = true;
         } elseif (strpos(basename($source), 'mis360') !== false || strpos(basename($source), $this->github_repo) !== false || strpos(basename($source), $this->github_user) !== false) {
             $is_our_theme = true;
@@ -242,16 +284,12 @@ class Mis360_Theme_Updater {
      * 'Sürüm ayrıntılarını görüntüle' tıklandığında açılan popup penceresi
      */
     public function theme_popup_details($result, $action, $args) {
-        if ($action !== 'theme_information' || !isset($args->slug) || $args->slug !== $this->theme_slug) {
+        if ($action !== 'theme_information' || !isset($args->slug) || !in_array($args->slug, [$this->theme_slug, 'mis360-mobilya', 'mis360-furniture'], true)) {
             return $result;
         }
 
         $remote_data = $this->get_remote_theme_data();
-
-        $theme = wp_get_theme($this->theme_slug);
-        if (!$theme->exists()) {
-            $theme = wp_get_theme();
-        }
+        $theme = wp_get_theme();
 
         $res = new stdClass();
         $res->name          = $theme->get('Name');
