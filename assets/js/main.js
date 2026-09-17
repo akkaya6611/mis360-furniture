@@ -153,9 +153,46 @@ function mis360Init() {
         }
     }
 
+    // Global erişim
+    window.mis360OpenAuthModal = openAuthModal;
+    window.mis360CloseAuthModal = closeAuthModal;
+
     if (authTrigger) authTrigger.addEventListener('click', openAuthModal);
     if (authClose) authClose.addEventListener('click', closeAuthModal);
     if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
+
+    // Siparişi Tamamla tıklandığında üye değilse giriş/kayıt modalını akıllıca aç
+    document.addEventListener('click', (e) => {
+        const checkoutAuthBtn = e.target.closest('.emdief-checkout-auth-btn');
+        if (!checkoutAuthBtn) return;
+
+        e.preventDefault();
+        if (typeof window.mis360CloseCartDrawer === 'function') {
+            window.mis360CloseCartDrawer();
+        }
+
+        const modal = document.getElementById('emdief-auth-modal');
+        if (modal) {
+            const checkoutUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : checkoutAuthBtn.getAttribute('href');
+            const loginRedir = modal.querySelector('#emdief-login-redirect, input[name="redirect_to"]');
+            if (loginRedir && checkoutUrl) {
+                loginRedir.value = checkoutUrl;
+            }
+            const regRedir = modal.querySelector('#emdief-reg-redirect, input[name="redirect"]');
+            if (regRedir && checkoutUrl) {
+                regRedir.value = checkoutUrl;
+            }
+
+            const modalSub = modal.querySelector('.auth-modal-subtitle');
+            if (modalSub) {
+                modalSub.textContent = 'Siparişinizi tamamlamak ve kargo takibinizi yapabilmek için lütfen giriş yapın veya ücretsiz üye olun.';
+            }
+
+            openAuthModal();
+        } else {
+            window.location.href = checkoutAuthBtn.getAttribute('href');
+        }
+    });
 
     // Modal ??i Tab De?i?imi (Giri? Yap / Kay?t Ol)
     const tabButtons = document.querySelectorAll('.auth-tab-btn');

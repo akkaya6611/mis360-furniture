@@ -479,7 +479,7 @@ if (!defined('ABSPATH')) {
                             <span><?php esc_html_e('Beni Hatırla', 'mis360-mobilya'); ?></span>
                         </label>
                     </div>
-                    <input type="hidden" name="redirect_to" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
+                    <input type="hidden" name="redirect_to" id="emdief-login-redirect" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
                     <button type="submit" class="emdief-btn btn-primary btn-block btn-lg auth-submit-btn">
                         <span><?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?></span>
                         <?php echo function_exists('mis360_icon') ? mis360_icon('arrow-right', 18) : '→'; ?>
@@ -501,6 +501,7 @@ if (!defined('ABSPATH')) {
                         </div>
                         <?php wp_nonce_field('woocommerce-register', 'woocommerce-register-nonce'); ?>
                         <input type="hidden" name="register" value="1">
+                        <input type="hidden" name="redirect" id="emdief-reg-redirect" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
                     <?php else: ?>
                         <div class="form-group">
                             <label for="emdief-reg-user"><?php esc_html_e('Kullanıcı Adı', 'mis360-mobilya'); ?></label>

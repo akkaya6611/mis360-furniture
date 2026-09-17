@@ -606,15 +606,15 @@ function mis360_render_drawer_cart_content() {
 
 
 
-                    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block">
-
-
-
-                        <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
-
-
-
-                    </a>
+                    <?php if (is_user_logged_in()): ?>
+                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block">
+                            <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
+                        </a>
+                    <?php else: ?>
+                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout">
+                            <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
+                        </a>
+                    <?php endif; ?>
 
 
 
@@ -7015,3 +7015,44 @@ function mis360_render_seo_topical_silo() {
     </section>
     <?php
 }
+
+/* ==========================================================================
+   ÖDEME AŞAMASINDA ZORUNLU ÜYELİK & AKILLI YÖNLENDİRME (v1.9.30)
+   Sepete ekleme serbesttir; ödeme (checkout) aşamasında üyelik zorunludur.
+   ========================================================================== */
+
+// 1. Misafir ödemesini kapat (Sipariş için üyelik şart)
+add_filter('pre_option_woocommerce_enable_guest_checkout', '__return_empty_string'); // 'no'
+
+// 2. Ödeme sayfasında hesap oluşturma ve girişi aktif tut
+add_filter('pre_option_woocommerce_enable_signup_and_login_from_checkout', function() {
+    return 'yes';
+});
+
+// 3. E-posta adresinden otomatik kullanıcı adı üret (Müşteriyi ekstra kullanıcı adı yazmakla yormaz)
+add_filter('pre_option_woocommerce_registration_generate_username', function() {
+    return 'yes';
+});
+
+// 4. Kullanıcı ödeme sayfasında hesap şifresini kendisi belirlesin
+add_filter('pre_option_woocommerce_registration_generate_password', '__return_empty_string');
+
+// 5. Sepet doluyken giriş veya kayıt yapıldığında doğrudan Ödeme Sayfasına (Checkout) yönlendir
+add_filter('woocommerce_login_redirect', 'mis360_redirect_to_checkout_after_auth', 10, 2);
+add_filter('woocommerce_registration_redirect', 'mis360_redirect_to_checkout_after_auth', 10, 1);
+function mis360_redirect_to_checkout_after_auth($redirect, $user = null) {
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        return wc_get_checkout_url();
+    }
+    return $redirect;
+}
+
+// 6. Standart wp-login üzerinden giriş yapıldığında da sepet doluysa ödeme sayfasına gönder
+add_filter('login_redirect', function($redirect_to, $request, $user) {
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty() && !is_wp_error($user) && is_a($user, 'WP_User')) {
+        if (!in_array('administrator', (array) $user->roles, true)) {
+            return wc_get_checkout_url();
+        }
+    }
+    return $redirect_to;
+}, 10, 3);

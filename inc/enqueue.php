@@ -81,6 +81,8 @@ function mis360_mobilya_scripts() {
             'currencySymbol'    => function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : 'TL',
             'addedToCartText'   => __('Sepete Eklendi!', 'mis360-mobilya'),
             'addingText'        => __('Ekleniyor...', 'mis360-mobilya'),
+            'isUserLoggedIn'    => is_user_logged_in(),
+            'checkoutUrl'       => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/odeme/'),
         ]);
     }
 }
