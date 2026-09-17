@@ -214,7 +214,7 @@ function mis360_render_drawer_cart_content() {
 
 
 
-    <div id="emdief-drawer-cart-content" class="emdief-drawer-body">
+    <div id="emdief-drawer-cart-content" class="emdief-drawer-body" style="opacity: 1 !important;">
 
 
 

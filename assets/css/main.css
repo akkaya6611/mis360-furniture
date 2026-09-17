@@ -1163,6 +1163,46 @@
   overflow: hidden !important;
   transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 2;
+  opacity: 1 !important;
+}
+
+/* Çekmece Sepet Siliklik ve WooCommerce BlockUI Koruması */
+#emdief-drawer-cart-content,
+.emdief-drawer-body,
+.emdief-drawer-items,
+.emdief-drawer-item,
+.emdief-drawer-footer {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  filter: none !important;
+  -webkit-filter: none !important;
+}
+
+#emdief-drawer-cart-content.updating,
+#emdief-drawer-cart-content.loading,
+#emdief-drawer-cart-content.processing,
+.emdief-drawer-body.updating,
+.emdief-drawer-body.loading,
+.emdief-drawer-body.processing {
+  opacity: 1 !important;
+  filter: none !important;
+}
+
+#emdief-cart-drawer .blockUI,
+#emdief-cart-drawer .blockOverlay,
+#emdief-cart-drawer .blockElement,
+#emdief-drawer-cart-content .blockUI,
+#emdief-drawer-cart-content .blockOverlay,
+#emdief-drawer-cart-content .blockElement,
+.emdief-drawer-body .blockUI,
+.emdief-drawer-body .blockOverlay,
+.emdief-drawer-panel .blockUI,
+.emdief-drawer-panel .blockOverlay {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .drawer-left {

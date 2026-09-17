@@ -65,6 +65,11 @@
                     window.mis360SyncCartState();
                 }
             }
+
+            // Çekmecede olası donma, opaklık düşüklüğü veya blockUI varsa derhal temizle
+            if (typeof window.mis360UnblockDrawerCart === 'function') {
+                window.mis360UnblockDrawerCart();
+            }
         }
 
         function closeCartDrawer() {
@@ -147,6 +152,36 @@
                 wc_add_to_cart_params.cart_redirect_after_add = 'no';
             }
 
+            // Çekmecede olası donma, opaklık düşüklüğü veya blockUI varsa derhal temizle
+            function unblockDrawerCart() {
+                const $drawer = $('#emdief-drawer-cart-content');
+                if ($drawer.length) {
+                    $drawer.stop(true, true)
+                           .removeClass('updating loading processing')
+                           .css({
+                               'opacity': '1',
+                               'pointer-events': 'auto',
+                               'filter': 'none',
+                               '-webkit-filter': 'none'
+                           });
+                    if (typeof $drawer.unblock === 'function') {
+                        $drawer.unblock();
+                    }
+                    $drawer.find('.blockUI, .blockOverlay, .blockElement').remove();
+                }
+                const $panel = $('.emdief-drawer-panel');
+                if ($panel.length) {
+                    $panel.stop(true, true).css({ 'opacity': '1', 'filter': 'none' });
+                    if (typeof $panel.unblock === 'function') {
+                        $panel.unblock();
+                    }
+                    $panel.find('.blockUI, .blockOverlay, .blockElement').remove();
+                }
+                $('#emdief-cart-drawer').find('.blockUI, .blockOverlay, .blockElement').remove();
+            }
+
+            window.mis360UnblockDrawerCart = unblockDrawerCart;
+
             // Tüm sepet fragmanlarını ve sayaçlarını DOM üzerinde anında güncelle
             function applyFragments(data) {
                 if (!data) return;
@@ -172,6 +207,11 @@
                 if (data.subtotal !== undefined) {
                     $('.emdief-cart-total').html(data.subtotal);
                 }
+
+                // Çekmecedeki olası blockUI, fadeTo ve siliklik durumlarını anında ve periyodik olarak temizle
+                unblockDrawerCart();
+                setTimeout(unblockDrawerCart, 50);
+                setTimeout(unblockDrawerCart, 450);
 
                 // 4. SessionStorage'a kaydet (Önbellekli anasayfada sıfır gecikmeyle göstermek için)
                 try {
@@ -223,11 +263,21 @@
             });
 
             // WooCommerce standart olaylarını dinle
-            $(document.body).on('added_to_cart removed_from_cart wc_fragments_refreshed wc_fragments_loaded', function(e, fragments) {
+            $(document.body).on('added_to_cart removed_from_cart wc_fragments_refreshed wc_fragments_loaded wc_fragment_refresh', function(e, fragments) {
                 if (fragments) {
                     applyFragments({ fragments: fragments });
                 }
+                unblockDrawerCart();
+                setTimeout(unblockDrawerCart, 50);
+                setTimeout(unblockDrawerCart, 450);
                 syncCartState();
+            });
+
+            $(document).ajaxComplete(function(e, xhr, settings) {
+                if (settings && settings.url && (settings.url.indexOf('wc-ajax=') !== -1 || settings.url.indexOf('admin-ajax.php') !== -1)) {
+                    unblockDrawerCart();
+                    setTimeout(unblockDrawerCart, 100);
+                }
             });
 
             // 1. Ürün Kartlarından (Slider / Kategori / Anasayfa) Sepete Ekleme
@@ -289,6 +339,9 @@
 
                             // Sepet çekmecesini anında aç!
                             openCartDrawer();
+                            unblockDrawerCart();
+                            setTimeout(unblockDrawerCart, 100);
+                            setTimeout(unblockDrawerCart, 500);
 
                             $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash]);
                             $(document.body).trigger('wc_fragment_refresh');
@@ -338,10 +391,14 @@
                     success: function(response) {
                         if (response && response.success && response.data) {
                             applyFragments(response.data);
+                            unblockDrawerCart();
+                            setTimeout(unblockDrawerCart, 100);
+                            setTimeout(unblockDrawerCart, 500);
                             $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash]);
                             $(document.body).trigger('wc_fragment_refresh');
                         } else if ($itemRow.length) {
                             $itemRow.css({ opacity: '', 'pointer-events': '' });
+                            unblockDrawerCart();
                         }
                     },
                     error: function() {
