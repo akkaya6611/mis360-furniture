@@ -7247,6 +7247,50 @@ function mis360_save_register_phone_field($customer_id) {
 }
 
 // 14. Telefon Numarası veya E-posta ile Giriş Yapabilme Desteği
+function mis360_find_user_by_phone($phone) {
+    $clean = preg_replace('/[^0-9]/', '', (string)$phone);
+    if (strlen($clean) < 10) {
+        return null;
+    }
+
+    $search_variants = [$clean];
+    if (strpos($clean, '90') === 0 && strlen($clean) === 12) {
+        $search_variants[] = substr($clean, 2);
+        $search_variants[] = '0' . substr($clean, 2);
+    } elseif (strpos($clean, '0') === 0 && strlen($clean) === 11) {
+        $search_variants[] = substr($clean, 1);
+        $search_variants[] = '90' . substr($clean, 1);
+    } elseif (strlen($clean) === 10) {
+        $search_variants[] = '0' . $clean;
+        $search_variants[] = '90' . $clean;
+    }
+
+    $meta_query = ['relation' => 'OR'];
+    foreach (array_unique($search_variants) as $var) {
+        $meta_query[] = [
+            'key'     => 'billing_phone_clean',
+            'value'   => $var,
+            'compare' => '='
+        ];
+        $meta_query[] = [
+            'key'     => 'billing_phone',
+            'value'   => $var,
+            'compare' => 'LIKE'
+        ];
+    }
+
+    $found_users = get_users([
+        'meta_query' => $meta_query,
+        'number'     => 1
+    ]);
+
+    if (!empty($found_users)) {
+        return reset($found_users);
+    }
+
+    return null;
+}
+
 add_filter('authenticate', 'mis360_authenticate_by_phone_or_email', 25, 3);
 function mis360_authenticate_by_phone_or_email($user, $username, $password) {
     if ($user instanceof WP_User) {
@@ -7256,46 +7300,9 @@ function mis360_authenticate_by_phone_or_email($user, $username, $password) {
         return $user;
     }
 
-    $clean = preg_replace('/[^0-9]/', '', $username);
-    // En az 10 rakam girildiyse telefon numarası olarak ara
-    if (strlen($clean) >= 10) {
-        $search_variants = [$clean];
-        if (strpos($clean, '90') === 0 && strlen($clean) === 12) {
-            $search_variants[] = substr($clean, 2);
-            $search_variants[] = '0' . substr($clean, 2);
-        } elseif (strpos($clean, '0') === 0 && strlen($clean) === 11) {
-            $search_variants[] = substr($clean, 1);
-            $search_variants[] = '90' . substr($clean, 1);
-        } elseif (strlen($clean) === 10) {
-            $search_variants[] = '0' . $clean;
-            $search_variants[] = '90' . $clean;
-        }
-
-        $meta_query = ['relation' => 'OR'];
-        foreach ($search_variants as $var) {
-            $meta_query[] = [
-                'key'     => 'billing_phone_clean',
-                'value'   => $var,
-                'compare' => '='
-            ];
-            $meta_query[] = [
-                'key'     => 'billing_phone',
-                'value'   => $var,
-                'compare' => 'LIKE'
-            ];
-        }
-
-        $found_users = get_users([
-            'meta_query' => $meta_query,
-            'number'     => 1
-        ]);
-
-        if (!empty($found_users)) {
-            $matched_user = reset($found_users);
-            if (wp_check_password($password, $matched_user->user_pass, $matched_user->ID)) {
-                return $matched_user;
-            }
-        }
+    $matched_user = mis360_find_user_by_phone($username);
+    if ($matched_user && wp_check_password($password, $matched_user->user_pass, $matched_user->ID)) {
+        return $matched_user;
     }
 
     return $user;
@@ -7307,6 +7314,15 @@ add_action('wp_ajax_mis360_ajax_login', 'mis360_ajax_login_handler');
 function mis360_ajax_login_handler() {
     while (ob_get_level()) {
         ob_end_clean();
+    }
+
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $redirect = (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) ? wc_get_checkout_url() : home_url('/');
+        wp_send_json_success([
+            'message'  => sprintf(__('Oturumunuz zaten açık (%s). Yönlendiriliyorsunuz...', 'mis360-mobilya'), $current_user->user_email),
+            'redirect' => $redirect,
+        ]);
     }
 
     if (!empty($_POST['security'])) {
@@ -7367,6 +7383,15 @@ function mis360_ajax_register_handler() {
         ob_end_clean();
     }
 
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $redirect = (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) ? wc_get_checkout_url() : home_url('/');
+        wp_send_json_success([
+            'message'  => sprintf(__('Oturumunuz zaten açık (%s). Yönlendiriliyorsunuz...', 'mis360-mobilya'), $current_user->user_email),
+            'redirect' => $redirect,
+        ]);
+    }
+
     if (!empty($_POST['security'])) {
         wp_verify_nonce(sanitize_text_field($_POST['security']), 'mis360_cart_nonce');
     }
@@ -7375,6 +7400,7 @@ function mis360_ajax_register_handler() {
     $phone = sanitize_text_field($_POST['billing_phone'] ?? '');
     $password = $_POST['password'] ?? '';
 
+    // 1. E-posta Kontrolü
     if (empty($email) || !is_email($email)) {
         wp_send_json_error(['message' => __('Lütfen geçerli bir e-posta adresi giriniz.', 'mis360-mobilya')]);
     }
@@ -7383,11 +7409,18 @@ function mis360_ajax_register_handler() {
         wp_send_json_error(['message' => __('Bu e-posta adresiyle kayıtlı bir hesap zaten var. Lütfen "Giriş Yap" sekmesinden giriş yapın.', 'mis360-mobilya')]);
     }
 
+    // 2. Cep Telefonu Kontrolü
     $clean_phone = preg_replace('/[^0-9]/', '', $phone);
     if (empty($phone) || strlen($clean_phone) < 10 || strlen($clean_phone) > 13) {
         wp_send_json_error(['message' => __('Lütfen geçerli bir cep telefonu numarası giriniz (örn: 0 (5XX) XXX XX XX).', 'mis360-mobilya')]);
     }
 
+    $existing_phone_user = mis360_find_user_by_phone($clean_phone);
+    if ($existing_phone_user) {
+        wp_send_json_error(['message' => __('Bu cep telefonu numarası ile kayıtlı bir hesap zaten var. Lütfen "Giriş Yap" sekmesinden giriş yapın.', 'mis360-mobilya')]);
+    }
+
+    // 3. Şifre Kontrolü
     if (empty($password) || strlen($password) < 6) {
         wp_send_json_error(['message' => __('Şifreniz en az 6 karakterden oluşmalıdır.', 'mis360-mobilya')]);
     }

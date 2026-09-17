@@ -355,11 +355,8 @@ function mis360Init() {
 
             const formData = new FormData(form);
             
-            // WordPress kanonik AJAX adresi
-            let ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
-            if (!ajaxUrl && window.location && window.location.origin) {
-                ajaxUrl = window.location.origin + '/wp-admin/admin-ajax.php';
-            }
+            // WordPress kanonik AJAX adresi (Her zaman geçerli origin ile göreceli)
+            let ajaxUrl = '/wp-admin/admin-ajax.php';
 
             const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
 
@@ -438,7 +435,8 @@ function mis360Init() {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHtml;
                 }
-                showFeedback('error', 'Bağlantı hatası oluştu. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                const errMsg = (err && err.message) ? err.message : 'Bağlantı hatası';
+                showFeedback('error', 'İşlem gerçekleştirilemedi (' + errMsg + '). Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
             });
         });
     });
