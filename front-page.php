@@ -231,21 +231,24 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         $discount_pct  = 20;
     }
 
-    // Sepette İndirimli Fiyat (%10 Kupon/Sepet indirimi)
-    $basket_price = round($current_price * 0.90, 2);
+    // Flaş Ürünler için 25 TL Sepet İndirimi; Diğerleri Son Fiyat
+    $is_flash_deal = ($badge_type === 'flash');
+    $basket_price  = $is_flash_deal ? max(0, $current_price - 25) : $current_price;
 
     // Puan ve Değerlendirme
     $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
     $review_count = 160 + (($id * 13) % 240);
 
-    // Zarif, Doğal Montessori Rozetleri (Neon yerine ahşap ve doğal tonlar)
-    $badge_configs = [
-        ['text' => 'Çok Satan', 'class' => 'badge-pill-amber'],
-        ['text' => 'Flaş Fırsat', 'class' => 'badge-pill-terracotta'],
-        ['text' => 'Yeni Sezon', 'class' => 'badge-pill-sage'],
-        ['text' => 'Montessori', 'class' => 'badge-pill-wood'],
-    ];
-    $badge = $badge_configs[$card_index % count($badge_configs)];
+    // Rozet: Flaş slider'ında Flaş Fırsat, diğerlerinde kategoriye uygun rozet
+    if ($badge_type === 'flash') {
+        $badge = ['text' => 'Flaş Fırsat', 'class' => 'badge-pill-terracotta'];
+    } elseif ($badge_type === 'bestseller') {
+        $badge = ['text' => 'Çok Satan', 'class' => 'badge-pill-amber'];
+    } elseif ($badge_type === 'new') {
+        $badge = ['text' => 'Yeni Sezon', 'class' => 'badge-pill-sage'];
+    } else {
+        $badge = ['text' => 'Montessori', 'class' => 'badge-pill-wood'];
+    }
     ?>
     <div class="trendyol-card theme-<?php echo esc_attr($color_theme); ?>">
         <div class="trendyol-card-thumb">
@@ -306,11 +309,13 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                     <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
                 </div>
 
-                <div class="trendyol-basket-row">
-                    <span>Sepette</span> <strong><?php echo number_format($basket_price, 0, ',', '.'); ?> TL</strong>
-                </div>
+                <?php if ($is_flash_deal && $basket_price < $current_price): ?>
+                    <div class="trendyol-basket-row">
+                        <span>Sepette 25 TL İndirim</span> <strong><?php echo number_format($basket_price, 0, ',', '.'); ?> TL</strong>
+                    </div>
+                <?php endif; ?>
 
-                <a href="<?php echo esc_url($prod->add_to_cart_url()); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="trendyol-btn-add-cart ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
+                <a href="<?php echo esc_url('?add-to-cart=' . $id . ($is_flash_deal ? '&flash_deal=1' : '')); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" data-flash-deal="<?php echo $is_flash_deal ? '1' : '0'; ?>" class="trendyol-btn-add-cart ajax_add_to_cart add_to_cart_button" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Sepete Ekle</span>
                 </a>

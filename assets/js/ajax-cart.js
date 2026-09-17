@@ -1,5 +1,6 @@
 /**
  * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
+ * Version: 1.9.16
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -72,11 +73,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = e.target.closest('a');
         if (!link) return;
 
-        // İstisnalar: Silme butonu, sepet açma tetikleyicisi, sayfa içi hash ve javascript linkleri
         if (link.classList.contains('remove-cart-item') ||
             link.closest('.remove-cart-item') ||
             link.id === 'emdief-cart-trigger' ||
             link.id === 'bottomNavCartBtn' ||
+            link.classList.contains('add_to_cart_button') ||
+            link.classList.contains('trendyol-btn-add-cart') ||
+            link.classList.contains('emdief-btn-add-cart') ||
             link.getAttribute('role') === 'button') {
             return;
         }
@@ -86,25 +89,180 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Sayfa geçişi başladı -> sepeti hemen kapat
         closeCartDrawer();
     }, { passive: true });
 
-    // Sayfa geri/ileri (bfcache) veya geçişlerinde açık kalmasını önle
     window.addEventListener('pageshow', closeCartDrawer);
     window.addEventListener('popstate', closeCartDrawer);
     window.addEventListener('beforeunload', closeCartDrawer);
 
-    // jQuery WooCommerce Event Listeners & AJAX Item Removal
+    // =========================================================================
+    // KESİN VE GÜVENİLİR AJAX SEPETE EKLE & SİLME MOTORU
+    // =========================================================================
     if (window.jQuery) {
         const $ = window.jQuery;
+        const ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
+        const nonce   = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
+        const addingText = (window.mis360Data && window.mis360Data.addingText) ? window.mis360Data.addingText : 'Ekleniyor...';
+        const addedText  = (window.mis360Data && window.mis360Data.addedToCartText) ? window.mis360Data.addedToCartText : '✓ Sepete Eklendi!';
 
-        // Ürün sepete eklendiğinde çekmeceyi aç
-        $(document.body).on('added_to_cart', (event, fragments, cart_hash, $button) => {
-            openCartDrawer();
+        // Fragmanları DOM üzerinde güncelleme fonksiyonu
+        function updateFragments(fragments) {
+            if (!fragments) return;
+            $.each(fragments, function(selector, html) {
+                $(selector).replaceWith(html);
+            });
+        }
+
+        // 1. Ürün Kartlarından (Slider / Kategori) Tıklamayla Sepete Ekleme
+        $(document).on('click', '.trendyol-btn-add-cart, .emdief-btn-add-cart, .ajax_add_to_cart, .add_to_cart_button:not(.product_type_variable):not(.product_type_grouped)', function(e) {
+            const $btn = $(this);
+            let productId = $btn.data('product_id') || $btn.attr('data-product_id');
+
+            // Eğer href içinde ?add-to-cart=123 varsa ayrıştır
+            if (!productId) {
+                const href = $btn.attr('href') || '';
+                const match = href.match(/add-to-cart=([0-9]+)/);
+                if (match) {
+                    productId = match[1];
+                }
+            }
+
+            if (!productId) {
+                return; // Varyasyonlu veya harici ürünse normal linke izin ver
+            }
+
+            // Sayfanın sepet URL'sine yönlenmesini %100 durdur
+            e.preventDefault();
+            e.stopPropagation();
+
+            if ($btn.hasClass('loading') || $btn.hasClass('is-added')) {
+                return;
+            }
+
+            const qty = $btn.data('quantity') || 1;
+            const originalHtml = $btn.html();
+
+            $btn.addClass('loading').css('pointer-events', 'none');
+            const $span = $btn.find('span');
+            if ($span.length) {
+                $span.text(addingText);
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxUrl,
+                data: {
+                    action: 'mis360_ajax_add_to_cart',
+                    product_id: productId,
+                    quantity: qty,
+                    nonce: nonce
+                },
+                success: function(response) {
+                    $btn.removeClass('loading');
+
+                    if (response && response.success && response.data && response.data.fragments) {
+                        updateFragments(response.data.fragments);
+
+                        $btn.addClass('is-added');
+                        if ($span.length) {
+                            $span.text(addedText);
+                        }
+
+                        // Çekmeceyi anında aç
+                        openCartDrawer();
+
+                        $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash, $btn]);
+                        $(document.body).trigger('wc_fragment_refresh');
+
+                        setTimeout(() => {
+                            $btn.removeClass('is-added').css('pointer-events', '');
+                            $btn.html(originalHtml);
+                        }, 2200);
+                    } else {
+                        $btn.css('pointer-events', '').html(originalHtml);
+                        if (response && response.data && response.data.product_url) {
+                            window.location.href = response.data.product_url;
+                        }
+                    }
+                },
+                error: function() {
+                    $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
+                }
+            });
         });
 
-        // Çekmece içi AJAX ürün çıkarma
+        // 2. Tekil Ürün Sayfasındaki Formdan (veya Sticky Buy Bar) Sepete Ekleme
+        $(document).on('submit', 'form.cart', function(e) {
+            const $form = $(this);
+            const $btn  = $form.find('.single_add_to_cart_button, button[type="submit"]');
+
+            if ($form.closest('.product-type-external').length) {
+                return;
+            }
+
+            e.preventDefault();
+
+            if ($btn.hasClass('loading') || $btn.hasClass('is-added')) {
+                return;
+            }
+
+            const originalHtml = $btn.html();
+            $btn.addClass('loading').css('pointer-events', 'none');
+            const $span = $btn.find('span').length ? $btn.find('span') : $btn;
+            $span.text(addingText);
+
+            let formData = $form.serializeArray();
+            let dataObj = {
+                action: 'mis360_ajax_add_to_cart',
+                nonce: nonce
+            };
+
+            $.each(formData, function(i, field) {
+                if (field.name === 'add-to-cart') {
+                    dataObj['product_id'] = field.value;
+                } else {
+                    dataObj[field.name] = field.value;
+                }
+            });
+
+            if (!dataObj['product_id']) {
+                dataObj['product_id'] = $btn.val() || $btn.data('product_id');
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxUrl,
+                data: dataObj,
+                success: function(response) {
+                    $btn.removeClass('loading');
+
+                    if (response && response.success && response.data && response.data.fragments) {
+                        updateFragments(response.data.fragments);
+
+                        $btn.addClass('is-added');
+                        $span.text(addedText);
+
+                        openCartDrawer();
+
+                        $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash, $btn]);
+                        $(document.body).trigger('wc_fragment_refresh');
+
+                        setTimeout(() => {
+                            $btn.removeClass('is-added').css('pointer-events', '');
+                            $btn.html(originalHtml);
+                        }, 2200);
+                    } else {
+                        $form.off('submit').submit();
+                    }
+                },
+                error: function() {
+                    $form.off('submit').submit();
+                }
+            });
+        });
+
+        // 3. Çekmece İçi AJAX Ürün Çıkarma
         $(document).on('click', '.remove-cart-item', function(e) {
             e.preventDefault();
             const $btn = $(this);
@@ -126,7 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Görsel yükleniyor / siliniyor durumu
             if ($item.length) {
                 $item.css({
                     'opacity': '0.35',
@@ -135,9 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     'transition': 'all 0.25s ease'
                 });
             }
-
-            const ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
-            const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
 
             $.ajax({
                 type: 'POST',
@@ -149,28 +303,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 success: function(response) {
                     if (response && response.success && response.data && response.data.fragments) {
-                        const fragments = response.data.fragments;
-
-                        // DOM üzerindeki tüm ilgili fragmanları güncelle
-                        $.each(fragments, function(selector, html) {
-                            $(selector).replaceWith(html);
-                        });
+                        updateFragments(response.data.fragments);
 
                         $(document.body).trigger('wc_fragments_refreshed');
-                        $(document.body).trigger('removed_from_cart', [fragments, response.data.cart_hash, $btn]);
+                        $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash, $btn]);
                     } else if ($btn.attr('href')) {
                         window.location.href = $btn.attr('href');
                         return;
                     }
 
-                    // Eğer kullanıcı /sepet veya /odeme sayfasındaysa sayfayı da yenile
                     const path = window.location.pathname.toLowerCase();
                     if (path.includes('/sepet') || path.includes('/cart') || path.includes('/odeme') || path.includes('/checkout')) {
                         window.location.reload();
                     }
                 },
                 error: function() {
-                    // Bağlantı hatasında standart WooCommerce silme URL'sine yönlendir
                     if ($btn.attr('href')) {
                         window.location.href = $btn.attr('href');
                     } else {
@@ -178,6 +325,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+        });
+
+        // Standart WooCommerce added_to_cart kancasında da çekmeceyi aç
+        $(document.body).on('added_to_cart', () => {
+            openCartDrawer();
         });
     }
 });

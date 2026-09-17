@@ -67,21 +67,13 @@ function mis360_cart_count_fragment($fragments) {
 
 
     $fragments['#emdief-cart-count'] = '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>';
-
-
-
     $fragments['#emdief-bottom-cart-count'] = '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>';
-
-
-
     $fragments['#emdief-drawer-count-badge'] = '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>';
 
-
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
+    $fragments['.emdief-cart-total'] = '<strong class="emdief-cart-total">' . $subtotal . '</strong>';
 
     return $fragments;
-
-
-
 }
 
 
@@ -799,10 +791,87 @@ function mis360_ajax_remove_cart_item() {
 
 
 add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
-
-
-
 add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+
+/**
+ * AJAX Add to Cart Handler (Tema Özel Sepete Ekle Motoru)
+ * Ürünü AJAX ile sepete ekler, sepet çekmecesi fragmanlarını döndürür ve boş sepete yönlendirmeyi önler.
+ */
+function mis360_ajax_add_to_cart() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
+
+    $product_id        = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? 0));
+    $quantity          = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
+    $variation_id      = absint($_POST['variation_id'] ?? 0);
+    $variations        = [];
+
+    foreach ($_POST as $key => $value) {
+        if (strpos($key, 'attribute_') === 0) {
+            $variations[$key] = sanitize_text_field(wp_unslash($value));
+        }
+    }
+
+    $cart_item_data = [];
+    if (!empty($_POST['is_flash_deal']) || !empty($_GET['flash_deal'])) {
+        $cart_item_data['is_flash_deal'] = 1;
+    }
+
+    $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations);
+
+    if ($passed_validation && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variations, $cart_item_data)) {
+        do_action('woocommerce_ajax_added_to_cart', $product_id);
+
+        WC()->cart->calculate_totals();
+
+        $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
+        $cart_hash = WC()->cart->get_cart_hash();
+
+        wp_send_json_success([
+            'fragments' => $fragments,
+            'cart_hash' => $cart_hash,
+            'product_id'=> $product_id,
+            'message'   => __('Ürün sepete eklendi.', 'mis360-mobilya'),
+        ]);
+    } else {
+        $data = [
+            'error'       => true,
+            'product_url' => apply_filters('woocommerce_cart_redirect_after_error', get_permalink($product_id), $product_id),
+            'message'     => __('Ürün sepete eklenemedi.', 'mis360-mobilya'),
+        ];
+        wp_send_json_error($data);
+    }
+    wp_die();
+}
+add_action('wp_ajax_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
+add_action('wp_ajax_nopriv_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
+
+// Sepete yönlendirmeyi önle - her zaman çekmece açılsın
+add_filter('woocommerce_add_to_cart_redirect', '__return_false', 99);
+
+/**
+ * Flaş Ürünler için Sepette 25 TL İndirim (Otomatik Flaş Fırsat İndirimi)
+ */
+function mis360_apply_flash_deal_cart_discount($cart) {
+    if (is_admin() && !defined('DOING_AJAX')) {
+        return;
+    }
+    if ($cart->is_empty()) {
+        return;
+    }
+
+    $flash_items = 0;
+    foreach ($cart->get_cart() as $cart_item) {
+        if (!empty($cart_item['is_flash_deal'])) {
+            $flash_items += $cart_item['quantity'];
+        }
+    }
+
+    if ($flash_items > 0) {
+        $discount = -25 * $flash_items;
+        $cart->add_fee(__('Flaş Fırsat İndirimi (-25 TL)', 'mis360-mobilya'), $discount);
+    }
+}
+add_action('woocommerce_cart_calculate_fees', 'mis360_apply_flash_deal_cart_discount');
 
 
 
