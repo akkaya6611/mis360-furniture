@@ -7305,8 +7305,8 @@ function mis360_authenticate_by_phone_or_email($user, $username, $password) {
 add_action('wp_ajax_nopriv_mis360_ajax_login', 'mis360_ajax_login_handler');
 add_action('wp_ajax_mis360_ajax_login', 'mis360_ajax_login_handler');
 function mis360_ajax_login_handler() {
-    if (ob_get_length()) {
-        ob_clean();
+    while (ob_get_level()) {
+        ob_end_clean();
     }
 
     if (!empty($_POST['security'])) {
@@ -7335,6 +7335,14 @@ function mis360_ajax_login_handler() {
     }
 
     wp_set_current_user($user->ID);
+    if (function_exists('wc_set_customer_auth_cookie')) {
+        wc_set_customer_auth_cookie($user->ID);
+    } else {
+        wp_set_auth_cookie($user->ID, $remember);
+    }
+    if (class_exists('WooCommerce') && WC()->session) {
+        WC()->session->init();
+    }
 
     // Sepet doluysa doğrudan ödeme sayfasına git
     if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
@@ -7355,8 +7363,8 @@ function mis360_ajax_login_handler() {
 add_action('wp_ajax_nopriv_mis360_ajax_register', 'mis360_ajax_register_handler');
 add_action('wp_ajax_mis360_ajax_register', 'mis360_ajax_register_handler');
 function mis360_ajax_register_handler() {
-    if (ob_get_length()) {
-        ob_clean();
+    while (ob_get_level()) {
+        ob_end_clean();
     }
 
     if (!empty($_POST['security'])) {
@@ -7412,6 +7420,9 @@ function mis360_ajax_register_handler() {
         wc_set_customer_auth_cookie($customer_id);
     } else {
         wp_set_auth_cookie($customer_id, true);
+    }
+    if (class_exists('WooCommerce') && WC()->session) {
+        WC()->session->init();
     }
 
     // Sepet doluysa doğrudan ödeme sayfasına git

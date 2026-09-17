@@ -626,6 +626,18 @@ add_action('woocommerce_after_add_to_cart_button', 'mis360_single_product_conver
    6. JAVASCRIPT MOTORU: GERİ SAYIM, SET HESAPLAMA, LIGHTBOX & ODA SİMÜLATÖRÜ
    ========================================================================== */
 function mis360_montessori_features_inline_script() {
+    if (function_exists('is_checkout') && is_checkout()) {
+        return;
+    }
+    if (function_exists('is_cart') && is_cart()) {
+        return;
+    }
+    if (function_exists('is_account_page') && is_account_page()) {
+        return;
+    }
+    if (!is_product() && !is_front_page()) {
+        return;
+    }
     ?>
     <script>
     (function() {

@@ -355,9 +355,9 @@ function mis360Init() {
 
             const formData = new FormData(form);
             
-            // Origin & Protokol Uyuşmazlığına Karşı %100 Güvenli URL
-            let ajaxUrl = '/wp-admin/admin-ajax.php';
-            if (window.location && window.location.origin) {
+            // WordPress kanonik AJAX adresi
+            let ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
+            if (!ajaxUrl && window.location && window.location.origin) {
                 ajaxUrl = window.location.origin + '/wp-admin/admin-ajax.php';
             }
 
@@ -371,8 +371,16 @@ function mis360Init() {
                 body: formData,
                 credentials: 'same-origin'
             })
-            .then(res => res.text())
+            .then(res => {
+                if (res.redirected) {
+                    const fallbackUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
+                    window.location.href = res.url || fallbackUrl;
+                    return null;
+                }
+                return res.text();
+            })
             .then(rawText => {
+                if (!rawText) return;
                 let data = null;
                 try {
                     data = JSON.parse(rawText);
@@ -382,11 +390,25 @@ function mis360Init() {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalBtnHtml;
                     }
-                    const cleanErr = rawText.replace(/<[^>]*>?/gm, '').trim();
-                    if (cleanErr && cleanErr !== '-1' && cleanErr !== '0') {
-                        showFeedback('error', cleanErr);
-                    } else {
+                    // Eğer dönen cevap bir HTML sayfası veya uzun metin ise ASLA ekrana ham kod dökümü yapma!
+                    const trimmed = rawText.trim();
+                    if (trimmed.startsWith('<') || trimmed.indexOf('<!DOCTYPE') !== -1 || trimmed.indexOf('<html') !== -1 || trimmed.length > 250) {
+                        // Eğer oturum açıldıysa sayfayı doğrudan ödemeye yönlendir
+                        if (trimmed.indexOf('wp-login.php?action=logout') !== -1 || trimmed.indexOf('logged-in') !== -1) {
+                            showFeedback('success', 'Giriş başarılı! Yönlendiriliyorsunuz...');
+                            setTimeout(() => {
+                                window.location.href = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
+                            }, 500);
+                            return;
+                        }
                         showFeedback('error', 'İşlem gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                    } else {
+                        const cleanErr = trimmed.replace(/<[^>]*>?/gm, '').trim();
+                        if (cleanErr && cleanErr !== '-1' && cleanErr !== '0') {
+                            showFeedback('error', cleanErr);
+                        } else {
+                            showFeedback('error', 'İşlem gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                        }
                     }
                     return;
                 }
@@ -394,14 +416,15 @@ function mis360Init() {
                 if (data && data.success) {
                     showFeedback('success', (data.data && data.data.message) ? data.data.message : 'Başarılı! Yönlendiriliyorsunuz...');
                     setTimeout(() => {
-                        window.location.href = (data.data && data.data.redirect) ? data.data.redirect : '/odeme/';
+                        const targetUrl = (data.data && data.data.redirect) ? data.data.redirect : ((window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/');
+                        window.location.href = targetUrl;
                     }, 500);
                 } else {
                     if (submitBtn) {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalBtnHtml;
                     }
-                    const errorMsg = (data && data.data && data.data.message) ? data.data.message : 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
+                    const errorMsg = (data && data.data && data.data.message) ? data.data.message : 'Bir hata oluştu. Lütfen bilgilerinizi kontrol ediniz.';
                     showFeedback('error', errorMsg);
                 }
             })
@@ -411,7 +434,7 @@ function mis360Init() {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHtml;
                 }
-                showFeedback('error', 'Bağlantı hatası oluştu: ' + (err.message || 'Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.'));
+                showFeedback('error', 'Bağlantı hatası oluştu. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
             });
         });
     });
