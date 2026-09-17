@@ -332,6 +332,7 @@ function mis360Init() {
     authModalForms.forEach((form) => {
         form.addEventListener('submit', function(e) {
             e.preventDefault();
+            e.stopPropagation();
 
             const isRegister = form.closest('#auth-tab-register') !== null;
             const submitBtn = form.querySelector('button[type="submit"]');
@@ -355,9 +356,8 @@ function mis360Init() {
 
             const formData = new FormData(form);
             
-            // WordPress kanonik AJAX adresi (Her zaman geçerli origin ile göreceli)
-            let ajaxUrl = '/wp-admin/admin-ajax.php';
-
+            // WordPress kanonik AJAX adresi
+            let ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
             const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
 
             // WooCommerce çekirdek process_registration kancasını bypass et (AJAX akışını kesmesin)
@@ -367,21 +367,16 @@ function mis360Init() {
             formData.append('action', isRegister ? 'mis360_ajax_register' : 'mis360_ajax_login');
             formData.append('security', nonce);
 
-            fetch(ajaxUrl, {
-                method: 'POST',
-                body: formData,
-                credentials: 'same-origin'
-            })
-            .then(res => {
-                if (res.redirected) {
-                    const fallbackUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
-                    window.location.href = res.url || fallbackUrl;
-                    return null;
+            function handleAuthResponse(rawText) {
+                if (!rawText) {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    showFeedback('error', 'Sunucudan yanıt alınamadı. Lütfen tekrar deneyiniz.');
+                    return;
                 }
-                return res.text();
-            })
-            .then(rawText => {
-                if (!rawText) return;
+
                 let data = null;
                 try {
                     data = JSON.parse(rawText);
@@ -428,16 +423,65 @@ function mis360Init() {
                     const errorMsg = (data && data.data && data.data.message) ? data.data.message : 'Bir hata oluştu. Lütfen bilgilerinizi kontrol ediniz.';
                     showFeedback('error', errorMsg);
                 }
-            })
-            .catch(err => {
-                console.error('Auth fetch error:', err);
+            }
+
+            // Evrensel ve her tarayıcıda (Chrome, Firefox, Safari) %100 kararlı XMLHttpRequest
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', ajaxUrl, true);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.withCredentials = true;
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 400) {
+                        handleAuthResponse(xhr.responseText);
+                    } else {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHtml;
+                        }
+                        showFeedback('error', 'Sunucu yanıt vermedi (' + xhr.status + '). Lütfen tekrar deneyiniz.');
+                    }
+                };
+
+                xhr.onerror = function() {
+                    // XHR bağlantı hatası durumunda jQuery veya doğrudan hata bildirimi
+                    if (window.jQuery) {
+                        window.jQuery.ajax({
+                            url: ajaxUrl,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            xhrFields: { withCredentials: true },
+                            success: function(resp) {
+                                handleAuthResponse(typeof resp === 'object' ? JSON.stringify(resp) : resp);
+                            },
+                            error: function() {
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.innerHTML = originalBtnHtml;
+                                }
+                                showFeedback('error', 'Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.');
+                            }
+                        });
+                    } else {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHtml;
+                        }
+                        showFeedback('error', 'Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.');
+                    }
+                };
+
+                xhr.send(formData);
+            } catch (xhrErr) {
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHtml;
                 }
-                const errMsg = (err && err.message) ? err.message : 'Bağlantı hatası';
-                showFeedback('error', 'İşlem gerçekleştirilemedi (' + errMsg + '). Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
-            });
+                showFeedback('error', 'İstek gönderilemedi: ' + xhrErr.message);
+            }
         });
     });
 
