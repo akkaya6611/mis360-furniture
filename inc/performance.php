@@ -321,3 +321,64 @@ function mis360_performance_update_htaccess_rules() {
     }
 }
 add_action('after_switch_theme', 'mis360_performance_update_htaccess_rules');
+
+/**
+ * 11. WP Emoji Script & Stillerini Kaldır (Sayfa Başına 10KB+ JS/CSS Tasarrufu)
+ */
+function mis360_performance_disable_emojis() {
+    remove_action('wp_head', 'print_emoji_detection_script', 7);
+    remove_action('admin_print_scripts', 'print_emoji_detection_script');
+    remove_action('wp_print_styles', 'print_emoji_styles');
+    remove_action('admin_print_styles', 'print_emoji_styles');
+    remove_filter('the_content_feed', 'wp_staticize_emoji');
+    remove_filter('comment_text_rss', 'wp_staticize_emoji');
+    remove_filter('wp_mail', 'wp_staticize_emoji_for_email');
+    add_filter('tiny_mce_plugins', 'mis360_performance_disable_emojis_tinymce');
+    add_filter('wp_resource_hints', 'mis360_performance_disable_emojis_remove_dns', 10, 2);
+}
+add_action('init', 'mis360_performance_disable_emojis');
+
+function mis360_performance_disable_emojis_tinymce($plugins) {
+    return is_array($plugins) ? array_diff($plugins, ['wpemoji']) : [];
+}
+
+function mis360_performance_disable_emojis_remove_dns($urls, $relation_type) {
+    if ('dns-prefetch' === $relation_type) {
+        $emoji_svg_url = apply_filters('emoji_svg_url', 'https://s.w.org/images/core/emoji/');
+        $urls = array_diff($urls, [$emoji_svg_url]);
+    }
+    return $urls;
+}
+
+/**
+ * 12. Gereksiz wp-embed Scriptini Kaldır
+ */
+function mis360_performance_disable_embeds() {
+    if (!is_admin()) {
+        wp_deregister_script('wp-embed');
+    }
+}
+add_action('wp_footer', 'mis360_performance_disable_embeds');
+
+/**
+ * 13. Heartbeat API Sıklığını Azalt (Sunucu CPU Yükünü Azaltır)
+ */
+function mis360_performance_throttle_heartbeat($settings) {
+    $settings['interval'] = 60;
+    return $settings;
+}
+add_filter('heartbeat_settings', 'mis360_performance_throttle_heartbeat');
+
+/**
+ * 14. Ön Yüzde jQuery Migrate Kaldır (Daha Hızlı JS Yükleme)
+ */
+function mis360_performance_remove_jquery_migrate($scripts) {
+    if (!is_admin() && isset($scripts->registered['jquery'])) {
+        $script = $scripts->registered['jquery'];
+        if ($script->deps) {
+            $script->deps = array_diff($script->deps, ['jquery-migrate']);
+        }
+    }
+}
+add_action('wp_default_scripts', 'mis360_performance_remove_jquery_migrate');
+
