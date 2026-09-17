@@ -7429,4 +7429,42 @@ function mis360_ajax_register_handler() {
     ]);
 }
 
+/**
+ * Banka Havalesi / EFT Siparişleri İçin Teşekkür Sayfasında WhatsApp Dekont Butonu
+ */
+function mis360_thankyou_whatsapp_dekont_notice($order_id) {
+    if (!$order_id) {
+        return;
+    }
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        return;
+    }
+
+    $payment_method = $order->get_payment_method();
+    $order_number = $order->get_order_number();
+    $order_total = $order->get_total();
+    
+    $wa_phone = '905374778766';
+    $msg = "Merhaba Emdief Home, #" . $order_number . " numaralı siparişimin (" . $order_total . " TL) banka havalesi/FAST ödemesini gerçekleştirdim. Dekontumu iletiyorum.";
+    $wa_url = "https://wa.me/" . $wa_phone . "?text=" . rawurlencode($msg);
+    ?>
+    <div class="emdief-thankyou-bacs-card" style="margin: 25px 0; padding: 22px 24px; background: #f0fdf4; border: 2px solid #86efac; border-radius: 16px; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.08); text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">📲</div>
+        <h3 style="color: #15803d; font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">
+            Ödemenizi Yaptınız mı? Hızlı Onay İçin Dekontunuzu İletin!
+        </h3>
+        <p style="color: #166534; font-size: 0.95rem; margin-bottom: 18px; max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+            Siparişiniz <strong>#<?php echo esc_html($order_number); ?></strong> koduyla sisteme kaydedildi. Banka havalesi veya FAST işleminizi tamamladıktan sonra siparişinizin anında öncelikli üretime alınması için tek tıkla dekontunuzu WhatsApp hattımıza iletebilirsiniz.
+        </p>
+        <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #22c55e; color: #ffffff; font-weight: 700; font-size: 1rem; padding: 13px 26px; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35); transition: transform 0.2s, background 0.2s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.777 2.796.777 3.182 0 5.768-2.587 5.768-5.766.001-3.187-2.575-5.763-5.768-5.763zm4.521 8.243c-.19.534-.997.989-1.391 1.042-.379.051-.875.074-2.825-.694-2.348-.925-3.837-3.328-3.954-3.483-.117-.156-.949-1.262-.949-2.408 0-1.146.601-1.709.814-1.942.213-.233.466-.291.621-.291.155 0 .31.002.446.009.144.007.338-.055.528.401.198.475.679 1.658.738 1.776.059.117.098.254.019.41-.078.156-.117.253-.233.389-.117.136-.246.304-.351.408-.117.117-.239.244-.103.478.136.234.606.999 1.3 1.617.893.796 1.646 1.043 1.88 1.159.233.117.37.098.506-.058.136-.156.583-.68.738-.913.155-.234.31-.195.524-.117.214.078 1.359.641 1.592.758.233.117.389.175.447.272.058.098.058.564-.132 1.098z"/></svg>
+            WhatsApp ile Dekont İlet
+        </a>
+    </div>
+    <?php
+}
+add_action('woocommerce_thankyou', 'mis360_thankyou_whatsapp_dekont_notice', 5);
+
+
 
