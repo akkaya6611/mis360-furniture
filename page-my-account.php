@@ -55,6 +55,11 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
 ?>
 
 <div class="emdief-container py-8">
+    <?php
+    if (function_exists('woocommerce_output_all_notices')) {
+        woocommerce_output_all_notices();
+    }
+    ?>
     <?php if ($is_logged_in): ?>
         <?php if ($cart_item_count > 0): ?>
             <!-- Sepette Ürün Varsa: Mutlu Alışveriş Yapan Ayıcık -->
@@ -534,15 +539,29 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
         <div class="account-guest-wrapper" style="max-width: 540px; margin: 3rem auto; text-align: center; background: #fff; padding: 3rem 2rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #f1ece7;">
             <div style="font-size: 3rem; margin-bottom: 1rem;">🧸</div>
             <h2 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">Emdief Home Hesabınıza Giriş Yapın</h2>
-            <p style="color: #64748b; font-size: 0.92rem; margin-bottom: 1.75rem;">Siparişlerinizi takip etmek, kayıtlı adreslerinizi yönetmek ve özel Montessori kulüp avantajlarından yararlanmak için lütfen giriş yapın.</p>
+            
+            <?php if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()): ?>
+                <div style="background: #fffbeb; border: 1.5px solid #fde047; border-radius: 12px; padding: 12px 16px; margin: 15px 0 20px; font-size: 13.5px; color: #854d0e; font-weight: 700; line-height: 1.5;">
+                    🛒 Sepetinizde ürün(ler) bulunmaktadır! Giriş yaptığınızda veya ücretsiz üye olduğunuzda doğrudan sipariş ekranına yönlendirileceksiniz.
+                </div>
+            <?php else: ?>
+                <p style="color: #64748b; font-size: 0.92rem; margin-bottom: 1.75rem;">Siparişlerinizi takip etmek, kayıtlı adreslerinizi yönetmek ve özel Montessori kulüp avantajlarından yararlanmak için lütfen giriş yapın.</p>
+            <?php endif; ?>
+
             <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                <button type="button" class="emdief-btn btn-primary btn-md" id="guest-login-open">
+                <button type="button" class="emdief-btn btn-primary btn-md" id="guest-login-open" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{const t=document.getElementById('emdief-login-trigger');if(t)t.click();} return false;">
                     <span>Giriş Yap / Kayıt Ol</span>
                     <?php echo mis360_icon('arrow-right', 16); ?>
                 </button>
-                <a href="<?php echo esc_url(home_url('/')); ?>" class="emdief-btn btn-outline btn-md">
-                    <span>Anasayfaya Dön</span>
-                </a>
+                <?php if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()): ?>
+                    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-warm btn-md">
+                        <span>💳 Ödeme Ekranına Git</span>
+                    </a>
+                <?php else: ?>
+                    <a href="<?php echo esc_url(home_url('/')); ?>" class="emdief-btn btn-outline btn-md">
+                        <span>Anasayfaya Dön</span>
+                    </a>
+                <?php endif; ?>
             </div>
         </div>
     <?php endif; ?>

@@ -327,6 +327,69 @@ function mis360Init() {
         });
     });
 
+    // Modal Formları AJAX ile Gönderme (Sayfa yenilenmesini ve /my-account/'a fırlatılmasını engeller)
+    const authModalForms = document.querySelectorAll('#emdief-auth-modal .emdief-auth-form');
+    authModalForms.forEach((form) => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const isRegister = form.closest('#auth-tab-register') !== null;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+            // Mevcut bildirim mesajını temizle
+            const oldFeedback = form.querySelector('.auth-feedback-msg');
+            if (oldFeedback) oldFeedback.remove();
+
+            function showFeedback(type, message) {
+                const msgEl = document.createElement('div');
+                msgEl.className = 'auth-feedback-msg ' + type;
+                msgEl.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + message;
+                form.insertBefore(msgEl, form.firstChild);
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = isRegister ? '<span>Hesap Oluşturuluyor... ⏳</span>' : '<span>Giriş Yapılıyor... ⏳</span>';
+            }
+
+            const formData = new FormData(form);
+            const ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
+            const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
+
+            formData.append('action', isRegister ? 'mis360_ajax_register' : 'mis360_ajax_login');
+            formData.append('security', nonce);
+
+            fetch(ajaxUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data && data.success) {
+                    showFeedback('success', data.data.message || 'Başarılı! Yönlendiriliyorsunuz...');
+                    setTimeout(() => {
+                        window.location.href = data.data.redirect || '/';
+                    }, 500);
+                } else {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    const errorMsg = (data && data.data && data.data.message) ? data.data.message : 'Bir hata oluştu. Lütfen tekrar deneyiniz.';
+                    showFeedback('error', errorMsg);
+                }
+            })
+            .catch(err => {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHtml;
+                }
+                showFeedback('error', 'Bağlantı hatası oluştu. Lütfen tekrar deneyiniz.');
+            });
+        });
+    });
+
     // Şifre Göster / Gizle (Tüm formlar için evrensel)
     document.querySelectorAll('.toggle-password-btn').forEach((btn) => {
         btn.addEventListener('click', () => {

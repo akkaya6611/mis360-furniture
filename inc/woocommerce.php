@@ -6994,8 +6994,15 @@ add_filter('pre_option_woocommerce_registration_generate_username', function() {
     return 'yes';
 });
 
-// 4. Kullanıcı ödeme sayfasında hesap şifresini kendisi belirlesin
-add_filter('pre_option_woocommerce_registration_generate_password', '__return_empty_string');
+// 4. Kullanıcı hesap şifresini kendisi belirlesin ('no' dönmelidir, böylece POST['password'] işlenir)
+add_filter('pre_option_woocommerce_registration_generate_password', function() {
+    return 'no';
+});
+
+// 4b. Hesabım sayfasında kayıt olmayı daima aktif tut
+add_filter('pre_option_woocommerce_enable_myaccount_registration', function() {
+    return 'yes';
+});
 
 // 5. Sepet doluyken giriş veya kayıt yapıldığında doğrudan Ödeme Sayfasına (Checkout) yönlendir
 add_filter('woocommerce_login_redirect', 'mis360_redirect_to_checkout_after_auth', 10, 2);
@@ -7210,4 +7217,119 @@ function mis360_authenticate_by_phone_or_email($user, $username, $password) {
 
     return $user;
 }
+
+// 15. AJAX ile Anında ve Kesintisiz Giriş Yapma (Login)
+add_action('wp_ajax_nopriv_mis360_ajax_login', 'mis360_ajax_login_handler');
+add_action('wp_ajax_mis360_ajax_login', 'mis360_ajax_login_handler');
+function mis360_ajax_login_handler() {
+    check_ajax_referer('mis360_cart_nonce', 'security');
+
+    $log = sanitize_text_field($_POST['log'] ?? '');
+    $pwd = $_POST['pwd'] ?? '';
+    $remember = !empty($_POST['rememberme']);
+
+    if (empty($log) || empty($pwd)) {
+        wp_send_json_error(['message' => __('Lütfen kullanıcı adı / e-posta ve şifrenizi giriniz.', 'mis360-mobilya')]);
+    }
+
+    $creds = [
+        'user_login'    => $log,
+        'user_password' => $pwd,
+        'remember'      => $remember,
+    ];
+
+    $user = wp_signon($creds, is_ssl());
+
+    if (is_wp_error($user)) {
+        wp_send_json_error(['message' => __('Girdiğiniz kullanıcı bilgileri veya şifre hatalı.', 'mis360-mobilya')]);
+    }
+
+    wp_set_current_user($user->ID);
+
+    // Sepet doluysa doğrudan ödeme sayfasına git
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        $redirect = wc_get_checkout_url();
+    } elseif (!empty($_POST['redirect_to'])) {
+        $redirect = esc_url_raw($_POST['redirect_to']);
+    } else {
+        $redirect = class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/');
+    }
+
+    wp_send_json_success([
+        'message'  => __('Giriş başarılı! Yönlendiriliyorsunuz...', 'mis360-mobilya'),
+        'redirect' => $redirect,
+    ]);
+}
+
+// 16. AJAX ile Anında ve Kesintisiz Kayıt Olma (Register)
+add_action('wp_ajax_nopriv_mis360_ajax_register', 'mis360_ajax_register_handler');
+add_action('wp_ajax_mis360_ajax_register', 'mis360_ajax_register_handler');
+function mis360_ajax_register_handler() {
+    check_ajax_referer('mis360_cart_nonce', 'security');
+
+    $email = sanitize_email($_POST['email'] ?? '');
+    $phone = sanitize_text_field($_POST['billing_phone'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(['message' => __('Lütfen geçerli bir e-posta adresi giriniz.', 'mis360-mobilya')]);
+    }
+
+    if (email_exists($email)) {
+        wp_send_json_error(['message' => __('Bu e-posta adresiyle kayıtlı bir hesap zaten var. Lütfen "Giriş Yap" sekmesinden giriş yapın.', 'mis360-mobilya')]);
+    }
+
+    $clean_phone = preg_replace('/[^0-9]/', '', $phone);
+    if (empty($phone) || strlen($clean_phone) < 10 || strlen($clean_phone) > 13) {
+        wp_send_json_error(['message' => __('Lütfen geçerli bir cep telefonu numarası giriniz (örn: 0 (5XX) XXX XX XX).', 'mis360-mobilya')]);
+    }
+
+    if (empty($password) || strlen($password) < 6) {
+        wp_send_json_error(['message' => __('Şifreniz en az 6 karakterden oluşmalıdır.', 'mis360-mobilya')]);
+    }
+
+    // Müşteriyi oluştur
+    $customer_id = wc_create_new_customer($email, '', $password);
+
+    if (is_wp_error($customer_id)) {
+        wp_send_json_error(['message' => $customer_id->get_error_message()]);
+    }
+
+    // Telefon numarasını meta ve fatura alanına işle
+    update_user_meta($customer_id, 'billing_phone', $phone);
+    update_user_meta($customer_id, 'billing_phone_clean', $clean_phone);
+
+    if (class_exists('WC_Customer')) {
+        try {
+            $customer = new WC_Customer($customer_id);
+            if ($customer) {
+                $customer->set_billing_phone($phone);
+                $customer->save();
+            }
+        } catch (Exception $e) {}
+    }
+
+    // Giriş çerezini ayarla
+    wp_set_current_user($customer_id);
+    if (function_exists('wc_set_customer_auth_cookie')) {
+        wc_set_customer_auth_cookie($customer_id);
+    } else {
+        wp_set_auth_cookie($customer_id, true);
+    }
+
+    // Sepet doluysa doğrudan ödeme sayfasına git
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        $redirect = wc_get_checkout_url();
+    } elseif (!empty($_POST['redirect'])) {
+        $redirect = esc_url_raw($_POST['redirect']);
+    } else {
+        $redirect = wc_get_page_permalink('myaccount');
+    }
+
+    wp_send_json_success([
+        'message'  => __('Hesabınız başarıyla oluşturuldu! Yönlendiriliyorsunuz...', 'mis360-mobilya'),
+        'redirect' => $redirect,
+    ]);
+}
+
 
