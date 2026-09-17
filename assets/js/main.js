@@ -363,6 +363,10 @@ function mis360Init() {
 
             const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
 
+            // WooCommerce çekirdek process_registration kancasını bypass et (AJAX akışını kesmesin)
+            formData.delete('register');
+            formData.delete('woocommerce-register-nonce');
+
             formData.append('action', isRegister ? 'mis360_ajax_register' : 'mis360_ajax_login');
             formData.append('security', nonce);
 

@@ -506,8 +506,8 @@ if (!defined('ABSPATH')) {
                                 <button type="button" class="toggle-password-btn" id="emdief-toggle-reg-pass" aria-label="<?php esc_attr_e('Şifreyi Göster', 'mis360-mobilya'); ?>">👁️</button>
                             </div>
                         </div>
-                        <?php wp_nonce_field('woocommerce-register', 'woocommerce-register-nonce'); ?>
-                        <input type="hidden" name="register" value="1">
+                        <?php wp_nonce_field('mis360_register_action', 'mis360_register_nonce'); ?>
+                        <input type="hidden" name="emdief_register" value="1">
                         <input type="hidden" name="redirect" id="emdief-reg-redirect" value="<?php echo esc_url($_SERVER['REQUEST_URI'] ?? home_url('/')); ?>">
                     <?php else: ?>
                         <div class="form-group">
