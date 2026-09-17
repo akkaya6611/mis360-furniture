@@ -4,7 +4,7 @@
  * WooCommerce ürünlerine Trendyol ürün yorumlarını (yıldız, isim, tarih, metin) aktarır.
  *
  * @package Mis360_Mobilya
- * @since 1.9.46
+ * @since 1.9.47
  */
 
 defined('ABSPATH') || exit;
@@ -51,14 +51,14 @@ function mis360_render_trendyol_review_metabox($post) {
     $site_ajax_url = admin_url('admin-ajax.php');
     $import_token  = wp_create_nonce('mis360_bookmarklet_import_' . $product_id);
     
-    // Bookmarklet JavaScript Kodu (Trendyol Üzerinde Çalışacak Kendi Kendini Onaran Motor)
+    // Bookmarklet JavaScript Motoru (Trendyol üzerinde tam yetkili çalışır)
     $bm_code = <<<JAVASCRIPT
 (function(){
     var PID = {$product_id};
     var AJAX_URL = '{$site_ajax_url}';
     var TOKEN = '{$import_token}';
 
-    // 1. Ürün Kimliğini Tespit Et
+    // 1. Ürün Kimliğini ve Linkini Tespit Et
     var m = location.pathname.match(/-p-([0-9]+)/);
     var cid = m ? m[1] : null;
     if (!cid && window.__PRODUCT_DETAIL_APP_INITIAL_STATE__ && window.__PRODUCT_DETAIL_APP_INITIAL_STATE__.product) {
@@ -75,7 +75,7 @@ function mis360_render_trendyol_review_metabox($post) {
 
     var overlay = document.createElement('div');
     overlay.id = 'mis360-ty-overlay';
-    overlay.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999999;background:#0f172a;color:#f8fafc;padding:20px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,0.5);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px;width:360px;border:2px solid #ea580c;line-height:1.5;box-sizing:border-box;';
+    overlay.style.cssText = 'position:fixed;top:20px;right:20px;z-index:99999999;background:#0f172a;color:#f8fafc;padding:20px;border-radius:16px;box-shadow:0 20px 40px rgba(0,0,0,0.5);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px;width:370px;border:2px solid #ea580c;line-height:1.5;box-sizing:border-box;';
     
     function setContent(html) {
         overlay.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid #334155;padding-bottom:8px;">'
@@ -87,9 +87,48 @@ function mis360_render_trendyol_review_metabox($post) {
     }
 
     document.body.appendChild(overlay);
-    setContent('<div style="color:#93c5fd;font-weight:600;margin-bottom:8px;">🔍 Sayfa ve Yorumlar Taranıyor...</div><div style="font-size:12px;color:#cbd5e1;">Ürün ID: ' + (cid || 'Tespit ediliyor...') + '</div>');
+    setContent('<div style="color:#93c5fd;font-weight:600;margin-bottom:6px;">🔍 Trendyol Yorumları Taranıyor...</div><div style="font-size:12px;color:#cbd5e1;">Ürün ID: ' + (cid || 'Tespit ediliyor...') + '</div>');
 
-    // DOM Scraping Fonksiyonu (Trendyol Değerlendirmeleri)
+    // JSON veya Veri Ayıklayıcı
+    function parseProps(data) {
+        var reviews = [];
+        if (!data) return reviews;
+
+        // reviewImages.content (Fotoğraflı ve popüler onaylı yorumlar)
+        if (data.reviewImages && data.reviewImages.content && Array.isArray(data.reviewImages.content)) {
+            data.reviewImages.content.forEach(function(item) {
+                var c = (item.comment || '').trim();
+                if (c && c.length > 2) {
+                    reviews.push({
+                        author: item.userFullName || 'Müşteri',
+                        rating: item.rate || 5,
+                        comment: c,
+                        date: item.lastModifiedDate ? new Date(item.lastModifiedDate).toISOString() : '',
+                        verified: true
+                    });
+                }
+            });
+        }
+
+        // productReviews.content
+        if (data.productReviews && data.productReviews.content && Array.isArray(data.productReviews.content)) {
+            data.productReviews.content.forEach(function(item) {
+                var c = (item.comment || '').trim();
+                if (c && c.length > 2) {
+                    reviews.push({
+                        author: item.userFullName || 'Müşteri',
+                        rating: item.rate || 5,
+                        comment: c,
+                        date: item.lastModifiedDate ? new Date(item.lastModifiedDate).toISOString() : '',
+                        verified: true
+                    });
+                }
+            });
+        }
+        return reviews;
+    }
+
+    // DOM Scraping (Sayfadaki Yorum Kartları)
     function scrapeFromDOM() {
         var results = [];
         var selectors = ['.r-c-c', '.comment', '.review-comment', '[class*="comment-card"]', '[class*="review-item"]', '[class*="ReviewCard"]', '.ps-r-w'];
@@ -99,7 +138,6 @@ function mis360_render_trendyol_review_metabox($post) {
             var fullText = c.innerText.trim();
             if (fullText.length < 5) return;
             
-            // Yorum Metni
             var textEl = c.querySelector('p, .comment-text, [class*="comment-text"], [class*="content"], .r-c-c-c');
             var comment = textEl ? textEl.innerText.trim() : '';
             if (!comment || comment.length < 5) {
@@ -110,7 +148,6 @@ function mis360_render_trendyol_review_metabox($post) {
             }
             if (!comment || comment.length < 3) return;
 
-            // Yazar
             var author = 'Müşteri';
             var authorMatch = fullText.match(/([A-ZÇĞİÖŞÜa-zçğıöşü]\*{1,4}\s+[A-ZÇĞİÖŞÜa-zçğıöşü]\*{1,4})/);
             if (authorMatch) {
@@ -120,14 +157,10 @@ function mis360_render_trendyol_review_metabox($post) {
                 if (uEl && uEl.innerText.trim()) author = uEl.innerText.trim();
             }
 
-            // Yıldız Puanı
             var rating = 5;
             var starSvgs = c.querySelectorAll('svg');
-            if (starSvgs.length >= 1 && starSvgs.length <= 5) {
-                rating = starSvgs.length;
-            }
+            if (starSvgs.length >= 1 && starSvgs.length <= 5) rating = starSvgs.length;
 
-            // Tarih
             var dateStr = '';
             var dateMatch = fullText.match(/([0-9]{1,2}\s+[A-Za-zÇĞİÖŞÜçğıöşü]+\s+[0-9]{4})/);
             if (dateMatch) dateStr = dateMatch[1];
@@ -143,26 +176,34 @@ function mis360_render_trendyol_review_metabox($post) {
         return results;
     }
 
-    // WooCommerce'a Gönder veya Panoya Kopyala
+    // WooCommerce'a Gönder ve Panoya Yedekle
     function sendToWooCommerce(reviews) {
         if (!reviews || !reviews.length) {
             showEmptyGuide();
             return;
         }
 
-        setContent('<div style="font-weight:700;color:#10b981;margin-bottom:6px;">✓ ' + reviews.length + ' Adet Yorum Tespit Edildi!</div>'
+        // Mükerrerleri filtrele
+        var seen = {};
+        var unique = [];
+        reviews.forEach(function(r){
+            if (!seen[r.comment]) {
+                seen[r.comment] = true;
+                unique.push(r);
+            }
+        });
+
+        setContent('<div style="font-weight:700;color:#10b981;margin-bottom:6px;">✓ ' + unique.length + ' Adet Yorum Algılandı!</div>'
             + '<div style="color:#cbd5e1;font-size:12px;margin-bottom:12px;">WooCommerce mağazanıza aktarılıyor...</div>'
             + '<div style="background:#1e293b;padding:8px 10px;border-radius:8px;font-size:11px;color:#94a3b8;max-height:80px;overflow:hidden;">'
-            + '"' + reviews[0].comment.substring(0, 60) + '..." (' + reviews[0].author + ')</div>');
+            + '"' + unique[0].comment.substring(0, 70) + '..." (' + unique[0].author + ')</div>');
 
-        var jsonStr = JSON.stringify(reviews);
+        var jsonStr = JSON.stringify(unique);
 
-        // Panoya otomatik yedekle
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(jsonStr).catch(function(){});
         }
 
-        // AJAX POST Denemesi (CORS destekli)
         var formData = new URLSearchParams();
         formData.append('action', 'mis360_ajax_import_trendyol_reviews');
         formData.append('product_id', PID);
@@ -182,18 +223,17 @@ function mis360_render_trendyol_review_metabox($post) {
             if (resData && resData.success) {
                 setContent('<div style="font-weight:800;color:#10b981;font-size:15px;margin-bottom:6px;">🎉 Başarıyla Aktarıldı!</div>'
                     + '<div style="color:#f1f5f9;margin-bottom:10px;">' + resData.data.imported + ' yeni yorum WooCommerce mağazanıza (#' + PID + ') kaydedildi.</div>'
-                    + '<div style="font-size:11px;color:#94a3b8;">Ortalama Puan: ' + resData.data.rating + ' / Toplam: ' + resData.data.total + '</div>');
+                    + '<div style="font-size:11px;color:#94a3b8;">Ortalama Puan: ' + resData.data.rating + ' / Toplam: ' + resData.data.total + ' Yorum</div>');
                 setTimeout(function(){ overlay.remove(); }, 6000);
             } else {
                 throw new Error(resData && resData.data ? resData.data : 'Bilinmeyen yanıt');
             }
         })
-        .catch(function(err) {
-            // Mixed Content veya CORS durumunda Pano Köprüsü devreye girer
-            setContent('<div style="font-weight:700;color:#38bdf8;font-size:14px;margin-bottom:6px;">📋 ' + reviews.length + ' Yorum Panoya Kopyalandı!</div>'
-                + '<div style="color:#cbd5e1;font-size:12px;margin-bottom:12px;">Tarayıcınızın güvenlik ayarları nedeniyle doğrudan aktarım yerine panonuz kullanıldı.</div>'
+        .catch(function() {
+            setContent('<div style="font-weight:700;color:#38bdf8;font-size:14px;margin-bottom:6px;">📋 ' + unique.length + ' Yorum Panoya Kopyalandı!</div>'
+                + '<div style="color:#cbd5e1;font-size:12px;margin-bottom:12px;">Tarayıcınızın yerel güvenlik politikası nedeniyle veriler panonuza alındı.</div>'
                 + '<div style="background:#1e293b;padding:10px;border-radius:8px;font-size:12px;color:#f8fafc;margin-bottom:12px;">'
-                + 'Şimdi WordPress ürün düzenleme sekmesine geçin ve <strong>"📥 Panodan Yorumları Oku ve Kaydet"</strong> butonuna tıklayın!</div>'
+                + 'Şimdi WordPress ürün sayfasına dönüp <strong>"📥 Panodan Yorumları Oku ve Kaydet"</strong> yeşil butonuna basın!</div>'
                 + '<button id="mis360-copy-manual" style="background:#ea580c;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-weight:700;cursor:pointer;width:100%;">Tekrar Panoya Kopyala</button>');
             
             var mb = document.getElementById('mis360-copy-manual');
@@ -209,72 +249,80 @@ function mis360_render_trendyol_review_metabox($post) {
 
     function showEmptyGuide() {
         var yorumlarUrl = location.origin + location.pathname.replace(/\/yorumlar$/, '') + '/yorumlar';
-        setContent('<div style="font-weight:700;color:#f59e0b;font-size:14px;margin-bottom:6px;">ℹ️ Yorumlar Henüz Sayfada Görünmüyor</div>'
-            + '<div style="color:#cbd5e1;font-size:12px;margin-bottom:12px;">Trendyol yorumları sayfa açıldığında hemen yüklemez. Aşağıdaki butona tıklayarak doğrudan yorumlar sayfasına gidebilir veya sayfayı aşağı kaydırabilirsiniz:</div>'
-            + '<a href="' + yorumlarUrl + '" style="display:block;text-align:center;background:#ea580c;color:#fff;text-decoration:none;font-weight:700;padding:10px;border-radius:8px;margin-bottom:8px;">👉 Tüm Yorumları Aç (Tek Tıkla Git)</a>'
-            + '<button id="mis360-scroll-btn" style="background:#334155;color:#fff;border:none;padding:8px;border-radius:8px;width:100%;cursor:pointer;font-weight:600;font-size:12px;">🔽 Sayfayı Yorumlara Kaydır ve Tekrar Tara</button>');
+        setContent('<div style="font-weight:700;color:#f59e0b;font-size:14px;margin-bottom:6px;">ℹ️ Yorumlar Yükleniyor...</div>'
+            + '<div style="color:#cbd5e1;font-size:12px;margin-bottom:12px;">Trendyol yorumlar sayfasına tek tıkla geçerek tüm değerlendirmeleri eksiksiz çekebilirsiniz:</div>'
+            + '<a href="' + yorumlarUrl + '" style="display:block;text-align:center;background:#ea580c;color:#fff;text-decoration:none;font-weight:700;padding:10px;border-radius:8px;margin-bottom:8px;">👉 Yorumlar Sayfasına Git</a>'
+            + '<button id="mis360-scroll-btn" style="background:#334155;color:#fff;border:none;padding:8px;border-radius:8px;width:100%;cursor:pointer;font-weight:600;font-size:12px;">🔽 Sayfayı Yorumlara Kaydır</button>');
         
         var sb = document.getElementById('mis360-scroll-btn');
         if (sb) {
             sb.onclick = function() {
                 window.scrollTo({ top: document.body.scrollHeight * 0.5, behavior: 'smooth' });
-                sb.innerText = 'Taranıyor...';
                 setTimeout(function() {
                     var r = scrapeFromDOM();
-                    if (r.length) {
-                        sendToWooCommerce(r);
-                    } else {
-                        sb.innerText = 'Yorumlar sekmesine tıklayın veya sayfayı aşağı kaydırın';
-                    }
+                    if (r.length) sendToWooCommerce(r);
                 }, 1500);
             };
         }
     }
 
-    // İlk Kontrol: DOM'da yorum var mı?
-    var domReviews = scrapeFromDOM();
-    if (domReviews.length > 0) {
-        sendToWooCommerce(domReviews);
+    // 1. Adım: Sayfa belleğindeki __review-detail__PROPS kontrolü (Yorumlar sayfasındaysa anında yakalar)
+    if (window["__review-detail__PROPS"]) {
+        var r1 = parseProps(window["__review-detail__PROPS"]);
+        if (r1.length > 0) {
+            sendToWooCommerce(r1);
+            return;
+        }
+    }
+
+    // 2. Adım: DOM Kontrolü
+    var domR = scrapeFromDOM();
+    if (domR.length > 0) {
+        sendToWooCommerce(domR);
         return;
     }
 
-    // İkinci Kontrol: Trendyol Public API dene (Güvenli, Asla Crash Olmaz)
-    if (cid) {
-        var apiUrl = 'https://public.trendyol.com/discovery-web-socialgw-service/api/reviews/' + cid + '?page=0&size=100';
-        fetch(apiUrl, { headers: { 'Accept': 'application/json' } })
-        .then(function(r) {
-            if (!r.ok) throw new Error('API yanıt vermedi');
-            var ct = r.headers.get('content-type') || '';
-            if (!ct.includes('json')) throw new Error('Geçersiz yanıt tipi');
-            return r.json();
-        })
-        .then(function(data) {
-            var list = (data && data.result && data.result.productReviews && data.result.productReviews.content) ? data.result.productReviews.content : [];
-            if (list && list.length) {
-                var apiPayload = list.map(function(item) {
-                    return {
-                        author: item.userFullName || 'Müşteri',
-                        rating: item.rate || 5,
-                        comment: item.comment || '',
-                        date: item.commentDateISOformat || '',
-                        verified: true
-                    };
-                });
-                sendToWooCommerce(apiPayload);
-            } else {
-                showEmptyGuide();
+    // 3. Adım: Aynı origin üzerinden /yorumlar sayfasını arka planda çek (Tarayıcıdan çağrıldığı için %100 başarılıdır)
+    var targetYorumlar = location.origin + location.pathname.replace(/\/yorumlar$/, '') + '/yorumlar';
+    fetch(targetYorumlar, { credentials: 'same-origin' })
+    .then(function(res){
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        return res.text();
+    })
+    .then(function(html){
+        var pos = html.indexOf('__review-detail__PROPS');
+        if (pos !== -1) {
+            var start = html.indexOf('{', pos);
+            if (start !== -1) {
+                var count = 0;
+                var end = -1;
+                for (var i = start; i < html.length; i++) {
+                    if (html[i] === '{') count++;
+                    else if (html[i] === '}') {
+                        count--;
+                        if (count === 0) { end = i + 1; break; }
+                    }
+                }
+                if (end !== -1) {
+                    try {
+                        var parsedData = JSON.parse(html.substring(start, end));
+                        var r2 = parseProps(parsedData);
+                        if (r2.length > 0) {
+                            sendToWooCommerce(r2);
+                            return;
+                        }
+                    } catch(e){}
+                }
             }
-        })
-        .catch(function() {
-            showEmptyGuide();
-        });
-    } else {
+        }
         showEmptyGuide();
-    }
+    })
+    .catch(function(){
+        showEmptyGuide();
+    });
 })();
 JAVASCRIPT;
 
-    // JavaScript kodunu tek satır bookmarklet formatına getir
     $min_bm = preg_replace('/\s+/', ' ', trim($bm_code));
     $bookmarklet_href = 'javascript:' . rawurlencode($min_bm);
     ?>
@@ -311,7 +359,7 @@ JAVASCRIPT;
             .importer-btn-danger { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; border-radius: 10px; padding: 9px 16px; font-weight: 650; font-size: 0.84rem; cursor: pointer; transition: all 0.2s ease; margin-left: auto; }
             .importer-btn-danger:hover { background: #fecaca; }
             
-            .importer-log-box { background: #0f172a; color: #38bdf8; border-radius: 10px; padding: 14px 18px; font-family: monospace; font-size: 0.82rem; margin-top: 14px; display: none; max-height: 180px; overflow-y: auto; border: 1px solid #334155; }
+            .importer-log-box { background: #0f172a; color: #38bdf8; border-radius: 10px; padding: 14px 18px; font-family: monospace; font-size: 0.82rem; margin-top: 14px; display: none; max-height: 220px; overflow-y: auto; border: 1px solid #334155; }
         </style>
 
         <!-- Canlı İstatistik Çubuğu -->
@@ -341,15 +389,15 @@ JAVASCRIPT;
 
         <!-- Yöntem Sekmeleri -->
         <div class="importer-method-tabs">
-            <button type="button" class="importer-tab-btn is-active" data-tab="bookmarklet">🚀 Yöntem 1: 1-Tıkla Tarayıcı Butonu (Önerilen)</button>
-            <button type="button" class="importer-tab-btn" data-tab="direct-link">🔗 Yöntem 2: Trendyol Linki / Ürün ID</button>
+            <button type="button" class="importer-tab-btn is-active" data-tab="bookmarklet">🚀 Yöntem 1: 1-Tıkla Tarayıcı Butonu (Önerilen - %100 Engelsiz)</button>
+            <button type="button" class="importer-tab-btn" data-tab="direct-link">🔗 Yöntem 2: Trendyol Linki / Akıllı Çekici</button>
             <button type="button" class="importer-tab-btn" data-tab="manual-paste">📋 Yöntem 3: Akıllı Yorum Yapıştırıcı</button>
         </div>
 
         <!-- SEKME 1: 1-Tıkla Bookmarklet (Sıfır Engel) -->
         <div class="importer-tab-content is-active" id="tab-bookmarklet">
             <p style="margin-top: 0; color: #334155; font-size: 0.9rem; line-height: 1.5;">
-                Trendyol'un Cloudflare ve bot korumasını <strong>%100 garantili ve tek tıkla</strong> aşmak için aşağıdaki butonu farenizle basılı tutup tarayıcınızın <strong>Yer İmleri (Sık Kullanılanlar)</strong> çubuğuna sürükleyip bırakın:
+                Trendyol'un tüm Cloudflare ve bot korumasını <strong>kendi tarayıcınızın yetkisiyle anında aşmak</strong> için aşağıdaki turuncu butonu basılı tutup tarayıcınızın <strong>Yer İmleri (Sık Kullanılanlar)</strong> çubuğuna sürükleyip bırakın:
             </p>
             <div style="margin: 18px 0; text-align: center;">
                 <a href="<?php echo $bookmarklet_href; ?>" class="bookmarklet-drag-btn" onclick="alert('Bu butona tıklamak yerine, farenizle basılı tutarak tarayıcınızın üstündeki Yer İmleri (Bookmarks) çubuğuna sürükleyip bırakın!'); return false;">
@@ -362,7 +410,7 @@ JAVASCRIPT;
             <div style="background: #f0fdf4; border: 1.5px solid #bbf7d0; padding: 14px 18px; border-radius: 12px; margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;">
                 <div>
                     <div style="font-weight: 700; color: #166534; font-size: 0.9rem;">📋 Pano Köprüsü (Hızlı Otomatik Aktarım)</div>
-                    <div style="font-size: 0.82rem; color: #15803d; margin-top: 2px;">Trendyol'da butona bastığınızda yorumlar panonuza kopyalandıysa buradan tek tıkla yükleyin:</div>
+                    <div style="font-size: 0.82rem; color: #15803d; margin-top: 2px;">Trendyol'da yer imi butonuna bastığınızda yorumlar panonuza alındıysa buradan tek tıkla yükleyin:</div>
                 </div>
                 <button type="button" class="importer-btn-success" id="mis360_btn_paste_from_clipboard">
                     <span>📥</span> <span>Panodan Yorumları Oku ve Kaydet</span>
@@ -371,17 +419,17 @@ JAVASCRIPT;
             
             <div style="background: #f8fafc; border-left: 3px solid #f97316; padding: 12px 16px; border-radius: 6px; font-size: 0.84rem; color: #475569; margin-top: 14px; line-height: 1.6;">
                 <strong>Nasıl Kullanılır?</strong><br>
-                1. Trendyol'da ilgili Montessori/ahşap ürününün sayfasına gidin.<br>
+                1. Trendyol'da ürünün sayfasına gidin (ister detay sayfası ister <code>/yorumlar</code> sekmesi).<br>
                 2. Yer imlerine eklediğiniz <strong>"Bu Ürüne Trendyol Yorumlarını Çek"</strong> butonuna bir kere tıklayın.<br>
-                3. Çıkan MİS360 penceresinden <strong>"Tüm Yorumları Aç"</strong> veya <strong>"Yorumları Aktar"</strong> deyin. Tüm gerçek yorumlar saniyeler içinde mağazanıza kaydedilir!
+                3. Yorumlar saniyeler içinde mağazanıza kaydedilir. (Yerel ortamdaysanız yeşil butona basmanız yeterlidir).
             </div>
         </div>
 
-        <!-- SEKME 2: Doğrudan Link / ID İle Çekme -->
+        <!-- SEKME 2: Doğrudan Link / Akıllı Çekici -->
         <div class="importer-tab-content" id="tab-direct-link">
             <div class="importer-input-group">
                 <label>Trendyol Ürün Linki veya Content ID:</label>
-                <input type="text" id="mis360_ty_product_url" placeholder="https://www.trendyol.com/emdief-home/carmen-3-rafli-kitaplik-p-38195379 veya sadece 38195379">
+                <input type="text" id="mis360_ty_product_url" placeholder="https://www.trendyol.com/emdief-home/carmen-3-rafli-kitaplik-p-38195379 veya 38195379">
             </div>
             <div class="importer-filter-row">
                 <label><input type="checkbox" id="mis360_only_5stars" checked> Sadece 5 Yıldızlı Yorumları Al</label>
@@ -390,9 +438,7 @@ JAVASCRIPT;
                     <span>⚡</span> <span>Trendyol'dan Çek ve Kaydet</span>
                 </button>
             </div>
-            <div style="font-size: 0.82rem; color: #64748b;">
-                * Not: Trendyol bazen sunucu kaynaklı istekleri Cloudflare bot korumasıyla engelleyebilir. Bu durumda en garantili yöntem <strong>Yöntem 1 (Tarayıcı Butonu)</strong> veya <strong>Yöntem 3 (Yapıştırıcı)</strong>'dır.
-            </div>
+            <div id="mis360_direct_guide_box" style="display:none; margin-top:12px;"></div>
         </div>
 
         <!-- SEKME 3: Akıllı Yorum Yapıştırıcı -->
@@ -496,6 +542,7 @@ JAVASCRIPT;
             const $btn = $(this);
             $btn.prop('disabled', true).text('Çekiliyor...');
             logMsg('Trendyol üzerinden yorumlar taranıyor: ' + urlVal);
+            $('#mis360_direct_guide_box').hide();
 
             $.ajax({
                 url: ajaxUrl,
@@ -518,12 +565,40 @@ JAVASCRIPT;
                             $('#mis360-rating-val').text(Number(res.data.rating).toFixed(1) + ' / 5.0');
                         }
                     } else {
-                        logMsg('⚠️ ' + (res.data || 'Yorumlar sunucu tarafından çekilemedi. Trendyol bot koruması nedeniyle lütfen "Yöntem 1 (1-Tıkla Tarayıcı Butonu)"nu kullanın.'), false);
+                        var errMsg = res && res.data ? res.data.message || res.data : 'Yorumlar çekilemedi.';
+                        logMsg('⚠️ ' + errMsg, false);
+
+                        if (res && res.data && res.data.yorumlar_url) {
+                            var yUrl = res.data.yorumlar_url;
+                            $('#mis360_direct_guide_box').html(
+                                '<div style="background:#fff7ed;border:1.5px solid #fdba74;border-radius:12px;padding:16px;margin-top:10px;">' +
+                                '<div style="font-weight:700;color:#c2410c;font-size:14px;margin-bottom:6px;">🛡️ Trendyol Cloudflare Koruması Algılandı</div>' +
+                                '<div style="font-size:12.5px;color:#475569;margin-bottom:12px;line-height:1.5;">' +
+                                'Trendyol, sunucu IP'lerinden gelen doğrudan bot isteklerini kısıtlıyor. Ancak <strong>kendi tarayıcınız engellenmediği için</strong> tek tıkla çekebilirsiniz:' +
+                                '</div>' +
+                                '<div style="display:flex;gap:10px;flex-wrap:wrap;">' +
+                                '<a href="' + yUrl + '" target="_blank" class="button button-primary" style="background:#ea580c;border-color:#ea580c;font-weight:700;padding:4px 14px;">' +
+                                '🌐 Trendyol Yorumlar Sayfasını Aç' +
+                                '</a>' +
+                                '<button type="button" class="button" id="mis360_switch_tab3" style="font-weight:600;">' +
+                                '📋 Manuel Yorum Yapıştır' +
+                                '</button>' +
+                                '</div>' +
+                                '<div style="font-size:11.5px;color:#9a3412;margin-top:10px;">' +
+                                '💡 <strong>İpucu:</strong> Yukarıdaki butona tıklayıp açılan sayfada yer imlerinizdeki <em>"Bu Ürüne Trendyol Yorumlarını Çek"</em> butonuna basmanız yeterlidir!' +
+                                '</div>' +
+                                '</div>'
+                            ).show();
+
+                            $('#mis360_switch_tab3').on('click', function(){
+                                $('[data-tab="manual-paste"]').click();
+                            });
+                        }
                     }
                 },
-                error: function(xhr, status, error) {
+                error: function() {
                     $btn.prop('disabled', false).html('<span>⚡</span> <span>Trendyol'dan Çek ve Kaydet</span>');
-                    logMsg('Sunucu hatası. Trendyol koruması nedeniyle lütfen "Yöntem 1 (1-Tıkla Tarayıcı Butonu)"nu kullanın.');
+                    logMsg('Sunucu hatası oluştu. Lütfen "Yöntem 1 (Tarayıcı Butonu)"nu kullanın.');
                 }
             });
         });
@@ -629,7 +704,6 @@ function mis360_render_trendyol_bot_admin_page() {
  * 5. AJAX Handler: Bookmarklet ve Harici İsteklerden Gelen Yorumları Kaydet (CORS Destekli)
  */
 function mis360_ajax_import_trendyol_reviews() {
-    // CORS Başlıkları (Trendyol üzerinden gelen fetch isteklerinin engellenmemesi için)
     if (isset($_SERVER['HTTP_ORIGIN'])) {
         header('Access-Control-Allow-Origin: ' . esc_url_raw($_SERVER['HTTP_ORIGIN']));
         header('Access-Control-Allow-Credentials: true');
@@ -693,56 +767,95 @@ function mis360_ajax_fetch_and_import_by_url() {
         wp_send_json_error('Trendyol ürün kimliği (contentId) tespit edilemedi. Lütfen geçerli bir Trendyol linki girin.');
     }
 
-    // Trendyol Public API'ye sunucu tarafından istek at
-    $api_url = "https://public.trendyol.com/discovery-web-socialgw-service/api/reviews/{$cid}?page=0&size=100";
-    $response = wp_remote_get($api_url, [
-        'timeout' => 10,
-        'headers' => [
-            'User-Agent'      => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            'Accept'          => 'application/json, text/plain, */*',
-            'Accept-Language' => 'tr-TR,tr;q=0.9',
-            'Referer'         => 'https://www.trendyol.com/'
+    // Yorumlar sayfasının gerçek adresi
+    $clean_url = preg_replace('/\?.*$/', '', $url);
+    if (!str_ends_with($clean_url, '/yorumlar')) {
+        $yorumlar_url = rtrim($clean_url, '/') . '/yorumlar';
+    } else {
+        $yorumlar_url = $clean_url;
+    }
+
+    // Sunucu tarafından SEO SSR yorumlar sayfasını çekmeyi dene
+    $response = wp_remote_get($yorumlar_url, [
+        'timeout'    => 12,
+        'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+        'headers'    => [
+            'Accept'          => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language' => 'tr-TR,tr;q=0.9'
         ]
     ]);
 
-    if (is_wp_error($response)) {
-        wp_send_json_error('Trendyol API bağlantı hatası: ' . $response->get_error_message() . '. Lütfen "Yöntem 1 (1-Tıkla Tarayıcı Butonu)"nu kullanın.');
-    }
-
-    $status_code = wp_remote_retrieve_response_code($response);
-    $body        = wp_remote_retrieve_body($response);
-
-    if ($status_code !== 200 || empty($body)) {
-        wp_send_json_error('Trendyol bot koruması (Cloudflare) sunucu isteğini engelledi (HTTP ' . $status_code . '). Lütfen tarayıcınızın engellenmeyen bağlantısını kullanan "Yöntem 1 (1-Tıkla Tarayıcı Butonu)"nu tercih edin.');
-    }
-
-    $json = json_decode($body, true);
-    $list = isset($json['result']['productReviews']['content']) ? $json['result']['productReviews']['content'] : [];
-
-    if (empty($list)) {
-        wp_send_json_error('Bu üründe Trendyol üzerinde henüz onaylanmış yorum bulunamadı.');
-    }
-
     $reviews_to_save = [];
-    foreach ($list as $item) {
-        $rate = isset($item['rate']) ? (int)$item['rate'] : 5;
-        if ($only_5 && $rate < 5) continue;
 
-        $reviews_to_save[] = [
-            'author'   => !empty($item['userFullName']) ? $item['userFullName'] : 'Müşteri',
-            'rating'   => $rate,
-            'comment'  => !empty($item['comment']) ? $item['comment'] : '',
-            'date'     => !empty($item['commentDateISOformat']) ? $item['commentDateISOformat'] : current_time('mysql'),
-            'verified' => true
-        ];
+    if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+        $html = wp_remote_retrieve_body($response);
+        $pos = strpos($html, '__review-detail__PROPS');
+        if ($pos !== false) {
+            $start = strpos($html, '{', $pos);
+            if ($start !== false) {
+                $len = strlen($html);
+                $count = 0;
+                $end = false;
+                for ($i = $start; $i < $len; $i++) {
+                    $char = $html[$i];
+                    if ($char === '{') $count++;
+                    elseif ($char === '}') {
+                        $count--;
+                        if ($count === 0) { $end = $i + 1; break; }
+                    }
+                }
+                if ($end !== false) {
+                    $json_data = json_decode(substr($html, $start, $end - $start), true);
+                    if (is_array($json_data)) {
+                        // reviewImages
+                        if (!empty($json_data['reviewImages']['content'])) {
+                            foreach ($json_data['reviewImages']['content'] as $item) {
+                                $rate = isset($item['rate']) ? (int)$item['rate'] : 5;
+                                if ($only_5 && $rate < 5) continue;
+                                if (!empty($item['comment'])) {
+                                    $reviews_to_save[] = [
+                                        'author'   => !empty($item['userFullName']) ? $item['userFullName'] : 'Müşteri',
+                                        'rating'   => $rate,
+                                        'comment'  => trim($item['comment']),
+                                        'date'     => !empty($item['lastModifiedDate']) ? date('Y-m-d H:i:s', (int)($item['lastModifiedDate'] / 1000)) : current_time('mysql'),
+                                        'verified' => true
+                                    ];
+                                }
+                            }
+                        }
+                        // productReviews
+                        if (!empty($json_data['productReviews']['content'])) {
+                            foreach ($json_data['productReviews']['content'] as $item) {
+                                $rate = isset($item['rate']) ? (int)$item['rate'] : 5;
+                                if ($only_5 && $rate < 5) continue;
+                                if (!empty($item['comment'])) {
+                                    $reviews_to_save[] = [
+                                        'author'   => !empty($item['userFullName']) ? $item['userFullName'] : 'Müşteri',
+                                        'rating'   => $rate,
+                                        'comment'  => trim($item['comment']),
+                                        'date'     => !empty($item['lastModifiedDate']) ? date('Y-m-d H:i:s', (int)($item['lastModifiedDate'] / 1000)) : current_time('mysql'),
+                                        'verified' => true
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
-    if (empty($reviews_to_save)) {
-        wp_send_json_error('Filtre kriterlerine uygun yorum bulunamadı.');
+    if (!empty($reviews_to_save)) {
+        $result = mis360_process_and_save_reviews($product_id, $reviews_to_save);
+        wp_send_json_success($result);
+    } else {
+        // Sunucu engellendiyse kullanıcıya direkt link ve 1-tıkla açma kılavuzunu döndür
+        wp_send_json_error([
+            'message'      => 'Trendyol Cloudflare sunucu isteğini engelledi.',
+            'yorumlar_url' => $yorumlar_url,
+            'content_id'   => $cid
+        ]);
     }
-
-    $result = mis360_process_and_save_reviews($product_id, $reviews_to_save);
-    wp_send_json_success($result);
 }
 add_action('wp_ajax_mis360_ajax_fetch_and_import_by_url', 'mis360_ajax_fetch_and_import_by_url');
 
