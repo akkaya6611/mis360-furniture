@@ -327,20 +327,57 @@ function mis360Init() {
         });
     });
 
-    // ?ifre G?ster / Gizle
-    const togglePassBtn = document.getElementById('emdief-toggle-pass');
-    const passInput = document.getElementById('emdief-user-pass');
-    if (togglePassBtn && passInput) {
-        togglePassBtn.addEventListener('click', () => {
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                togglePassBtn.textContent = '??';
+    // Şifre Göster / Gizle (Tüm formlar için evrensel)
+    document.querySelectorAll('.toggle-password-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const wrap = btn.closest('.input-password-wrap');
+            if (!wrap) return;
+            const input = wrap.querySelector('input');
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
             } else {
-                passInput.type = 'password';
-                togglePassBtn.textContent = '???';
+                input.type = 'password';
+                btn.textContent = '👁️';
             }
         });
+    });
+
+    // Telefon Numarası Otomatik Formatlama / Maskeleme (0 (5XX) XXX XX XX)
+    function formatTurkishPhone(value) {
+        let digits = value.replace(/\D/g, '');
+        if (digits.startsWith('90') && digits.length > 10) {
+            digits = digits.substring(2);
+        }
+        if (!digits.startsWith('0') && digits.length > 0) {
+            digits = '0' + digits;
+        }
+        digits = digits.substring(0, 11);
+
+        let res = '';
+        if (digits.length > 0) res += digits.substring(0, 1);
+        if (digits.length > 1) res += ' (' + digits.substring(1, Math.min(4, digits.length));
+        if (digits.length >= 4) res += ') ';
+        if (digits.length > 4) res += digits.substring(4, Math.min(7, digits.length));
+        if (digits.length >= 7) res += ' ';
+        if (digits.length > 7) res += digits.substring(7, Math.min(9, digits.length));
+        if (digits.length >= 9) res += ' ';
+        if (digits.length > 9) res += digits.substring(9, 11);
+        return res;
     }
+
+    document.addEventListener('input', (e) => {
+        const target = e.target;
+        if (!target) return;
+        if (target.classList.contains('emdief-phone-input') || target.name === 'billing_phone' || target.id === 'emdief-reg-phone' || target.id === 'reg_billing_phone') {
+            const prevVal = target.value;
+            const formatted = formatTurkishPhone(prevVal);
+            if (prevVal !== formatted) {
+                target.value = formatted;
+            }
+        }
+    });
 
     // 4. Sayfa Ba??na D?n (Back to Top)
     const backToTopBtn = document.getElementById('emdief-back-to-top');

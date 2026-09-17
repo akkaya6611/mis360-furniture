@@ -460,8 +460,8 @@ if (!defined('ABSPATH')) {
             <div class="auth-form-panel is-active" id="auth-tab-login">
                 <form method="post" action="<?php echo esc_url(site_url('wp-login.php', 'login_post')); ?>" class="emdief-auth-form">
                     <div class="form-group">
-                        <label for="emdief-user-login"><?php esc_html_e('E-posta veya Kullanıcı Adı', 'mis360-mobilya'); ?></label>
-                        <input type="text" name="log" id="emdief-user-login" class="form-input" required placeholder="ornek@mail.com" autocomplete="username">
+                        <label for="emdief-user-login"><?php esc_html_e('E-posta veya Cep Telefonu', 'mis360-mobilya'); ?></label>
+                        <input type="text" name="log" id="emdief-user-login" class="form-input" required placeholder="ornek@mail.com veya 05XX XXX XX XX" autocomplete="username">
                     </div>
                     <div class="form-group">
                         <div class="d-flex-between">
@@ -492,12 +492,19 @@ if (!defined('ABSPATH')) {
                 <form method="post" action="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : wp_registration_url()); ?>" class="emdief-auth-form">
                     <div class="form-group">
                         <label for="emdief-reg-email"><?php esc_html_e('E-posta Adresi', 'mis360-mobilya'); ?></label>
-                        <input type="email" name="<?php echo class_exists('WooCommerce') ? 'email' : 'user_email'; ?>" id="emdief-reg-email" class="form-input" required placeholder="ornek@mail.com">
+                        <input type="email" name="<?php echo class_exists('WooCommerce') ? 'email' : 'user_email'; ?>" id="emdief-reg-email" class="form-input" required placeholder="ornek@mail.com" autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="emdief-reg-phone"><?php esc_html_e('Cep Telefonu Numarası', 'mis360-mobilya'); ?></label>
+                        <input type="tel" name="billing_phone" id="emdief-reg-phone" class="form-input emdief-phone-input" required placeholder="0 (5XX) XXX XX XX" pattern="[0-9\s\(\)\-\+]{10,18}" autocomplete="tel">
                     </div>
                     <?php if (class_exists('WooCommerce')): ?>
                         <div class="form-group">
                             <label for="emdief-reg-pass"><?php esc_html_e('Şifre', 'mis360-mobilya'); ?></label>
-                            <input type="password" name="password" id="emdief-reg-pass" class="form-input" required placeholder="<?php esc_attr_e('Güvenli bir şifre belirleyin', 'mis360-mobilya'); ?>">
+                            <div class="input-password-wrap">
+                                <input type="password" name="password" id="emdief-reg-pass" class="form-input" required placeholder="<?php esc_attr_e('Güvenli bir şifre belirleyin', 'mis360-mobilya'); ?>" autocomplete="new-password">
+                                <button type="button" class="toggle-password-btn" id="emdief-toggle-reg-pass" aria-label="<?php esc_attr_e('Şifreyi Göster', 'mis360-mobilya'); ?>">👁️</button>
+                            </div>
                         </div>
                         <?php wp_nonce_field('woocommerce-register', 'woocommerce-register-nonce'); ?>
                         <input type="hidden" name="register" value="1">

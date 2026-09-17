@@ -7103,3 +7103,111 @@ function mis360_cart_page_auth_notice() {
     </div>
     <?php
 }
+
+// 11. Kayıt Formunda Telefon Numarası Alanı (Standart WooCommerce Hesabım Sayfası)
+add_action('woocommerce_register_form', 'mis360_add_phone_field_to_register_form', 15);
+function mis360_add_phone_field_to_register_form() {
+    ?>
+    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+        <label for="reg_billing_phone">
+            <?php esc_html_e('Cep Telefonu Numarası', 'mis360-mobilya'); ?>&nbsp;<span class="required">*</span>
+        </label>
+        <input type="tel" class="woocommerce-Input woocommerce-Input--text input-text emdief-phone-input" name="billing_phone" id="reg_billing_phone" autocomplete="tel" value="<?php echo (!empty($_POST['billing_phone'])) ? esc_attr(wp_unslash($_POST['billing_phone'])) : ''; ?>" placeholder="0 (5XX) XXX XX XX" required />
+    </p>
+    <?php
+}
+
+// 12. Kayıt Esnasında Telefon Numarası Doğrulaması
+add_filter('woocommerce_registration_errors', 'mis360_validate_register_phone_field', 10, 3);
+function mis360_validate_register_phone_field($errors, $username, $email) {
+    if (empty($_POST['billing_phone'])) {
+        $errors->add('billing_phone_error', __('<strong>Hata:</strong> Lütfen geçerli bir cep telefonu numarası giriniz.', 'mis360-mobilya'));
+    } else {
+        $clean = preg_replace('/[^0-9]/', '', sanitize_text_field($_POST['billing_phone']));
+        if (strlen($clean) < 10 || strlen($clean) > 13) {
+            $errors->add('billing_phone_error', __('<strong>Hata:</strong> Lütfen geçerli bir cep telefonu numarası giriniz (örn: 0 (5XX) XXX XX XX).', 'mis360-mobilya'));
+        }
+    }
+    return $errors;
+}
+
+// 13. Yeni Üye Oluşturulduğunda Telefon Numarasını Kaydetme (Ödeme Sayfasında Otomatik Dolar)
+add_action('woocommerce_created_customer', 'mis360_save_register_phone_field');
+function mis360_save_register_phone_field($customer_id) {
+    if (!empty($_POST['billing_phone'])) {
+        $raw_phone = sanitize_text_field($_POST['billing_phone']);
+        $clean_phone = preg_replace('/[^0-9]/', '', $raw_phone);
+
+        update_user_meta($customer_id, 'billing_phone', $raw_phone);
+        update_user_meta($customer_id, 'billing_phone_clean', $clean_phone);
+
+        // WC Müşteri nesnesine de fatura telefonu olarak kaydet
+        if (class_exists('WC_Customer')) {
+            try {
+                $customer = new WC_Customer($customer_id);
+                if ($customer) {
+                    $customer->set_billing_phone($raw_phone);
+                    $customer->save();
+                }
+            } catch (Exception $e) {
+                // Sessizce logla
+            }
+        }
+    }
+}
+
+// 14. Telefon Numarası veya E-posta ile Giriş Yapabilme Desteği
+add_filter('authenticate', 'mis360_authenticate_by_phone_or_email', 25, 3);
+function mis360_authenticate_by_phone_or_email($user, $username, $password) {
+    if ($user instanceof WP_User) {
+        return $user;
+    }
+    if (empty($username) || empty($password)) {
+        return $user;
+    }
+
+    $clean = preg_replace('/[^0-9]/', '', $username);
+    // En az 10 rakam girildiyse telefon numarası olarak ara
+    if (strlen($clean) >= 10) {
+        $search_variants = [$clean];
+        if (strpos($clean, '90') === 0 && strlen($clean) === 12) {
+            $search_variants[] = substr($clean, 2);
+            $search_variants[] = '0' . substr($clean, 2);
+        } elseif (strpos($clean, '0') === 0 && strlen($clean) === 11) {
+            $search_variants[] = substr($clean, 1);
+            $search_variants[] = '90' . substr($clean, 1);
+        } elseif (strlen($clean) === 10) {
+            $search_variants[] = '0' . $clean;
+            $search_variants[] = '90' . $clean;
+        }
+
+        $meta_query = ['relation' => 'OR'];
+        foreach ($search_variants as $var) {
+            $meta_query[] = [
+                'key'     => 'billing_phone_clean',
+                'value'   => $var,
+                'compare' => '='
+            ];
+            $meta_query[] = [
+                'key'     => 'billing_phone',
+                'value'   => $var,
+                'compare' => 'LIKE'
+            ];
+        }
+
+        $found_users = get_users([
+            'meta_query' => $meta_query,
+            'number'     => 1
+        ]);
+
+        if (!empty($found_users)) {
+            $matched_user = reset($found_users);
+            if (wp_check_password($password, $matched_user->user_pass, $matched_user->ID)) {
+                return $matched_user;
+            }
+        }
+    }
+
+    return $user;
+}
+
