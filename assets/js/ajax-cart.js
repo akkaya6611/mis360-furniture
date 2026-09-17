@@ -1,6 +1,6 @@
 /**
  * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
- * Version: 1.9.18
+ * Version: 1.9.19
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -134,9 +134,47 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.subtotal !== undefined) {
                 $('.emdief-cart-total').html(data.subtotal);
             }
+
+            // 4. SessionStorage'a kaydet (Önbellekli anasayfada sıfır gecikmeyle göstermek için)
+            try {
+                sessionStorage.setItem('emdief_cart_data', JSON.stringify(data));
+            } catch(err) {}
         }
 
-        // 1. Ürün Kartlarından (Slider / Kategori / Ansayfa) Sepete Ekleme
+        // Önbellekli Sayfalarda Sepet Durumunu Canlı Eşitleme
+        function syncCartState() {
+            // A. Önce SessionStorage'dan anında yükle (0 ms gecikme)
+            try {
+                const cachedData = sessionStorage.getItem('emdief_cart_data');
+                if (cachedData) {
+                    const parsed = JSON.parse(cachedData);
+                    applyFragments(parsed);
+                }
+            } catch (err) {}
+
+            // B. Sunucudan taze sepet verisini çekip doğrula
+            $.ajax({
+                type: 'POST',
+                url: ajaxUrl,
+                data: {
+                    action: 'mis360_get_cart_fragments',
+                    nonce: nonce
+                },
+                success: function(response) {
+                    if (response && response.success && response.data) {
+                        applyFragments(response.data);
+                    }
+                }
+            });
+        }
+
+        // Sayfa açıldığında senkronize et
+        syncCartState();
+        window.addEventListener('pageshow', (e) => {
+            if (e.persisted) syncCartState();
+        });
+
+        // 1. Ürün Kartlarından (Slider / Kategori / Anasayfa) Sepete Ekleme
         $(document).on('click', '.trendyol-btn-add-cart, .emdief-btn-add-cart, .ajax_add_to_cart', function(e) {
             const $btn = $(this);
 

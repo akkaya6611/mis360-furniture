@@ -854,6 +854,47 @@ add_action('wp_ajax_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
 add_action('wp_ajax_nopriv_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
 
 /**
+ * AJAX Cart Fragments Endpoint (Önbelleğe Alınmış Sayfalarda Canlı Senkronizasyon)
+ */
+function mis360_ajax_get_cart_fragments() {
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+    if (!isset(WC()->cart) || null === WC()->cart) {
+        if (function_exists('WC') && method_exists(WC(), 'initialize_cart')) {
+            WC()->initialize_session();
+            WC()->initialize_cart();
+        }
+    }
+
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
+
+    $count = (function_exists('WC') && WC()->cart) ? (string) WC()->cart->get_cart_contents_count() : '0';
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
+
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
+
+    wp_send_json_success([
+        'fragments' => $fragments,
+        'count'     => $count,
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
+    ]);
+}
+add_action('wp_ajax_mis360_get_cart_fragments', 'mis360_ajax_get_cart_fragments');
+add_action('wp_ajax_nopriv_mis360_get_cart_fragments', 'mis360_ajax_get_cart_fragments');
+
+/**
  * AJAX ve Sepet Yönlendirme Kontrolleri
  * - WooCommerce standart AJAX sepete eklemeyi daima zorunlu kılar
  * - Sepete eklendikten sonra /sepet/ sayfasına yönlendirmeyi %100 engeller (Çekmece açılması için)
