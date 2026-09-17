@@ -168,39 +168,140 @@ function mis360Init() {
     if (authClose) authClose.addEventListener('click', closeAuthModal);
     if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
 
-    // Siparişi Tamamla tıklandığında üye değilse giriş/kayıt modalını akıllıca aç
+    // Misafir kullanıcılar için Sepet Sayfası, Bloklar ve Çekmecedeki TÜM Ödeme Butonlarını Yakala
     document.addEventListener('click', (e) => {
-        const checkoutAuthBtn = e.target.closest('.emdief-checkout-auth-btn');
-        if (!checkoutAuthBtn) return;
+        // Zaten giriş yapmışsa normal devam etsin
+        if (window.mis360Data && window.mis360Data.isUserLoggedIn) {
+            return;
+        }
 
+        const target = e.target;
+        if (!target) return;
+
+        const checkoutBtn = target.closest(
+            '.emdief-checkout-auth-btn, ' +
+            '.checkout-button, ' +
+            '.wc-block-cart__submit-button, ' +
+            '.wc-block-components-checkout-button, ' +
+            '.wc-block-cart__submit a, ' +
+            'a.wc-block-cart__submit-button, ' +
+            'a[href*="/odeme"], ' +
+            'a[href*="/checkout"], ' +
+            'button[data-auth-prompt="checkout"]'
+        );
+
+        if (!checkoutBtn) return;
+
+        // Navigasyon veya submit işlemini KESİNLİKLE durdur!
         e.preventDefault();
+        e.stopPropagation();
         e.stopImmediatePropagation();
+
+        // Çekmece açıksa kapat
         if (typeof window.mis360CloseCartDrawer === 'function') {
             window.mis360CloseCartDrawer();
         }
 
         const modal = document.getElementById('emdief-auth-modal');
         if (modal) {
-            const checkoutUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : (checkoutAuthBtn.getAttribute('data-href') || checkoutAuthBtn.getAttribute('href') || '/odeme/');
+            const checkoutUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
             const loginRedir = modal.querySelector('#emdief-login-redirect, input[name="redirect_to"]');
-            if (loginRedir && checkoutUrl) {
-                loginRedir.value = checkoutUrl;
-            }
+            if (loginRedir) loginRedir.value = checkoutUrl;
+
             const regRedir = modal.querySelector('#emdief-reg-redirect, input[name="redirect"]');
-            if (regRedir && checkoutUrl) {
-                regRedir.value = checkoutUrl;
+            if (regRedir) regRedir.value = checkoutUrl;
+
+            const modalTitle = modal.querySelector('.auth-modal-title');
+            if (modalTitle) {
+                modalTitle.textContent = 'Sipariş İçin Üyelik Gerekmektedir';
             }
 
             const modalSub = modal.querySelector('.auth-modal-subtitle');
             if (modalSub) {
-                modalSub.textContent = 'Siparişinizi tamamlamak ve adres/fatura bilgilerinizi kaydetmek için lütfen giriş yapın veya ücretsiz üye olun.';
+                modalSub.innerHTML = '⚠️ <strong>Adres ve fatura bilgilerinizi girmeden önce</strong> kargo ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.';
             }
 
             openAuthModal('login');
         } else {
-            window.location.href = checkoutAuthBtn.getAttribute('data-href') || checkoutAuthBtn.getAttribute('href') || '/odeme/';
+            window.location.href = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
         }
-    });
+        return false;
+    }, true); // useCapture = true! React ve Gutenberg event delegation öncesi en başta yakalar!
+
+    // Ödeme Sayfasında (Checkout) Misafir Kullanıcı Kontrolü ve Zorunlu Üyelik Uyarısı
+    function initCheckoutAuthGuard() {
+        const isCheckout = (window.mis360Data && window.mis360Data.isCheckout) || 
+                           window.location.pathname.indexOf('/odeme') !== -1 || 
+                           window.location.pathname.indexOf('/checkout') !== -1;
+
+        if (!isCheckout) return;
+
+        const isLoggedIn = window.mis360Data ? window.mis360Data.isUserLoggedIn : false;
+        if (isLoggedIn) return;
+
+        // 1. Eğer Gutenberg Blok veya klasik checkout varsa ve uyarı kutusu henüz sayfada yoksa dinamik ekle
+        function checkAndInjectGate() {
+            if (document.querySelector('.emdief-checkout-auth-gate-box')) return;
+
+            const targetContainer = document.querySelector('.wp-block-woocommerce-checkout, form.checkout, .woocommerce-checkout, main#primary .entry-content');
+            if (!targetContainer) return;
+
+            const gateBox = document.createElement('div');
+            gateBox.className = 'emdief-checkout-auth-gate-box';
+            gateBox.innerHTML = `
+                <div class="auth-gate-badge">
+                    <span class="gate-pulse"></span>
+                    🔒 ADRES & FATURA ÖNCESİ ZORUNLU ADIM
+                </div>
+                <div class="auth-gate-content">
+                    <h3 class="auth-gate-title">
+                        ⚠️ Sipariş Oluşturabilmek İçin Üyelik Gerekmektedir!
+                    </h3>
+                    <p class="auth-gate-desc">
+                        Değerli müşterimiz; fatura güvenliğiniz, yasal haklarınız ve kargo durumunuzu anlık takip edebilmeniz için <strong>adres ve fatura bilgilerinizi girmeden önce lütfen sisteme giriş yapın veya ücretsiz üye olun.</strong>
+                    </p>
+                    <div class="auth-gate-buttons">
+                        <button type="button" class="emdief-btn btn-primary auth-gate-btn-login" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');} return false;">
+                            🔑 Giriş Yap
+                        </button>
+                        <button type="button" class="emdief-btn btn-warm auth-gate-btn-register" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('register');} return false;">
+                            ✨ Hızlı Üye Ol (10 Saniyede Ücretsiz)
+                        </button>
+                    </div>
+                </div>
+            `;
+            targetContainer.insertBefore(gateBox, targetContainer.firstChild);
+        }
+
+        checkAndInjectGate();
+        setTimeout(checkAndInjectGate, 500);
+        setTimeout(checkAndInjectGate, 1200);
+
+        // 2. Ödeme sayfasına gelindiğinde kullanıcıyı hemen uyar (Popup aç)
+        setTimeout(() => {
+            const modal = document.getElementById('emdief-auth-modal');
+            if (modal && !modal.classList.contains('is-active')) {
+                const modalSub = modal.querySelector('.auth-modal-subtitle');
+                if (modalSub) {
+                    modalSub.innerHTML = '⚠️ <strong>Adres ve fatura bilgilerinizi girmeden önce</strong> lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.';
+                }
+                openAuthModal('login');
+            }
+        }, 700);
+
+        // 3. Misafir kullanıcı adres formuna odaklanırsa popup'ı aç
+        document.addEventListener('focusin', (e) => {
+            if (window.mis360Data && window.mis360Data.isUserLoggedIn) return;
+            const input = e.target.closest('input, select, textarea');
+            if (!input) return;
+            if (input.closest('.emdief-modal') || input.closest('.emdief-header')) return;
+            if (input.closest('.wp-block-woocommerce-checkout, form.checkout, .woocommerce-billing-fields, .wc-block-components-address-form')) {
+                openAuthModal('login');
+            }
+        });
+    }
+
+    initCheckoutAuthGuard();
 
     // Modal ??i Tab De?i?imi (Giri? Yap / Kay?t Ol)
     const tabButtons = document.querySelectorAll('.auth-tab-btn');

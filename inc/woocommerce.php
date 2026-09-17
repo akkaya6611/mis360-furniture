@@ -7082,3 +7082,23 @@ function mis360_button_proceed_to_checkout() {
         <?php
     }
 }
+
+// 10. Sepet Sayfasında (Cart) Giriş Yapmamış Kullanıcılar İçin Bilgilendirme Kartı
+add_action('woocommerce_before_cart', 'mis360_cart_page_auth_notice', 15);
+function mis360_cart_page_auth_notice() {
+    if (is_user_logged_in()) {
+        return;
+    }
+    ?>
+    <div class="cart-guest-auth-alert">
+        <div class="cart-alert-icon">🔒</div>
+        <div class="cart-alert-body">
+            <strong><?php esc_html_e('Sipariş verebilmek için üyelik gerekmektedir:', 'mis360-mobilya'); ?></strong>
+            <span><?php esc_html_e('Adres ve fatura bilgilerinizi girmeden önce kargo ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.', 'mis360-mobilya'); ?></span>
+        </div>
+        <button type="button" class="emdief-btn btn-sm btn-primary cart-alert-btn" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');} return false;">
+            🔑 <?php esc_html_e('Giriş Yap / Üye Ol', 'mis360-mobilya'); ?>
+        </button>
+    </div>
+    <?php
+}

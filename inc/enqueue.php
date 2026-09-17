@@ -51,6 +51,21 @@ function mis360_mobilya_scripts() {
         );
     }
 
+    $free_shipping_min = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+    $mis360_data = [
+        'ajaxUrl'           => admin_url('admin-ajax.php'),
+        'nonce'             => wp_create_nonce('mis360_cart_nonce'),
+        'freeShippingLimit' => $free_shipping_min,
+        'currencySymbol'    => function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : 'TL',
+        'addedToCartText'   => __('Sepete Eklendi!', 'mis360-mobilya'),
+        'addingText'        => __('Ekleniyor...', 'mis360-mobilya'),
+        'isUserLoggedIn'    => is_user_logged_in(),
+        'checkoutUrl'       => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/odeme/'),
+        'cartUrl'           => function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/sepet/'),
+        'isCheckout'        => function_exists('is_checkout') ? (is_checkout() && !is_order_received_page()) : false,
+        'isCart'            => function_exists('is_cart') ? is_cart() : false,
+    ];
+
     // 5. Ana Tema Scripti (Vanilla JS)
     wp_enqueue_script(
         'mis360-main-js',
@@ -59,6 +74,7 @@ function mis360_mobilya_scripts() {
         $main_js_ver,
         true
     );
+    wp_localize_script('mis360-main-js', 'mis360Data', $mis360_data);
 
     // 6. WooCommerce AJAX Sepet ve Çekmece Scripti
     if (class_exists('WooCommerce')) {
@@ -71,19 +87,7 @@ function mis360_mobilya_scripts() {
             $cart_js_ver,
             true
         );
-
-        $free_shipping_min = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
-
-        wp_localize_script('mis360-ajax-cart', 'mis360Data', [
-            'ajaxUrl'           => admin_url('admin-ajax.php'),
-            'nonce'             => wp_create_nonce('mis360_cart_nonce'),
-            'freeShippingLimit' => $free_shipping_min,
-            'currencySymbol'    => function_exists('get_woocommerce_currency_symbol') ? get_woocommerce_currency_symbol() : 'TL',
-            'addedToCartText'   => __('Sepete Eklendi!', 'mis360-mobilya'),
-            'addingText'        => __('Ekleniyor...', 'mis360-mobilya'),
-            'isUserLoggedIn'    => is_user_logged_in(),
-            'checkoutUrl'       => function_exists('wc_get_checkout_url') ? wc_get_checkout_url() : home_url('/odeme/'),
-        ]);
+        wp_localize_script('mis360-ajax-cart', 'mis360Data', $mis360_data);
     }
 }
 add_action('wp_enqueue_scripts', 'mis360_mobilya_scripts');
