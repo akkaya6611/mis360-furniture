@@ -255,7 +255,6 @@
                 }
 
                 const qty = $btn.data('quantity') || 1;
-                const isFlash = ($btn.data('flash_deal') == '1' || $btn.data('is_flash_deal') == '1' || $btn.attr('data-flash_deal') == '1') ? 1 : 0;
                 const originalHtml = $btn.html();
 
                 $btn.addClass('loading').css('pointer-events', 'none');
@@ -271,8 +270,6 @@
                         action: 'mis360_ajax_add_to_cart',
                         product_id: productId,
                         quantity: qty,
-                        is_flash_deal: isFlash,
-                        flash_deal: isFlash,
                         nonce: nonce
                     },
                     success: function(response) {

@@ -911,50 +911,7 @@ add_filter('woocommerce_get_script_data', function($params, $handle) {
     return $params;
 }, 10, 2);
 
-/**
- * Flaş Ürünler için Cart Item Data ve İndirim Entegrasyonu
- * Standart WooCommerce AJAX veya form ile eklense dahi Flaş etiketi sepette korunur
- */
-function mis360_add_flash_deal_cart_item_data($cart_item_data, $product_id, $variation_id = 0, $quantity = 1) {
-    if (!empty($_REQUEST['flash_deal']) || !empty($_REQUEST['is_flash_deal']) || !empty($_POST['flash_deal']) || !empty($_POST['is_flash_deal'])) {
-        $cart_item_data['is_flash_deal'] = 1;
-    }
-    return $cart_item_data;
-}
-add_filter('woocommerce_add_cart_item_data', 'mis360_add_flash_deal_cart_item_data', 10, 4);
-
-function mis360_get_cart_item_from_session($cart_item, $values) {
-    if (!empty($values['is_flash_deal'])) {
-        $cart_item['is_flash_deal'] = 1;
-    }
-    return $cart_item;
-}
-add_filter('woocommerce_get_cart_item_from_session', 'mis360_get_cart_item_from_session', 10, 2);
-
-/**
- * Flaş Ürünler için Sepette 25 TL İndirim (Otomatik Flaş Fırsat İndirimi)
- */
-function mis360_apply_flash_deal_cart_discount($cart) {
-    if (is_admin() && !defined('DOING_AJAX')) {
-        return;
-    }
-    if (!function_exists('WC') || !WC()->cart || WC()->cart->is_empty()) {
-        return;
-    }
-
-    $flash_items = 0;
-    foreach (WC()->cart->get_cart() as $cart_item) {
-        if (!empty($cart_item['is_flash_deal'])) {
-            $flash_items += $cart_item['quantity'];
-        }
-    }
-
-    if ($flash_items > 0) {
-        $discount = -25 * $flash_items;
-        $cart->add_fee(__('Flaş Fırsat İndirimi (-25 TL)', 'mis360-mobilya'), $discount);
-    }
-}
-add_action('woocommerce_cart_calculate_fees', 'mis360_apply_flash_deal_cart_discount');
+/* Flaş indirim motoru kaldırıldı (Kupon koduna hazır) */
 
 
 

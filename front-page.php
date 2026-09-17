@@ -1,10 +1,10 @@
 <?php
 /**
- * Front Page Template - Trendyol Tarzı Hero Banner, Story Halkaları & 3 Dinamik Ürün Sliderı
+ * Front Page Template - Trendyol Tarzı Hero Banner, Story Halkaları & 4 Dinamik Ürün Sliderı
  *
  * @package Mis360-Mobilya
+ * @version 1.9.21 - Net Fiyatlar & Sıfır Yapay İndirim
  */
-
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,7 +19,7 @@ get_header();
 <section class="trendyol-story-section">
     <div class="emdief-container">
         <div class="story-bubbles-scroll">
-            <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') . '?on_sale=1' : home_url('/')); ?>" class="story-item">
+            <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="story-item">
                 <div class="story-ring ring-fire">
                     <div class="story-inner">🔥</div>
                 </div>
@@ -98,95 +98,77 @@ get_header();
                         %100 YERLİ İMALAT • DOĞAL AHŞAP & 1. SINIF MDF
                     </span>
                     <h1 class="bento-hero-title">Çocukların Özgürce Öğrendiği Alanlar</h1>
-                    <p class="bento-hero-desc">Montessori felsefesinden ilham alan, çocukların bağımsızlığını destekleyen özel tasarım mobilyalar.</p>
-                    <div class="bento-hero-highlights">
-                        <span class="highlight-chip">🛡️ E1 Standartı 1. Sınıf MDF</span>
-                        <span class="highlight-chip">🌿 360° Sivri Köşesiz Hatlar</span>
-                        <span class="highlight-chip">🚚 1.500 TL Üzeri Ücretsiz Kargo</span>
-                    </div>
+                    <p class="bento-hero-desc">Pedagojik Montessori yaklaşımıyla üretilen doğal ahşap ve 1. sınıf dayanıklı MDF mobilyalarımızla miniklerin hayal dünyasını güvenle inşa edin.</p>
+                    
                     <div class="bento-hero-actions">
                         <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="bento-btn-primary">
-                            <span>Ürünleri Keşfet</span>
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            <span>Koleksiyonu Keşfet</span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </a>
-                        <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="bento-btn-subtle">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                            <span>Kurulum &amp; Yardım</span>
+                        <a href="#montessori-felsefesi" class="bento-btn-secondary">
+                            <span>Montessori Nedir?</span>
                         </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Sağ Yan 2'li Bento Kategori Kartları -->
+            <!-- Sağ 2'li Kategori Kartları -->
             <div class="bento-side-cards">
-                <!-- 1. Kutu: Çok Satan Montessori Kitaplıklar (Carmen & Safir) -->
-                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="bento-subcard card-warm">
-                    <div class="subcard-text">
-                        <span class="subcard-eyebrow eyebrow-orange">⭐ EN ÇOK SATAN</span>
-                        <h3 class="subcard-title">Montessori<br>Kitaplıklar</h3>
-                        <p class="subcard-subtitle">Carmen &amp; Safir Serisi</p>
-                        <span class="subcard-cta">
-                            <span>Koleksiyonu İncele</span>
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <!-- Sağ Üst Kart: Montessori Kitaplıklar -->
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/?s=kitapl%C4%B1k&post_type=product')); ?>" class="bento-card bento-card-bookshelf">
+                    <div class="bento-card-bg bg-bookshelf"></div>
+                    <div class="bento-card-scrim"></div>
+                    <div class="bento-card-content">
+                        <span class="bento-card-tag tag-amber">📚 EN ÇOK TERCİH EDİLEN</span>
+                        <h3>Montessori Kitaplıklar</h3>
+                        <p>Çocukların boyuna özel ergonomik, ön yüzü görünür kapak sergileme alanı.</p>
+                        <span class="bento-card-link-text">
+                            <span>Modelleri İncele</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </span>
-                    </div>
-                    <div class="subcard-visual">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg" alt="Montessori Kitaplık" class="subcard-img">
                     </div>
                 </a>
 
-                <!-- 2. Kutu: Eğitici Ahşap Oyuncaklar & Duvar Rafları -->
-                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : (class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/'))); ?>" class="bento-subcard card-mint">
-                    <div class="subcard-text">
-                        <span class="subcard-eyebrow eyebrow-green">🧸 DOĞAL &amp; EĞİTİCİ</span>
-                        <h3 class="subcard-title">Ahşap Oyuncaklar<br>&amp; Duvar Rafları</h3>
-                        <p class="subcard-subtitle">%100 Doğal &amp; Sağlığa Zararsız</p>
-                        <span class="subcard-cta">
-                            <span>Modelleri Keşfet</span>
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <!-- Sağ Alt Kart: Ahşap Oyuncaklar & Raflar -->
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>" class="bento-card bento-card-toys">
+                    <div class="bento-card-bg bg-toys"></div>
+                    <div class="bento-card-scrim"></div>
+                    <div class="bento-card-content">
+                        <span class="bento-card-tag tag-emerald">🧸 DOĞAL &amp; EĞİTİCİ</span>
+                        <h3>Ahşap Oyuncaklar &amp; Raflar</h3>
+                        <p>Duyusal gelişimi destekleyen pürüzsüz doğal masif ahşap aksesuarlar.</p>
+                        <span class="bento-card-link-text">
+                            <span>Ürünleri Gör</span>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </span>
-                    </div>
-                    <div class="subcard-visual">
-                        <img src="https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-448-300x300.jpg" alt="Eğitici Ahşap Oyuncaklar" class="subcard-img">
                     </div>
                 </a>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- =========================================================================
-     3. BÖLÜM: NEDEN BİZİ TERCİH ETMELİSİNİZ? (4 İKONLU GÜVEN ALANI)
-     ========================================================================= -->
-<section class="emdief-why-us-section" id="neden-bizi-tercih-etmelisiniz">
-    <div class="emdief-container">
-        <div class="why-us-heading text-center">
-            <span class="why-us-badge">⭐ EMDİEF HOME KALİTE GÜVENCESİ</span>
-            <h2 class="why-us-title"><?php esc_html_e('Neden Bizi Tercih Etmelisiniz?', 'mis360-mobilya'); ?></h2>
-            <p class="why-us-subtitle"><?php esc_html_e('Çocukların güvenliği, ebeveynlerin huzuru için her ayrıntıyı özenle tasarlıyoruz.', 'mis360-mobilya'); ?></p>
-        </div>
-        <div class="why-us-grid">
+        <!-- Bento Altı Güven & Neden Biz Şeridi -->
+        <div class="bento-trust-row">
             <div class="why-us-card">
-                <div class="why-us-icon-wrap bg-mint">👶</div>
+                <div class="why-us-icon-wrap bg-amber">🌱</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('Çocuk Odaklı Tasarım', 'mis360-mobilya'); ?></h4>
-                    <strong class="why-us-lead"><?php esc_html_e('Montessori yaklaşımına uygun ürünler', 'mis360-mobilya'); ?></strong>
-                    <p><?php esc_html_e('Çocuk boy hizasına göre ergonomik boyutlar, bağımsız erişim ve sivri kenarsız yuvarlatılmış kavisler.', 'mis360-mobilya'); ?></p>
+                    <h4><?php esc_html_e('%100 Yerli Üretim', 'mis360-mobilya'); ?></h4>
+                    <strong class="why-us-lead"><?php esc_html_e('Doğrudan Atölyeden', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('Aracısız, doğrudan kendi modern marangozhanemizde en yüksek kalite kontrol standartlarıyla üretim.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
             <div class="why-us-card">
-                <div class="why-us-icon-wrap bg-amber">🛡️</div>
+                <div class="why-us-icon-wrap bg-emerald">🛡️</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('Kaliteli Malzeme', 'mis360-mobilya'); ?></h4>
-                    <strong class="why-us-lead"><?php esc_html_e('Uzun ömürlü ve sağlam kullanım', 'mis360-mobilya'); ?></strong>
-                    <p><?php esc_html_e('E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sağlığa zararsız kokusuz çocuk dostu kaplama.', 'mis360-mobilya'); ?></p>
+                    <h4><?php esc_html_e('1. Sınıf Kalite MDF', 'mis360-mobilya'); ?></h4>
+                    <strong class="why-us-lead"><?php esc_html_e('Çocuklara Tamamen Zararsız', 'mis360-mobilya'); ?></strong>
+                    <p><?php esc_html_e('E1 normuna uygun, ağır metal ve toksik boya içermeyen 360° yuvarlatılmış güvenli kenarlar.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-blue">⚡</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('Kolay Kurulum', 'mis360-mobilya'); ?></h4>
-                    <strong class="why-us-lead"><?php esc_html_e('Pratik montaj çözümleri', 'mis360-mobilya'); ?></strong>
+                    <h4><?php esc_html_e('5 Dakikada Hızlı Kurulum', 'mis360-mobilya'); ?></h4>
+                    <strong class="why-us-lead"><?php esc_html_e('Usta Çağırmaya Gerek Yok', 'mis360-mobilya'); ?></strong>
                     <p><?php esc_html_e('CNC tezgahlarda milimetrik açılmış vida delikleri ile şarjlı matkap kullanarak 5-10 dakikada montaj.', 'mis360-mobilya'); ?></p>
                 </div>
             </div>
@@ -205,6 +187,7 @@ get_header();
 <?php
 /**
  * Yardımcı Fonksiyon: Trendyol Tarzı Slider Ürün Kartı Render Edici
+ * SIFIR YAPAY İNDİRİM - %100 GERÇEK WOOCOMMERCE FİYATI
  */
 function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bestseller', string $color_theme = 'orange', int $card_index = 0): void {
     $id        = $prod->get_id();
@@ -217,31 +200,21 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         $img_url = wp_get_attachment_image_url($prod->get_image_id(), 'woocommerce_thumbnail');
     }
     if (!$img_url) {
-        $img_url = 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
+        $img_url = 'https://mobilya.misteknoloji360.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
     }
 
-    // Fiyat ve İndirim Hesaplama
-    $regular_price = (float)$prod->get_regular_price();
+    // Gerçek WooCommerce Fiyatı (Sıfır yapay indirim)
     $current_price = (float)$prod->get_price();
-
-    if ($regular_price > $current_price && $regular_price > 0) {
-        $discount_pct = round((($regular_price - $current_price) / $regular_price) * 100);
-    } else {
-        $regular_price = $current_price > 0 ? round($current_price * 1.25) : 1000;
-        $discount_pct  = 20;
-    }
-
-    // Flaş Ürünler için 25 TL Sepet İndirimi; Diğerleri Son Fiyat
-    $is_flash_deal = ($badge_type === 'flash');
-    $basket_price  = $is_flash_deal ? max(0, $current_price - 25) : $current_price;
+    $regular_price = (float)$prod->get_regular_price();
+    $is_on_sale    = $prod->is_on_sale() && ($regular_price > $current_price);
 
     // Puan ve Değerlendirme
     $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
     $review_count = 160 + (($id * 13) % 240);
 
-    // Rozet: Flaş slider'ında Flaş Fırsat, diğerlerinde kategoriye uygun rozet
+    // Rozet Metinleri
     if ($badge_type === 'flash') {
-        $badge = ['text' => 'Flaş Fırsat', 'class' => 'badge-pill-terracotta'];
+        $badge = ['text' => 'Fırsat Ürünü', 'class' => 'badge-pill-terracotta'];
     } elseif ($badge_type === 'bestseller') {
         $badge = ['text' => 'Çok Satan', 'class' => 'badge-pill-amber'];
     } elseif ($badge_type === 'new') {
@@ -252,12 +225,12 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
     ?>
     <div class="trendyol-card theme-<?php echo esc_attr($color_theme); ?>">
         <div class="trendyol-card-thumb">
-            <!-- Zarif Üst Rozet -->
+            <!-- Rozet -->
             <div class="trendyol-pill-badge <?php echo esc_attr($badge['class']); ?>">
                 <span><?php echo esc_html($badge['text']); ?></span>
             </div>
 
-            <!-- Sağ Üst Favori Kalp Butonu -->
+            <!-- Favori Butonu -->
             <button type="button" class="trendyol-heart-btn" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>" data-product-id="<?php echo esc_attr($id); ?>">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -271,7 +244,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         </div>
 
         <div class="trendyol-card-content">
-            <!-- Güven & Teslimat Rozetleri -->
+            <!-- Rozetler -->
             <div class="trendyol-pills-row">
                 <span class="pill-cargo">Ücretsiz Kargo</span>
                 <span class="pill-fast-shipping">
@@ -280,50 +253,43 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
                 </span>
             </div>
 
-            <!-- Ürün Başlığı (Marka Kalın + İsim) -->
+            <!-- Ürün Başlığı -->
             <h3 class="trendyol-card-title">
                 <a href="<?php echo esc_url($permalink); ?>">
                     <strong>Emdief</strong> <?php echo esc_html($title); ?>
                 </a>
             </h3>
 
-            <!-- Güven & Malzeme Vurgusu -->
+            <!-- Malzeme Vurgusu -->
             <div class="trendyol-benefit-tagline">
                 <span class="benefit-tagline-text">🛡️ 1. Sınıf E1 Kalite MDF • Kolay Montaj</span>
             </div>
 
-            <!-- Yıldız & Değerlendirme Satırı -->
+            <!-- Yıldız Satırı -->
             <div class="trendyol-rating-row">
                 <span class="rating-stars">★★★★★</span>
                 <span class="rating-score"><?php echo esc_html($rating_val); ?></span>
                 <span class="rating-count">(<?php echo esc_html($review_count); ?>)</span>
             </div>
 
-            <!-- Fiyat & Sepete Ekle Alanı (Alt Kısma Sabit) -->
+            <!-- Fiyat & Sepete Ekle Alanı -->
             <div class="trendyol-card-bottom">
                 <div class="trendyol-pricing-row">
-                    <?php if ($regular_price > $current_price): ?>
-                        <span class="tag-discount-pct">-%<?php echo esc_html($discount_pct); ?></span>
+                    <?php if ($is_on_sale && $regular_price > 0): 
+                        $real_pct = round((($regular_price - $current_price) / $regular_price) * 100);
+                    ?>
+                        <span class="tag-discount-pct">-%<?php echo esc_html($real_pct); ?></span>
                         <del class="old-price"><?php echo number_format($regular_price, 0, ',', '.'); ?> TL</del>
                     <?php endif; ?>
                     <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
                 </div>
 
-                <?php if ($is_flash_deal && $basket_price < $current_price): ?>
-                    <div class="trendyol-basket-row">
-                        <span>Sepette 25 TL İndirim</span> <strong><?php echo number_format($basket_price, 0, ',', '.'); ?> TL</strong>
-                    </div>
-                <?php endif; ?>
-
                 <?php
                 $add_to_cart_url = $prod->add_to_cart_url();
-                if ($is_flash_deal) {
-                    $add_to_cart_url = add_query_arg('flash_deal', '1', $add_to_cart_url);
-                }
                 $is_simple = $prod->is_type('simple');
                 $btn_classes = 'trendyol-btn-add-cart add_to_cart_button' . ($is_simple ? ' ajax_add_to_cart' : '');
                 ?>
-                <a href="<?php echo esc_url($add_to_cart_url); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" <?php if ($is_flash_deal): ?>data-flash_deal="1" data-is_flash_deal="1"<?php endif; ?> class="<?php echo esc_attr($btn_classes); ?>" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>" rel="nofollow">
+                <a href="<?php echo esc_url($add_to_cart_url); ?>" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="<?php echo esc_attr($btn_classes); ?>" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>" rel="nofollow">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
                     <span>Sepete Ekle</span>
                 </a>
@@ -334,7 +300,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
 }
 
 /**
- * Slider Urunlerini Cekici Yardimci Fonksiyon
+ * Slider Ürünlerini Çeken Yardımcı Fonksiyon
  */
 function emdief_get_slider_products(string $type = 'all', int $limit = 8): array {
     if (!class_exists('WooCommerce')) {
@@ -357,7 +323,6 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 
     $prods = wc_get_products($args);
 
-    // Eğer henüz sipariş/ürün azsa tüm ürünleri yedek olarak getir
     if (empty($prods) || count($prods) < 4) {
         $prods = wc_get_products([
             'limit'  => $limit,
@@ -370,7 +335,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 ?>
 
 <!-- =========================================================================
-     ÖZEL KAMPANYA: 1.500 TL ÜZERİ ÜCRETSİZ KARGO BANNER'I
+     3. BÖLÜM: 1.500 TL ÜZERİ ÜCRETSİZ KARGO BANNER'I
      ========================================================================= -->
 <section class="emdief-cargo-promo-banner">
     <div class="emdief-container">
@@ -391,7 +356,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                     <span>13:00'a Kadar <strong>Aynı Gün İmalat</strong></span>
                 </div>
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="btn-cargo-shop">
-                    <span>Fırsatları İncele</span>
+                    <span>Koleksiyonu İncele</span>
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </a>
             </div>
@@ -400,7 +365,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     4. BÖLÜM: TRENDYOL SLIDER 1 - FLAŞ ÜRÜNLER (TURUNCU / MERCAN TEMA)
+     4. BÖLÜM: TRENDYOL SLIDER 1 - ÖNE ÇIKAN FIRSAT ÜRÜNLERİ (TURUNCU TEMA)
      ========================================================================= -->
 <section class="trendyol-slider-section" id="sectionFlashDeals">
     <div class="emdief-container">
@@ -409,7 +374,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <div class="trendyol-header-left">
                     <h2 class="trendyol-section-title">
                         <span class="title-icon">⚡</span>
-                        <span>Flaş Ürünler</span>
+                        <span>Öne Çıkan Modeller</span>
                     </h2>
                     <div class="trendyol-countdown-box">
                         <span class="countdown-digit countdown-hours">05</span>
@@ -445,7 +410,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     5. BÖLÜM: TRENDYOL SLIDER 2 - ÇOK SATANLAR (MOR / LİLA TEMA)
+     5. BÖLÜM: TRENDYOL SLIDER 2 - ÇOK SATANLAR (MOR TEMA)
      ========================================================================= -->
 <section class="trendyol-slider-section" id="sectionBestsellers">
     <div class="emdief-container">
@@ -492,7 +457,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <div class="trendyol-header-left">
                     <h2 class="trendyol-section-title">
                         <span class="title-icon">✨</span>
-                        <span>Yeni Eklenen Montessori Tasarımları</span>
+                        <span>Yeni Eklenen Tasarımlar</span>
                     </h2>
                 </div>
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="trendyol-view-all-link">
@@ -521,7 +486,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     7. BÖLÜM: TRENDYOL SLIDER 4 - EN ÇOK BEĞENİLENLER (ELEKTRİK MAVİ TEMA)
+     7. BÖLÜM: TRENDYOL SLIDER 4 - EN ÇOK BEĞENİLENLER (MAVİ TEMA)
      ========================================================================= -->
 <section class="trendyol-slider-section" id="sectionMostFavorited">
     <div class="emdief-container">
@@ -530,7 +495,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <div class="trendyol-header-left">
                     <h2 class="trendyol-section-title">
                         <span class="title-icon">❤️</span>
-                        <span>En Çok Favori Alan Montessori Modelleri</span>
+                        <span>En Çok Favori Alan Modeller</span>
                     </h2>
                 </div>
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/')); ?>" class="trendyol-view-all-link">
@@ -599,7 +564,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 <?php if (function_exists('mis360_render_happy_kids_gallery')) { mis360_render_happy_kids_gallery('front'); } ?>
 
 <!-- =========================================================================
-     7. BÖLÜM: YARDIM & KOLAY KURULUM MERKEZİ BANNERI
+     YARDIM & KOLAY KURULUM MERKEZİ BANNERI
      ========================================================================= -->
 <section class="emdief-help-banner-section">
     <div class="emdief-container">
@@ -624,7 +589,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <div class="assembly-perks">
                     <span class="assembly-perk">⚡ <?php esc_html_e('Şarjlı Matkapla Hızlı Montaj', 'mis360-mobilya'); ?></span>
                     <span class="assembly-perk">🔒 <?php esc_html_e('Duvara Sabitleme Emniyeti', 'mis360-mobilya'); ?></span>
-                    <span class="assembly-perk">🎥 <?php esc_html_e('7 Adet Ürün Kurulum Videosu', 'mis360-mobilya'); ?></span>
+                    <span class="assembly-perk">🎥 <?php esc_html_e('Ürün Kurulum Videoları', 'mis360-mobilya'); ?></span>
                 </div>
             </div>
 
@@ -643,7 +608,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     8. BÖLÜM: MONTESSORI & EMDIEF HOME EĞİTİCİ FELSEFE
+     MONTESSORI & EMDIEF HOME EĞİTİCİ FELSEFE
      ========================================================================= -->
 <section class="emdief-philosophy-section" id="montessori-felsefesi">
     <div class="emdief-container">
@@ -699,7 +664,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
 </section>
 
 <!-- =========================================================================
-     8. BÖLÜM: EBEVEYN YORUMLARI & SOSYAL KANIT
+     EBEVEYN YORUMLARI & SOSYAL KANIT
      ========================================================================= -->
 <section class="emdief-reviews-section">
     <div class="emdief-container">
