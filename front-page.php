@@ -210,6 +210,10 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
     $regular_price = (float)$prod->get_regular_price();
     $is_on_sale    = $prod->is_on_sale() && ($regular_price > $current_price);
 
+    // Ücretsiz Kargo Eşiği Kontrolü (1.500 TL)
+    $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+    $has_free_shipping   = ($current_price >= $free_shipping_limit);
+
     // Puan ve Değerlendirme
     $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
     $review_count = 160 + (($id * 13) % 240);
@@ -248,10 +252,14 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         <div class="trendyol-card-content">
             <!-- Rozetler -->
             <div class="trendyol-pills-row">
-                <span class="pill-cargo">Ücretsiz Kargo</span>
+                <?php if ($has_free_shipping): ?>
+                    <span class="pill-cargo"><?php esc_html_e('Ücretsiz Kargo', 'mis360-mobilya'); ?></span>
+                <?php else: ?>
+                    <span class="pill-cargo-info"><?php esc_html_e('Hızlı Kargo', 'mis360-mobilya'); ?></span>
+                <?php endif; ?>
                 <span class="pill-fast-shipping">
                     <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Öncelikli İmalat
+                    <?php esc_html_e('Öncelikli İmalat', 'mis360-mobilya'); ?>
                 </span>
             </div>
 
