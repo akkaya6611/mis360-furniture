@@ -41,9 +41,12 @@ class Mis360_Theme_Updater {
      * Güncellemeyi anında zorlamak için transient ve önbellek temizleyici
      */
     public function force_check_listener() {
-        if (isset($_GET['force-check']) && current_user_can('update_themes')) {
-            delete_transient('mis360_github_update_data');
-            delete_site_transient('update_themes');
+        global $pagenow;
+        if (is_admin() && in_array($pagenow, ['themes.php', 'update-core.php', 'update.php']) && current_user_can('update_themes')) {
+            if (isset($_GET['force-check'])) {
+                delete_transient('mis360_github_update_data');
+                delete_site_transient('update_themes');
+            }
             if (function_exists('wp_clean_themes_cache')) {
                 wp_clean_themes_cache();
             }
