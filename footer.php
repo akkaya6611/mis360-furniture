@@ -228,6 +228,7 @@ endif;
         <span class="nav-icon has-badge">
             <svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
             <span class="bottom-cart-badge" id="emdief-bottom-cart-count"><?php echo (class_exists('WooCommerce') && WC()->cart) ? esc_html((string) WC()->cart->get_cart_contents_count()) : '0'; ?></span>
+            <script>(function(){try{var m=document.cookie.match(/woocommerce_items_in_cart=([0-9]+)/);if(m&&parseInt(m[1],10)>0){var el=document.getElementById("emdief-bottom-cart-count");if(el)el.textContent=m[1];}}catch(e){}})();</script>
         </span>
         <span class="nav-label"><?php esc_html_e('Sepetim', 'mis360-mobilya'); ?></span>
     </button>

@@ -63,10 +63,11 @@ function mis360_mobilya_scripts() {
     // 6. WooCommerce AJAX Sepet ve Çekmece Scripti
     if (class_exists('WooCommerce')) {
         wp_enqueue_script('wc-add-to-cart');
+        wp_enqueue_script('wc-cart-fragments');
         wp_enqueue_script(
             'mis360-ajax-cart',
             MIS360_MOBILYA_URI . '/assets/js/ajax-cart.js',
-            ['jquery', 'wc-add-to-cart', 'mis360-main-js'],
+            ['jquery', 'wc-add-to-cart', 'wc-cart-fragments', 'mis360-main-js'],
             $cart_js_ver,
             true
         );

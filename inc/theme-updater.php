@@ -218,9 +218,11 @@ class Mis360_Theme_Updater {
         $target_dir_name = $this->theme_slug;
         $is_our_theme    = false;
 
-        if (isset($upgrader->skin->theme) && $upgrader->skin->theme === $this->theme_slug) {
+        if (isset($upgrader->skin->theme) && in_array($upgrader->skin->theme, ['mis360-mobilya', 'mis360-furniture'], true)) {
             $is_our_theme = true;
-        } elseif (strpos(basename($source), $this->github_repo) !== false || strpos(basename($source), $this->github_user) !== false) {
+        } elseif (isset($upgrader->skin->theme_info) && is_object($upgrader->skin->theme_info) && in_array($upgrader->skin->theme_info->get_stylesheet(), ['mis360-mobilya', 'mis360-furniture'], true)) {
+            $is_our_theme = true;
+        } elseif (strpos(basename($source), 'mis360') !== false || strpos(basename($source), $this->github_repo) !== false || strpos(basename($source), $this->github_user) !== false) {
             $is_our_theme = true;
         }
 
