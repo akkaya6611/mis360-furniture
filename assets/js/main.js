@@ -354,7 +354,13 @@ function mis360Init() {
             }
 
             const formData = new FormData(form);
-            const ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
+            
+            // Origin & Protokol Uyuşmazlığına Karşı %100 Güvenli URL
+            let ajaxUrl = '/wp-admin/admin-ajax.php';
+            if (window.location && window.location.origin) {
+                ajaxUrl = window.location.origin + '/wp-admin/admin-ajax.php';
+            }
+
             const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
 
             formData.append('action', isRegister ? 'mis360_ajax_register' : 'mis360_ajax_login');
@@ -362,14 +368,33 @@ function mis360Init() {
 
             fetch(ajaxUrl, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                credentials: 'same-origin'
             })
-            .then(res => res.json())
-            .then(data => {
+            .then(res => res.text())
+            .then(rawText => {
+                let data = null;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (jsonErr) {
+                    console.warn('Auth raw response (non-json):', rawText);
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    const cleanErr = rawText.replace(/<[^>]*>?/gm, '').trim();
+                    if (cleanErr && cleanErr !== '-1' && cleanErr !== '0') {
+                        showFeedback('error', cleanErr);
+                    } else {
+                        showFeedback('error', 'İşlem gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                    }
+                    return;
+                }
+
                 if (data && data.success) {
-                    showFeedback('success', data.data.message || 'Başarılı! Yönlendiriliyorsunuz...');
+                    showFeedback('success', (data.data && data.data.message) ? data.data.message : 'Başarılı! Yönlendiriliyorsunuz...');
                     setTimeout(() => {
-                        window.location.href = data.data.redirect || '/';
+                        window.location.href = (data.data && data.data.redirect) ? data.data.redirect : '/odeme/';
                     }, 500);
                 } else {
                     if (submitBtn) {
@@ -381,11 +406,12 @@ function mis360Init() {
                 }
             })
             .catch(err => {
+                console.error('Auth fetch error:', err);
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalBtnHtml;
                 }
-                showFeedback('error', 'Bağlantı hatası oluştu. Lütfen tekrar deneyiniz.');
+                showFeedback('error', 'Bağlantı hatası oluştu: ' + (err.message || 'Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.'));
             });
         });
     });

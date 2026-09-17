@@ -7222,7 +7222,13 @@ function mis360_authenticate_by_phone_or_email($user, $username, $password) {
 add_action('wp_ajax_nopriv_mis360_ajax_login', 'mis360_ajax_login_handler');
 add_action('wp_ajax_mis360_ajax_login', 'mis360_ajax_login_handler');
 function mis360_ajax_login_handler() {
-    check_ajax_referer('mis360_cart_nonce', 'security');
+    if (ob_get_length()) {
+        ob_clean();
+    }
+
+    if (!empty($_POST['security'])) {
+        wp_verify_nonce(sanitize_text_field($_POST['security']), 'mis360_cart_nonce');
+    }
 
     $log = sanitize_text_field($_POST['log'] ?? '');
     $pwd = $_POST['pwd'] ?? '';
@@ -7241,7 +7247,8 @@ function mis360_ajax_login_handler() {
     $user = wp_signon($creds, is_ssl());
 
     if (is_wp_error($user)) {
-        wp_send_json_error(['message' => __('Girdiğiniz kullanıcı bilgileri veya şifre hatalı.', 'mis360-mobilya')]);
+        $err_msg = wp_strip_all_tags($user->get_error_message());
+        wp_send_json_error(['message' => $err_msg ?: __('Girdiğiniz kullanıcı bilgileri veya şifre hatalı.', 'mis360-mobilya')]);
     }
 
     wp_set_current_user($user->ID);
@@ -7265,7 +7272,13 @@ function mis360_ajax_login_handler() {
 add_action('wp_ajax_nopriv_mis360_ajax_register', 'mis360_ajax_register_handler');
 add_action('wp_ajax_mis360_ajax_register', 'mis360_ajax_register_handler');
 function mis360_ajax_register_handler() {
-    check_ajax_referer('mis360_cart_nonce', 'security');
+    if (ob_get_length()) {
+        ob_clean();
+    }
+
+    if (!empty($_POST['security'])) {
+        wp_verify_nonce(sanitize_text_field($_POST['security']), 'mis360_cart_nonce');
+    }
 
     $email = sanitize_email($_POST['email'] ?? '');
     $phone = sanitize_text_field($_POST['billing_phone'] ?? '');
@@ -7292,7 +7305,8 @@ function mis360_ajax_register_handler() {
     $customer_id = wc_create_new_customer($email, '', $password);
 
     if (is_wp_error($customer_id)) {
-        wp_send_json_error(['message' => $customer_id->get_error_message()]);
+        $err_msg = wp_strip_all_tags($customer_id->get_error_message());
+        wp_send_json_error(['message' => $err_msg ?: __('Hesap oluşturulamadı. Lütfen bilgilerinizi kontrol ediniz.', 'mis360-mobilya')]);
     }
 
     // Telefon numarasını meta ve fatura alanına işle
