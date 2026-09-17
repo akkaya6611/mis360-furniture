@@ -226,7 +226,7 @@
 
 .action-btn:hover .action-icon {
   background-color: var(--emd-primary-light);
-  color: var(--emd-primary-hover);
+  color: #92400e;
 }
 
 .emdief-cart-count {
@@ -310,7 +310,7 @@
 .emdief-nav-menu li a:hover,
 .emdief-nav-menu li.current-menu-item a {
   background-color: var(--emd-primary-light);
-  color: var(--emd-primary-hover);
+  color: #92400e;
 }
 
 /* Masaüstü Dropdown Açılır Menü Desteği */
@@ -459,7 +459,7 @@
 .btn-secondary:hover {
   border-color: var(--emd-primary);
   background-color: var(--emd-primary-light);
-  color: var(--emd-primary-hover);
+  color: #92400e;
   transform: translateY(-2px);
 }
 
@@ -855,7 +855,7 @@
   flex-shrink: 0;
 }
 
-.pillar-content h4 {
+.pillar-content h4, .pillar-content h3 {
   margin: 0 0 0.25rem 0;
   font-size: 1rem;
   font-weight: 700;
@@ -875,7 +875,7 @@
 }
 
 .quote-badge {
-  background-color: var(--emd-primary);
+  background-color: #9a3412;
   color: #ffffff;
   font-size: 0.7rem;
   font-weight: 800;
@@ -959,7 +959,7 @@
   height: 40px;
   border-radius: 50%;
   background-color: var(--emd-primary-light);
-  color: var(--emd-primary-hover);
+  color: #92400e;
   font-weight: 800;
   font-size: 0.85rem;
   display: flex;
@@ -4524,7 +4524,7 @@ button.button.emdief-btn-empty-cart:hover {
         font-size: 18px !important;
         margin-bottom: 8px !important;
     }
-    .why-us-info h4 {
+    .why-us-info h4, .why-us-info h3, .why-us-title {
         font-size: 0.82rem !important;
         line-height: 1.25 !important;
         margin: 0 0 2px !important;
@@ -4561,7 +4561,7 @@ button.button.emdief-btn-empty-cart:hover {
         font-size: 16px !important;
         margin-bottom: 6px !important;
     }
-    .why-us-info h4 {
+    .why-us-info h4, .why-us-info h3, .why-us-title {
         font-size: 0.76rem !important;
     }
     .why-us-lead {
@@ -4606,7 +4606,7 @@ button.button.emdief-btn-empty-cart:hover {
 .why-us-icon-wrap.bg-blue { background: #eff6ff; }
 .why-us-icon-wrap.bg-coral { background: #fff1f2; }
 
-.why-us-info h4 {
+.why-us-info h4, .why-us-info h3, .why-us-title {
     font-size: 1.05rem;
     font-weight: 750;
     color: #1e293b;
@@ -5286,7 +5286,7 @@ button.button.emdief-btn-empty-cart:hover {
     white-space: nowrap;
 }
 .pill-fast-shipping {
-    color: #059669;
+    color: #047857;
     font-size: 10px;
     font-weight: 700;
     display: inline-flex;
@@ -5355,7 +5355,7 @@ button.button.emdief-btn-empty-cart:hover {
     letter-spacing: -1px;
 }
 .rating-count {
-    color: #94a3b8;
+    color: #475569;
 }
 .camera-icon {
     margin-left: 2px;
@@ -5395,7 +5395,7 @@ button.button.emdief-btn-empty-cart:hover {
 .current-price-val {
     font-size: 16px;
     font-weight: 900;
-    color: #ea580c;
+    color: #c2410c;
     width: 100%;
 }
 
@@ -5647,7 +5647,7 @@ button.button.emdief-btn-empty-cart:hover {
     gap: 3px;
     background: transparent;
     border: none;
-    color: #64748b;
+    color: #334155;
     text-decoration: none;
     cursor: pointer;
     padding: 6px 2px;
@@ -5658,7 +5658,7 @@ button.button.emdief-btn-empty-cart:hover {
   .bottom-nav-item.is-active,
   .bottom-nav-item:hover,
   .bottom-nav-item:active {
-    color: #f27a1a !important;
+    color: #c2410c !important;
   }
 
   .bottom-nav-item .nav-icon {
@@ -7939,9 +7939,9 @@ button.button.emdief-btn-empty-cart:hover {
     text-transform: uppercase;
     letter-spacing: 0.3px;
 }
-.badge-pill-amber { background: #d97706; }
-.badge-pill-terracotta { background: #ea580c; }
-.badge-pill-sage { background: #059669; }
+.badge-pill-amber { background: #b45309; }
+.badge-pill-terracotta { background: #c2410c; }
+.badge-pill-sage { background: #047857; }
 .badge-pill-wood { background: #78350f; }
 
 .trendyol-card-bottom {

@@ -12,10 +12,16 @@ if (!defined('ABSPATH')) {
 function mis360_mobilya_scripts() {
     $theme_dir   = get_template_directory();
     $style_ver   = file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.2.0';
-    $main_css_ver = file_exists($theme_dir . '/assets/css/main.css') ? filemtime($theme_dir . '/assets/css/main.css') : '1.2.0';
-    $wc_css_ver  = file_exists($theme_dir . '/assets/css/woocommerce.css') ? filemtime($theme_dir . '/assets/css/woocommerce.css') : '1.2.0';
-    $main_js_ver = file_exists($theme_dir . '/assets/js/main.js') ? filemtime($theme_dir . '/assets/js/main.js') : '1.2.0';
-    $cart_js_ver = file_exists($theme_dir . '/assets/js/ajax-cart.js') ? filemtime($theme_dir . '/assets/js/ajax-cart.js') : '1.2.0';
+    $main_css_file = file_exists($theme_dir . '/assets/css/main.min.css') ? '/assets/css/main.min.css' : '/assets/css/main.css';
+    $wc_css_file   = file_exists($theme_dir . '/assets/css/woocommerce.min.css') ? '/assets/css/woocommerce.min.css' : '/assets/css/woocommerce.css';
+    $main_js_file  = file_exists($theme_dir . '/assets/js/main.min.js') ? '/assets/js/main.min.js' : '/assets/js/main.js';
+    $cart_js_file  = file_exists($theme_dir . '/assets/js/ajax-cart.min.js') ? '/assets/js/ajax-cart.min.js' : '/assets/js/ajax-cart.js';
+
+    $style_ver    = file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.2.0';
+    $main_css_ver = file_exists($theme_dir . $main_css_file) ? filemtime($theme_dir . $main_css_file) : '1.2.0';
+    $wc_css_ver   = file_exists($theme_dir . $wc_css_file) ? filemtime($theme_dir . $wc_css_file) : '1.2.0';
+    $main_js_ver  = file_exists($theme_dir . $main_js_file) ? filemtime($theme_dir . $main_js_file) : '1.2.0';
+    $cart_js_ver  = file_exists($theme_dir . $cart_js_file) ? filemtime($theme_dir . $cart_js_file) : '1.2.0';
 
     // 1. Google Fonts: Plus Jakarta Sans
     wp_enqueue_style(
@@ -33,10 +39,10 @@ function mis360_mobilya_scripts() {
         $style_ver
     );
 
-    // 3. Ana Arayüz Stilleri (assets/css/main.css)
+    // 3. Ana Arayüz Stilleri (assets/css/main.min.css)
     wp_enqueue_style(
         'mis360-main',
-        MIS360_MOBILYA_URI . '/assets/css/main.css',
+        MIS360_MOBILYA_URI . $main_css_file,
         ['mis360-style'],
         $main_css_ver
     );
@@ -45,7 +51,7 @@ function mis360_mobilya_scripts() {
     if (class_exists('WooCommerce')) {
         wp_enqueue_style(
             'mis360-woocommerce',
-            MIS360_MOBILYA_URI . '/assets/css/woocommerce.css',
+            MIS360_MOBILYA_URI . $wc_css_file,
             ['mis360-main'],
             $wc_css_ver
         );
@@ -69,7 +75,7 @@ function mis360_mobilya_scripts() {
     // 5. Ana Tema Scripti (Vanilla JS)
     wp_enqueue_script(
         'mis360-main-js',
-        MIS360_MOBILYA_URI . '/assets/js/main.js',
+        MIS360_MOBILYA_URI . $main_js_file,
         [],
         $main_js_ver,
         true
@@ -82,7 +88,7 @@ function mis360_mobilya_scripts() {
         wp_enqueue_script('wc-cart-fragments');
         wp_enqueue_script(
             'mis360-ajax-cart',
-            MIS360_MOBILYA_URI . '/assets/js/ajax-cart.js',
+            MIS360_MOBILYA_URI . $cart_js_file,
             ['jquery', 'wc-add-to-cart', 'wc-cart-fragments', 'mis360-main-js'],
             $cart_js_ver,
             true

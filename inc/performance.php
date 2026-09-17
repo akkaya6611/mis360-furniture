@@ -43,7 +43,8 @@ function mis360_performance_defer_scripts($tag, $handle, $src) {
         'wc-cart-fragments',
         'sourcebuster-js',
         'wc-order-attribution',
-        'js-cookie'
+        'js-cookie',
+        'jquery-blockui'
     ];
 
     if (in_array($handle, $defer_handles, true)) {
@@ -67,12 +68,9 @@ function mis360_performance_async_google_fonts($tag, $handle, $href, $media) {
 add_filter('style_loader_tag', 'mis360_performance_async_google_fonts', 10, 4);
 
 /**
- * 3. Preconnect for Fonts and Hero Assets
+ * 3. Preload Hero Image Asset (Preconnect is already cleanly defined in header.php)
  */
 function mis360_performance_head_hints() {
-    echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
-    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
-
     if (function_exists('is_front_page') && is_front_page()) {
         $banner_uri = get_template_directory_uri() . '/assets/images/banner-emdief.webp';
         echo '<link rel="preload" as="image" href="' . esc_url($banner_uri) . '" type="image/webp" fetchpriority="high">' . "\n";
@@ -319,8 +317,13 @@ function mis360_performance_update_htaccess_rules() {
     } catch (Throwable $e) {
         // Never break WordPress operations
     }
-}
 add_action('after_switch_theme', 'mis360_performance_update_htaccess_rules');
+add_action('admin_init', function() {
+    if (!get_transient('mis360_htaccess_cached_v1955')) {
+        set_transient('mis360_htaccess_cached_v1955', 1, DAY_IN_SECONDS * 7);
+        mis360_performance_update_htaccess_rules();
+    }
+});
 
 /**
  * 11. WP Emoji Script & Stillerini Kaldır (Sayfa Başına 10KB+ JS/CSS Tasarrufu)

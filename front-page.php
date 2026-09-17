@@ -114,11 +114,11 @@ get_header();
 
             <!-- Sağ 2'li Kategori Kartları -->
             <div class="bento-side-cards">
-                <!-- Sağ Üst Kart: Montessori Kitaplıklar -->
+                    <!-- Sağ Üst Kart: Montessori Kitaplıklar -->
                 <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/?s=kitapl%C4%B1k&post_type=product')); ?>" class="bento-card bento-subcard card-warm bento-card-bookshelf">
                     <div class="bento-card-content subcard-text">
                         <span class="bento-card-tag tag-amber subcard-eyebrow eyebrow-orange">📚 EN ÇOK TERCİH EDİLEN</span>
-                        <h3 class="subcard-title">Montessori Kitaplıklar</h3>
+                        <h2 class="subcard-title">Montessori Kitaplıklar</h2>
                         <p class="subcard-subtitle">Çocukların boyuna özel ergonomik, ön yüzü görünür kapak sergileme alanı.</p>
                         <span class="bento-card-link-text subcard-cta">
                             <span>Modelleri İncele</span>
@@ -134,7 +134,7 @@ get_header();
                 <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>" class="bento-card bento-subcard card-mint bento-card-toys">
                     <div class="bento-card-content subcard-text">
                         <span class="bento-card-tag tag-emerald subcard-eyebrow eyebrow-green">🧸 DOĞAL &amp; EĞİTİCİ</span>
-                        <h3 class="subcard-title">Ahşap Oyuncaklar &amp; Raflar</h3>
+                        <h2 class="subcard-title">Ahşap Oyuncaklar &amp; Raflar</h2>
                         <p class="subcard-subtitle">Duyusal gelişimi destekleyen pürüzsüz doğal masif ahşap aksesuarlar.</p>
                         <span class="bento-card-link-text subcard-cta">
                             <span>Ürünleri Gör</span>
@@ -153,7 +153,7 @@ get_header();
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-amber">🌱</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('%100 Yerli Üretim', 'mis360-mobilya'); ?></h4>
+                    <h3 class="why-us-title"><?php esc_html_e('%100 Yerli Üretim', 'mis360-mobilya'); ?></h3>
                     <strong class="why-us-lead"><?php esc_html_e('Doğrudan Atölyeden', 'mis360-mobilya'); ?></strong>
                     <p><?php esc_html_e('Aracısız, doğrudan kendi modern marangozhanemizde en yüksek kalite kontrol standartlarıyla üretim.', 'mis360-mobilya'); ?></p>
                 </div>
@@ -161,7 +161,7 @@ get_header();
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-emerald">🛡️</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('1. Sınıf Kalite MDF', 'mis360-mobilya'); ?></h4>
+                    <h3 class="why-us-title"><?php esc_html_e('1. Sınıf Kalite MDF', 'mis360-mobilya'); ?></h3>
                     <strong class="why-us-lead"><?php esc_html_e('Çocuklara Tamamen Zararsız', 'mis360-mobilya'); ?></strong>
                     <p><?php esc_html_e('E1 normuna uygun, ağır metal ve toksik boya içermeyen 360° yuvarlatılmış güvenli kenarlar.', 'mis360-mobilya'); ?></p>
                 </div>
@@ -169,7 +169,7 @@ get_header();
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-blue">⚡</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('5 Dakikada Hızlı Kurulum', 'mis360-mobilya'); ?></h4>
+                    <h3 class="why-us-title"><?php esc_html_e('5 Dakikada Hızlı Kurulum', 'mis360-mobilya'); ?></h3>
                     <strong class="why-us-lead"><?php esc_html_e('Usta Çağırmaya Gerek Yok', 'mis360-mobilya'); ?></strong>
                     <p><?php esc_html_e('CNC tezgahlarda milimetrik açılmış vida delikleri ile şarjlı matkap kullanarak 5-10 dakikada montaj.', 'mis360-mobilya'); ?></p>
                 </div>
@@ -177,7 +177,7 @@ get_header();
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-coral">📦</div>
                 <div class="why-us-info">
-                    <h4><?php esc_html_e('Güvenli Paketleme', 'mis360-mobilya'); ?></h4>
+                    <h3 class="why-us-title"><?php esc_html_e('Güvenli Paketleme', 'mis360-mobilya'); ?></h3>
                     <strong class="why-us-lead"><?php esc_html_e('Özenli gönderim', 'mis360-mobilya'); ?></strong>
                     <p><?php esc_html_e('Yüksek yoğunluklu darbe emici straforlar ve koruyucu ambalajlarla kapıya kadar %100 sigortalı teslimat.', 'mis360-mobilya'); ?></p>
                 </div>
@@ -620,21 +620,21 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                         <div class="pillar">
                             <div class="pillar-icon">👶</div>
                             <div class="pillar-content">
-                                <h4>Özerklik & Karar Verme</h4>
+                                <h3>Özerklik & Karar Verme</h3>
                                 <p>Çocuk kimseden yardım istemeden ilgisini çeken kitabı seçer ve yerine geri koyma alışkanlığı kazanır.</p>
                             </div>
                         </div>
                         <div class="pillar">
                             <div class="pillar-icon">🛡️</div>
                             <div class="pillar-content">
-                                <h4>1. Sınıf MDF</h4>
+                                <h3>1. Sınıf MDF</h3>
                                 <p>Çocuk odalarına özel pürüzsüz, sağlam ve uzun ömürlü 1. sınıf kaliteli MDF malzeme.</p>
                             </div>
                         </div>
                         <div class="pillar">
                             <div class="pillar-icon">🌿</div>
                             <div class="pillar-content">
-                                <h4>360° Yuvarlatılmış Güvenli Hatlar</h4>
+                                <h3>360° Yuvarlatılmış Güvenli Hatlar</h3>
                                 <p>Sivri köşeler ve tehlikeli kenarlar yok. Her köşe çocuk güvenliği için özel makinelerle pürüzsüzleştirilmiştir.</p>
                             </div>
                         </div>
