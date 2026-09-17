@@ -202,7 +202,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
         $img_url = wp_get_attachment_image_url($prod->get_image_id(), 'woocommerce_thumbnail');
     }
     if (!$img_url) {
-        $img_url = 'https://mobilya.misteknoloji360.com.tr/wp-content/uploads/2026/08/1_org_zoom-451-300x300.jpg';
+        $img_url = function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src('woocommerce_thumbnail') : (get_template_directory_uri() . '/assets/images/banner-emdief.webp');
     }
 
     // Gerçek WooCommerce Fiyatı (Sıfır yapay indirim)

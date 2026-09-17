@@ -9,7 +9,7 @@
 - **Fabrika & Atölye:** Mobilya Kent Kırmızı Bloklar, Camikebir Mah. 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri, Türkiye
 - **Müşteri Hizmetleri & Telefon:** +90 537 477 87 66
 - **WhatsApp Canlı Destek:** +90 537 477 87 66 (https://wa.me/905374778766)
-- **Kurumsal E-Posta:** emdiefmobilya@gmail.com
+- **Kurumsal E-Posta:** info@emdiefhome.com.tr (İkincil: emdiefmobilya@gmail.com)
 - **Resmi Web Sitesi:** https://emdiefhome.com.tr/
 - **Çalışma Saatleri:** Pazartesi - Cumartesi 08:30 - 19:00
 
@@ -81,6 +81,7 @@ Montessori pedagojisinde çocukların kitap kapaklarını görerek kendi seçiml
 - [Kargo ve Teslimat Koşulları](https://emdiefhome.com.tr/kargo-ve-teslimat/)
 - [İade ve Değişim Prosedürü](https://emdiefhome.com.tr/iade-ve-degisim/)
 - [Gizlilik Politikası & KVKK](https://emdiefhome.com.tr/gizlilik-ve-kvkk/)
-- [XML Site Haritası](https://emdiefhome.com.tr/wp-sitemap.xml)
+- [XML Site Haritası (Sitemap)](https://emdiefhome.com.tr/sitemap.xml)
+- [WordPress Standart Site Haritası](https://emdiefhome.com.tr/wp-sitemap.xml)
 - [LLMs Standart Dosyası](https://emdiefhome.com.tr/llms.txt)
 - [Genişletilmiş LLMs Kataloğu](https://emdiefhome.com.tr/llms-full.txt)

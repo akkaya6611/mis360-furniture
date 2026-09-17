@@ -264,18 +264,16 @@ function mis360_output_seo_meta_tags(): void {
 ";
 
     // GEO & Coğrafi Hedefleme (Yerel SEO & Local Business - Kayseri Mobilya Kent)
-    echo '<meta name="geo.region" content="TR-38">' . "
-";
-    echo '<meta name="geo.placename" content="Kayseri, Kocasinan, Mobilya Kent">' . "
-";
-    echo '<meta name="geo.position" content="38.7312;35.4787">' . "
-";
-    echo '<meta name="ICBM" content="38.7312, 35.4787">' . "
-";
-    echo '<meta name="geo.country" content="TR">' . "
-";
-    echo '<meta http-equiv="content-language" content="tr">' . "
-";
+    echo '<meta name="geo.region" content="TR-38">' . "\n";
+    echo '<meta name="geo.placename" content="Kayseri, Kocasinan, Mobilya Kent">' . "\n";
+    echo '<meta name="geo.position" content="38.7312;35.4787">' . "\n";
+    echo '<meta name="ICBM" content="38.7312, 35.4787">' . "\n";
+    echo '<meta name="geo.country" content="TR">' . "\n";
+    echo '<meta name="DC.title" content="Emdief Home | Montessori Çocuk Mobilyaları">' . "\n";
+    echo '<meta name="DC.creator" content="Emdief Home &amp; Serkan AKKAYA">' . "\n";
+    echo '<meta name="DC.coverage" content="Turkey">' . "\n";
+    echo '<meta name="DC.spatial" content="Kocasinan, Kayseri, Türkiye">' . "\n";
+    echo '<meta http-equiv="content-language" content="tr">' . "\n";
 
     // OpenGraph (Facebook, WhatsApp, Instagram, LinkedIn, Telegram)
     echo '<meta property="og:locale" content="tr_TR">' . "
@@ -396,10 +394,10 @@ function mis360_output_json_ld(): void {
             'width'  => '220',
             'height' => '60',
         ],
-        'image'           => 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg',
+        'image'           => get_template_directory_uri() . '/assets/images/banner-emdief.webp',
         'description'     => 'Montessori felsefesine uygun 1. sınıf kaliteli MDF ve doğal masif kayın çocuk odası kitaplıkları, eğitici ahşap mobilyalar ve montaj kolaylığı sağlayan yerli üretim mobilya atölyesi.',
         'telephone'       => $phone,
-        'email'           => 'emdiefmobilya@gmail.com',
+        'email'           => 'info@emdiefhome.com.tr',
         'priceRange'      => '₺₺',
         'currenciesAccepted' => 'TRY',
         'paymentAccepted' => 'Banka Havalesi, EFT, FAST, Kredi Kartı, Peşin',
@@ -1003,7 +1001,7 @@ function mis360_custom_robots_txt($output, $public) {
         return $output;
     }
 
-    $sitemap_url   = home_url('/wp-sitemap.xml');
+    $sitemap_url   = home_url('/sitemap.xml');
     $llms_url      = home_url('/llms.txt');
     $llms_full_url = home_url('/llms-full.txt');
 
@@ -1015,6 +1013,12 @@ function mis360_custom_robots_txt($output, $public) {
     $rules .= "Disallow: /wp-admin/
 ";
     $rules .= "Allow: /wp-admin/admin-ajax.php
+";
+    $rules .= "Disallow: /sepet/
+";
+    $rules .= "Disallow: /odeme/
+";
+    $rules .= "Disallow: /hesabim/
 ";
     $rules .= "Disallow: /cart/
 ";
@@ -1106,3 +1110,134 @@ Web: " . home_url('/');
     }
 }
 add_action('init', 'mis360_serve_llms_txt', 1);
+
+/**
+ * 7. YÜKSEK PERFORMANSLI DİNAMİK XML SİTEMAP MOTORU (/sitemap.xml)
+ * 
+ * - Google Görsel ve Ürün Arama Standartlarına Tam Uyumlu (xmlns:image)
+ * - WooCommerce Ürünleri, Kategorileri ve Kurumsal Sayfaları Otomatik Listeler
+ * - Sepet, Ödeme, Hesap Sayfalarını Arama Motorunu Yormamak İçin Hariç Tutar
+ */
+function mis360_serve_xml_sitemap() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
+
+    if ($path === 'sitemap.xml' || $path === 'sitemap_index.xml') {
+        header('Content-Type: application/xml; charset=utf-8');
+        header('X-Robots-Tag: noindex, follow');
+        header('Cache-Control: public, max-age=3600');
+
+        echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . "\n";
+        echo '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
+
+        // 1. Anasayfa
+        echo '  <url>' . "\n";
+        echo '    <loc>' . esc_url(home_url('/')) . '</loc>' . "\n";
+        echo '    <changefreq>daily</changefreq>' . "\n";
+        echo '    <priority>1.0</priority>' . "\n";
+        echo '  </url>' . "\n";
+
+        // 2. Mağaza / Shop
+        if (class_exists('WooCommerce')) {
+            $shop_url = wc_get_page_permalink('shop');
+            if ($shop_url) {
+                echo '  <url>' . "\n";
+                echo '    <loc>' . esc_url($shop_url) . '</loc>' . "\n";
+                echo '    <changefreq>daily</changefreq>' . "\n";
+                echo '    <priority>0.9</priority>' . "\n";
+                echo '  </url>' . "\n";
+            }
+        }
+
+        // 3. WooCommerce Ürünleri (Görsel Zenginleştirmesiyle)
+        if (class_exists('WooCommerce')) {
+            $products = get_posts([
+                'post_type'      => 'product',
+                'post_status'    => 'publish',
+                'posts_per_page' => 500,
+                'orderby'        => 'modified',
+                'order'          => 'DESC',
+            ]);
+
+            if (!empty($products)) {
+                foreach ($products as $post) {
+                    $permalink = get_permalink($post);
+                    $modified  = get_the_modified_date('c', $post);
+                    $img_id    = get_post_thumbnail_id($post);
+                    $img_url   = $img_id ? wp_get_attachment_image_url($img_id, 'full') : '';
+
+                    echo '  <url>' . "\n";
+                    echo '    <loc>' . esc_url($permalink) . '</loc>' . "\n";
+                    echo '    <lastmod>' . esc_html($modified) . '</lastmod>' . "\n";
+                    echo '    <changefreq>daily</changefreq>' . "\n";
+                    echo '    <priority>0.9</priority>' . "\n";
+
+                    if ($img_url) {
+                        echo '    <image:image>' . "\n";
+                        echo '      <image:loc>' . esc_url($img_url) . '</image:loc>' . "\n";
+                        echo '      <image:title>' . esc_html($post->post_title) . '</image:title>' . "\n";
+                        echo '    </image:image>' . "\n";
+                    }
+
+                    echo '  </url>' . "\n";
+                }
+            }
+
+            // 4. Ürün Kategorileri
+            $categories = get_terms([
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => true,
+            ]);
+
+            if (!is_wp_error($categories) && !empty($categories)) {
+                foreach ($categories as $cat) {
+                    $cat_link = get_term_link($cat);
+                    if (!is_wp_error($cat_link)) {
+                        echo '  <url>' . "\n";
+                        echo '    <loc>' . esc_url($cat_link) . '</loc>' . "\n";
+                        echo '    <changefreq>weekly</changefreq>' . "\n";
+                        echo '    <priority>0.8</priority>' . "\n";
+                        echo '  </url>' . "\n";
+                    }
+                }
+            }
+        }
+
+        // 5. Statik Kurumsal Sayfalar (Sepet, Ödeme ve Hesap hariç)
+        $pages = get_pages([
+            'post_status'  => 'publish',
+            'hierarchical' => 0,
+        ]);
+
+        $excluded_slugs = ['sepet', 'odeme', 'hesabim', 'cart', 'checkout', 'my-account'];
+
+        if (!empty($pages)) {
+            foreach ($pages as $p) {
+                if (in_array($p->post_name, $excluded_slugs, true)) {
+                    continue;
+                }
+                if (class_exists('WooCommerce')) {
+                    if ($p->ID === (int) wc_get_page_id('cart') || $p->ID === (int) wc_get_page_id('checkout') || $p->ID === (int) wc_get_page_id('myaccount')) {
+                        continue;
+                    }
+                }
+                $p_link = get_permalink($p);
+                $p_mod  = get_the_modified_date('c', $p);
+                $is_important = in_array($p->post_name, ['yardim-merkezi', 'iletisim', 'hakkimizda'], true);
+
+                echo '  <url>' . "\n";
+                echo '    <loc>' . esc_url($p_link) . '</loc>' . "\n";
+                echo '    <lastmod>' . esc_html($p_mod) . '</lastmod>' . "\n";
+                echo '    <changefreq>' . ($is_important ? 'weekly' : 'monthly') . '</changefreq>' . "\n";
+                echo '    <priority>' . ($is_important ? '0.8' : '0.5') . '</priority>' . "\n";
+                echo '  </url>' . "\n";
+            }
+        }
+
+        echo '</urlset>' . "\n";
+        exit;
+    }
+}
+add_action('init', 'mis360_serve_xml_sitemap', 1);
+
