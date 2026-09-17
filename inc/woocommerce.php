@@ -748,19 +748,35 @@ function mis360_ajax_remove_cart_item() {
         WC()->cart->calculate_totals();
     }
 
-    $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
-    $cart_hash = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '';
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
+
+    $count = (function_exists('WC') && WC()->cart) ? (string) WC()->cart->get_cart_contents_count() : '0';
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
+
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
 
     wp_send_json_success([
         'fragments' => $fragments,
-        'cart_hash' => $cart_hash,
+        'count'     => $count,
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
     ]);
 }
 add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
 
 /**
- * AJAX Add to Cart Handler (Yedek & Özel Sepete Ekle Motoru)
+ * AJAX Add to Cart Handler (Ultra Hızlı ve Güvenilir Sepete Ekle Motoru)
  */
 function mis360_ajax_add_to_cart() {
     check_ajax_referer('mis360_cart_nonce', 'nonce', false);
@@ -798,11 +814,28 @@ function mis360_ajax_add_to_cart() {
 
         WC()->cart->calculate_totals();
 
-        $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
+        ob_start();
+        mis360_render_drawer_cart_content();
+        $drawer_html = ob_get_clean();
+
+        $count = (string) WC()->cart->get_cart_contents_count();
+        $subtotal = WC()->cart->get_cart_subtotal();
+
+        $fragments = [
+            '#emdief-drawer-cart-content' => $drawer_html,
+            '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+            '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+            '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+            '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+        ];
+
+        $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
         $cart_hash = WC()->cart->get_cart_hash();
 
         wp_send_json_success([
             'fragments' => $fragments,
+            'count'     => $count,
+            'subtotal'  => $subtotal,
             'cart_hash' => $cart_hash,
             'product_id'=> $product_id,
             'message'   => __('Ürün sepete eklendi.', 'mis360-mobilya'),

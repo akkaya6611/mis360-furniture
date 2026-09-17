@@ -1,13 +1,13 @@
 /**
  * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
- * Version: 1.9.17
+ * Version: 1.9.18
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const cartDrawer = document.getElementById('emdief-cart-drawer');
-    const cartTrigger = document.getElementById('emdief-cart-trigger');
-    const cartClose = document.getElementById('emdief-cart-close');
-    const cartOverlay = document.getElementById('emdief-cart-overlay');
+    const cartDrawer    = document.getElementById('emdief-cart-drawer');
+    const cartTrigger   = document.getElementById('emdief-cart-trigger');
+    const cartClose     = document.getElementById('emdief-cart-close');
+    const cartOverlay   = document.getElementById('emdief-cart-overlay');
     const bottomNavCart = document.getElementById('bottomNavCartBtn');
 
     function openCartDrawer() {
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    // Fonksiyonları global olarak sun
+    // Global erişim
     window.mis360OpenCartDrawer = openCartDrawer;
     window.mis360CloseCartDrawer = closeCartDrawer;
 
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Otomatik Kapatma: Kategori, ürün veya başka bir sayfaya geçiş yapıldığında çekmeceyi kapat
+    // Sayfa geçişlerinde çekmeceyi kapat
     document.addEventListener('click', (e) => {
         const link = e.target.closest('a');
         if (!link) return;
@@ -97,118 +97,125 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('beforeunload', closeCartDrawer);
 
     // =========================================================================
-    // WOOCOMMERCE AJAX SEPET VE ÇEKMECE MOTORU
+    // KESİN VE ANLIK ÇALIŞAN AJAX SEPETE EKLE & SİLME MOTORU
     // =========================================================================
     if (window.jQuery) {
         const $ = window.jQuery;
         const ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
         const nonce   = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
-        const addedText  = (window.mis360Data && window.mis360Data.addedToCartText) ? window.mis360Data.addedToCartText : '✓ Sepete Eklendi!';
+        const addedText = (window.mis360Data && window.mis360Data.addedToCartText) ? window.mis360Data.addedToCartText : '✓ Sepete Eklendi!';
 
-        // Sepet yönlendirmesini istemci tarafında da kesin olarak kapat (Boş sepete yönlenmeyi önler)
         if (typeof wc_add_to_cart_params !== 'undefined') {
             wc_add_to_cart_params.cart_redirect_after_add = 'no';
         }
 
-        // Fragmanları DOM üzerinde güncelleme fonksiyonu
-        function updateFragments(fragments) {
-            if (!fragments) return;
-            $.each(fragments, function(selector, html) {
-                $(selector).replaceWith(html);
-            });
-        }
+        // Tüm sepet fragmanlarını ve sayaçlarını DOM üzerinde anında güncelle
+        function applyFragments(data) {
+            if (!data) return;
 
-        // 1. Ürün Sepete Eklendiğinde (WooCommerce native added_to_cart kancası)
-        $(document.body).on('added_to_cart', function(event, fragments, cart_hash, $button) {
-            if ($button && $button.length) {
-                $button.removeClass('loading').addClass('is-added');
-                const $span = $button.find('span');
-                if ($span.length) {
-                    const originalText = $button.data('orig-btn-text') || $span.text();
-                    if (!$button.data('orig-btn-text')) {
-                        $button.data('orig-btn-text', originalText);
-                    }
-                    $span.text(addedText);
-
-                    setTimeout(() => {
-                        $button.removeClass('is-added');
-                        $span.text($button.data('orig-btn-text') || originalText);
-                    }, 2200);
-                }
-            }
-
-            if (fragments) {
-                updateFragments(fragments);
-            }
-
-            // Sepet çekmecesini anında aç
-            openCartDrawer();
-        });
-
-        // 2. Yedek Fallback: Eğer WooCommerce'in wc-add-to-cart scripti herhangi bir sebeple yüklenmediyse
-        if (typeof wc_add_to_cart_params === 'undefined') {
-            $(document).on('click', '.trendyol-btn-add-cart.ajax_add_to_cart', function(e) {
-                const $btn = $(this);
-                let productId = $btn.data('product_id') || $btn.attr('data-product_id');
-
-                if (!productId) {
-                    const href = $btn.attr('href') || '';
-                    const match = href.match(/add-to-cart=([0-9]+)/);
-                    if (match) productId = match[1];
-                }
-
-                if (!productId) return;
-
-                e.preventDefault();
-                if ($btn.hasClass('loading') || $btn.hasClass('is-added')) return;
-
-                const qty = $btn.data('quantity') || 1;
-                const isFlash = $btn.data('flash_deal') || $btn.data('is_flash_deal') || 0;
-                const originalHtml = $btn.html();
-
-                $btn.addClass('loading').css('pointer-events', 'none');
-                const $span = $btn.find('span');
-                if ($span.length) $span.text('Ekleniyor...');
-
-                $.ajax({
-                    type: 'POST',
-                    url: ajaxUrl,
-                    data: {
-                        action: 'mis360_ajax_add_to_cart',
-                        product_id: productId,
-                        quantity: qty,
-                        is_flash_deal: isFlash,
-                        nonce: nonce
-                    },
-                    success: function(response) {
-                        $btn.removeClass('loading').css('pointer-events', '');
-                        if (response && response.success && response.data && response.data.fragments) {
-                            updateFragments(response.data.fragments);
-                            $btn.addClass('is-added');
-                            if ($span.length) $span.text(addedText);
-
-                            openCartDrawer();
-                            $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash, $btn]);
-
-                            setTimeout(() => {
-                                $btn.removeClass('is-added');
-                                $btn.html(originalHtml);
-                            }, 2200);
-                        } else if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
-                        }
-                    },
-                    error: function() {
-                        $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
-                        if ($btn.attr('href')) {
-                            window.location.href = $btn.attr('href');
-                        }
+            // 1. Fragmanları değiştir
+            if (data.fragments) {
+                $.each(data.fragments, function(selector, html) {
+                    const $target = $(selector);
+                    if ($target.length) {
+                        $target.replaceWith(html);
                     }
                 });
-            });
+            }
+
+            // 2. Ürün adedini doğrudan güncelle
+            if (data.count !== undefined) {
+                $('#emdief-cart-count').text(data.count);
+                $('#emdief-bottom-cart-count').text(data.count);
+                $('#emdief-drawer-count-badge').text(data.count + ' ürün');
+            }
+
+            // 3. Ara toplamı doğrudan güncelle
+            if (data.subtotal !== undefined) {
+                $('.emdief-cart-total').html(data.subtotal);
+            }
         }
 
-        // 3. Çekmece İçi AJAX Ürün Çıkarma
+        // 1. Ürün Kartlarından (Slider / Kategori / Ansayfa) Sepete Ekleme
+        $(document).on('click', '.trendyol-btn-add-cart, .emdief-btn-add-cart, .ajax_add_to_cart', function(e) {
+            const $btn = $(this);
+
+            if ($btn.hasClass('product_type_variable') || $btn.hasClass('product_type_grouped') || $btn.hasClass('product_type_external')) {
+                return;
+            }
+
+            let productId = $btn.data('product_id') || $btn.attr('data-product_id');
+            if (!productId) {
+                const href = $btn.attr('href') || '';
+                const match = href.match(/add-to-cart=([0-9]+)/);
+                if (match) productId = match[1];
+            }
+
+            if (!productId) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            if ($btn.hasClass('loading') || $btn.hasClass('is-added')) {
+                return;
+            }
+
+            const qty = $btn.data('quantity') || 1;
+            const isFlash = ($btn.data('flash_deal') == '1' || $btn.data('is_flash_deal') == '1' || $btn.attr('data-flash_deal') == '1') ? 1 : 0;
+            const originalHtml = $btn.html();
+
+            $btn.addClass('loading').css('pointer-events', 'none');
+            const $span = $btn.find('span');
+            if ($span.length) {
+                $span.text('Ekleniyor...');
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: ajaxUrl,
+                data: {
+                    action: 'mis360_ajax_add_to_cart',
+                    product_id: productId,
+                    quantity: qty,
+                    is_flash_deal: isFlash,
+                    flash_deal: isFlash,
+                    nonce: nonce
+                },
+                success: function(response) {
+                    $btn.removeClass('loading').css('pointer-events', '');
+
+                    if (response && response.success && response.data) {
+                        applyFragments(response.data);
+
+                        $btn.addClass('is-added');
+                        if ($span.length) {
+                            $span.text(addedText);
+                        }
+
+                        // Sepet çekmecesini anında aç!
+                        openCartDrawer();
+
+                        $(document.body).trigger('added_to_cart', [response.data.fragments, response.data.cart_hash, $btn]);
+                        $(document.body).trigger('wc_fragment_refresh');
+
+                        setTimeout(() => {
+                            $btn.removeClass('is-added');
+                            $btn.html(originalHtml);
+                        }, 2200);
+                    } else if ($btn.attr('href')) {
+                        window.location.href = $btn.attr('href');
+                    }
+                },
+                error: function() {
+                    $btn.removeClass('loading').css('pointer-events', '').html(originalHtml);
+                    if ($btn.attr('href')) {
+                        window.location.href = $btn.attr('href');
+                    }
+                }
+            });
+        });
+
+        // 2. Çekmece İçi AJAX Ürün Çıkarma
         $(document).on('click', '.remove-cart-item', function(e) {
             e.preventDefault();
             const $btn = $(this);
@@ -248,8 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     nonce: nonce
                 },
                 success: function(response) {
-                    if (response && response.success && response.data && response.data.fragments) {
-                        updateFragments(response.data.fragments);
+                    if (response && response.success && response.data) {
+                        applyFragments(response.data);
 
                         $(document.body).trigger('wc_fragments_refreshed');
                         $(document.body).trigger('removed_from_cart', [response.data.fragments, response.data.cart_hash, $btn]);
@@ -271,6 +278,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+        });
+
+        // WooCommerce native olaylarında da fragmanları uygula
+        $(document.body).on('added_to_cart', function(event, fragments, cart_hash, $button) {
+            if (fragments) {
+                applyFragments({ fragments: fragments });
+            }
+            openCartDrawer();
         });
     }
 });
