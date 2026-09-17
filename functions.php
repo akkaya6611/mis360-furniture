@@ -27,7 +27,6 @@ $mis360_includes = [
     '/inc/corporate-pages.php',// Kurumsal sayfalar ve yasal metinler motoru
     '/inc/montessori-features.php', // Özel Montessori Satış & Dönüşüm Modülleri (v1.9.0)
     '/inc/login-customizer.php', // Özel Emdief Home wp-login.php giriş sayfası tasarımı (v1.9.42)
-    '/inc/trendyol-review-importer.php', // Trendyol Yorum İçe Aktarma Botu (v1.9.45)
 ];
 
 foreach ($mis360_includes as $inc_file) {
