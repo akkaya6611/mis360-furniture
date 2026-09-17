@@ -236,11 +236,11 @@ function mis360_render_drawer_cart_content() {
                 </div>
                 <div class="mascot-speech-msg">
                     <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
-                        <div class="mascot-celebrate-badge">
-                            <span>🎉</span> <strong>TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
+                        <div class="mascot-celebrate-badge" style="color: #ffffff !important;">
+                            <span>🎉</span> <strong style="color: #ffffff !important;">TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
                         </div>
-                        <div class="mascot-celebrate-text">
-                            Harika seçim! Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandı! Kargo ücreti ödemeyeceksiniz!
+                        <div class="mascot-celebrate-text" style="color: #0f172a !important;">
+                            Harika seçim! Sepetiniz <strong style="color: #047857 !important;">1.500 TL</strong> limitini aştı ve <strong style="color: #047857 !important;">ÜCRETSİZ KARGO</strong> kazandı! Kargo ücreti ödemeyeceksiniz!
                         </div>
                     <?php elseif ($cart_subtotal > 0): ?>
 
@@ -3045,33 +3045,12 @@ function mis360_cart_page_mascot_notice() {
 
 
                 <?php if ($diff <= 0): ?>
-
-
-
-                    <div class="mascot-celebrate-badge">
-
-
-
-                        <span>🎉</span> <strong>TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
-
-
-
+                    <div class="mascot-celebrate-badge" style="color: #ffffff !important;">
+                        <span>🎉</span> <strong style="color: #ffffff !important;">TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
                     </div>
-
-
-
-                    <div class="mascot-celebrate-text">
-
-
-
-                        Harika seçim! Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
-
-
-
+                    <div class="mascot-celebrate-text" style="color: #0f172a !important;">
+                        Harika seçim! Sepetiniz <strong style="color: #047857 !important;">1.500 TL</strong> limitini aştı ve <strong style="color: #047857 !important;">ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
                     </div>
-
-
-
                 <?php else: ?>
 
 

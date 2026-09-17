@@ -597,9 +597,9 @@ ul.products {
 }
 
 .mascot-speech-bubble-box.is-free-shipping {
-  background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 50%, #ffffff 100%);
-  border-color: #6ee7b7;
-  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.15);
+  background: #ffffff !important;
+  border: 1.5px solid #10b981 !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.12) !important;
 }
 
 .mascot-bubble-avatar-col {
@@ -665,9 +665,10 @@ ul.products {
 }
 
 .is-free-shipping .mascot-label-tag {
-  background: #dcfce7;
-  color: #15803d;
-  border-color: #86efac;
+  background: #ecfdf5;
+  color: #065f46 !important;
+  border-color: #6ee7b7;
+  font-weight: 800;
 }
 
 .tag-pulse {
@@ -712,23 +713,32 @@ ul.products {
 }
 
 .is-free-shipping .mascot-speech-msg strong {
-  color: #16a34a;
+  color: #047857;
 }
 
 .mascot-celebrate-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  padding: 4px 12px;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: #ffffff !important;
+  padding: 5px 12px;
   border-radius: 999px;
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   margin-bottom: 6px;
-  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+  box-shadow: 0 3px 12px rgba(4, 120, 87, 0.35);
   animation: badgeGlowPulse 2s ease-in-out infinite;
+}
+
+.mascot-celebrate-badge strong,
+.mascot-speech-msg .mascot-celebrate-badge strong,
+.is-free-shipping .mascot-speech-msg .mascot-celebrate-badge strong,
+.mascot-celebrate-badge span {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .mascot-celebrate-badge span {
@@ -738,23 +748,27 @@ ul.products {
 @keyframes badgeGlowPulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+    box-shadow: 0 3px 12px rgba(4, 120, 87, 0.35);
   }
   50% {
     transform: scale(1.03);
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 4px 16px rgba(4, 120, 87, 0.55);
   }
 }
 
 .mascot-celebrate-text {
-  font-size: 12px;
-  color: #065f46;
-  line-height: 1.45;
+  font-size: 13px;
+  color: #0f172a !important; /* Çok koyu antrasit - beyaz kutuda tertemiz ve jilet gibi okunur */
+  line-height: 1.5;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
-.mascot-celebrate-text strong {
+.mascot-celebrate-text strong,
+.mascot-speech-msg .mascot-celebrate-text strong,
+.is-free-shipping .mascot-speech-msg .mascot-celebrate-text strong {
   color: #047857 !important;
-  font-weight: 700;
+  font-weight: 800 !important;
 }
 
 .mascot-meter-wrap {
@@ -790,7 +804,8 @@ ul.products {
 }
 
 .is-free-shipping .mascot-meter-status {
-  color: #16a34a;
+  color: #047857 !important;
+  font-weight: 800;
 }
 
 /* Sepet Sayfası (Cart Page) Kutusu */

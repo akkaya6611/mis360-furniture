@@ -1,6 +1,6 @@
 /**
  * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
- * Version: 1.9.31 - Confetti Celebration & 1.500 TL Free Shipping Burst
+ * Version: 1.9.32 - Crystal Clear Typography & High Contrast Celebration
  */
 
 (function() {
