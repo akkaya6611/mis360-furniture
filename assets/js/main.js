@@ -135,12 +135,19 @@ function mis360Init() {
     const authClose = document.getElementById('emdief-auth-close');
     const authOverlay = document.getElementById('emdief-auth-overlay');
 
-    function openAuthModal() {
+    function openAuthModal(defaultTab) {
         if (authModal) {
+            if (defaultTab) {
+                const targetBtn = authModal.querySelector(`.auth-tab-btn[data-tab="${defaultTab}"]`);
+                if (targetBtn) {
+                    targetBtn.click();
+                }
+            }
             authModal.classList.add('is-active');
             authModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
-            const firstInput = authModal.querySelector('input[type="text"], input[type="email"]');
+            const activePanel = authModal.querySelector('.auth-form-panel.is-active');
+            const firstInput = (activePanel || authModal).querySelector('input[type="text"], input[type="email"]');
             if (firstInput) setTimeout(() => firstInput.focus(), 150);
         }
     }
@@ -157,7 +164,7 @@ function mis360Init() {
     window.mis360OpenAuthModal = openAuthModal;
     window.mis360CloseAuthModal = closeAuthModal;
 
-    if (authTrigger) authTrigger.addEventListener('click', openAuthModal);
+    if (authTrigger) authTrigger.addEventListener('click', () => openAuthModal('login'));
     if (authClose) authClose.addEventListener('click', closeAuthModal);
     if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
 
@@ -167,13 +174,14 @@ function mis360Init() {
         if (!checkoutAuthBtn) return;
 
         e.preventDefault();
+        e.stopImmediatePropagation();
         if (typeof window.mis360CloseCartDrawer === 'function') {
             window.mis360CloseCartDrawer();
         }
 
         const modal = document.getElementById('emdief-auth-modal');
         if (modal) {
-            const checkoutUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : checkoutAuthBtn.getAttribute('href');
+            const checkoutUrl = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : (checkoutAuthBtn.getAttribute('data-href') || checkoutAuthBtn.getAttribute('href') || '/odeme/');
             const loginRedir = modal.querySelector('#emdief-login-redirect, input[name="redirect_to"]');
             if (loginRedir && checkoutUrl) {
                 loginRedir.value = checkoutUrl;
@@ -185,12 +193,12 @@ function mis360Init() {
 
             const modalSub = modal.querySelector('.auth-modal-subtitle');
             if (modalSub) {
-                modalSub.textContent = 'Siparişinizi tamamlamak ve kargo takibinizi yapabilmek için lütfen giriş yapın veya ücretsiz üye olun.';
+                modalSub.textContent = 'Siparişinizi tamamlamak ve adres/fatura bilgilerinizi kaydetmek için lütfen giriş yapın veya ücretsiz üye olun.';
             }
 
-            openAuthModal();
+            openAuthModal('login');
         } else {
-            window.location.href = checkoutAuthBtn.getAttribute('href');
+            window.location.href = checkoutAuthBtn.getAttribute('data-href') || checkoutAuthBtn.getAttribute('href') || '/odeme/';
         }
     });
 

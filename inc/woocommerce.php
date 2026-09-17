@@ -559,9 +559,9 @@ function mis360_render_drawer_cart_content() {
                             <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
                         </a>
                     <?php else: ?>
-                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout">
-                            <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
-                        </a>
+                        <button type="button" class="emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>">
+                            🔒 <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
+                        </button>
                     <?php endif; ?>
 
 
@@ -7015,3 +7015,70 @@ add_filter('login_redirect', function($redirect_to, $request, $user) {
     }
     return $redirect_to;
 }, 10, 3);
+
+// 7. Ödeme Sayfasında Adres/Fatura Öncesi Zorunlu Üyelik Uyarı Kutusu
+add_action('woocommerce_before_checkout_form', 'mis360_checkout_auth_required_gate', 5);
+function mis360_checkout_auth_required_gate() {
+    if (is_user_logged_in() || (function_exists('is_order_received_page') && is_order_received_page())) {
+        return;
+    }
+    ?>
+    <div class="emdief-checkout-auth-gate-box">
+        <div class="auth-gate-badge">
+            <span class="gate-pulse"></span>
+            🔒 <?php esc_html_e('ADRES & FATURA ÖNCESİ ZORUNLU ADIM', 'mis360-mobilya'); ?>
+        </div>
+        <div class="auth-gate-content">
+            <h3 class="auth-gate-title">
+                ⚠️ <?php esc_html_e('Sipariş Oluşturabilmek İçin Üyelik Gerekmektedir!', 'mis360-mobilya'); ?>
+            </h3>
+            <p class="auth-gate-desc">
+                <?php _e('Değerli müşterimiz; fatura güvenliğiniz, yasal haklarınız ve kargo durumunuzu anlık takip edebilmeniz için <strong>adres ve fatura bilgilerinizi girmeden önce lütfen sisteme giriş yapın veya ücretsiz üye olun.</strong>', 'mis360-mobilya'); ?>
+            </p>
+            <div class="auth-gate-buttons">
+                <button type="button" class="emdief-btn btn-primary auth-gate-btn-login" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>';} return false;">
+                    🔑 <?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?>
+                </button>
+                <button type="button" class="emdief-btn btn-warm auth-gate-btn-register" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('register');}else{window.location.href='<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>';} return false;">
+                    ✨ <?php esc_html_e('Hızlı Üye Ol (10 Saniyede Ücretsiz)', 'mis360-mobilya'); ?>
+                </button>
+            </div>
+        </div>
+    </div>
+    <?php
+}
+
+// 8. Fatura Alanı Öncesi Canlı Bilgilendirme Hatırlatması
+add_action('woocommerce_before_checkout_billing_form', 'mis360_before_billing_auth_reminder');
+function mis360_before_billing_auth_reminder() {
+    if (is_user_logged_in() || (function_exists('is_order_received_page') && is_order_received_page())) {
+        return;
+    }
+    ?>
+    <div class="checkout-billing-auth-hint">
+        💡 <strong><?php esc_html_e('Önemli Hatırlatma:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Henüz giriş yapmadınız. Adresinizi doldururken veya tamamlamadan önce yukarıdaki "Giriş Yap" veya "Hızlı Üye Ol" butonundan hesabınızı oluşturabilirsiniz.', 'mis360-mobilya'); ?>
+    </div>
+    <?php
+}
+
+// 9. Sepet Sayfası (Cart Page) Siparişi Tamamla Butonunu Üyelik Korumalı Yap
+remove_action('woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20);
+add_action('woocommerce_proceed_to_checkout', 'mis360_button_proceed_to_checkout', 20);
+function mis360_button_proceed_to_checkout() {
+    if (is_user_logged_in()) {
+        ?>
+        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block">
+            <?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?>
+        </a>
+        <?php
+    } else {
+        ?>
+        <button type="button" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_checkout_url()); ?>';}">
+            🔒 <?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?>
+        </button>
+        <p class="cart-auth-required-hint" style="text-align: center; margin-top: 8px; font-size: 12px; color: #b45309; font-weight: 600;">
+            ⚠️ <?php esc_html_e('Sipariş oluşturabilmek için lütfen üye olun veya giriş yapın.', 'mis360-mobilya'); ?>
+        </p>
+        <?php
+    }
+}
