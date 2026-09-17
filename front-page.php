@@ -115,39 +115,41 @@ get_header();
             <!-- Sağ 2'li Kategori Kartları -->
             <div class="bento-side-cards">
                 <!-- Sağ Üst Kart: Montessori Kitaplıklar -->
-                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/?s=kitapl%C4%B1k&post_type=product')); ?>" class="bento-card bento-card-bookshelf">
-                    <div class="bento-card-bg bg-bookshelf"></div>
-                    <div class="bento-card-scrim"></div>
-                    <div class="bento-card-content">
-                        <span class="bento-card-tag tag-amber">📚 EN ÇOK TERCİH EDİLEN</span>
-                        <h3>Montessori Kitaplıklar</h3>
-                        <p>Çocukların boyuna özel ergonomik, ön yüzü görünür kapak sergileme alanı.</p>
-                        <span class="bento-card-link-text">
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/?s=kitapl%C4%B1k&post_type=product')); ?>" class="bento-card bento-subcard card-warm bento-card-bookshelf">
+                    <div class="bento-card-content subcard-text">
+                        <span class="bento-card-tag tag-amber subcard-eyebrow eyebrow-orange">📚 EN ÇOK TERCİH EDİLEN</span>
+                        <h3 class="subcard-title">Montessori Kitaplıklar</h3>
+                        <p class="subcard-subtitle">Çocukların boyuna özel ergonomik, ön yüzü görünür kapak sergileme alanı.</p>
+                        <span class="bento-card-link-text subcard-cta">
                             <span>Modelleri İncele</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </span>
                     </div>
+                    <div class="bento-card-visual subcard-visual">
+                        <span class="bento-visual-emoji" style="font-size: 52px; display: block; line-height: 1; filter: drop-shadow(0 6px 14px rgba(234, 88, 12, 0.15));">📚</span>
+                    </div>
                 </a>
 
                 <!-- Sağ Alt Kart: Ahşap Oyuncaklar & Raflar -->
-                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>" class="bento-card bento-card-toys">
-                    <div class="bento-card-bg bg-toys"></div>
-                    <div class="bento-card-scrim"></div>
-                    <div class="bento-card-content">
-                        <span class="bento-card-tag tag-emerald">🧸 DOĞAL &amp; EĞİTİCİ</span>
-                        <h3>Ahşap Oyuncaklar &amp; Raflar</h3>
-                        <p>Duyusal gelişimi destekleyen pürüzsüz doğal masif ahşap aksesuarlar.</p>
-                        <span class="bento-card-link-text">
+                <a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/?s=oyuncak&post_type=product')); ?>" class="bento-card bento-subcard card-mint bento-card-toys">
+                    <div class="bento-card-content subcard-text">
+                        <span class="bento-card-tag tag-emerald subcard-eyebrow eyebrow-green">🧸 DOĞAL &amp; EĞİTİCİ</span>
+                        <h3 class="subcard-title">Ahşap Oyuncaklar &amp; Raflar</h3>
+                        <p class="subcard-subtitle">Duyusal gelişimi destekleyen pürüzsüz doğal masif ahşap aksesuarlar.</p>
+                        <span class="bento-card-link-text subcard-cta">
                             <span>Ürünleri Gör</span>
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                         </span>
+                    </div>
+                    <div class="bento-card-visual subcard-visual">
+                        <span class="bento-visual-emoji" style="font-size: 52px; display: block; line-height: 1; filter: drop-shadow(0 6px 14px rgba(16, 185, 129, 0.15));">🧸</span>
                     </div>
                 </a>
             </div>
         </div>
 
         <!-- Bento Altı Güven & Neden Biz Şeridi -->
-        <div class="bento-trust-row">
+        <div class="bento-trust-row why-us-grid">
             <div class="why-us-card">
                 <div class="why-us-icon-wrap bg-amber">🌱</div>
                 <div class="why-us-info">

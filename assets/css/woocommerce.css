@@ -3778,6 +3778,7 @@ ul.products {
     margin: 0 auto;
     line-height: 1.6;
 }
+.bento-trust-row,
 .why-us-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
