@@ -317,6 +317,7 @@ function mis360_performance_update_htaccess_rules() {
     } catch (Throwable $e) {
         // Never break WordPress operations
     }
+}
 add_action('after_switch_theme', 'mis360_performance_update_htaccess_rules');
 add_action('admin_init', function() {
     if (!get_transient('mis360_htaccess_cached_v1955')) {
