@@ -1,6 +1,6 @@
 /**
  * Mis360-Mobilya AJAX Mini-Cart & Drawer Engine
- * Version: 1.9.20 - Fully Synced & Bulletproof Cart System
+ * Version: 1.9.31 - Confetti Celebration & 1.500 TL Free Shipping Burst
  */
 
 (function() {
@@ -34,6 +34,144 @@
 
     // Script yüklendiği an ilk senkronizasyon
     quickSyncBadge();
+
+    // =========================================================================
+    // KUTLAMA VE KONFETİ MOTORU (Montessori Renk Paleti, Saf HTML5 Canvas)
+    // =========================================================================
+    var lastConfettiTime = 0;
+    function launchCartConfetti(container) {
+        var now = Date.now();
+        if (now - lastConfettiTime < 5000) {
+            return; // 5 saniye içinde tekrar tetikleme
+        }
+        lastConfettiTime = now;
+
+        var parent = container || document.querySelector('.emdief-drawer-panel') || document.body;
+        if (!parent) return;
+
+        var canvas = document.createElement('canvas');
+        canvas.className = 'mis360-cart-confetti-canvas';
+        canvas.style.position = 'absolute';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '99999';
+
+        var computedStyle = window.getComputedStyle(parent);
+        if (computedStyle.position === 'static') {
+            parent.style.position = 'relative';
+        }
+
+        parent.appendChild(canvas);
+
+        var rect = parent.getBoundingClientRect();
+        var width = rect.width || window.innerWidth;
+        var height = rect.height || window.innerHeight;
+        var dpr = window.devicePixelRatio || 1;
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+
+        var ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.scale(dpr, dpr);
+
+        // Montessori Canlı & Güven Veren Renkler
+        var colors = [
+            '#f59e0b', // Güneş Sarısı
+            '#10b981', // Nane Yeşili
+            '#0284c7', // Gökyüzü Mavisi
+            '#ff6b6b', // Mercan Pembesi
+            '#8b5cf6', // Lavanta Moru
+            '#ec4899', // Pembe
+            '#14b8a6', // Turkuaz
+            '#fbbf24'  // Altın
+        ];
+
+        var particles = [];
+        var particleCount = Math.min(80, Math.max(50, Math.floor(width / 5)));
+        var originX = width / 2;
+        var originY = Math.min(190, height * 0.28);
+
+        for (var i = 0; i < particleCount; i++) {
+            var angle = (Math.PI * 2) * (i / particleCount) + (Math.random() - 0.5);
+            var speed = 3.5 + Math.random() * 6.5;
+            particles.push({
+                x: originX + (Math.random() - 0.5) * 60,
+                y: originY + (Math.random() - 0.5) * 30,
+                vx: Math.cos(angle) * speed + (Math.random() - 0.5) * 2,
+                vy: Math.sin(angle) * speed - (3 + Math.random() * 4.5),
+                size: 5 + Math.random() * 6,
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 12,
+                wobble: Math.random() * 10,
+                wobbleSpeed: 0.08 + Math.random() * 0.07,
+                shape: Math.random() > 0.35 ? 'rect' : 'circle',
+                opacity: 1,
+                decay: 0.007 + Math.random() * 0.006
+            });
+        }
+
+        var startTime = performance.now();
+        var maxDuration = 3200;
+
+        function renderConfetti(nowTime) {
+            var elapsed = nowTime - startTime;
+            if (elapsed > maxDuration || particles.length === 0) {
+                if (canvas.parentNode) {
+                    canvas.parentNode.removeChild(canvas);
+                }
+                return;
+            }
+
+            ctx.clearRect(0, 0, width, height);
+
+            for (var j = particles.length - 1; j >= 0; j--) {
+                var p = particles[j];
+
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.22; // Yer çekimi
+                p.vx *= 0.98; // Hava direnci
+                p.vy *= 0.98;
+                p.rotation += p.rotationSpeed;
+                p.wobble += p.wobbleSpeed;
+                p.opacity -= p.decay;
+
+                if (p.opacity <= 0 || p.y > height + 20) {
+                    particles.splice(j, 1);
+                    continue;
+                }
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                ctx.globalAlpha = Math.max(0, p.opacity);
+                ctx.fillStyle = p.color;
+
+                var scaleX = Math.cos(p.wobble);
+
+                if (p.shape === 'rect') {
+                    ctx.fillRect(-p.size * scaleX / 2, -p.size / 2, p.size * scaleX, p.size * 0.65);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, (p.size / 2) * Math.abs(scaleX), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            }
+
+            requestAnimationFrame(renderConfetti);
+        }
+
+        requestAnimationFrame(renderConfetti);
+    }
+
+    window.mis360LaunchConfetti = launchCartConfetti;
 
     function initMis360CartEngine() {
         const cartDrawer    = document.getElementById('emdief-cart-drawer');
@@ -70,6 +208,13 @@
             if (typeof window.mis360UnblockDrawerCart === 'function') {
                 window.mis360UnblockDrawerCart();
             }
+
+            // Sepet 1500 TL (ücretsiz kargo) eşiğinde veya üzerindeyse konfeti patlat!
+            setTimeout(function() {
+                if (cartDrawer.querySelector('.mascot-speech-bubble-box.is-free-shipping')) {
+                    launchCartConfetti(cartDrawer.querySelector('.emdief-drawer-panel'));
+                }
+            }, 300);
         }
 
         function closeCartDrawer() {
@@ -212,6 +357,15 @@
                 unblockDrawerCart();
                 setTimeout(unblockDrawerCart, 50);
                 setTimeout(unblockDrawerCart, 450);
+
+                // Ücretsiz kargo eşiğine ulaşıldıysa (1500 TL) konfeti patlat!
+                setTimeout(function() {
+                    const $freeBox = $('.mascot-speech-bubble-box.is-free-shipping');
+                    if ($freeBox.length) {
+                        const panel = document.querySelector('.emdief-drawer-panel') || $freeBox[0];
+                        launchCartConfetti(panel);
+                    }
+                }, 350);
 
                 // 4. SessionStorage'a kaydet (Önbellekli anasayfada sıfır gecikmeyle göstermek için)
                 try {
@@ -413,9 +567,21 @@
         }
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initMis360CartEngine);
-    } else {
+    function runInit() {
         initMis360CartEngine();
+
+        // Sepet sayfasında ücretsiz kargo zaten sağlanmışsa kutlama konfetisi patlat
+        setTimeout(function() {
+            var cartPageBox = document.querySelector('.cart-page-mascot-box.is-free-shipping');
+            if (cartPageBox) {
+                launchCartConfetti(cartPageBox);
+            }
+        }, 500);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runInit);
+    } else {
+        runInit();
     }
 })();

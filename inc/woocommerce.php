@@ -219,81 +219,29 @@ function mis360_render_drawer_cart_content() {
 
 
         <!-- Maskottan Mesaj Var: Canlı Kargo Tavsiye Kutusu -->
-
-
-
-        <div class="mascot-speech-bubble-box <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'is-free-shipping' : ''; ?>">
-
-
-
+        <div class="mascot-speech-bubble-box <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'is-free-shipping' : ''; ?>" <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'data-free-shipping="true"' : ''; ?>>
             <div class="mascot-bubble-avatar-col">
-
-
-
                 <div class="mascot-avatar-wrapper">
-
-
-
                     <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(44, 'mascot-chat-bear') : '🧸'; ?>
-
-
-
                     <span class="mascot-live-indicator" title="Maskot Çevrimiçi"></span>
-
-
-
                 </div>
-
-
-
             </div>
-
-
-
             <div class="mascot-speech-body">
-
-
-
                 <div class="mascot-speech-top">
-
-
-
                     <span class="mascot-label-tag">
-
-
-
                         <span class="tag-pulse"></span>
-
-
-
                         💬 MASKOTTAN MESAJ VAR!
-
-
-
                     </span>
-
-
-
                     <span class="mascot-time-tag">Canlı İpucu</span>
-
-
-
                 </div>
-
-
-
                 <div class="mascot-speech-msg">
-
-
-
                     <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
-
-
-
-                        🎉 <strong>Harika seçim!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı, kargo ücreti ödemeyeceksiniz!
-
-
-
+                        <div class="mascot-celebrate-badge">
+                            <span>🎉</span> <strong>TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
+                        </div>
+                        <div class="mascot-celebrate-text">
+                            Harika seçim! Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandı! Kargo ücreti ödemeyeceksiniz!
+                        </div>
                     <?php elseif ($cart_subtotal > 0): ?>
 
 
@@ -3032,7 +2980,7 @@ function mis360_cart_page_mascot_notice() {
 
 
 
-    <div class="mascot-speech-bubble-box cart-page-mascot-box <?php echo ($diff <= 0) ? 'is-free-shipping' : ''; ?>">
+    <div class="mascot-speech-bubble-box cart-page-mascot-box <?php echo ($diff <= 0) ? 'is-free-shipping' : ''; ?>" <?php echo ($diff <= 0) ? 'data-free-shipping="true"' : ''; ?>>
 
 
 
@@ -3100,7 +3048,27 @@ function mis360_cart_page_mascot_notice() {
 
 
 
-                    🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
+                    <div class="mascot-celebrate-badge">
+
+
+
+                        <span>🎉</span> <strong>TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
+
+
+
+                    </div>
+
+
+
+                    <div class="mascot-celebrate-text">
+
+
+
+                        Harika seçim! Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
+
+
+
+                    </div>
 
 
 
@@ -4093,6 +4061,18 @@ function mis360_cart_free_shipping_popup() {
 
 
                 if (barMsgEl) barMsgEl.innerHTML = '🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı!';
+
+
+
+                if (typeof window.mis360LaunchConfetti === 'function') {
+
+
+
+                    window.mis360LaunchConfetti();
+
+
+
+                }
 
 
 
