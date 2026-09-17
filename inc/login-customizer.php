@@ -301,11 +301,144 @@ add_action('login_enqueue_scripts', function() {
             color: #065f46 !important;
         }
 
+        /* MİS360 Web Yazılım Banner */
+        .mis360-login-agency-banner {
+            width: 100%;
+            max-width: 410px;
+            margin: 22px auto 30px;
+            box-sizing: border-box;
+        }
+
+        .agency-banner-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 12px 16px;
+            text-decoration: none !important;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.25), 0 4px 10px -2px rgba(15, 23, 42, 0.15);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agency-banner-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .agency-banner-link:hover::before {
+            left: 150%;
+        }
+
+        .agency-banner-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 32px -4px rgba(15, 23, 42, 0.35);
+            border-color: rgba(249, 115, 22, 0.4);
+        }
+
+        .agency-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .agency-logo-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 850;
+            font-size: 13px;
+            letter-spacing: -0.05em;
+            box-shadow: 0 4px 12px rgba(234, 88, 12, 0.4);
+            flex-shrink: 0;
+        }
+
+        .agency-info {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .agency-tag {
+            font-size: 0.62rem;
+            font-weight: 750;
+            color: #fb923c;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .agency-brand-title {
+            font-size: 0.94rem;
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.25;
+            margin: 2px 0 1px;
+        }
+
+        .agency-brand-title .agency-accent {
+            color: #fdba74;
+            font-weight: 600;
+        }
+
+        .agency-url {
+            font-size: 0.72rem;
+            color: #94a3b8;
+            line-height: 1.2;
+        }
+
+        .agency-action {
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .agency-btn-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-size: 0.74rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 999px;
+            transition: all 0.2s ease;
+        }
+
+        .agency-banner-link:hover .agency-btn-pill {
+            background: #ea580c;
+            border-color: #ea580c;
+            box-shadow: 0 2px 8px rgba(234, 88, 12, 0.4);
+        }
+
+        .agency-btn-pill svg {
+            transition: transform 0.2s ease;
+        }
+
+        .agency-banner-link:hover .agency-btn-pill svg {
+            transform: translate(2px, -2px);
+        }
+
         .mis360-login-footer-tag {
             text-align: center;
-            font-size: 0.76rem;
+            font-size: 0.74rem;
             color: #94a3b8;
-            margin-top: 20px;
+            margin-top: 14px;
             letter-spacing: 0.02em;
         }
     </style>
@@ -313,8 +446,32 @@ add_action('login_enqueue_scripts', function() {
 });
 
 /**
- * Giriş sayfası altına güven & telif notu ekle
+ * Giriş sayfası altına MİS360 Web Yazılım bannerı & telif notu ekle
  */
 add_action('login_footer', function() {
-    echo '<div class="mis360-login-footer-tag">Emdief Home &bull; Güvenli Altyapı &bull; MİS360</div>';
+    ?>
+    <div class="mis360-login-agency-banner">
+        <a href="https://misteknoloji360.com.tr/" target="_blank" rel="noopener noreferrer" class="agency-banner-link" title="<?php esc_attr_e('MİS360 Web Yazılım & E-Ticaret Altyapıları', 'mis360-mobilya'); ?>">
+            <div class="agency-banner-left">
+                <div class="agency-logo-badge">
+                    <span>&lt;/&gt;</span>
+                </div>
+                <div class="agency-info">
+                    <span class="agency-tag">WEB YAZILIM &bull; E-TİCARET &bull; DİJİTAL</span>
+                    <div class="agency-brand-title">
+                        <span>MİS360</span> <span class="agency-accent">Web Yazılım</span>
+                    </div>
+                    <span class="agency-url">misteknoloji360.com.tr</span>
+                </div>
+            </div>
+            <div class="agency-action">
+                <span class="agency-btn-pill">
+                    <span>Ziyaret Et</span>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M7 17L17 7M7 7h10v10"/></svg>
+                </span>
+            </div>
+        </a>
+        <div class="mis360-login-footer-tag">&copy; <?php echo date('Y'); ?> Emdief Home &bull; Tüm Hakları Saklıdır</div>
+    </div>
+    <?php
 });
