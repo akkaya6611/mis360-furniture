@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Mis360 Mobilya - Sitemap & Instant Indexing (Hızlı İndeksleme) Modülü
  *
@@ -142,12 +142,67 @@ function mis360_auto_indexnow_on_publish($new_status, $old_status, $post) {
     }
 }
 
-// 5. WP Admin Menüsü & Arayüzü
+// 5. Doğrulama Meta Etiketleri ve Özel HTML Kodlarının Ön Yüze Enjeksiyonu
+function mis360_render_verification_meta($name, $val) {
+    $val = trim($val ?? '');
+    if (empty($val)) {
+        return;
+    }
+    // Kullanıcı tam <meta ...> etiketi girdiyse olduğu gibi bas, sadece içerik girdiyse etiketi oluştur
+    if (stripos($val, '<meta') !== false) {
+        echo $val . "\n";
+    } else {
+        echo '<meta name="' . esc_attr($name) . '" content="' . esc_attr($val) . '" />' . "\n";
+    }
+}
+
+// <head> Çıktısı (Meta etiketleri & Özel Header HTML / Scriptler)
+add_action('wp_head', 'mis360_inject_head_tags_and_scripts', 1);
+function mis360_inject_head_tags_and_scripts() {
+    echo "\n<!-- Emdief Home SEO & Verification Tags -->\n";
+    mis360_render_verification_meta('google-site-verification', get_option('mis360_google_verification', ''));
+    mis360_render_verification_meta('msvalidate.01', get_option('mis360_bing_verification', ''));
+    mis360_render_verification_meta('yandex-verification', get_option('mis360_yandex_verification', ''));
+    mis360_render_verification_meta('facebook-domain-verification', get_option('mis360_facebook_verification', ''));
+    mis360_render_verification_meta('p:domain_verify', get_option('mis360_pinterest_verification', ''));
+    echo "<!-- /Emdief Home SEO & Verification Tags -->\n";
+
+    $custom_head = get_option('mis360_custom_header_html', '');
+    if (!empty($custom_head)) {
+        echo "\n<!-- Emdief Home Custom Header Scripts -->\n";
+        echo $custom_head . "\n";
+        echo "<!-- /Emdief Home Custom Header Scripts -->\n";
+    }
+}
+
+// <body> Açılış Çıktısı (Örn: GTM <noscript>)
+add_action('wp_body_open', 'mis360_inject_body_scripts', 1);
+function mis360_inject_body_scripts() {
+    $custom_body = get_option('mis360_custom_body_html', '');
+    if (!empty($custom_body)) {
+        echo "\n<!-- Emdief Home Custom Body Start Scripts -->\n";
+        echo $custom_body . "\n";
+        echo "<!-- /Emdief Home Custom Body Start Scripts -->\n";
+    }
+}
+
+// </body> Kapanış Öncesi Çıktısı (Örn: Canlı Destek, Pixel, İstatistik)
+add_action('wp_footer', 'mis360_inject_footer_scripts', 99);
+function mis360_inject_footer_scripts() {
+    $custom_footer = get_option('mis360_custom_footer_html', '');
+    if (!empty($custom_footer)) {
+        echo "\n<!-- Emdief Home Custom Footer Scripts -->\n";
+        echo $custom_footer . "\n";
+        echo "<!-- /Emdief Home Custom Footer Scripts -->\n";
+    }
+}
+
+// 6. WP Admin Menüsü & Çok Sekmeli Arayüz
 add_action('admin_menu', 'mis360_indexing_admin_menu');
 function mis360_indexing_admin_menu() {
     add_submenu_page(
         'tools.php',
-        'SEO & Hızlı İndeksleme (Sitemap & IndexNow)',
+        'SEO, İndeksleme & HTML Etiketleri',
         'SEO & İndeksleme',
         'manage_options',
         'mis360-indexing',
@@ -160,6 +215,7 @@ function mis360_indexing_admin_page() {
         wp_die(__('Bu sayfaya erişim yetkiniz bulunmuyor.', 'mis360-mobilya'));
     }
 
+    $active_tab = isset($_GET['tab']) && $_GET['tab'] === 'html_tags' ? 'html_tags' : 'indexing';
     $notice = null;
     $notice_type = 'info';
 
@@ -245,8 +301,27 @@ function mis360_indexing_admin_page() {
         elseif (isset($_POST['mis360_action_save_settings'])) {
             $auto = isset($_POST['mis360_auto_indexnow']) ? 'yes' : 'no';
             update_option('mis360_auto_indexnow', $auto);
-            $notice = 'Ayarlar kaydedildi.';
+            $notice = 'İndeksleme ayarları başarıyla kaydedildi.';
             $notice_type = 'success';
+        }
+
+        // 6. HTML Doğrulama & Özel Kodları Kaydet
+        elseif (isset($_POST['mis360_action_save_html_tags'])) {
+            update_option('mis360_google_verification', trim($_POST['mis360_google_verification'] ?? ''));
+            update_option('mis360_bing_verification', trim($_POST['mis360_bing_verification'] ?? ''));
+            update_option('mis360_yandex_verification', trim($_POST['mis360_yandex_verification'] ?? ''));
+            update_option('mis360_facebook_verification', trim($_POST['mis360_facebook_verification'] ?? ''));
+            update_option('mis360_pinterest_verification', trim($_POST['mis360_pinterest_verification'] ?? ''));
+
+            if (current_user_can('unfiltered_html')) {
+                update_option('mis360_custom_header_html', wp_unslash($_POST['mis360_custom_header_html'] ?? ''));
+                update_option('mis360_custom_body_html', wp_unslash($_POST['mis360_custom_body_html'] ?? ''));
+                update_option('mis360_custom_footer_html', wp_unslash($_POST['mis360_custom_footer_html'] ?? ''));
+            }
+
+            $notice = 'HTML doğrulama etiketleri ve özel kodlar başarıyla kaydedildi.';
+            $notice_type = 'success';
+            $active_tab = 'html_tags';
         }
     }
 
@@ -264,19 +339,31 @@ function mis360_indexing_admin_page() {
     ];
     ?>
     <div class="wrap mis360-indexing-wrap">
-        <h1 style="display:flex;align-items:center;gap:10px;">
+        <h1 style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
             <span class="dashicons dashicons-search" style="font-size:32px;width:32px;height:32px;color:#7a00df;"></span>
-            Emdief Home - SEO & Hızlı İndeksleme Modülü
+            Emdief Home - SEO, İndeksleme & HTML Doğrulama Paneli
         </h1>
-        <p style="color:#646970;font-size:14px;margin-bottom:20px;">
-            Sitenizdeki sayfaları, WooCommerce ürünlerini ve XML Haritalarını Google, Bing, Yandex ve IndexNow protokolü (Bing, Yandex, Seznam, Naver) aracılığıyla anında arama motorlarına bildirin.
-        </p>
+
+        <!-- Çoklu Sekme Başlıkları -->
+        <h2 class="nav-tab-wrapper" style="margin-bottom:20px;">
+            <a href="?page=mis360-indexing&tab=indexing" class="nav-tab <?php echo $active_tab === 'indexing' ? 'nav-tab-active' : ''; ?>" style="font-weight:600;">
+                🚀 Sitemap & Hızlı İndeksleme
+            </a>
+            <a href="?page=mis360-indexing&tab=html_tags" class="nav-tab <?php echo $active_tab === 'html_tags' ? 'nav-tab-active' : ''; ?>" style="font-weight:600;">
+                🏷️ HTML Etiketleri & Doğrulama Kodları
+            </a>
+        </h2>
 
         <?php if ($notice): ?>
             <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible" style="padding:12px 15px;border-left-width:4px;">
                 <p><?php echo wp_kses_post($notice); ?></p>
             </div>
         <?php endif; ?>
+
+        <?php if ($active_tab === 'indexing'): ?>
+            <p style="color:#646970;font-size:14px;margin-bottom:20px;">
+                Sitenizdeki sayfaları, WooCommerce ürünlerini ve XML Haritalarını Google, Bing, Yandex ve IndexNow protokolü (Bing, Yandex, Seznam, Naver) aracılığıyla anında arama motorlarına bildirin.
+            </p>
 
         <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px;">
             <!-- Sol Kolon: İşlemler & Haritalar -->
@@ -392,6 +479,152 @@ function mis360_indexing_admin_page() {
                 <?php endif; ?>
             </div>
         </div>
+    </div>
+
+        <?php else: ?>
+            <!-- ================= SEKME 2: HTML ETİKETLERİ & DOĞRULAMA ================= -->
+            <form method="post" action="">
+                <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px;">
+                    <!-- Sol Kolon: Arama Motoru Doğrulama Kodları -->
+                    <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                        <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;color:#1d2327;">
+                            🔍 Arama Motoru Doğrulama Meta Etiketleri
+                        </h2>
+                        <p style="color:#646970;font-size:13px;line-height:1.5;">
+                            Google Search Console, Bing, Yandex veya Meta (Facebook) gibi platformların sağladığı doğrulama kodlarını buraya ekleyebilirsiniz. 
+                            <em>İster doğrudan <code>&lt;meta name="..." content="..." /&gt;</code> etiketinin tamamını yapıştırın, ister sadece içindeki doğrulama anahtarını yazın; sistem otomatik tanır.</em>
+                        </p>
+
+                        <!-- Google Search Console -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🔴 Google Search Console Doğrulama
+                            </label>
+                            <input type="text" name="mis360_google_verification" 
+                                   value="<?php echo esc_attr(get_option('mis360_google_verification', '')); ?>" 
+                                   placeholder='google-site-verification veya <meta name="google-site-verification" content="..." />' 
+                                   class="large-text" style="padding:7px 10px;" />
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Örnek: <code>google-site-verification=abc123xyz</code> veya tüm <code>&lt;meta&gt;</code> etiketi.
+                            </p>
+                        </div>
+
+                        <!-- Bing Webmaster Tools -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🔵 Bing & Yahoo Webmaster Doğrulama
+                            </label>
+                            <input type="text" name="mis360_bing_verification" 
+                                   value="<?php echo esc_attr(get_option('mis360_bing_verification', '')); ?>" 
+                                   placeholder='msvalidate.01 doğrulama kodu veya tam meta etiketi' 
+                                   class="large-text" style="padding:7px 10px;" />
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Örnek: <code>&lt;meta name="msvalidate.01" content="91283019283..." /&gt;</code>
+                            </p>
+                        </div>
+
+                        <!-- Yandex Webmaster -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🟡 Yandex Webmaster Doğrulama
+                            </label>
+                            <input type="text" name="mis360_yandex_verification" 
+                                   value="<?php echo esc_attr(get_option('mis360_yandex_verification', '')); ?>" 
+                                   placeholder='yandex-verification kodu veya tam meta etiketi' 
+                                   class="large-text" style="padding:7px 10px;" />
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Örnek: <code>&lt;meta name="yandex-verification" content="abcdef012345" /&gt;</code>
+                            </p>
+                        </div>
+
+                        <!-- Meta (Facebook) Domain Verification -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🔷 Meta (Facebook) Alan Adı Doğrulama
+                            </label>
+                            <input type="text" name="mis360_facebook_verification" 
+                                   value="<?php echo esc_attr(get_option('mis360_facebook_verification', '')); ?>" 
+                                   placeholder='facebook-domain-verification kodu' 
+                                   class="large-text" style="padding:7px 10px;" />
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Facebook Business Manager alan adı doğrulama meta kodu.
+                            </p>
+                        </div>
+
+                        <!-- Pinterest Domain Verification -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                📌 Pinterest Alan Doğrulama
+                            </label>
+                            <input type="text" name="mis360_pinterest_verification" 
+                                   value="<?php echo esc_attr(get_option('mis360_pinterest_verification', '')); ?>" 
+                                   placeholder='p:domain_verify kodu' 
+                                   class="large-text" style="padding:7px 10px;" />
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Pinterest işletme hesabı için site doğrulama kodu.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Sağ Kolon: Serbest HTML, Head, Body & Footer Kodları -->
+                    <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+                        <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;color:#1d2327;">
+                            💻 Serbest HTML & Takip Scriptleri
+                        </h2>
+                        <p style="color:#646970;font-size:13px;line-height:1.5;">
+                            Google Tag Manager, Google Analytics (GA4), Meta Pixel, Yandex Metrica veya özel CSS/JS kodlarınızı sitenizin ilgili kısımlarına güvenle ekleyin.
+                        </p>
+
+                        <!-- Header Kodları -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🌐 &lt;head&gt; Kodları (Header HTML & Scriptler)
+                            </label>
+                            <textarea name="mis360_custom_header_html" rows="5" class="large-text" 
+                                      style="font-family:monospace;font-size:12px;padding:8px;" 
+                                      placeholder="&lt;!-- Google Analytics, GTM, Meta Etiketleri veya Özel CSS --&gt;"><?php echo esc_textarea(get_option('mis360_custom_header_html', '')); ?></textarea>
+                            <p class="description" style="font-size:11px;color:#777;">
+                                <code>&lt;head&gt;</code> etiketinin hemen içine yerleştirilir (GA4, GTM ana kodu, özel meta tagler).
+                            </p>
+                        </div>
+
+                        <!-- Body Açılış Kodları -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                🚪 &lt;body&gt; Başlangıç Kodları (Body Start HTML)
+                            </label>
+                            <textarea name="mis360_custom_body_html" rows="4" class="large-text" 
+                                      style="font-family:monospace;font-size:12px;padding:8px;" 
+                                      placeholder="&lt;!-- Google Tag Manager (noscript) veya açılış scriptleri --&gt;"><?php echo esc_textarea(get_option('mis360_custom_body_html', '')); ?></textarea>
+                            <p class="description" style="font-size:11px;color:#777;">
+                                <code>&lt;body&gt;</code> etiketinin hemen ardından çalıştırılır (Örn: GTM noscript iframe kodu).
+                            </p>
+                        </div>
+
+                        <!-- Footer Kapanış Kodları -->
+                        <div style="margin-top:18px;">
+                            <label style="display:block;font-weight:600;margin-bottom:5px;">
+                                ⚓ &lt;/body&gt; Öncesi Kodlar (Footer HTML & Scriptler)
+                            </label>
+                            <textarea name="mis360_custom_footer_html" rows="4" class="large-text" 
+                                      style="font-family:monospace;font-size:12px;padding:8px;" 
+                                      placeholder="&lt;!-- Canlı Destek Widget, WhatsApp balonu, Meta Pixel veya takip JS --&gt;"><?php echo esc_textarea(get_option('mis360_custom_footer_html', '')); ?></textarea>
+                            <p class="description" style="font-size:11px;color:#777;">
+                                Sayfa altındaki <code>&lt;/body&gt;</code> kapanışından hemen önce basılır (Canlı destek, piksel kodları).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px;">
+                    <button type="submit" name="mis360_action_save_html_tags" class="button button-primary" style="background:#7a00df;border-color:#6500b8;padding:8px 24px;font-size:14px;font-weight:600;height:auto;">
+                        💾 Tüm HTML Etiketlerini ve Kodları Kaydet
+                    </button>
+                </div>
+            </form>
+        <?php endif; ?>
     </div>
     <?php
 }
