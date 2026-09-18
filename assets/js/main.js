@@ -1162,6 +1162,37 @@ function mis360Init() {
             }
         });
     }
+
+    // 16. Ziyaretçi & Ürün İnceleme Takip Motoru (0 ms Gecikmeli Asenkron Beacon)
+    if (typeof window.mis360TrackerData !== 'undefined' && window.mis360TrackerData.isProduct && window.mis360TrackerData.product) {
+        try {
+            const p = window.mis360TrackerData.product;
+            const beaconPayload = JSON.stringify({
+                event: 'view_product',
+                product_id: p.id,
+                product_name: p.name,
+                product_price: p.price,
+                product_image: p.image,
+                page_url: window.location.href,
+                referrer: document.referrer || '',
+                sid: window.mis360TrackerData.sid || ''
+            });
+
+            const beaconEndpoint = window.mis360TrackerData.ajaxUrl + '?action=mis360_track_beacon';
+
+            if (navigator.sendBeacon) {
+                const blob = new Blob([beaconPayload], { type: 'application/json' });
+                navigator.sendBeacon(beaconEndpoint, blob);
+            } else {
+                fetch(beaconEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: beaconPayload,
+                    keepalive: true
+                }).catch(() => {});
+            }
+        } catch (e) {}
+    }
 }
 
 
