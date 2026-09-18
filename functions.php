@@ -28,6 +28,7 @@ $mis360_includes = [
     '/inc/montessori-features.php', // Özel Montessori Satış & Dönüşüm Modülleri (v1.9.0)
     '/inc/login-customizer.php', // Özel Emdief Home wp-login.php giriş sayfası tasarımı (v1.9.42)
     '/inc/security.php',       // Kapsamlı Güvenlik & Zafiyet Kalkanı (v1.9.53)
+    '/inc/sitemap-indexing.php', // Sitemap & Hızlı İndeksleme Modülü (Google, Bing, Yandex, IndexNow) (v1.9.62)
 ];
 
 foreach ($mis360_includes as $inc_file) {
