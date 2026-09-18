@@ -539,12 +539,24 @@ ul.products {
 }
 
 /* AJAX Mini-Cart Drawer Elements */
+.emdief-drawer:not(.is-active) #emdief-drawer-cart-content,
+.emdief-drawer:not(.is-active) .emdief-drawer-body {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
 #emdief-drawer-cart-content,
 .emdief-drawer-body {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+}
+
+.emdief-drawer.is-active #emdief-drawer-cart-content,
+.emdief-drawer.is-active .emdief-drawer-body {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;

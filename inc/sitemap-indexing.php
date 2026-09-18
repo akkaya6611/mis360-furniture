@@ -339,6 +339,48 @@ function mis360_indexing_admin_page() {
     ];
     ?>
     <div class="wrap mis360-indexing-wrap">
+        <style>
+        .mis360-indexing-wrap {
+            max-width: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+        }
+        .mis360-indexing-grid-main {
+            display: grid;
+            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .mis360-indexing-grid-tags {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 20px;
+            margin-top: 10px;
+        }
+        @media (max-width: 1024px) {
+            .mis360-indexing-grid-main,
+            .mis360-indexing-grid-tags {
+                grid-template-columns: minmax(0, 1fr) !important;
+            }
+        }
+        .mis360-indexing-wrap input[type="text"],
+        .mis360-indexing-wrap input[type="url"],
+        .mis360-indexing-wrap textarea {
+            max-width: 100% !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+        }
+        .mis360-indexing-wrap table {
+            width: 100%;
+            table-layout: auto;
+            word-break: break-word;
+        }
+        .mis360-indexing-wrap .postbox {
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        </style>
+
         <h1 style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
             <span class="dashicons dashicons-search" style="font-size:32px;width:32px;height:32px;color:#7a00df;"></span>
             Emdief Home - SEO, İndeksleme & HTML Doğrulama Paneli
@@ -365,7 +407,7 @@ function mis360_indexing_admin_page() {
                 Sitenizdeki sayfaları, WooCommerce ürünlerini ve XML Haritalarını Google, Bing, Yandex ve IndexNow protokolü (Bing, Yandex, Seznam, Naver) aracılığıyla anında arama motorlarına bildirin.
             </p>
 
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-top:20px;">
+        <div class="mis360-indexing-grid-main">
             <!-- Sol Kolon: İşlemler & Haritalar -->
             <div>
                 <!-- Hızlı İşlemler Kartı -->
@@ -486,7 +528,7 @@ function mis360_indexing_admin_page() {
             <form method="post" action="">
                 <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
 
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:10px;">
+                <div class="mis360-indexing-grid-tags">
                     <!-- Sol Kolon: Arama Motoru Doğrulama Kodları -->
                     <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
                         <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;color:#1d2327;">

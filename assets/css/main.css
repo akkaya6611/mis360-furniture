@@ -2,6 +2,13 @@
    Mis360-Mobilya Main Stylesheet (Montessori & Corporate Design System)
    ========================================================================== */
 
+/* Root & Body Overflow Containment */
+html, body {
+  overflow-x: clip;
+  max-width: 100%;
+  position: relative;
+}
+
 /* Layout & Container */
 .emdief-container {
   width: 100%;
@@ -1114,20 +1121,35 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
   height: 100dvh;
   z-index: 99999;
   visibility: hidden;
   pointer-events: none;
   overflow: hidden !important;
-  max-width: 100vw !important;
-  transition: visibility 0.3s ease;
+  clip-path: inset(0 0 0 0);
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+
+.emdief-drawer:not(.is-active) {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+.emdief-drawer:not(.is-active) * {
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 .emdief-drawer.is-active {
-  visibility: visible;
-  pointer-events: auto;
+  display: block !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  opacity: 1 !important;
 }
 
 .emdief-drawer-overlay {
@@ -1166,12 +1188,12 @@
   opacity: 1 !important;
 }
 
-/* Çekmece Sepet Siliklik ve WooCommerce BlockUI Koruması */
-#emdief-drawer-cart-content,
-.emdief-drawer-body,
-.emdief-drawer-items,
-.emdief-drawer-item,
-.emdief-drawer-footer {
+/* Çekmece Sepet Siliklik ve WooCommerce BlockUI Koruması (Yalnızca Çekmece Aktifken) */
+.emdief-drawer.is-active #emdief-drawer-cart-content,
+.emdief-drawer.is-active .emdief-drawer-body,
+.emdief-drawer.is-active .emdief-drawer-items,
+.emdief-drawer.is-active .emdief-drawer-item,
+.emdief-drawer.is-active .emdief-drawer-footer {
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
@@ -6232,8 +6254,22 @@ button.button.emdief-btn-empty-cart:hover {
 /* Responsive Kurumsal Düzen */
 @media (max-width: 992px) {
   .corporate-layout-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
     gap: 24px;
+  }
+  .corporate-sidebar,
+  .corporate-main-content {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .corporate-sidebar-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
   .corporate-sidebar {
     position: static;
@@ -6241,7 +6277,9 @@ button.button.emdief-btn-empty-cart:hover {
   .corporate-nav {
     display: flex;
     flex-direction: row;
-    overflow-x: auto;
+    overflow-x: auto !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
     padding-bottom: 8px;
     -webkit-overflow-scrolling: touch;
   }
@@ -6249,12 +6287,17 @@ button.button.emdief-btn-empty-cart:hover {
     white-space: nowrap;
     padding: 8px 14px;
     background: #f8fafc;
+    flex-shrink: 0;
   }
   .sidebar-support-box {
     display: none;
   }
   .corporate-article-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
     padding: 24px 20px;
+    overflow-x: auto;
   }
   .corp-title {
     font-size: 1.6rem;
