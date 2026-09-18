@@ -1163,22 +1163,24 @@ function mis360Init() {
         });
     }
 
-    // 16. Ziyaretçi & Ürün İnceleme Takip Motoru (0 ms Gecikmeli Asenkron Beacon)
-    if (typeof window.mis360TrackerData !== 'undefined' && window.mis360TrackerData.isProduct && window.mis360TrackerData.product) {
+    // 16. Ziyaretçi & Sayfa/Ürün İzleme Motoru (0 ms Gecikmeli Asenkron Beacon)
+    if (typeof window.mis360TrackerData !== 'undefined') {
         try {
-            const p = window.mis360TrackerData.product;
+            const td = window.mis360TrackerData;
+            const isProd = Boolean(td.isProduct && td.product);
+            const p = isProd ? td.product : null;
             const beaconPayload = JSON.stringify({
-                event: 'view_product',
-                product_id: p.id,
-                product_name: p.name,
-                product_price: p.price,
-                product_image: p.image,
+                event: isProd ? 'view_product' : 'page_view',
+                product_id: p ? p.id : 0,
+                product_name: p ? p.name : (document.title || 'Sayfa Ziyareti'),
+                product_price: p ? p.price : 0,
+                product_image: p ? p.image : '',
                 page_url: window.location.href,
                 referrer: document.referrer || '',
-                sid: window.mis360TrackerData.sid || ''
+                sid: td.sid || ''
             });
 
-            const beaconEndpoint = window.mis360TrackerData.ajaxUrl + '?action=mis360_track_beacon';
+            const beaconEndpoint = td.ajaxUrl + '?action=mis360_track_beacon';
 
             if (navigator.sendBeacon) {
                 const blob = new Blob([beaconPayload], { type: 'application/json' });

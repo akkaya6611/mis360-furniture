@@ -244,8 +244,8 @@ function mis360_tracker_get_or_create_session($custom_hash = '', $referrer = '')
         return null;
     }
 
-    // Admin hariç tutma ayarı aktifse ve kullanıcı yöneticiyse çık
-    if (get_option('mis360_tracker_ignore_admin', 'yes') === 'yes' && current_user_can('manage_options')) {
+    // Admin hariç tutma ayarı aktifse ve kullanıcı yöneticiyse çık (Varsayılan: 'no')
+    if (get_option('mis360_tracker_ignore_admin', 'no') === 'yes' && current_user_can('manage_options')) {
         return null;
     }
 
@@ -366,15 +366,16 @@ function mis360_tracker_log_event($session_id, $event_type, $product_id = 0, $pr
         }
     }
 
-    // Aynı oturumda aynı ürünün son 5 saniye içinde mükerrer view_product kaydını engelle
-    if ($event_type === 'view_product') {
+    // Aynı oturumda aynı sayfanın veya ürünün son 5 saniye içinde mükerrer kaydını engelle
+    if (in_array($event_type, ['view_product', 'page_view'])) {
         $recent = $wpdb->get_var($wpdb->prepare(
             "SELECT id FROM $events_table 
-             WHERE session_id = %d AND event_type = %s AND product_id = %d 
+             WHERE session_id = %d AND event_type = %s AND (product_id = %d OR page_url = %s)
              AND created_at >= %s LIMIT 1",
             $session_id,
             $event_type,
             $product_id,
+            $page_url,
             date('Y-m-d H:i:s', current_time('timestamp') - 5)
         ));
         if ($recent) {
@@ -1048,7 +1049,7 @@ function mis360_tracker_render_tab_stream($abandon_threshold) {
                         <th><?php esc_html_e('Ziyaretçi / Müşteri', 'mis360-mobilya'); ?></th>
                         <th><?php esc_html_e('Kaynak / Cihaz', 'mis360-mobilya'); ?></th>
                         <th><?php esc_html_e('Mevcut Durum', 'mis360-mobilya'); ?></th>
-                        <th><?php esc_html_e('İncelediği Son Ürün', 'mis360-mobilya'); ?></th>
+                        <th><?php esc_html_e('İncelediği Son Sayfa / Ürün', 'mis360-mobilya'); ?></th>
                         <th><?php esc_html_e('Sepet', 'mis360-mobilya'); ?></th>
                         <th><?php esc_html_e('Son Hareket', 'mis360-mobilya'); ?></th>
                         <th><?php esc_html_e('Aksiyon', 'mis360-mobilya'); ?></th>
@@ -1059,17 +1060,25 @@ function mis360_tracker_render_tab_stream($abandon_threshold) {
                         // Terk edilmiş sepet tespiti
                         $is_abandoned = in_array($s->cart_status, ['cart_added', 'checkout']) && $s->cart_items_count > 0 && empty($s->order_id) && $s->last_activity <= $abandon_threshold;
                         
-                        // Son ürün inceleme olayını çek
+                        // Son olayı çek (ürün veya sayfa)
                         $last_event = $wpdb->get_row($wpdb->prepare(
-                            "SELECT * FROM $events_table WHERE session_id = %d AND event_type = 'view_product' ORDER BY id DESC LIMIT 1",
+                            "SELECT * FROM $events_table WHERE session_id = %d ORDER BY id DESC LIMIT 1",
                             $s->id
                         ));
 
+                        $is_admin = ($s->user_id > 0 && user_can($s->user_id, 'manage_options'));
+                        $is_me    = ($s->user_id > 0 && $s->user_id == get_current_user_id());
                         $visitor_display = !empty($s->user_name) ? esc_html($s->user_name) : sprintf(esc_html__('Misafir #%s', 'mis360-mobilya'), substr($s->session_hash, 0, 6));
                     ?>
                         <tr>
                             <td>
                                 <strong><?php echo $visitor_display; ?></strong>
+                                <?php if ($is_admin): ?>
+                                    <span style="background:#ede9fe; color:#6d28d9; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:700; margin-left:4px;">👑 <?php esc_html_e('Yönetici', 'mis360-mobilya'); ?></span>
+                                <?php endif; ?>
+                                <?php if ($is_me): ?>
+                                    <span style="background:#dbeafe; color:#1e40af; padding:2px 7px; border-radius:4px; font-size:11px; font-weight:700; margin-left:4px;"><?php esc_html_e('(Siz)', 'mis360-mobilya'); ?></span>
+                                <?php endif; ?>
                                 <?php if (!empty($s->user_email)): ?>
                                     <div style="font-size:12px; color:#64748b;"><?php echo esc_html($s->user_email); ?></div>
                                 <?php endif; ?>
@@ -1091,26 +1100,56 @@ function mis360_tracker_render_tab_stream($abandon_threshold) {
                                 <?php elseif ($s->cart_items_count > 0): ?>
                                     <span class="badge-status badge-cart_added">🛒 <?php esc_html_e('Sepete Ekledi', 'mis360-mobilya'); ?></span>
                                 <?php else: ?>
-                                    <span class="badge-status badge-viewing">👁️ <?php esc_html_e('Ürün İnceliyor', 'mis360-mobilya'); ?></span>
+                                    <span class="badge-status badge-viewing">👁️ <?php esc_html_e('Geziniyor', 'mis360-mobilya'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if ($last_event && !empty($last_event->product_name)): ?>
-                                    <div style="display:flex; align-items:center; gap:8px;">
-                                        <?php if (!empty($last_event->product_image)): ?>
-                                            <img src="<?php echo esc_url($last_event->product_image); ?>" class="journey-product-thumb" alt="" />
-                                        <?php endif; ?>
-                                        <div>
-                                            <a href="<?php echo esc_url(get_permalink($last_event->product_id)); ?>" target="_blank" style="text-decoration:none; font-weight:600; color:#1e293b;">
-                                                <?php echo esc_html($last_event->product_name); ?>
-                                            </a>
-                                            <?php if ($last_event->product_price > 0): ?>
-                                                <div style="font-size:12px; color:#16a34a; font-weight:600;">
-                                                    <?php echo wc_price($last_event->product_price); ?>
-                                                </div>
+                                <?php if ($last_event): ?>
+                                    <?php if ($last_event->event_type === 'view_product' && !empty($last_event->product_name)): ?>
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <?php if (!empty($last_event->product_image)): ?>
+                                                <img src="<?php echo esc_url($last_event->product_image); ?>" class="journey-product-thumb" alt="" />
                                             <?php endif; ?>
+                                            <div>
+                                                <a href="<?php echo esc_url(get_permalink($last_event->product_id) ?: $last_event->page_url); ?>" target="_blank" style="text-decoration:none; font-weight:600; color:#1e293b;">
+                                                    <?php echo esc_html($last_event->product_name); ?>
+                                                </a>
+                                                <?php if ($last_event->product_price > 0): ?>
+                                                    <div style="font-size:12px; color:#16a34a; font-weight:600;">
+                                                        <?php echo wc_price($last_event->product_price); ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php elseif ($last_event->event_type === 'page_view'): ?>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:16px;">📄</span>
+                                            <div>
+                                                <a href="<?php echo esc_url($last_event->page_url); ?>" target="_blank" style="text-decoration:none; font-weight:600; color:#1e293b;">
+                                                    <?php echo esc_html($last_event->product_name ?: __('Sayfa Ziyareti', 'mis360-mobilya')); ?>
+                                                </a>
+                                                <div style="font-size:11px; color:#94a3b8;"><?php echo esc_html(wp_parse_url($last_event->page_url, PHP_URL_PATH) ?: '/'); ?></div>
+                                            </div>
+                                        </div>
+                                    <?php elseif ($last_event->event_type === 'add_to_cart'): ?>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:16px;">🛒</span>
+                                            <div>
+                                                <strong><?php esc_html_e('Sepete Ekledi:', 'mis360-mobilya'); ?></strong>
+                                                <span style="color:#b45309;"><?php echo esc_html($last_event->product_name); ?></span>
+                                            </div>
+                                        </div>
+                                    <?php elseif ($last_event->event_type === 'checkout_start'): ?>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:16px;">💳</span>
+                                            <strong><?php esc_html_e('Ödeme Başlatıldı', 'mis360-mobilya'); ?></strong>
+                                        </div>
+                                    <?php elseif ($last_event->event_type === 'purchase'): ?>
+                                        <div style="display:flex; align-items:center; gap:6px;">
+                                            <span style="font-size:16px;">🎉</span>
+                                            <strong style="color:#16a34a;"><?php echo esc_html($last_event->product_name); ?></strong>
+                                        </div>
+                                    <?php endif; ?>
                                 <?php else: ?>
                                     <span style="color:#94a3b8; font-size:12.5px;">-</span>
                                 <?php endif; ?>
@@ -1359,7 +1398,7 @@ function mis360_tracker_render_tab_abandoned($abandon_threshold) {
  */
 function mis360_tracker_render_tab_settings() {
     $enabled       = get_option('mis360_tracker_enabled', 'yes');
-    $ignore_admin  = get_option('mis360_tracker_ignore_admin', 'yes');
+    $ignore_admin  = get_option('mis360_tracker_ignore_admin', 'no');
     $mask_ip       = get_option('mis360_tracker_mask_ip', 'yes');
     $retention     = get_option('mis360_tracker_retention_days', 30);
     $last_purge    = get_option('mis360_tracker_last_purge', __('Henüz çalışmadı', 'mis360-mobilya'));
@@ -1493,7 +1532,11 @@ function mis360_ajax_get_visitor_journey() {
                 $icon = '👁️';
                 $action_label = __('Ürün İnceledi', 'mis360-mobilya');
 
-                if ($ev->event_type === 'add_to_cart') {
+                if ($ev->event_type === 'page_view') {
+                    $dot_class = 'dot-view';
+                    $icon = '📄';
+                    $action_label = __('Sayfa Ziyareti', 'mis360-mobilya');
+                } elseif ($ev->event_type === 'add_to_cart') {
                     $dot_class = 'dot-cart';
                     $icon = '🛒';
                     $action_label = __('Sepete Ekledi', 'mis360-mobilya');
@@ -1523,6 +1566,10 @@ function mis360_ajax_get_visitor_journey() {
                             <?php if ($ev->product_id > 0): ?>
                                 <a href="<?php echo esc_url(get_permalink($ev->product_id)); ?>" target="_blank" style="text-decoration:none; color:#1e293b;">
                                     <?php echo esc_html($ev->product_name); ?>
+                                </a>
+                            <?php elseif (!empty($ev->page_url)): ?>
+                                <a href="<?php echo esc_url($ev->page_url); ?>" target="_blank" style="text-decoration:none; color:#1e293b;">
+                                    <?php echo esc_html($ev->product_name ?: __('Sayfa', 'mis360-mobilya')); ?>
                                 </a>
                             <?php else: ?>
                                 <?php echo esc_html($ev->product_name); ?>
