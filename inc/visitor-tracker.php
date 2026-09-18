@@ -26,20 +26,12 @@ if (!defined('ABSPATH')) {
 function mis360_tracker_install_tables() {
     global $wpdb;
 
-    $installed_ver = get_option('mis360_tracker_db_version', '0');
-    $current_ver   = '1.0.0';
-
-    if ($installed_ver === $current_ver) {
-        return;
-    }
-
+    $sessions_table = $wpdb->prefix . 'mis360_visitor_sessions';
+    $events_table   = $wpdb->prefix . 'mis360_visitor_events';
     $charset_collate = $wpdb->get_charset_collate();
-    $sessions_table  = $wpdb->prefix . 'mis360_visitor_sessions';
-    $events_table    = $wpdb->prefix . 'mis360_visitor_events';
 
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-
-    $sql_sessions = "CREATE TABLE $sessions_table (
+    // 1. Doğrudan SQL Oluşturma (Garantili Kurulum)
+    $wpdb->query("CREATE TABLE IF NOT EXISTS $sessions_table (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         session_hash VARCHAR(64) NOT NULL,
         user_id BIGINT(20) UNSIGNED DEFAULT 0,
@@ -58,14 +50,14 @@ function mis360_tracker_install_tables() {
         cart_items_count INT UNSIGNED DEFAULT 0,
         cart_total DECIMAL(10,2) DEFAULT 0.00,
         order_id BIGINT(20) UNSIGNED DEFAULT 0,
-        PRIMARY KEY  (id),
+        PRIMARY KEY (id),
         UNIQUE KEY idx_session_hash (session_hash),
         KEY idx_user_id (user_id),
         KEY idx_last_activity (last_activity),
         KEY idx_cart_status (cart_status)
-    ) $charset_collate;";
+    ) $charset_collate;");
 
-    $sql_events = "CREATE TABLE $events_table (
+    $wpdb->query("CREATE TABLE IF NOT EXISTS $events_table (
         id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
         session_id BIGINT(20) UNSIGNED NOT NULL,
         event_type VARCHAR(40) NOT NULL,
@@ -77,17 +69,66 @@ function mis360_tracker_install_tables() {
         page_url VARCHAR(255) DEFAULT '',
         duration_sec INT DEFAULT 0,
         created_at DATETIME NOT NULL,
-        PRIMARY KEY  (id),
+        PRIMARY KEY (id),
         KEY idx_session_id (session_id),
         KEY idx_event_type (event_type),
         KEY idx_product_id (product_id),
         KEY idx_created_at (created_at)
-    ) $charset_collate;";
+    ) $charset_collate;");
 
-    dbDelta($sql_sessions);
-    dbDelta($sql_events);
+    // 2. WordPress dbDelta Tamamlayıcısı
+    if (file_exists(ABSPATH . 'wp-admin/includes/upgrade.php')) {
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+        $sql_sessions = "CREATE TABLE $sessions_table (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            session_hash VARCHAR(64) NOT NULL,
+            user_id BIGINT(20) UNSIGNED DEFAULT 0,
+            user_name VARCHAR(150) DEFAULT '',
+            user_email VARCHAR(150) DEFAULT '',
+            user_phone VARCHAR(50) DEFAULT '',
+            ip_address VARCHAR(45) DEFAULT '',
+            city VARCHAR(100) DEFAULT '',
+            device_type VARCHAR(20) DEFAULT 'desktop',
+            browser VARCHAR(50) DEFAULT '',
+            referrer VARCHAR(255) DEFAULT '',
+            first_seen DATETIME NOT NULL,
+            last_activity DATETIME NOT NULL,
+            pageviews INT UNSIGNED DEFAULT 1,
+            cart_status VARCHAR(20) DEFAULT 'viewing',
+            cart_items_count INT UNSIGNED DEFAULT 0,
+            cart_total DECIMAL(10,2) DEFAULT 0.00,
+            order_id BIGINT(20) UNSIGNED DEFAULT 0,
+            PRIMARY KEY  (id),
+            UNIQUE KEY idx_session_hash (session_hash),
+            KEY idx_user_id (user_id),
+            KEY idx_last_activity (last_activity),
+            KEY idx_cart_status (cart_status)
+        ) $charset_collate;";
 
-    update_option('mis360_tracker_db_version', $current_ver);
+        $sql_events = "CREATE TABLE $events_table (
+            id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+            session_id BIGINT(20) UNSIGNED NOT NULL,
+            event_type VARCHAR(40) NOT NULL,
+            product_id BIGINT(20) UNSIGNED DEFAULT 0,
+            product_name VARCHAR(255) DEFAULT '',
+            product_price DECIMAL(10,2) DEFAULT 0.00,
+            product_image VARCHAR(255) DEFAULT '',
+            quantity INT DEFAULT 1,
+            page_url VARCHAR(255) DEFAULT '',
+            duration_sec INT DEFAULT 0,
+            created_at DATETIME NOT NULL,
+            PRIMARY KEY  (id),
+            KEY idx_session_id (session_id),
+            KEY idx_event_type (event_type),
+            KEY idx_product_id (product_id),
+            KEY idx_created_at (created_at)
+        ) $charset_collate;";
+
+        dbDelta($sql_sessions);
+        dbDelta($sql_events);
+    }
+
+    update_option('mis360_tracker_db_version', '1.0.2');
 }
 add_action('init', 'mis360_tracker_install_tables');
 
@@ -708,6 +749,9 @@ function mis360_tracker_render_admin_page() {
 
     $active_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'stream';
     $notice = null;
+
+    // Tabloların varlığını kesinleştir
+    mis360_tracker_install_tables();
 
     // Ayarları Kaydetme İşlemi
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('mis360_tracker_settings_action', 'mis360_tracker_nonce')) {
