@@ -610,6 +610,14 @@ function mis360_output_json_ld(): void {
                 $related_urls[] = get_permalink($rid);
             }
 
+            // Marka belirleme (Üründe 'pa_marka' veya 'marka' niteliği varsa dinamik, yoksa Emdief Home)
+            $brand_name = 'Emdief Home';
+            if ($product->get_attribute('pa_marka')) {
+                $brand_name = $product->get_attribute('pa_marka');
+            } elseif ($product->get_attribute('marka')) {
+                $brand_name = $product->get_attribute('marka');
+            }
+
             $product_schema = [
                 '@context'        => 'https://schema.org',
                 '@type'           => 'Product',
@@ -639,7 +647,7 @@ function mis360_output_json_ld(): void {
                 ],
                 'brand'           => [
                     '@type' => 'Brand',
-                    'name'  => 'Emdief Home',
+                    'name'  => esc_html($brand_name),
                 ],
                 // Sesli arama / AI asistanı okuma direktifi
                 'speakable'       => [
@@ -971,6 +979,26 @@ function mis360_output_json_ld(): void {
     }
 }
 add_action('wp_head', 'mis360_output_json_ld', 30);
+
+/**
+ * WooCommerce varsayılan ürün Schema.org (Structured Data) çıktısını devre dışı bırak.
+ *
+ * Emdief Home teması, Google 2026 Merchant Center ve Rich Results standartlarına tam uyumlu;
+ * kargo (shippingDetails), 14 gün iade (hasMerchantReturnPolicy), ebatlar, sesli arama (speakable)
+ * ve tekil "brand" alanına sahip eksiksiz Product şemasını 'wp_head' içerisinde üretmektedir.
+ *
+ * WooCommerce varsayılan şeması çalıştığında, her iki şema da aynı @id (#product) URI'sini kullandığından
+ * Google her iki şemayı tek bir varlık olarak birleştirmekte ve her ikisinde de "brand" tanımlı olduğu için
+ * Google Search Console'da "brand alanı yineleniyor" ve "offers" mükerrerlik hataları meydana gelmektedir.
+ */
+add_filter('woocommerce_structured_data_product', '__return_empty_array', 999);
+
+add_action('init', function() {
+    if (class_exists('WooCommerce') && function_exists('WC') && isset(WC()->structured_data)) {
+        remove_action('woocommerce_before_main_content', [WC()->structured_data, 'generate_product_data'], 30);
+    }
+}, 20);
+
 
 /**
  * 4. GÖRSEL SEO (IMAGE SEO): Otomatik Alt ve Title Etiketleri
