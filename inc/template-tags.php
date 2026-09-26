@@ -741,3 +741,79 @@ function mis360_get_category_icon($term) {
 
     return '🏷️';
 }
+
+/**
+ * T.C. Ticaret Bakanlığı ETBİS Resmi Doğrulama & Karekod Kartı
+ */
+function mis360_render_etbis_footer_card() {
+    $enabled = get_theme_mod('mis360_etbis_enabled', true);
+    if (!$enabled) {
+        return;
+    }
+
+    $custom_code = get_theme_mod('mis360_etbis_custom_code', '');
+    if (!empty($custom_code)) {
+        echo '<div class="footer-etbis-wrapper">' . wp_kses_post($custom_code) . '</div>';
+        return;
+    }
+
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    $qr_image  = get_theme_mod('mis360_etbis_qr_image', '');
+
+    $qr_src = !empty($qr_image) ? $qr_image : 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=6&data=' . rawurlencode($etbis_url);
+    ?>
+    <div class="footer-etbis-card">
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-qr-box" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kaydını Doğrulamak İçin Tıklayın', 'mis360-mobilya'); ?>">
+            <img src="<?php echo esc_url($qr_src); ?>" alt="<?php esc_attr_e('Emdief Home ETBİS Karekod Doğrulama', 'mis360-mobilya'); ?>" width="72" height="72" loading="lazy" class="etbis-qr-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="etbis-qr-fallback" style="display:none;">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4 4h4v4h-4v-4zm4-4h-4v-4h4v4zm-8-6h4v4h-4v-4zm4 4h4v4h-4v-4zm0-8h4v4h-4V6z"/></svg>
+            </div>
+            <span class="qr-label"><?php esc_html_e('ETBİS KAREKOD', 'mis360-mobilya'); ?></span>
+        </a>
+        <div class="etbis-details">
+            <div class="etbis-badge-pill">
+                <span class="flag-icon">🇹🇷</span>
+                <span class="pill-name"><?php esc_html_e('T.C. TİCARET BAKANLIĞI', 'mis360-mobilya'); ?></span>
+            </div>
+            <strong class="etbis-main-title">
+                <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?>
+                <span class="etbis-check-icon">✓</span>
+            </strong>
+            <p class="etbis-sub-text">
+                <?php esc_html_e('Emdief Home; Elektronik Ticaret Bilgi Sistemi\'ne (ETBİS) kayıtlı ve doğrulanmış yasal e-ticaret işletmesidir.', 'mis360-mobilya'); ?>
+            </p>
+            <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-verify-link">
+                <?php esc_html_e('Bakanlık Kaydını Sorgula', 'mis360-mobilya'); ?> &rarr;
+            </a>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Ürün Detay Sayfası ETBİS Güven Rozeti
+ */
+function mis360_render_etbis_product_badge() {
+    if (!get_theme_mod('mis360_etbis_enabled', true) || !get_theme_mod('mis360_etbis_show_product', true)) {
+        return;
+    }
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    ?>
+    <div class="single-product-etbis-badge">
+        <div class="etbis-seal">
+            <span class="seal-emoji">🏛️</span>
+        </div>
+        <div class="etbis-body">
+            <div class="etbis-headline">
+                <strong><?php esc_html_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Satıcı', 'mis360-mobilya'); ?></strong>
+                <span class="verified-tag">✓ Doğrulanmış Mağaza</span>
+            </div>
+            <p class="etbis-p"><?php esc_html_e('Emdief Home resmi onaylı üreticidir. Siparişleriniz faturalı, yasal tüketici hakları ve 14 gün ücretsiz iade güvencesindedir.', 'mis360-mobilya'); ?></p>
+        </div>
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-btn-check">
+            <?php esc_html_e('Sorgula', 'mis360-mobilya'); ?> &rarr;
+        </a>
+    </div>
+    <?php
+}
+

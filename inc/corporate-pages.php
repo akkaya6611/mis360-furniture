@@ -149,7 +149,8 @@ function mis360_get_corporate_pages_data() {
     Adres: Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri<br>
     Telefon: +90 537 477 87 66<br>
     E-posta: emdiefmobilya@gmail.com<br>
-    Web: https://emdiefhome.com.tr</p>
+    Web: https://emdiefhome.com.tr<br>
+    ETBİS Durumu: T.C. Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi\'ne (ETBİS) Kayıtlı ve Doğrulanmış İşletmedir.</p>
 
     <p><strong>1.2. ALICI:</strong><br>
     Web sitesinden sipariş oluşturan, fatura ve teslimat bilgilerini giren gerçek veya tüzel kişi ("Alıcı").</p>
@@ -255,6 +256,14 @@ function mis360_get_corporate_pages_data() {
 
     <h2>Yerli Üretim ve Atölye Gücü</h2>
     <p>Tasarımından hassas kesimine, zımparalamasından koruyucu paketlemesine kadar tüm süreçler Türkiye\'deki kendi modern tesislerimizde titizlikle yürütülmektedir. Binlerce mutlu ailenin ve çocuğun odasına güven ve estetik katmaktan gurur duyuyoruz.</p>
+
+    <h2>T.C. Ticaret Bakanlığı ETBİS Kaydı & Güven Taahhüdü</h2>
+    <div class="prose-alert prose-alert-success">
+        <span class="alert-icon">🏛️</span>
+        <div class="alert-body">
+            <strong>Resmi ETBİS Kayıtlı E-Ticaret Sitesi:</strong> Emdief Home (Orhan TEBER), T.C. Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi\'ne (ETBİS) kayıtlı ve doğrulanmış resmi bir e-ticaret markasıdır. Sitemiz üzerinden verilen tüm siparişler yasal tüketici hakları, mesafeli satış mevzuatı, 256-bit SSL güvenlik şifrelemesi ve 14 gün koşulsuz ücretsiz iade güvencesi altındadır.
+        </div>
+    </div>
 </div>',
         ],
         'iletisim' => [
@@ -289,6 +298,13 @@ function mis360_get_corporate_pages_data() {
             <h3>Fabrika Satış & Atölye</h3>
             <p>Mobilya Kent Kırmızı Bloklar, Camikebir Mah. 5066. Sk No:1 D:K, 38070 Kocasinan / Kayseri</p>
             <a href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111" target="_blank" rel="noopener" class="contact-link">📍 Haritada Aç & Yol Tarifi Al &rarr;</a>
+        </div>
+
+        <div class="contact-info-card is-etbis">
+            <div class="card-icon">🏛️</div>
+            <h3>ETBİS Resmi Kaydı</h3>
+            <p>T.C. Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi Onaylı.</p>
+            <a href="https://etbis.eticaret.gov.tr/" target="_blank" rel="noopener" class="contact-link">Resmi Kaydı Doğrula &rarr;</a>
         </div>
     </div>
 

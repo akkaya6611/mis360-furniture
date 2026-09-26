@@ -31,6 +31,13 @@ if (!defined('ABSPATH')) {
                 <span class="topbar-text"><?php echo esc_html(get_theme_mod('mis360_topbar_text', "13:00'a Kadar Verilen Siparişler Öncelikli İmalata Alınır! | 1500 TL Üzeri Ücretsiz Kargo")); ?></span>
             </div>
             <div class="topbar-right">
+                <?php if (get_theme_mod('mis360_etbis_show_topbar', true)): ?>
+                    <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/')); ?>" target="_blank" rel="noopener noreferrer" class="topbar-link topbar-etbis" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Doğrulanmış Mağaza', 'mis360-mobilya'); ?>">
+                        <span class="etbis-dot"></span>
+                        <strong>🏛️ ETBİS</strong>
+                        <span><?php esc_html_e('Kayıtlı Mağaza', 'mis360-mobilya'); ?></span>
+                    </a>
+                <?php endif; ?>
                 <a href="tel:<?php echo esc_attr(str_replace(' ', '', get_theme_mod('mis360_phone', '+90 537 477 87 66'))); ?>" class="topbar-link">
                     <?php echo function_exists('mis360_icon') ? mis360_icon('phone', 14) : '📞'; ?>
                     <span><?php echo esc_html(get_theme_mod('mis360_phone', '+90 537 477 87 66')); ?></span>

@@ -1248,12 +1248,10 @@ function mis360_single_product_trust_box() {
 
     ?>
 
-
+    <!-- ETBİS Resmi Satıcı Güven Rozeti (v1.9.69) -->
+    <?php if (function_exists('mis360_render_etbis_product_badge')) { mis360_render_etbis_product_badge(); } ?>
 
     <!-- 4 Öğeli Güven Rozetleri (v1.8.0 Standart) -->
-
-
-
     <div class="emdief-single-trust-badges">
 
 
@@ -7509,6 +7507,30 @@ function mis360_thankyou_whatsapp_dekont_notice($order_id) {
     <?php
 }
 add_action('woocommerce_thankyou', 'mis360_thankyou_whatsapp_dekont_notice', 5);
+
+/**
+ * Ödeme (Checkout) Sayfasında ETBİS Resmi Güven Notu
+ */
+function mis360_checkout_etbis_trust_note() {
+    if (!get_theme_mod('mis360_etbis_enabled', true)) {
+        return;
+    }
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    ?>
+    <div class="checkout-etbis-trust-box">
+        <div class="etbis-box-icon">🏛️</div>
+        <div class="etbis-box-text">
+            <strong><?php esc_html_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Resmi E-Ticaret Sitesi', 'mis360-mobilya'); ?></strong>
+            <span><?php esc_html_e('Emdief Home doğrulanmış resmi üretici mağazasıdır. 256-Bit SSL şifreleme ve 14 gün koşulsuz iade güvencesiyle alışveriş yapıyorsunuz.', 'mis360-mobilya'); ?></span>
+        </div>
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-box-link">
+            <?php esc_html_e('Doğrula', 'mis360-mobilya'); ?> &rarr;
+        </a>
+    </div>
+    <?php
+}
+add_action('woocommerce_review_order_after_submit', 'mis360_checkout_etbis_trust_note', 10);
+
 
 
 

@@ -59,13 +59,14 @@ if (!defined('ABSPATH')) {
                 </p>
 
                 <div class="footer-cert-badges">
-
+                    <?php if (get_theme_mod('mis360_etbis_enabled', true)): ?>
+                        <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/')); ?>" target="_blank" rel="noopener noreferrer" class="cert-pill cert-pill-etbis" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Doğrulanmış Mağaza', 'mis360-mobilya'); ?>">
+                            🏛️ <?php esc_html_e('ETBİS Kayıtlı Mağaza', 'mis360-mobilya'); ?>
+                        </a>
+                    <?php endif; ?>
                     <span class="cert-pill">🛡️ 1. Sınıf MDF</span>
-
                     <span class="cert-pill">🛡️ Yuvarlatılmış Güvenli Köşeler</span>
-
                     <span class="cert-pill">👶 Montessori Ergonomisi</span>
-
                 </div>
 
             </div>
@@ -275,20 +276,16 @@ if (!defined('ABSPATH')) {
 
 
                 <div class="footer-payment-icons">
-
                     <span class="pay-text">🏦 Güvenli Banka Havalesi / FAST / 3D Secure</span>
-
                     <div class="pay-badges">
-
                         <span class="pay-card">Banka Havalesi</span>
-
                         <span class="pay-card">EFT / FAST</span>
-
                         <span class="pay-card">Sipariş Onaylı</span>
-
                     </div>
-
                 </div>
+
+                <!-- ETBİS Resmi Kayıt & Karekod Kartı (v1.9.69) -->
+                <?php if (function_exists('mis360_render_etbis_footer_card')) { mis360_render_etbis_footer_card(); } ?>
 
             </div>
 

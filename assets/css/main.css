@@ -8044,3 +8044,324 @@ button.button.emdief-btn-empty-cart:hover {
         display: none;
     }
 }
+
+/* ==========================================================================
+   T.C. Ticaret Bakanlığı ETBİS Doğrulama & Güven Rozetleri (v1.9.69)
+   ========================================================================== */
+
+/* 1. Üst Duyuru Çubuğu (Topbar) ETBİS Çipi */
+.topbar-etbis {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 3px 10px !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border-radius: 999px !important;
+    font-size: 11.5px !important;
+    color: #ffffff !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+    margin-right: 6px !important;
+}
+.topbar-etbis:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    transform: translateY(-1px);
+    color: #ffffff !important;
+}
+.topbar-etbis .etbis-dot {
+    width: 7px;
+    height: 7px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.35);
+    animation: etbisPulse 1.8s infinite;
+}
+@keyframes etbisPulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* 2. Footer Hakkımızda Bölümü ETBİS Rozeti */
+.cert-pill.cert-pill-etbis {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: #fef2f2 !important;
+    color: #b91c1c !important;
+    border: 1px solid #fecaca !important;
+    text-decoration: none !important;
+    font-weight: 750 !important;
+    transition: all 0.2s ease !important;
+}
+.cert-pill.cert-pill-etbis:hover {
+    background: #b91c1c !important;
+    color: #ffffff !important;
+    border-color: #b91c1c !important;
+    transform: translateY(-1px);
+}
+
+/* 3. Footer Bize Ulaşın / Ödeme Altı ETBİS Kartı */
+.footer-etbis-card {
+    margin-top: 1.25rem;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    transition: all 0.25s ease;
+}
+.footer-etbis-card:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+}
+.footer-etbis-card .etbis-qr-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 6px;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+.footer-etbis-card .etbis-qr-box:hover {
+    transform: scale(1.05);
+    border-color: #94a3b8;
+}
+.footer-etbis-card .etbis-qr-img {
+    width: 68px;
+    height: 68px;
+    border-radius: 6px;
+    display: block;
+    object-fit: contain;
+    background: #ffffff;
+}
+.footer-etbis-card .qr-label {
+    font-size: 8.5px;
+    font-weight: 800;
+    color: #64748b;
+    letter-spacing: 0.5px;
+    margin-top: 3px;
+    text-transform: uppercase;
+}
+.footer-etbis-card .etbis-details {
+    flex: 1;
+    min-width: 0;
+}
+.footer-etbis-card .etbis-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #fef2f2;
+    color: #991b1b;
+    font-size: 9.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+    border: 1px solid #fee2e2;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+.footer-etbis-card .etbis-main-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+    line-height: 1.25;
+}
+.footer-etbis-card .etbis-check-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    background: #10b981;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 900;
+}
+.footer-etbis-card .etbis-sub-text {
+    font-size: 11px;
+    color: #64748b;
+    line-height: 1.4;
+    margin: 0 0 6px 0;
+}
+.footer-etbis-card .etbis-verify-link {
+    font-size: 11.5px;
+    font-weight: 750;
+    color: #b91c1c;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.15s ease;
+}
+.footer-etbis-card .etbis-verify-link:hover {
+    text-decoration: underline;
+    color: #7f1d1d;
+}
+
+/* 4. Tekil Ürün Detay Sayfası ETBİS Güven Rozeti */
+.single-product-etbis-badge {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fdfefe;
+    border: 1.5px solid #e2e8f0;
+    border-left: 4px solid #10b981;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.03);
+    transition: all 0.25s ease;
+}
+.single-product-etbis-badge:hover {
+    border-color: #cbd5e1;
+    border-left-color: #059669;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.06);
+}
+.single-product-etbis-badge .etbis-seal {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+.single-product-etbis-badge .etbis-body {
+    flex: 1;
+    min-width: 0;
+}
+.single-product-etbis-badge .etbis-headline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 3px;
+}
+.single-product-etbis-badge .etbis-headline strong {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.single-product-etbis-badge .verified-tag {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 6px;
+}
+.single-product-etbis-badge .etbis-p {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.45;
+    margin: 0;
+}
+.single-product-etbis-badge .etbis-btn-check {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #334155;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+.single-product-etbis-badge .etbis-btn-check:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    transform: translateY(-1px);
+}
+
+/* 5. Ödeme (Checkout) Güven Kutusu */
+.checkout-etbis-trust-box {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: #f8fafc;
+    border: 1.5px dashed #cbd5e1;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12.5px;
+}
+.checkout-etbis-trust-box .etbis-box-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+.checkout-etbis-trust-box .etbis-box-text {
+    flex: 1;
+    min-width: 0;
+}
+.checkout-etbis-trust-box .etbis-box-text strong {
+    display: block;
+    color: #0f172a;
+    font-weight: 800;
+    margin-bottom: 2px;
+}
+.checkout-etbis-trust-box .etbis-box-text span {
+    display: block;
+    color: #64748b;
+    font-size: 11.5px;
+    line-height: 1.4;
+}
+.checkout-etbis-trust-box .etbis-box-link {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #1e293b;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.checkout-etbis-trust-box .etbis-box-link:hover {
+    background: #0f172a;
+    color: #ffffff;
+}
+
+@media (max-width: 640px) {
+    .single-product-etbis-badge {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .single-product-etbis-badge .etbis-btn-check {
+        align-self: flex-start;
+    }
+    .footer-etbis-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .checkout-etbis-trust-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
