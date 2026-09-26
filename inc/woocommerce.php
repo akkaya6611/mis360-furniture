@@ -7515,7 +7515,7 @@ function mis360_checkout_etbis_trust_note() {
     if (!get_theme_mod('mis360_etbis_enabled', true)) {
         return;
     }
-    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
     ?>
     <div class="checkout-etbis-trust-box">
         <div class="etbis-box-icon">🏛️</div>

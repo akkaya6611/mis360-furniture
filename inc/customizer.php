@@ -114,12 +114,12 @@ function mis360_customize_register($wp_customize) {
 
     // 2. ETBİS Sorgu / Doğrulama Bağlantısı
     $wp_customize->add_setting('mis360_etbis_url', [
-        'default'           => 'https://etbis.eticaret.gov.tr/',
+        'default'           => 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb',
         'sanitize_callback' => 'esc_url_raw',
     ]);
     $wp_customize->add_control('mis360_etbis_url', [
         'label'       => __('ETBİS Doğrulama / Sorgu Bağlantısı', 'mis360-mobilya'),
-        'description' => __('Kullanıcı karekoda veya rozete tıkladığında açılacak Ticaret Bakanlığı sayfası (Varsayılan: https://etbis.eticaret.gov.tr/)', 'mis360-mobilya'),
+        'description' => __('Kullanıcı karekoda veya rozete tıkladığında açılacak Ticaret Bakanlığı sayfası', 'mis360-mobilya'),
         'section'     => 'emdief_etbis_section',
         'type'        => 'url',
     ]);

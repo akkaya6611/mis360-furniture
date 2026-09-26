@@ -304,7 +304,7 @@ function mis360_get_corporate_pages_data() {
             <div class="card-icon">🏛️</div>
             <h3>ETBİS Resmi Kaydı</h3>
             <p>T.C. Ticaret Bakanlığı Elektronik Ticaret Bilgi Sistemi Onaylı.</p>
-            <a href="https://etbis.eticaret.gov.tr/" target="_blank" rel="noopener" class="contact-link">Resmi Kaydı Doğrula &rarr;</a>
+            <a href="https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb" target="_blank" rel="noopener noreferrer" class="contact-link">Resmi Kaydı Doğrula &rarr;</a>
         </div>
     </div>
 

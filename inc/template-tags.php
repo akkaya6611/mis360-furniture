@@ -757,10 +757,11 @@ function mis360_render_etbis_footer_card() {
         return;
     }
 
-    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
     $qr_image  = get_theme_mod('mis360_etbis_qr_image', '');
 
-    $qr_src = !empty($qr_image) ? $qr_image : 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=6&data=' . rawurlencode($etbis_url);
+    $local_qr = get_template_directory_uri() . '/assets/images/etbis-qr.webp';
+    $qr_src   = !empty($qr_image) ? $qr_image : (file_exists(get_template_directory() . '/assets/images/etbis-qr.webp') ? $local_qr : 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=6&data=' . rawurlencode($etbis_url));
     ?>
     <div class="footer-etbis-card">
         <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-qr-box" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kaydını Doğrulamak İçin Tıklayın', 'mis360-mobilya'); ?>">
@@ -797,7 +798,7 @@ function mis360_render_etbis_product_badge() {
     if (!get_theme_mod('mis360_etbis_enabled', true) || !get_theme_mod('mis360_etbis_show_product', true)) {
         return;
     }
-    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/');
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
     ?>
     <div class="single-product-etbis-badge">
         <div class="etbis-seal">

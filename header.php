@@ -32,7 +32,7 @@ if (!defined('ABSPATH')) {
             </div>
             <div class="topbar-right">
                 <?php if (get_theme_mod('mis360_etbis_show_topbar', true)): ?>
-                    <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.eticaret.gov.tr/')); ?>" target="_blank" rel="noopener noreferrer" class="topbar-link topbar-etbis" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Doğrulanmış Mağaza', 'mis360-mobilya'); ?>">
+                    <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb')); ?>" target="_blank" rel="noopener noreferrer" class="topbar-link topbar-etbis" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Doğrulanmış Mağaza', 'mis360-mobilya'); ?>">
                         <span class="etbis-dot"></span>
                         <strong>🏛️ ETBİS</strong>
                         <span><?php esc_html_e('Kayıtlı Mağaza', 'mis360-mobilya'); ?></span>

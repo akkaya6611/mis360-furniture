@@ -276,6 +276,18 @@ if (!defined('ABSPATH')) {
 
 
                 <div class="footer-payment-icons">
+                    <?php if (get_theme_mod('mis360_etbis_enabled', true)): ?>
+                        <div class="footer-etbis-badge-wrap">
+                            <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb')); ?>" target="_blank" rel="noopener noreferrer" class="footer-etbis-logo-link" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Resmi Kayıt ve Doğrulama Sayfası İçin Tıklayın', 'mis360-mobilya'); ?>">
+                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/etbis-logo.webp'); ?>" alt="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı E-Ticaret Sitesi - Emdief Home', 'mis360-mobilya'); ?>" class="footer-etbis-logo-img" width="140" height="49" loading="lazy">
+                                <span class="etbis-verify-mini-chip">
+                                    <svg viewBox="0 0 20 20" width="12" height="12" fill="#10b981"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                                    <?php esc_html_e('ETBİS Doğrulanmış Mağaza', 'mis360-mobilya'); ?>
+                                </span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
                     <span class="pay-text">🏦 Güvenli Banka Havalesi / FAST / 3D Secure</span>
                     <div class="pay-badges">
                         <span class="pay-card">Banka Havalesi</span>
@@ -284,7 +296,7 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
 
-                <!-- ETBİS Resmi Kayıt & Karekod Kartı (v1.9.69) -->
+                <!-- ETBİS Resmi Kayıt & Karekod Kartı (v1.9.70) -->
                 <?php if (function_exists('mis360_render_etbis_footer_card')) { mis360_render_etbis_footer_card(); } ?>
 
             </div>

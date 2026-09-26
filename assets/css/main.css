@@ -8103,7 +8103,50 @@ button.button.emdief-btn-empty-cart:hover {
     transform: translateY(-1px);
 }
 
-/* 3. Footer Bize Ulaşın / Ödeme Altı ETBİS Kartı */
+/* 3. Footer Ödeme İkonları Üzeri ETBİS Logosu (v1.9.70) */
+.footer-etbis-badge-wrap {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+.footer-etbis-logo-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    background: #ffffff !important;
+    border: 1.5px solid #e2e8f0 !important;
+    border-radius: 12px !important;
+    padding: 7px 14px !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.25s ease !important;
+}
+.footer-etbis-logo-link:hover {
+    border-color: #cbd5e1 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08) !important;
+}
+.footer-etbis-logo-img {
+    height: 42px !important;
+    width: auto !important;
+    display: block !important;
+    object-fit: contain !important;
+}
+.etbis-verify-mini-chip {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    background: #f0fdf4 !important;
+    color: #166534 !important;
+    border: 1px solid #bbf7d0 !important;
+    font-size: 11px !important;
+    font-weight: 750 !important;
+    padding: 3px 8px !important;
+    border-radius: 6px !important;
+    white-space: nowrap !important;
+}
+
+/* 4. Footer Bize Ulaşın / Ödeme Altı ETBİS Kartı */
 .footer-etbis-card {
     margin-top: 1.25rem;
     padding: 12px 14px;
