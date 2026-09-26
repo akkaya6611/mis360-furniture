@@ -277,21 +277,37 @@ if (!defined('ABSPATH')) {
                         <span class="pay-card">EFT / FAST</span>
                         <span class="pay-card">Sipariş Onaylı</span>
                     </div>
-
-                    <?php if (get_theme_mod('mis360_etbis_enabled', true)): ?>
-                        <div class="footer-etbis-clean-wrap">
-                            <a href="<?php echo esc_url(get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb')); ?>" target="_blank" rel="noopener noreferrer" class="footer-etbis-clean-link" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Doğrulama Sayfası İçin Tıklayın', 'mis360-mobilya'); ?>">
-                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/etbis-logo.webp'); ?>" alt="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS', 'mis360-mobilya'); ?>" class="footer-etbis-clean-img" width="125" height="44" loading="lazy">
-                            </a>
-                        </div>
-                    <?php endif; ?>
                 </div>
 
             </div>
 
         </div>
 
-
+        <!-- ETBİS Resmi Güvenlik & Doğrulama Şeridi (v1.9.72) -->
+        <?php if (get_theme_mod('mis360_etbis_enabled', true)): 
+            $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
+        ?>
+            <div class="footer-etbis-bar">
+                <div class="footer-etbis-bar-inner">
+                    <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="footer-etbis-bar-logo" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Resmi Kaydını Doğrulamak İçin Tıklayın', 'mis360-mobilya'); ?>">
+                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/etbis-logo.webp'); ?>" alt="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS', 'mis360-mobilya'); ?>" width="115" height="40" loading="lazy">
+                    </a>
+                    <div class="footer-etbis-bar-text">
+                        <span class="etbis-bar-badge">
+                            <svg viewBox="0 0 20 20" width="13" height="13" fill="#059669"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                            <?php esc_html_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Resmi İşletme', 'mis360-mobilya'); ?>
+                        </span>
+                        <p class="etbis-bar-desc">
+                            <?php esc_html_e('Emdief Home (emdiefhome.com.tr), Elektronik Ticaret Bilgi Sistemi\'ne kayıtlı ve doğrulanmış yasal e-ticaret mağazasıdır. Tüm siparişleriniz bakanlık güvencesi ve yasal standartlar altında korunmaktadır.', 'mis360-mobilya'); ?>
+                        </p>
+                    </div>
+                    <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="footer-etbis-bar-btn">
+                        <span><?php esc_html_e('Bakanlık Kaydını Doğrula', 'mis360-mobilya'); ?></span>
+                        <svg viewBox="0 0 20 20" width="14" height="14" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </a>
+                </div>
+            </div>
+        <?php endif; ?>
 
         <!-- Alt Telif Hakkı Şeridi -->
 
