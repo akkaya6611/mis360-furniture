@@ -6251,6 +6251,25 @@ button.button.emdief-btn-empty-cart:hover {
   color: #cbd5e1;
 }
 
+.footer-credit a {
+  color: var(--emd-text-muted, #94a3b8);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer-credit a:hover {
+  color: var(--emd-primary, #f97316);
+}
+
+.footer-credit strong {
+  color: var(--emd-text-main, #0f172a);
+  transition: color 0.2s ease;
+}
+
+.footer-credit a:hover strong {
+  color: var(--emd-primary, #f97316);
+}
+
 /* Responsive Kurumsal Düzen */
 @media (max-width: 992px) {
   .corporate-layout-grid {

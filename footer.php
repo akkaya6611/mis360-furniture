@@ -335,7 +335,7 @@ if (!defined('ABSPATH')) {
 
             <div class="footer-credit">
 
-                <span>Theme by <strong>MİS360</strong> & Serkan AKKAYA</span>
+                <span>Theme by <a href="https://misteknoloji360.com.tr/" target="_blank" rel="noopener noreferrer" title="<?php esc_attr_e('MİS360 & Serkan AKKAYA - Web ve Yazılım Çözümleri', 'mis360-mobilya'); ?>"><strong>MİS360</strong> & Serkan AKKAYA</a></span>
 
             </div>
 
