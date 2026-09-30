@@ -271,10 +271,11 @@ if (!defined('ABSPATH')) {
 
 
                 <div class="footer-payment-icons">
-                    <span class="pay-text">🏦 Güvenli Banka Havalesi / FAST / 3D Secure</span>
+                    <span class="pay-text">🏦 Komisyonsuz Havale / FAST ile En Uygun Fiyat</span>
                     <div class="pay-badges">
                         <span class="pay-card">Banka Havalesi</span>
-                        <span class="pay-card">EFT / FAST</span>
+                        <span class="pay-card">7/24 FAST</span>
+                        <span class="pay-card">Komisyonsuz İndirim</span>
                         <span class="pay-card">Sipariş Onaylı</span>
                     </div>
                 </div>

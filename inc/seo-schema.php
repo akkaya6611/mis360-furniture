@@ -400,7 +400,7 @@ function mis360_output_json_ld(): void {
         'email'           => 'info@emdiefhome.com.tr',
         'priceRange'      => '₺₺',
         'currenciesAccepted' => 'TRY',
-        'paymentAccepted' => 'Banka Havalesi, EFT, FAST, Kredi Kartı, Peşin',
+        'paymentAccepted' => 'Banka Havalesi, EFT, FAST, Peşin',
         'foundingDate'    => '2020',
         'founder'         => [
             '@type' => 'Person',

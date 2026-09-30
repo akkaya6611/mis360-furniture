@@ -569,7 +569,7 @@ function mis360_render_drawer_cart_content() {
 
                     <span class="drawer-trust-badge">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
 
-                    <span class="drawer-trust-badge">💳 <?php esc_html_e('3D Secure Güvenli Ödeme', 'mis360-mobilya'); ?></span>
+                    <span class="drawer-trust-badge">🏦 <?php esc_html_e('Havale / FAST İndirimi', 'mis360-mobilya'); ?></span>
 
                     <span class="drawer-trust-badge">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
 
@@ -1244,7 +1244,7 @@ function mis360_single_product_trust_box() {
 
 
 
-                <span class="badge-sub"><?php esc_html_e('256-Bit SSL & 3D Secure Güvencesi', 'mis360-mobilya'); ?></span>
+                <span class="badge-sub"><?php esc_html_e('Komisyonsuz Banka Havalesi & FAST Güvencesi', 'mis360-mobilya'); ?></span>
 
 
 
@@ -7129,12 +7129,26 @@ function mis360_render_cart_page_trust_badges() {
     <div class="cart-page-trust-pills">
         <span class="trust-pill-item">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
         <span class="trust-pill-item">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
-        <span class="trust-pill-item">💳 <?php esc_html_e('3D Secure Güvenli Ödeme', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🏦 <?php esc_html_e('Havale / FAST ile Komisyonsuz İndirim', 'mis360-mobilya'); ?></span>
         <span class="trust-pill-item">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
     </div>
     <?php
 }
 add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_page_trust_badges', 25);
+
+// 9b. Ödeme Sayfasında Komisyonsuz Havale / FAST İndirim Avantajı Kutusu (v1.9.75)
+function mis360_checkout_havale_discount_advantage_notice() {
+    ?>
+    <div class="checkout-havale-advantage-box">
+        <div class="havale-adv-icon">🏷️</div>
+        <div class="havale-adv-content">
+            <strong><?php esc_html_e('Kredi Kartı Komisyonu Yok, Doğrudan İndirimli Fiyat!', 'mis360-mobilya'); ?></strong>
+            <p><?php esc_html_e('Banka ve kredi kartı komisyon/vade maliyetlerini aracı kurumlara ödemek yerine doğrudan müşterilerimize indirim olarak yansıtıyoruz. 7/24 FAST veya Havale ile ek masrafsız, en uygun üretici fiyatıyla güvenle sipariş verebilirsiniz.', 'mis360-mobilya'); ?></p>
+        </div>
+    </div>
+    <?php
+}
+add_action('woocommerce_review_order_before_payment', 'mis360_checkout_havale_discount_advantage_notice', 5);
 
 // 10. Terk Edilen Sepet Kurtarma Kuponunu Otomatik Tanımla (EMDIEF5)
 add_action('init', 'mis360_ensure_exit_intent_coupon');
@@ -7192,7 +7206,7 @@ function mis360_render_exit_intent_popup() {
                 <div class="exit-modal-footer-trust">
                     <span>🛡️ 1. Sınıf E1 MDF</span>
                     <span>🏛️ ETBİS Kayıtlı</span>
-                    <span>💳 Güvenli Ödeme</span>
+                    <span>🏦 Komisyonsuz FAST / Havale</span>
                 </div>
             </div>
         </div>
