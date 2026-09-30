@@ -8025,42 +8025,83 @@ button.button.emdief-btn-empty-cart:hover {
     font-weight: 600;
 }
 
-/* Nav Collision Prevention */
+/* Nav Collision & Breakage Prevention (v1.9.79 Kesintisiz Tek Satır & Kırılma Koruması) */
 .emdief-nav-bar {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
     min-width: 0;
     gap: 0.5rem;
 }
 .emdief-nav-menu {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
     min-width: 0;
     flex: 1 1 auto;
-    gap: 0.1rem;
+    gap: 0.12rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.emdief-nav-menu::-webkit-scrollbar {
+    display: none;
+}
+.emdief-nav-menu li {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
 }
 .emdief-nav-menu li a {
-    padding: 0.4rem 0.52rem;
+    display: inline-flex !important;
+    align-items: center !important;
+    white-space: nowrap !important;
+    padding: 0.4rem 0.55rem;
     font-size: 0.82rem;
+    font-weight: 600;
 }
 .nav-extra-badge {
-    flex-shrink: 0;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
     margin-left: auto;
     padding-left: 0.35rem;
 }
-@media (max-width: 1240px) {
+.nav-extra-badge .badge-link {
+    white-space: nowrap !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.8rem;
+}
+@media (max-width: 1280px) {
+    .emdief-nav-bar {
+        gap: 0.35rem;
+    }
+    .emdief-nav-menu {
+        gap: 0.05rem;
+    }
     .emdief-nav-menu li a {
         padding: 0.35rem 0.42rem;
-        font-size: 0.78rem;
+        font-size: 0.77rem;
     }
     .nav-extra-badge .badge-link {
         padding: 0.3rem 0.5rem;
         font-size: 0.75rem;
     }
 }
-@media (max-width: 1050px) {
+@media (max-width: 1100px) {
     .emdief-nav-bar {
         overflow-x: auto;
         scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
     .emdief-nav-bar::-webkit-scrollbar {
         display: none;
+    }
+    .emdief-nav-menu li a {
+        padding: 0.32rem 0.35rem;
+        font-size: 0.74rem;
     }
 }
 
@@ -8672,7 +8713,7 @@ button.button.emdief-btn-empty-cart:hover {
 }
 
 /* ==========================================================================
-   Ödeme Formu Sadeleştirme (Posta Kodu, Şirket ve 2. Adres Gizleme - v1.9.78)
+   Ödeme Formu Sadeleştirme (Posta Kodu, Şirket, 2. Adres & Toggle Gizleme - v1.9.79)
    ========================================================================== */
 #billing_postcode_field,
 #shipping_postcode_field,
@@ -8683,6 +8724,9 @@ button.button.emdief-btn-empty-cart:hover {
 .wc-block-components-address-form__postcode,
 .wc-block-components-address-form__company,
 .wc-block-components-address-form__address_2,
+.wc-block-components-address-form__address_2-toggle,
+button.wc-block-components-address-form__address_2-toggle,
+a.wc-block-components-address-form__address_2-toggle,
 .wc-block-checkout__shipping-address .wc-block-components-address-form__postcode,
 .wc-block-checkout__billing-address .wc-block-components-address-form__postcode,
 .wc-block-components-text-input:has(input[id*="postcode"]),
@@ -8695,9 +8739,16 @@ div[data-field-name="address_2"] {
     display: none !important;
 }
 
+.wc-block-components-address-form__phone,
+#billing_phone_field,
+#shipping_phone_field {
+    width: 100% !important;
+}
+
 #billing_address_1_field,
 #shipping_address_1_field {
     width: 100% !important;
 }
+
 
 

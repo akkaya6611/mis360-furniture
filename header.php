@@ -163,7 +163,7 @@ if (!defined('ABSPATH')) {
                 <ul class="emdief-nav-menu">
                     <li class="<?php echo is_front_page() ? 'current-menu-item' : ''; ?>"><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Anasayfa', 'mis360-mobilya'); ?></a></li>
                     <?php if (class_exists('WooCommerce')): ?>
-                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php esc_html_e('Tüm Koleksiyon', 'mis360-mobilya'); ?></a></li>
+                        <li><a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>"><?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></a></li>
                     <?php endif; ?>
                     <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>">📚 <?php esc_html_e('Kitaplıklar', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/shop/?s=duvar+masas%C4%B1')); ?>">🪑 <?php esc_html_e('Duvar Masaları', 'mis360-mobilya'); ?></a></li>
@@ -186,7 +186,7 @@ if (!defined('ABSPATH')) {
             <div class="nav-extra-badge">
                 <a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') . '?on_sale=1' : home_url('/shop/')); ?>" class="badge-link">
                     <span class="flame-icon">🔥</span>
-                    <span><?php esc_html_e('Haftanın İndirimleri', 'mis360-mobilya'); ?></span>
+                    <span><?php esc_html_e('Fırsatlar', 'mis360-mobilya'); ?></span>
                 </a>
             </div>
         </nav>

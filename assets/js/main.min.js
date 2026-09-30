@@ -167,7 +167,8 @@ function mis360Init() {
     if (authTrigger) authTrigger.addEventListener('click', () => openAuthModal('login'));
     if (authClose) authClose.addEventListener('click', closeAuthModal);
     // Misafir kullanıcılar doğrudan ödeme sayfasına geçebilir (Engelsiz Guest Checkout)
-    function autoFillHiddenCheckoutFields() {
+    function optimizeCheckoutFormFields() {
+        // 1. Posta kodunu sessizce doldur (React doğrulaması için)
         const postcodeInputs = document.querySelectorAll('input[id*="postcode"], input[name*="postcode"], .wc-block-components-address-form__postcode input');
         postcodeInputs.forEach(input => {
             if (!input.value) {
@@ -176,11 +177,44 @@ function mis360Init() {
                 input.dispatchEvent(new Event('change', { bubbles: true }));
             }
         });
+
+        // 2. Telefon alanını ZORUNLU yap & '(isteğe bağlı)' ibaresini temizle
+        const phoneLabels = document.querySelectorAll('.wc-block-components-address-form__phone label, label[for*="phone"], #billing_phone_field label');
+        phoneLabels.forEach(lbl => {
+            if (lbl.textContent.includes('isteğe bağlı') || lbl.textContent.includes('optional')) {
+                lbl.innerHTML = 'Cep Telefonu <span class="wc-block-components-address-form__required-marker" aria-hidden="true" style="color:#ef4444;font-weight:bold;">*</span>';
+            }
+        });
+
+        const phoneInputs = document.querySelectorAll('input[id*="phone"], input[name*="phone"], .wc-block-components-address-form__phone input');
+        phoneInputs.forEach(inp => {
+            inp.setAttribute('required', 'required');
+            inp.setAttribute('aria-required', 'true');
+            if (inp.placeholder && (inp.placeholder.includes('isteğe bağlı') || inp.placeholder.includes('optional'))) {
+                inp.placeholder = '0 (5XX) XXX XX XX';
+            }
+        });
+
+        // 3. 'Daire, süit vb. ekle' toggle linkini gizle
+        const address2Toggles = document.querySelectorAll('.wc-block-components-address-form__address_2-toggle, button[class*="address_2"], a[class*="address_2"]');
+        address2Toggles.forEach(t => { t.style.display = 'none'; });
     }
+
     if (window.location.pathname.indexOf('/odeme') !== -1 || window.location.pathname.indexOf('/checkout') !== -1) {
-        autoFillHiddenCheckoutFields();
-        setTimeout(autoFillHiddenCheckoutFields, 800);
-        setTimeout(autoFillHiddenCheckoutFields, 2000);
+        optimizeCheckoutFormFields();
+        setTimeout(optimizeCheckoutFormFields, 400);
+        setTimeout(optimizeCheckoutFormFields, 1000);
+        setTimeout(optimizeCheckoutFormFields, 2500);
+
+        if (window.MutationObserver) {
+            const checkoutObserver = new MutationObserver(() => {
+                optimizeCheckoutFormFields();
+            });
+            const targetContainer = document.querySelector('.woocommerce, main#primary, body');
+            if (targetContainer) {
+                checkoutObserver.observe(targetContainer, { childList: true, subtree: true });
+            }
+        }
     }
 
     // Modal ??i Tab De?i?imi (Giri? Yap / Kay?t Ol)

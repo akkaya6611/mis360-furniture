@@ -7151,8 +7151,12 @@ function mis360_checkout_havale_discount_advantage_notice() {
 }
 add_action('woocommerce_review_order_before_payment', 'mis360_checkout_havale_discount_advantage_notice', 5);
 
-// 9c. Ödeme Formunu Sadeleştir (Posta Kodu, Şirket Adı ve 2. Adres Satırını Kaldır - v1.9.78)
-// Türkiye'de kargolamada posta kodu kullanılmaz; sepet terki ve kafa karışıklığı yaratır.
+// 9c. Ödeme Formunu Sadeleştir & Telefonu Zorunlu Yap (v1.9.79)
+// Telefon kargo teslimatı için zorunludur; Posta kodu, Şirket adı ve 2. Adres satırı kaldırılmıştır.
+add_filter('pre_option_woocommerce_checkout_phone_field', function() {
+    return 'required';
+});
+
 add_filter('woocommerce_default_address_fields', 'mis360_optimize_default_address_fields', 9999);
 function mis360_optimize_default_address_fields($fields) {
     if (isset($fields['postcode'])) {
@@ -7169,6 +7173,11 @@ function mis360_optimize_default_address_fields($fields) {
         $fields['address_2']['required'] = false;
         $fields['address_2']['hidden']   = true;
         unset($fields['address_2']);
+    }
+    if (isset($fields['phone'])) {
+        $fields['phone']['required'] = true;
+        $fields['phone']['hidden']   = false;
+        $fields['phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
     }
     if (isset($fields['address_1'])) {
         $fields['address_1']['label']       = __('Açık Teslimat Adresi', 'mis360-mobilya');
@@ -7194,6 +7203,8 @@ function mis360_optimize_checkout_fields($fields) {
         $fields['billing']['billing_last_name']['placeholder'] = __('Soyadınız', 'mis360-mobilya');
     }
     if (isset($fields['billing']['billing_phone'])) {
+        $fields['billing']['billing_phone']['required']    = true;
+        $fields['billing']['billing_phone']['label']       = __('Cep Telefonu', 'mis360-mobilya');
         $fields['billing']['billing_phone']['placeholder'] = __('0 (5XX) XXX XX XX', 'mis360-mobilya');
     }
     if (isset($fields['billing']['billing_email'])) {
@@ -7207,6 +7218,11 @@ function mis360_optimize_billing_fields($fields) {
     unset($fields['billing_postcode']);
     unset($fields['billing_company']);
     unset($fields['billing_address_2']);
+
+    if (isset($fields['billing_phone'])) {
+        $fields['billing_phone']['required'] = true;
+        $fields['billing_phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
+    }
     return $fields;
 }
 
@@ -7215,6 +7231,11 @@ function mis360_optimize_shipping_fields($fields) {
     unset($fields['shipping_postcode']);
     unset($fields['shipping_company']);
     unset($fields['shipping_address_2']);
+
+    if (isset($fields['shipping_phone'])) {
+        $fields['shipping_phone']['required'] = true;
+        $fields['shipping_phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
+    }
     return $fields;
 }
 
@@ -7223,6 +7244,10 @@ function mis360_remove_tr_postcode_requirement($locale) {
     if (isset($locale['TR']['postcode'])) {
         $locale['TR']['postcode']['required'] = false;
         $locale['TR']['postcode']['hidden']   = true;
+    }
+    if (isset($locale['TR']['phone'])) {
+        $locale['TR']['phone']['required'] = true;
+        $locale['TR']['phone']['hidden']   = false;
     }
     return $locale;
 }
@@ -7236,6 +7261,16 @@ function mis360_prevent_postcode_validation_errors($data) {
         $data['shipping_postcode'] = '34000';
     }
     return $data;
+}
+
+// Ödeme onayında telefon numarasının eksiksiz girildiğini doğrula
+add_action('woocommerce_after_checkout_validation', 'mis360_validate_checkout_phone', 10, 2);
+function mis360_validate_checkout_phone($data, $errors) {
+    $phone = sanitize_text_field($data['billing_phone'] ?? '');
+    $clean = preg_replace('/[^0-9]/', '', $phone);
+    if (empty($clean) || strlen($clean) < 10) {
+        $errors->add('billing_phone_required', __('<strong>Telefon Numarası Zorunludur:</strong> Kargo takip SMS bildirimleri ve teslimat için lütfen geçerli bir cep telefonu numarası giriniz (örn: 05XX XXX XX XX).', 'mis360-mobilya'));
+    }
 }
 
 // 10. Terk Edilen Sepet Kurtarma Kuponunu Otomatik Tanımla (EMDIEF5)
