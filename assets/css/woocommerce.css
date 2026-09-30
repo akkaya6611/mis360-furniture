@@ -370,6 +370,26 @@ ul.products {
   line-height: 1;
 }
 
+.cat-pill-icon svg {
+  width: 17px;
+  height: 17px;
+  stroke: currentColor;
+  display: inline-block;
+  vertical-align: middle;
+  transition: transform 0.2s ease, stroke 0.2s ease;
+}
+
+.cat-pill-item:hover .cat-pill-icon svg {
+  transform: scale(1.12);
+  color: #ea580c;
+  stroke: #ea580c;
+}
+
+.cat-pill-item.is-active .cat-pill-icon svg {
+  color: #ffffff;
+  stroke: #ffffff;
+}
+
 .cat-pill-thumb-img {
   width: 20px;
   height: 20px;
