@@ -1904,43 +1904,16 @@ button.button.emdief-btn-empty-cart:hover {
         margin: 6px 0 12px 0 !important;
     }
 
-    .btn-single-wishlist {
+    .emdief-single-action-addon-btns {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+
+    .btn-addon-action {
         width: 100% !important;
-        min-height: 44px !important;
-        justify-content: center !important;
-        text-align: center !important;
-        box-sizing: border-box !important;
-        font-size: 0.84rem !important;
+        min-height: 46px !important;
+        justify-content: flex-start !important;
     }
-
-    .btn-spouse-share {
-        width: 100% !important;
-        min-height: 44px !important;
-        padding: 8px 12px !important;
-        justify-content: center !important;
-        text-align: center !important;
-        box-sizing: border-box !important;
-    }
-
-    .spouse-btn-text {
-        display: flex !important;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 6px !important;
-        flex-wrap: wrap !important;
-        justify-content: center !important;
-    }
-
-    .spouse-btn-text strong {
-        font-size: 0.82rem !important;
-        line-height: 1.2 !important;
-    }
-
-    .spouse-btn-text small {
-        font-size: 0.74rem !important;
-        opacity: 0.85 !important;
-    }
-}
 
 /* Guven Rozetleri Kutusu (100% MDF Guvencesi): Derli Toplu */
 .emdief-single-trust {
@@ -5290,8 +5263,8 @@ button.button.emdief-btn-empty-cart:hover {
 .emdief-single-action-addon-btns {
     grid-column: 1 / -1 !important;
     display: flex !important;
-    align-items: center !important;
-    flex-wrap: wrap !important;
+    align-items: stretch !important;
+    flex-wrap: nowrap !important;
     gap: 10px !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -5299,72 +5272,106 @@ button.button.emdief-btn-empty-cart:hover {
     box-sizing: border-box !important;
     margin: 10px 0 16px 0 !important;
 }
-.btn-single-wishlist {
+
+.btn-addon-action {
     display: inline-flex !important;
     align-items: center !important;
-    justify-content: center !important;
-    gap: 6px !important;
-    padding: 10px 14px !important;
-    background: #fdf2f8 !important;
-    border: 1px solid #fbcfe8 !important;
-    border-radius: 10px !important;
-    color: #be185d !important;
-    font-size: 0.84rem !important;
-    font-weight: 700 !important;
-    cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    padding: 8px 14px !important;
+    border-radius: 12px !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
     box-sizing: border-box !important;
-    min-height: 44px !important;
-    white-space: nowrap !important;
+    min-height: 48px !important;
+    flex: 1 1 0 !important;
+    min-width: 0 !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    border: 1.5px solid transparent !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03) !important;
 }
-.btn-single-wishlist:hover,
+
+.btn-addon-action:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Wishlist Button */
+.btn-single-wishlist {
+    background: #fff1f2 !important;
+    border-color: #fecdd3 !important;
+    color: #e11d48 !important;
+}
+
+.btn-single-wishlist:hover {
+    background: #e11d48 !important;
+    border-color: #e11d48 !important;
+    color: #ffffff !important;
+}
+
 .btn-single-wishlist.is-favorited {
     background: #f43f5e !important;
-    color: #ffffff !important;
     border-color: #f43f5e !important;
+    color: #ffffff !important;
 }
+
 .btn-single-wishlist.is-favorited .heart-svg {
     fill: currentColor !important;
 }
+
+/* Spouse Share Button */
 .btn-spouse-share {
+    background: #f0fdf4 !important;
+    border-color: #bbf7d0 !important;
+    color: #15803d !important;
+}
+
+.btn-spouse-share:hover {
+    background: #16a34a !important;
+    border-color: #16a34a !important;
+    color: #ffffff !important;
+}
+
+/* Unified Inner Elements */
+.addon-btn-icon {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 8px !important;
-    padding: 8px 14px !important;
-    background: #f0fdf4 !important;
-    border: 1px solid #bbf7d0 !important;
-    border-radius: 10px !important;
-    color: #166534 !important;
-    text-decoration: none !important;
-    transition: all 0.2s ease !important;
-    flex: 1 1 200px !important;
-    min-width: 0 !important;
-    min-height: 44px !important;
-    box-sizing: border-box !important;
-}
-.btn-spouse-share:hover {
-    background: #22c55e !important;
-    color: #ffffff !important;
-    border-color: #22c55e !important;
-}
-.spouse-share-icon {
-    font-size: 1.2rem !important;
+    justify-content: center !important;
     flex-shrink: 0 !important;
-    display: flex !important;
-    align-items: center !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 8px !important;
+    background: rgba(255, 255, 255, 0.7) !important;
+    transition: all 0.2s ease !important;
 }
-.spouse-btn-text {
+
+.btn-addon-action:hover .addon-btn-icon {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.addon-btn-text {
     display: flex !important;
     flex-direction: column !important;
     min-width: 0 !important;
+    line-height: 1.25 !important;
+    text-align: left !important;
+    flex: 1 !important;
 }
-.spouse-btn-text strong {
+
+.addon-btn-text strong {
     font-size: 0.82rem !important;
-    line-height: 1.2 !important;
+    font-weight: 750 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
-.spouse-btn-text small {
-    font-size: 0.72rem !important;
+
+.addon-btn-text small {
+    font-size: 0.70rem !important;
     opacity: 0.85 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
 }
 
 /* Wishlist Toast */

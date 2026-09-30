@@ -582,6 +582,8 @@ function mis360_single_product_conversion_buttons() {
     $id = $product->get_id();
     $permalink = get_permalink($id);
     $title = $product->get_name();
+    $is_logged_in = is_user_logged_in() ? '1' : '0';
+    $login_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : wp_login_url($permalink);
 
     // Eşe WhatsApp Mesajı
     $spouse_msg = sprintf(
@@ -592,20 +594,25 @@ function mis360_single_product_conversion_buttons() {
     $spouse_wa_url = 'https://api.whatsapp.com/send?text=' . rawurlencode($spouse_msg);
     ?>
     <div class="emdief-single-action-addon-btns">
-        <!-- 1. Hızlı Favorilere Ekle (Wishlist) Butonu -->
-        <button type="button" class="btn-single-wishlist" id="btnSingleWishlist" data-product-id="<?php echo esc_attr((string)$id); ?>" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>" title="<?php esc_attr_e('Favori Listeme Ekle', 'mis360-mobilya'); ?>">
-            <svg class="heart-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-            <span class="wishlist-btn-text"><?php esc_html_e('Favorilere Ekle', 'mis360-mobilya'); ?></span>
+        <!-- 1. Hızlı Favorilere Ekle (Wishlist) Butonu - Üyelik Zorunlu -->
+        <button type="button" class="btn-single-wishlist btn-addon-action" id="btnSingleWishlist" data-product-id="<?php echo esc_attr((string)$id); ?>" data-logged-in="<?php echo esc_attr($is_logged_in); ?>" data-login-url="<?php echo esc_url($login_url); ?>" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>" title="<?php esc_attr_e('Favori Listeme Ekle', 'mis360-mobilya'); ?>">
+            <span class="addon-btn-icon heart-icon">
+                <svg class="heart-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                </svg>
+            </span>
+            <span class="addon-btn-text">
+                <strong class="wishlist-btn-title"><?php esc_html_e('Favorilere Ekle', 'mis360-mobilya'); ?></strong>
+                <small class="wishlist-btn-sub"><?php esc_html_e('Listene kaydet ❤️', 'mis360-mobilya'); ?></small>
+            </span>
         </button>
 
         <!-- 2. "Beğendiğin Ürünü Eşine WhatsApp ile Gönder" Butonu -->
-        <a href="<?php echo esc_url($spouse_wa_url); ?>" target="_blank" rel="noopener noreferrer" class="btn-spouse-share" title="<?php esc_attr_e('Eşine WhatsApp\'tan Danış', 'mis360-mobilya'); ?>">
-            <span class="spouse-share-icon">
+        <a href="<?php echo esc_url($spouse_wa_url); ?>" target="_blank" rel="noopener noreferrer" class="btn-spouse-share btn-addon-action" title="<?php esc_attr_e('Eşine WhatsApp\'tan Danış', 'mis360-mobilya'); ?>">
+            <span class="addon-btn-icon wa-icon">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.771.814 2.802.814 3.184 0 5.769-2.586 5.77-5.766.001-3.181-2.584-5.766-5.776-5.766zm9.969 5.768c0 5.514-4.486 10-10 10-1.745 0-3.376-.449-4.801-1.233l-5.2 1.364 1.39-5.07c-.886-1.488-1.389-3.228-1.389-5.061 0-5.514 4.486-10 10-10s10 4.486 10 10z"/></svg>
             </span>
-            <span class="spouse-btn-text">
+            <span class="addon-btn-text">
                 <strong><?php esc_html_e('Eşine WhatsApp\'tan Gönder', 'mis360-mobilya'); ?></strong>
                 <small><?php esc_html_e('Fikrini hemen sor 💬', 'mis360-mobilya'); ?></small>
             </span>
@@ -844,35 +851,63 @@ function mis360_montessori_features_inline_script() {
         if (rWidthInput) rWidthInput.addEventListener('input', updateRoomSimulation);
         if (rLengthInput) rLengthInput.addEventListener('input', updateRoomSimulation);
 
-        // --- 5. Favorilere Ekle (Wishlist) & LocalStorage ---
+        // --- 5. Favorilere Ekle (Wishlist) & Üyelik Kontrolü ---
         var wishBtn = document.getElementById('btnSingleWishlist');
         var toast = document.getElementById('emdiefWishlistToast');
 
         if (wishBtn) {
             var pid = wishBtn.getAttribute('data-product-id');
-            var savedWish = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
-            if (savedWish.indexOf(pid) !== -1) {
-                wishBtn.classList.add('is-favorited');
-                var txt = wishBtn.querySelector('.wishlist-btn-text');
-                if (txt) txt.textContent = 'Favorilerinizde ❤️';
+            var isLoggedIn = wishBtn.getAttribute('data-logged-in') === '1';
+            var loginUrl = wishBtn.getAttribute('data-login-url') || '/hesabim/';
+
+            if (isLoggedIn) {
+                var savedWish = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
+                if (savedWish.indexOf(pid) !== -1) {
+                    wishBtn.classList.add('is-favorited');
+                    var txtTitle = wishBtn.querySelector('.wishlist-btn-title');
+                    var txtSub = wishBtn.querySelector('.wishlist-btn-sub');
+                    if (txtTitle) txtTitle.textContent = 'Favorilerinizde';
+                    if (txtSub) txtSub.textContent = 'Listeden çıkar 💔';
+                }
             }
 
-            wishBtn.addEventListener('click', function() {
+            wishBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                // 1. Üyelik Zorunluluğu Kontrolü
+                if (!isLoggedIn) {
+                    if (toast) {
+                        toast.querySelector('.toast-msg').textContent = 'Favorilere eklemek için lütfen giriş yapınız! 🔒';
+                        toast.style.display = 'flex';
+                        setTimeout(function() { toast.style.display = 'none'; }, 3200);
+                    }
+
+                    if (typeof window.mis360OpenAuthModal === 'function') {
+                        window.mis360OpenAuthModal('login');
+                    } else {
+                        window.location.href = loginUrl;
+                    }
+                    return;
+                }
+
+                // 2. Giriş yapılmışsa Favorilere Ekle / Çıkar
                 var list = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
                 var idx = list.indexOf(pid);
                 var isAdded = false;
+                var txtTitle = wishBtn.querySelector('.wishlist-btn-title');
+                var txtSub = wishBtn.querySelector('.wishlist-btn-sub');
 
                 if (idx === -1) {
                     list.push(pid);
                     wishBtn.classList.add('is-favorited');
-                    var txt = wishBtn.querySelector('.wishlist-btn-text');
-                    if (txt) txt.textContent = 'Favorilerinizde ❤️';
+                    if (txtTitle) txtTitle.textContent = 'Favorilerinizde';
+                    if (txtSub) txtSub.textContent = 'Listeden çıkar 💔';
                     isAdded = true;
                 } else {
                     list.splice(idx, 1);
                     wishBtn.classList.remove('is-favorited');
-                    var txt = wishBtn.querySelector('.wishlist-btn-text');
-                    if (txt) txt.textContent = 'Favorilere Ekle';
+                    if (txtTitle) txtTitle.textContent = 'Favorilere Ekle';
+                    if (txtSub) txtSub.textContent = 'Listene kaydet ❤️';
                     isAdded = false;
                 }
                 localStorage.setItem('emdief_wishlist', JSON.stringify(list));
