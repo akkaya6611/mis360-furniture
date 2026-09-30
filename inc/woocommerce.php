@@ -1210,19 +1210,10 @@ function mis360_single_product_benefit_badge() {
 
 }
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_benefit_badge', 6);
-
-
+// add_action('woocommerce_single_product_summary', 'mis360_single_product_benefit_badge', 6); // Kullanici talebiyle kalabaligi azaltmak icin kaldirildi
 
 function mis360_single_product_trust_box() {
-
-
-
     ?>
-
-    <!-- ETBİS Resmi Satıcı Güven Rozeti (v1.9.69) -->
-    <?php if (function_exists('mis360_render_etbis_product_badge')) { mis360_render_etbis_product_badge(); } ?>
-
     <!-- 4 Öğeli Güven Rozetleri (v1.8.0 Standart) -->
     <div class="emdief-single-trust-badges">
 

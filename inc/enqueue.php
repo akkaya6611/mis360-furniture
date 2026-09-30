@@ -17,7 +17,7 @@ function mis360_mobilya_scripts() {
     $main_js_file  = file_exists($theme_dir . '/assets/js/main.min.js') ? '/assets/js/main.min.js' : '/assets/js/main.js';
     $cart_js_file  = file_exists($theme_dir . '/assets/js/ajax-cart.min.js') ? '/assets/js/ajax-cart.min.js' : '/assets/js/ajax-cart.js';
 
-    $ver_prefix   = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION . '.' : '1.9.80.';
+    $ver_prefix   = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION . '.' : '1.9.81.';
     $style_ver    = $ver_prefix . (file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.0');
     $main_css_ver = $ver_prefix . (file_exists($theme_dir . $main_css_file) ? filemtime($theme_dir . $main_css_file) : '1.0');
     $wc_css_ver   = $ver_prefix . (file_exists($theme_dir . $wc_css_file) ? filemtime($theme_dir . $wc_css_file) : '1.0');
