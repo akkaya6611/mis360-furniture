@@ -8671,3 +8671,33 @@ button.button.emdief-btn-empty-cart:hover {
     }
 }
 
+/* ==========================================================================
+   Ödeme Formu Sadeleştirme (Posta Kodu, Şirket ve 2. Adres Gizleme - v1.9.78)
+   ========================================================================== */
+#billing_postcode_field,
+#shipping_postcode_field,
+#billing_company_field,
+#shipping_company_field,
+#billing_address_2_field,
+#shipping_address_2_field,
+.wc-block-components-address-form__postcode,
+.wc-block-components-address-form__company,
+.wc-block-components-address-form__address_2,
+.wc-block-checkout__shipping-address .wc-block-components-address-form__postcode,
+.wc-block-checkout__billing-address .wc-block-components-address-form__postcode,
+.wc-block-components-text-input:has(input[id*="postcode"]),
+.wc-block-components-text-input:has(input[id*="company"]),
+.wc-block-components-text-input:has(input[name*="postcode"]),
+.wc-block-components-text-input:has(input[name*="company"]),
+div[data-field-name="postcode"],
+div[data-field-name="company"],
+div[data-field-name="address_2"] {
+    display: none !important;
+}
+
+#billing_address_1_field,
+#shipping_address_1_field {
+    width: 100% !important;
+}
+
+

@@ -166,9 +166,22 @@ function mis360Init() {
 
     if (authTrigger) authTrigger.addEventListener('click', () => openAuthModal('login'));
     if (authClose) authClose.addEventListener('click', closeAuthModal);
-    if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
-
     // Misafir kullanıcılar doğrudan ödeme sayfasına geçebilir (Engelsiz Guest Checkout)
+    function autoFillHiddenCheckoutFields() {
+        const postcodeInputs = document.querySelectorAll('input[id*="postcode"], input[name*="postcode"], .wc-block-components-address-form__postcode input');
+        postcodeInputs.forEach(input => {
+            if (!input.value) {
+                input.value = '34000';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+    }
+    if (window.location.pathname.indexOf('/odeme') !== -1 || window.location.pathname.indexOf('/checkout') !== -1) {
+        autoFillHiddenCheckoutFields();
+        setTimeout(autoFillHiddenCheckoutFields, 800);
+        setTimeout(autoFillHiddenCheckoutFields, 2000);
+    }
 
     // Modal ??i Tab De?i?imi (Giri? Yap / Kay?t Ol)
     const tabButtons = document.querySelectorAll('.auth-tab-btn');

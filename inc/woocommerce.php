@@ -7151,6 +7151,93 @@ function mis360_checkout_havale_discount_advantage_notice() {
 }
 add_action('woocommerce_review_order_before_payment', 'mis360_checkout_havale_discount_advantage_notice', 5);
 
+// 9c. Ödeme Formunu Sadeleştir (Posta Kodu, Şirket Adı ve 2. Adres Satırını Kaldır - v1.9.78)
+// Türkiye'de kargolamada posta kodu kullanılmaz; sepet terki ve kafa karışıklığı yaratır.
+add_filter('woocommerce_default_address_fields', 'mis360_optimize_default_address_fields', 9999);
+function mis360_optimize_default_address_fields($fields) {
+    if (isset($fields['postcode'])) {
+        $fields['postcode']['required'] = false;
+        $fields['postcode']['hidden']   = true;
+        unset($fields['postcode']);
+    }
+    if (isset($fields['company'])) {
+        $fields['company']['required'] = false;
+        $fields['company']['hidden']   = true;
+        unset($fields['company']);
+    }
+    if (isset($fields['address_2'])) {
+        $fields['address_2']['required'] = false;
+        $fields['address_2']['hidden']   = true;
+        unset($fields['address_2']);
+    }
+    if (isset($fields['address_1'])) {
+        $fields['address_1']['label']       = __('Açık Teslimat Adresi', 'mis360-mobilya');
+        $fields['address_1']['placeholder'] = __('Mahalle, cadde, sokak, bina ve daire numarası...', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_checkout_fields', 'mis360_optimize_checkout_fields', 9999);
+function mis360_optimize_checkout_fields($fields) {
+    unset($fields['billing']['billing_postcode']);
+    unset($fields['billing']['billing_company']);
+    unset($fields['billing']['billing_address_2']);
+
+    unset($fields['shipping']['shipping_postcode']);
+    unset($fields['shipping']['shipping_company']);
+    unset($fields['shipping']['shipping_address_2']);
+
+    if (isset($fields['billing']['billing_first_name'])) {
+        $fields['billing']['billing_first_name']['placeholder'] = __('Adınız', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_last_name'])) {
+        $fields['billing']['billing_last_name']['placeholder'] = __('Soyadınız', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_phone'])) {
+        $fields['billing']['billing_phone']['placeholder'] = __('0 (5XX) XXX XX XX', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['placeholder'] = __('ornek@gmail.com', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_billing_fields', 'mis360_optimize_billing_fields', 9999);
+function mis360_optimize_billing_fields($fields) {
+    unset($fields['billing_postcode']);
+    unset($fields['billing_company']);
+    unset($fields['billing_address_2']);
+    return $fields;
+}
+
+add_filter('woocommerce_shipping_fields', 'mis360_optimize_shipping_fields', 9999);
+function mis360_optimize_shipping_fields($fields) {
+    unset($fields['shipping_postcode']);
+    unset($fields['shipping_company']);
+    unset($fields['shipping_address_2']);
+    return $fields;
+}
+
+add_filter('woocommerce_get_country_locale', 'mis360_remove_tr_postcode_requirement', 9999);
+function mis360_remove_tr_postcode_requirement($locale) {
+    if (isset($locale['TR']['postcode'])) {
+        $locale['TR']['postcode']['required'] = false;
+        $locale['TR']['postcode']['hidden']   = true;
+    }
+    return $locale;
+}
+
+add_filter('woocommerce_checkout_posted_data', 'mis360_prevent_postcode_validation_errors');
+function mis360_prevent_postcode_validation_errors($data) {
+    if (empty($data['billing_postcode'])) {
+        $data['billing_postcode'] = '34000';
+    }
+    if (empty($data['shipping_postcode'])) {
+        $data['shipping_postcode'] = '34000';
+    }
+    return $data;
+}
+
 // 10. Terk Edilen Sepet Kurtarma Kuponunu Otomatik Tanımla (EMDIEF5)
 add_action('init', 'mis360_ensure_exit_intent_coupon');
 function mis360_ensure_exit_intent_coupon() {
