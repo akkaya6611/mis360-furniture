@@ -7038,6 +7038,7 @@ function mis360_render_seo_topical_silo() {
 add_filter('pre_option_woocommerce_enable_guest_checkout', function() {
     return 'yes';
 });
+add_filter('woocommerce_checkout_registration_required', '__return_false');
 
 // 2. Ödeme sayfasında hesap oluşturma ve girişi aktif tut (İsteyen üye olabilir)
 add_filter('pre_option_woocommerce_enable_signup_and_login_from_checkout', function() {
