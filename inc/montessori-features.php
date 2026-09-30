@@ -211,7 +211,7 @@ function mis360_render_bundle_cross_sells() {
     </section>
     <?php
 }
-add_action('woocommerce_after_single_product_summary', 'mis360_render_bundle_cross_sells', 9);
+add_action('woocommerce_after_single_product_summary', 'mis360_render_bundle_cross_sells', 15);
 
 /**
  * AJAX: Çoklu Bundle Ürünlerini Sepete Ekle

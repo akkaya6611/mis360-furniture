@@ -1341,7 +1341,7 @@ function mis360_single_product_trust_box() {
 
 }
 
-add_action('mis360_under_product_gallery', 'mis360_single_product_trust_box', 15);
+// add_action('mis360_under_product_gallery', 'mis360_single_product_trust_box', 15); // Kullanici talebiyle 4'lu guven rozetleri kaldirildi
 
 /**
  * Ürün Detay Sol Sütun Kapsayıcısı (Galeri + Sol Bilgi ve Güven Rozetleri)
