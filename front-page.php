@@ -299,33 +299,87 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
 }
 
 /**
- * Slider Ürünlerini Çeken Yardımcı Fonksiyon
+ * Slider Ürünlerini Çeken Akıllı ve Çakışmasız Yardımcı Fonksiyon
+ * Her vitrinde farklı ve tekrar etmeyen ürünlerin listelenmesini garanti eder.
+ *
+ * @param string $type Slider tipi ('featured', 'bestseller', 'new', 'all')
+ * @param int $limit Çekilecek ürün sayısı
+ * @param array $exclude_ids Daha önceki sliderlarda gösterilmiş ürün ID'leri
+ * @return array WC_Product nesneleri dizisi
  */
-function emdief_get_slider_products(string $type = 'all', int $limit = 8): array {
+function emdief_get_slider_products(string $type = 'all', int $limit = 8, array $exclude_ids = []): array {
     if (!class_exists('WooCommerce')) {
         return [];
     }
 
-    $args = [
-        'limit'      => $limit,
-        'status'     => 'publish',
-        'visibility' => 'catalog',
+    $base_args = [
+        'limit'   => $limit,
+        'status'  => 'publish',
+        'exclude' => $exclude_ids,
     ];
 
-    if ($type === 'bestseller') {
-        $args['orderby'] = 'popularity';
-        $args['order']   = 'DESC';
+    $prods = [];
+
+    if ($type === 'featured' || $type === 'flash') {
+        // 1. Vitrin (Öne Çıkanlar): Öne çıkan ürünler veya popüler modeller
+        $prods = wc_get_products(array_merge($base_args, [
+            'featured' => true,
+        ]));
+
+        if (empty($prods) || count($prods) < 3) {
+            $prods = wc_get_products(array_merge($base_args, [
+                'orderby' => 'popularity',
+                'order'   => 'DESC',
+            ]));
+        }
+    } elseif ($type === 'bestseller') {
+        // 2. Vitrin (Çok Satanlar): Satış adedine göre veya başlığa/fiyata göre zengin modeller
+        $prods = wc_get_products(array_merge($base_args, [
+            'orderby'  => 'meta_value_num',
+            'meta_key' => 'total_sales',
+            'order'    => 'DESC',
+        ]));
+
+        if (empty($prods) || count($prods) < 3) {
+            $prods = wc_get_products(array_merge($base_args, [
+                'orderby' => 'title',
+                'order'   => 'ASC',
+            ]));
+        }
     } elseif ($type === 'new') {
-        $args['orderby'] = 'date';
-        $args['order']   = 'DESC';
+        // 3. Vitrin (Yeni Eklenenler): En son tarihe göre eklenen yeni tasarımlar
+        $prods = wc_get_products(array_merge($base_args, [
+            'orderby' => 'date',
+            'order'   => 'DESC',
+        ]));
+    } else {
+        // 4. Vitrin (Favoriler / Diğer): Rastgele keşif
+        $prods = wc_get_products(array_merge($base_args, [
+            'orderby' => 'rand',
+        ]));
     }
 
-    $prods = wc_get_products($args);
+    // Eğer hariç tutulanlar nedeniyle çekilen ürün sayısı az ise, eksikleri henüz gösterilmemiş diğer ürünlerden tamamla
+    if (count($prods) < $limit) {
+        $needed = $limit - count($prods);
+        $current_ids = array_merge($exclude_ids, wp_list_pluck($prods, 'id'));
+        $extra_prods = wc_get_products([
+            'limit'   => $needed,
+            'status'  => 'publish',
+            'exclude' => $current_ids,
+            'orderby' => 'rand',
+        ]);
+        if (!empty($extra_prods)) {
+            $prods = array_merge($prods, $extra_prods);
+        }
+    }
 
-    if (empty($prods) || count($prods) < 4) {
+    // Toplam mağaza ürün sayısı az ise ve hariç tutulunca boş kalıyorsa, sayfayı boş bırakmamak için genel liste
+    if (empty($prods)) {
         $prods = wc_get_products([
-            'limit'  => $limit,
-            'status' => 'publish',
+            'limit'   => $limit,
+            'status'  => 'publish',
+            'orderby' => 'rand',
         ]);
     }
 
@@ -363,6 +417,8 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
     </div>
 </section>
 
+<?php $displayed_slider_ids = []; ?>
+
 <!-- =========================================================================
      4. BÖLÜM: TRENDYOL SLIDER 1 - ÖNE ÇIKAN FIRSAT ÜRÜNLERİ (TURUNCU TEMA)
      ========================================================================= -->
@@ -387,7 +443,8 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <button type="button" class="trendyol-nav-arrow trendyol-nav-prev" data-target="trackFlashDeals" aria-label="Önceki Ürünler">&#10094;</button>
                 <div class="trendyol-products-track" id="trackFlashDeals">
                     <?php
-                    $flash_prods = emdief_get_slider_products('bestseller', 8);
+                    $flash_prods = emdief_get_slider_products('featured', 8, $displayed_slider_ids);
+                    $displayed_slider_ids = array_merge($displayed_slider_ids, wp_list_pluck($flash_prods, 'id'));
                     $idx = 0;
                     foreach ($flash_prods as $prod):
                         if ($prod instanceof WC_Product):
@@ -425,7 +482,8 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <button type="button" class="trendyol-nav-arrow trendyol-nav-prev" data-target="trackBestsellers" aria-label="Önceki Ürünler">&#10094;</button>
                 <div class="trendyol-products-track" id="trackBestsellers">
                     <?php
-                    $best_prods = emdief_get_slider_products('bestseller', 8);
+                    $best_prods = emdief_get_slider_products('bestseller', 8, $displayed_slider_ids);
+                    $displayed_slider_ids = array_merge($displayed_slider_ids, wp_list_pluck($best_prods, 'id'));
                     $idx = 0;
                     foreach ($best_prods as $prod):
                         if ($prod instanceof WC_Product):
@@ -463,7 +521,8 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <button type="button" class="trendyol-nav-arrow trendyol-nav-prev" data-target="trackNewArrivals" aria-label="Önceki Ürünler">&#10094;</button>
                 <div class="trendyol-products-track" id="trackNewArrivals">
                     <?php
-                    $new_prods = emdief_get_slider_products('new', 8);
+                    $new_prods = emdief_get_slider_products('new', 8, $displayed_slider_ids);
+                    $displayed_slider_ids = array_merge($displayed_slider_ids, wp_list_pluck($new_prods, 'id'));
                     $idx = 0;
                     foreach ($new_prods as $prod):
                         if ($prod instanceof WC_Product):
@@ -501,7 +560,8 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8): array
                 <button type="button" class="trendyol-nav-arrow trendyol-nav-prev" data-target="trackFavorited" aria-label="Önceki Ürünler">&#10094;</button>
                 <div class="trendyol-products-track" id="trackFavorited">
                     <?php
-                    $fav_prods = emdief_get_slider_products('all', 8);
+                    $fav_prods = emdief_get_slider_products('all', 8, $displayed_slider_ids);
+                    $displayed_slider_ids = array_merge($displayed_slider_ids, wp_list_pluck($fav_prods, 'id'));
                     $idx = 0;
                     foreach ($fav_prods as $prod):
                         if ($prod instanceof WC_Product):
