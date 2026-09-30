@@ -17,11 +17,12 @@ function mis360_mobilya_scripts() {
     $main_js_file  = file_exists($theme_dir . '/assets/js/main.min.js') ? '/assets/js/main.min.js' : '/assets/js/main.js';
     $cart_js_file  = file_exists($theme_dir . '/assets/js/ajax-cart.min.js') ? '/assets/js/ajax-cart.min.js' : '/assets/js/ajax-cart.js';
 
-    $style_ver    = file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.2.0';
-    $main_css_ver = file_exists($theme_dir . $main_css_file) ? filemtime($theme_dir . $main_css_file) : '1.2.0';
-    $wc_css_ver   = file_exists($theme_dir . $wc_css_file) ? filemtime($theme_dir . $wc_css_file) : '1.2.0';
-    $main_js_ver  = file_exists($theme_dir . $main_js_file) ? filemtime($theme_dir . $main_js_file) : '1.2.0';
-    $cart_js_ver  = file_exists($theme_dir . $cart_js_file) ? filemtime($theme_dir . $cart_js_file) : '1.2.0';
+    $ver_prefix   = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION . '.' : '1.9.76.';
+    $style_ver    = $ver_prefix . (file_exists($theme_dir . '/style.css') ? filemtime($theme_dir . '/style.css') : '1.0');
+    $main_css_ver = $ver_prefix . (file_exists($theme_dir . $main_css_file) ? filemtime($theme_dir . $main_css_file) : '1.0');
+    $wc_css_ver   = $ver_prefix . (file_exists($theme_dir . $wc_css_file) ? filemtime($theme_dir . $wc_css_file) : '1.0');
+    $main_js_ver  = $ver_prefix . (file_exists($theme_dir . $main_js_file) ? filemtime($theme_dir . $main_js_file) : '1.0');
+    $cart_js_ver  = $ver_prefix . (file_exists($theme_dir . $cart_js_file) ? filemtime($theme_dir . $cart_js_file) : '1.0');
 
     // 1. Google Fonts: Plus Jakarta Sans
     wp_enqueue_style(

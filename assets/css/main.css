@@ -8122,101 +8122,122 @@ button.button.emdief-btn-empty-cart:hover {
     transform: translateY(-1px);
 }
 
-/* 3. Footer Telif Şeridi Üstü ETBİS Güvenlik & Doğrulama Şeridi (v1.9.72) */
-.footer-etbis-bar {
-    margin-top: 2rem;
-    margin-bottom: 0.5rem;
-    padding: 14px 18px;
+/* 3. Footer Telif Şeridi Üstü ETBİS Güvenlik & Doğrulama Kartı (v1.9.76 Kompakt & Premium) */
+.footer-etbis-card-compact {
+    margin: 1.5rem 0 1rem 0;
+    padding: 14px 20px;
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.footer-etbis-bar:hover {
-    border-color: #cbd5e1;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
-}
-.footer-etbis-bar-inner {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 18px;
+    gap: 16px;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
 }
-.footer-etbis-bar-logo {
+.footer-etbis-card-compact:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+.etbis-card-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    min-width: 0;
+}
+.etbis-brand-logo {
     display: flex;
     align-items: center;
     flex-shrink: 0;
     text-decoration: none;
     transition: transform 0.2s ease;
 }
-.footer-etbis-bar-logo:hover {
-    transform: scale(1.04);
+.etbis-brand-logo:hover {
+    transform: scale(1.05);
 }
-.footer-etbis-bar-logo img {
-    height: 38px;
+.etbis-brand-logo img {
+    height: 34px;
     width: auto;
     object-fit: contain;
     display: block;
 }
-.footer-etbis-bar-text {
+.etbis-card-info {
     flex: 1;
     min-width: 0;
 }
-.etbis-bar-badge {
-    display: inline-flex;
+.etbis-verified-headline {
+    display: flex;
     align-items: center;
     gap: 6px;
     font-size: 13px;
     font-weight: 800;
     color: #0f172a;
-    margin-bottom: 2px;
-    letter-spacing: -0.01em;
+    line-height: 1.3;
 }
-.etbis-bar-desc {
+.etbis-badge-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: #10b981;
+    color: #ffffff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+.etbis-card-sub {
     font-size: 11.5px;
     color: #64748b;
-    line-height: 1.45;
-    margin: 0;
+    margin: 2px 0 0 0;
+    line-height: 1.4;
 }
-.footer-etbis-bar-btn {
+.etbis-card-verify-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 15px;
-    background: #f8fafc;
-    border: 1px solid #cbd5e1;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 700;
-    color: #1e293b;
-    text-decoration: none;
-    white-space: nowrap;
-    flex-shrink: 0;
-    transition: all 0.2s ease;
-}
-.footer-etbis-bar-btn:hover {
+    padding: 9px 18px;
     background: #0f172a;
     color: #ffffff !important;
-    border-color: #0f172a;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.18);
+    transition: all 0.2s ease;
 }
+.etbis-card-verify-btn:hover {
+    background: #334155;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
+}
+
 @media (max-width: 768px) {
-    .footer-etbis-bar {
-        padding: 14px;
-        margin-top: 1.5rem;
+    .footer-etbis-card-compact {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 16px;
+        gap: 12px;
+        margin: 1.25rem 0 0.75rem 0;
     }
-    .footer-etbis-bar-inner {
+    .etbis-card-left {
         flex-direction: column;
         align-items: flex-start;
-        gap: 12px;
+        gap: 10px;
     }
-    .footer-etbis-bar-btn {
+    .etbis-card-verify-btn {
         width: 100%;
         justify-content: center;
+        padding: 10px 16px;
         text-align: center;
-        padding: 9px 14px;
+        box-sizing: border-box;
     }
 }
 
