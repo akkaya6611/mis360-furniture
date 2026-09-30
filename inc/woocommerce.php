@@ -546,60 +546,32 @@ function mis360_render_drawer_cart_content() {
 
                 <div class="drawer-actions">
 
+                    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block drawer-btn-checkout">
+                        <span><?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?></span>
+                        <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-left:4px;"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </a>
 
+                    <?php if (function_exists('mis360_render_cart_whatsapp_btn')) { mis360_render_cart_whatsapp_btn('drawer-btn-wa'); } ?>
 
-                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="emdief-btn btn-outline btn-block">
-
-
+                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="emdief-btn btn-outline btn-block drawer-btn-cart">
 
                         <?php esc_html_e('Sepeti Görüntüle', 'mis360-mobilya'); ?>
 
-
-
                     </a>
-
-
-
-                    <?php if (is_user_logged_in()): ?>
-                        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block">
-                            <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
-                        </a>
-                    <?php else: ?>
-                        <p class="drawer-auth-required-hint">🔒 <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?></p>
-                        <button type="button" class="emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>">
-                            🔒 <?php esc_html_e('Siparişi Tamamla & Giriş Yap', 'mis360-mobilya'); ?>
-                        </button>
-                    <?php endif; ?>
-
-
 
                 </div>
 
-
-
-                <!-- Sepet Güven İpuçları (v1.8.0 4 Güven Öğesi) -->
-
-
+                <!-- Sepet Güven İpuçları (v1.9.74) -->
 
                 <div class="drawer-trust-check-list">
 
+                    <span class="drawer-trust-badge">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
 
+                    <span class="drawer-trust-badge">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
 
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Güvenli Ödeme', 'mis360-mobilya'); ?></span>
+                    <span class="drawer-trust-badge">💳 <?php esc_html_e('3D Secure Güvenli Ödeme', 'mis360-mobilya'); ?></span>
 
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Hızlı Kargo', 'mis360-mobilya'); ?></span>
-
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Kolay Kurulum', 'mis360-mobilya'); ?></span>
-
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('WhatsApp Destek', 'mis360-mobilya'); ?></span>
-
-
+                    <span class="drawer-trust-badge">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
 
                 </div>
 
@@ -7060,12 +7032,14 @@ function mis360_render_seo_topical_silo() {
 /* ==========================================================================
    ÖDEME AŞAMASINDA ZORUNLU ÜYELİK & AKILLI YÖNLENDİRME (v1.9.30)
    Sepete ekleme serbesttir; ödeme (checkout) aşamasında üyelik zorunludur.
-   ========================================================================== */
+    ========================================================================== */
 
-// 1. Misafir ödemesini kapat (Sipariş için üyelik şart)
-add_filter('pre_option_woocommerce_enable_guest_checkout', '__return_empty_string'); // 'no'
+// 1. Misafir ödemesini daima aktif tut (Sepet Terkini Önleyen En Önemli Adım)
+add_filter('pre_option_woocommerce_enable_guest_checkout', function() {
+    return 'yes';
+});
 
-// 2. Ödeme sayfasında hesap oluşturma ve girişi aktif tut
+// 2. Ödeme sayfasında hesap oluşturma ve girişi aktif tut (İsteyen üye olabilir)
 add_filter('pre_option_woocommerce_enable_signup_and_login_from_checkout', function() {
     return 'yes';
 });
@@ -7075,7 +7049,7 @@ add_filter('pre_option_woocommerce_registration_generate_username', function() {
     return 'yes';
 });
 
-// 4. Kullanıcı hesap şifresini kendisi belirlesin ('no' dönmelidir, böylece POST['password'] işlenir)
+// 4. Kullanıcı hesap şifresini kendisi belirleyebilsin
 add_filter('pre_option_woocommerce_registration_generate_password', function() {
     return 'no';
 });
@@ -7105,90 +7079,178 @@ add_filter('login_redirect', function($redirect_to, $request, $user) {
     return $redirect_to;
 }, 10, 3);
 
-// 7. Ödeme Sayfasında Adres/Fatura Öncesi Zorunlu Üyelik Uyarı Kutusu
-add_action('woocommerce_before_checkout_form', 'mis360_checkout_auth_required_gate', 5);
-function mis360_checkout_auth_required_gate() {
-    if (is_user_logged_in() || (function_exists('is_order_received_page') && is_order_received_page())) {
-        return;
-    }
-    ?>
-    <div class="emdief-checkout-auth-gate-box">
-        <div class="auth-gate-badge">
-            <span class="gate-pulse"></span>
-            🔒 <?php esc_html_e('ÖDEME ÖNCESİ HESAP DOĞRULAMA', 'mis360-mobilya'); ?>
-        </div>
-        <div class="auth-gate-content">
-            <h3 class="auth-gate-title">
-                ⚠️ <?php esc_html_e('Ödemeye Devam Edebilmek İçin Hesabınıza Giriş Yapmalı ya da Üyelik Oluşturmalısınız', 'mis360-mobilya'); ?>
-            </h3>
-            <p class="auth-gate-desc">
-                <?php _e('Değerli müşterimiz; siparişinizi güvenle tamamlamak ve ödemeye devam edebilmek için lütfen <strong>hesabınıza giriş yapın ya da 10 saniyede ücretsiz üye olun.</strong> Adres ve fatura bilgileriniz hesabınıza güvenle kaydedilecektir.', 'mis360-mobilya'); ?>
-            </p>
-            <div class="auth-gate-buttons">
-                <button type="button" class="emdief-btn btn-primary auth-gate-btn-login" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>';} return false;">
-                    🔑 <?php esc_html_e('Giriş Yap', 'mis360-mobilya'); ?>
-                </button>
-                <button type="button" class="emdief-btn btn-warm auth-gate-btn-register" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('register');}else{window.location.href='<?php echo esc_url(wc_get_page_permalink('myaccount')); ?>';} return false;">
-                    ✨ <?php esc_html_e('Hızlı Üye Ol (10 Saniyede Ücretsiz)', 'mis360-mobilya'); ?>
-                </button>
-            </div>
-        </div>
-    </div>
-    <?php
-}
-
-// 8. Fatura Alanı Öncesi Canlı Bilgilendirme Hatırlatması
-add_action('woocommerce_before_checkout_billing_form', 'mis360_before_billing_auth_reminder');
-function mis360_before_billing_auth_reminder() {
-    if (is_user_logged_in() || (function_exists('is_order_received_page') && is_order_received_page())) {
-        return;
-    }
-    ?>
-    <div class="checkout-billing-auth-hint">
-        💡 <strong><?php esc_html_e('Bilgilendirme:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?>
-    </div>
-    <?php
-}
-
-// 9. Sepet Sayfası (Cart Page) Siparişi Tamamla Butonunu Üyelik Korumalı Yap
+// 7. Sepet Sayfası (Cart Page) Doğrudan Siparişi Tamamla Butonu (Engelsiz & Hızlı)
 remove_action('woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20);
 add_action('woocommerce_proceed_to_checkout', 'mis360_button_proceed_to_checkout', 20);
 function mis360_button_proceed_to_checkout() {
-    if (is_user_logged_in()) {
-        ?>
-        <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block">
-            <?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?>
-        </a>
-        <?php
-    } else {
-        ?>
-        <button type="button" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block emdief-checkout-auth-btn" data-auth-prompt="checkout" data-href="<?php echo esc_url(wc_get_checkout_url()); ?>" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');}else{window.location.href='<?php echo esc_url(wc_get_checkout_url()); ?>';}">
-            🔒 <?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?>
-        </button>
-        <p class="cart-auth-required-hint" style="text-align: center; margin-top: 8px; font-size: 12.5px; color: #b45309; font-weight: 700;">
-            ⚠️ <?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?>
-        </p>
-        <?php
+    ?>
+    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block btn-lg" style="margin-bottom: 10px;">
+        <span><?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?></span>
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-left:6px;"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    </a>
+    <?php
+}
+
+// 8. Sepeti WhatsApp ile Sipariş Ver Butonu (Hem Sepet Sayfası Hem Drawer İçin)
+function mis360_render_cart_whatsapp_btn($custom_class = '') {
+    $whatsapp_num = get_theme_mod('mis360_whatsapp', '905374778766');
+    if (empty($whatsapp_num) || !class_exists('WooCommerce') || !WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    $clean_num = preg_replace('/[^0-9]/', '', $whatsapp_num);
+
+    $items_text = [];
+    foreach (WC()->cart->get_cart() as $item) {
+        $prod = $item['data'] ?? null;
+        if ($prod) {
+            $items_text[] = '• ' . $prod->get_name() . ' (' . $item['quantity'] . ' Adet) - ' . html_entity_decode(strip_tags(wc_price($item['line_total'])));
+        }
+    }
+    $total = html_entity_decode(strip_tags(WC()->cart->get_total()));
+
+    $msg = "Merhaba Emdief Home, sepetimdeki ürünleri sipariş vermek istiyorum:\n\n" 
+         . implode("\n", $items_text) . "\n\n"
+         . "Toplam Tutar: " . $total . "\n"
+         . "Siparişim ve ödeme detayları için yardımcı olabilir misiniz?";
+
+    $wa_url = 'https://wa.me/' . $clean_num . '?text=' . rawurlencode($msg);
+    ?>
+    <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="emdief-btn btn-whatsapp-order btn-block <?php echo esc_attr($custom_class); ?>" title="<?php esc_attr_e('Sepeti WhatsApp üzerinden hızlıca sipariş verin', 'mis360-mobilya'); ?>">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.777 2.796.777 3.182 0 5.768-2.587 5.768-5.766.001-3.187-2.575-5.763-5.768-5.763zm4.521 8.243c-.19.534-.997.989-1.391 1.042-.379.051-.875.074-2.825-.694-2.348-.925-3.837-3.328-3.954-3.483-.117-.156-.949-1.262-.949-2.408 0-1.146.601-1.709.814-1.942.213-.233.466-.291.621-.291.155 0 .31.002.446.009.144.007.338-.055.528.401.198.475.679 1.658.738 1.776.059.117.098.254.019.41-.078.156-.117.253-.233.389-.117.136-.246.304-.351.408-.117.117-.239.244-.103.478.136.234.606.999 1.3 1.617.893.796 1.646 1.043 1.88 1.159.233.117.37.098.506-.058.136-.156.583-.68.738-.913.155-.234.31-.195.524-.117.214.078 1.359.641 1.592.758.233.117.389.175.447.272.058.098.058.564-.132 1.098z"/></svg>
+        <span><?php esc_html_e('WhatsApp ile Hızlı Sipariş Ver', 'mis360-mobilya'); ?></span>
+    </a>
+    <?php
+}
+add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_whatsapp_btn', 22);
+
+// 9. Sepet Sayfası Güven Rozetleri (v1.9.74)
+function mis360_render_cart_page_trust_badges() {
+    ?>
+    <div class="cart-page-trust-pills">
+        <span class="trust-pill-item">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">💳 <?php esc_html_e('3D Secure Güvenli Ödeme', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
+    </div>
+    <?php
+}
+add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_page_trust_badges', 25);
+
+// 10. Terk Edilen Sepet Kurtarma Kuponunu Otomatik Tanımla (EMDIEF5)
+add_action('init', 'mis360_ensure_exit_intent_coupon');
+function mis360_ensure_exit_intent_coupon() {
+    if (!class_exists('WooCommerce')) return;
+    $coupon_code = 'emdief5';
+    $coupon_id = wc_get_coupon_id_by_code($coupon_code);
+    if (!$coupon_id) {
+        $coupon = new WC_Coupon();
+        $coupon->set_code($coupon_code);
+        $coupon->set_discount_type('percent');
+        $coupon->set_amount(5);
+        $coupon->set_description(__('Sepet Terk Kurtarma - Özel %5 İndirim Kuponu', 'mis360-mobilya'));
+        $coupon->set_individual_use(false);
+        $coupon->save();
     }
 }
 
-// 10. Sepet Sayfasında (Cart) Giriş Yapmamış Kullanıcılar İçin Bilgilendirme Kartı
-add_action('woocommerce_before_cart', 'mis360_cart_page_auth_notice', 15);
-function mis360_cart_page_auth_notice() {
-    if (is_user_logged_in()) {
+// 11. Çıkış Niyeti (Exit-Intent) İndirim Pop-up'ı (Modal & Trigger)
+add_action('wp_footer', 'mis360_render_exit_intent_popup', 35);
+function mis360_render_exit_intent_popup() {
+    if (!class_exists('WooCommerce') || !WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    // Sipariş teşekkür sayfasında gösterme
+    if (function_exists('is_order_received_page') && is_order_received_page()) {
         return;
     }
     ?>
-    <div class="cart-guest-auth-alert">
-        <div class="cart-alert-icon">🔒</div>
-        <div class="cart-alert-body">
-            <strong><?php esc_html_e('Ödemeye devam edebilmek için hesabınıza giriş yapmalı ya da üyelik oluşturmalısınız.', 'mis360-mobilya'); ?></strong>
-            <span><?php esc_html_e('Sipariş ve fatura güvenliğiniz için lütfen giriş yapın veya 10 saniyede ücretsiz üye olun.', 'mis360-mobilya'); ?></span>
+    <div id="emdief-exit-modal" class="emdief-exit-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="exit-modal-title">
+        <div class="exit-modal-backdrop" onclick="window.mis360CloseExitModal()"></div>
+        <div class="exit-modal-container">
+            <button type="button" class="exit-modal-close" onclick="window.mis360CloseExitModal()" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">&times;</button>
+            <div class="exit-modal-content">
+                <div class="exit-modal-icon-wrap">
+                    <span class="exit-gift-badge">🎁 <?php esc_html_e('Özel Fırsat', 'mis360-mobilya'); ?></span>
+                    <div class="exit-mascot-icon">🧸</div>
+                </div>
+                <h3 id="exit-modal-title" class="exit-modal-title"><?php esc_html_e('Gitmeden Önce Küçük Bir Sürprizimiz Var!', 'mis360-mobilya'); ?></h3>
+                <p class="exit-modal-desc">
+                    <?php esc_html_e('Çocuğunuzun odasına Montessori konforu katacak sepetinizdeki ürünler için sana özel ekstra %5 indirim tanımladık!', 'mis360-mobilya'); ?>
+                </p>
+                <div class="exit-coupon-box">
+                    <span class="coupon-label"><?php esc_html_e('İndirim Kodunuz:', 'mis360-mobilya'); ?></span>
+                    <strong class="coupon-code">EMDIEF5</strong>
+                </div>
+                <div class="exit-modal-actions">
+                    <button type="button" class="emdief-btn btn-primary btn-block exit-btn-apply" onclick="window.mis360ApplyExitCoupon()">
+                        ✨ <?php esc_html_e('Kuponu Uygula & Siparişi Tamamla', 'mis360-mobilya'); ?>
+                    </button>
+                    <button type="button" class="exit-btn-dismiss" onclick="window.mis360CloseExitModal()">
+                        <?php esc_html_e('Teşekkürler, indirimsiz devam etmek istiyorum', 'mis360-mobilya'); ?>
+                    </button>
+                </div>
+                <div class="exit-modal-footer-trust">
+                    <span>🛡️ 1. Sınıf E1 MDF</span>
+                    <span>🏛️ ETBİS Kayıtlı</span>
+                    <span>💳 Güvenli Ödeme</span>
+                </div>
+            </div>
         </div>
-        <button type="button" class="emdief-btn btn-sm btn-primary cart-alert-btn" onclick="if(window.mis360OpenAuthModal){window.mis360OpenAuthModal('login');} return false;">
-            🔑 <?php esc_html_e('Giriş Yap / Üye Ol', 'mis360-mobilya'); ?>
-        </button>
     </div>
+    <script>
+    (function(){
+        if (typeof window === 'undefined') return;
+        var modal = document.getElementById('emdief-exit-modal');
+        if (!modal) return;
+        
+        var shownKey = 'emdief_exit_intent_shown_v1';
+        if (sessionStorage.getItem(shownKey)) return;
+
+        window.mis360CloseExitModal = function() {
+            modal.style.display = 'none';
+            sessionStorage.setItem(shownKey, '1');
+        };
+
+        window.mis360ApplyExitCoupon = function() {
+            var btn = document.querySelector('.exit-btn-apply');
+            if (btn) btn.innerHTML = '⏳ <?php esc_html_e("Uygulanıyor...", "mis360-mobilya"); ?>';
+            
+            // Sepette kupon inputu varsa doldur ve submit et, yoksa checkout'a kuponlu yönlendir
+            var couponInput = document.querySelector('input[name="coupon_code"]');
+            var couponBtn = document.querySelector('button[name="apply_coupon"]');
+            if (couponInput && couponBtn) {
+                couponInput.value = 'EMDIEF5';
+                sessionStorage.setItem(shownKey, '1');
+                couponBtn.click();
+                modal.style.display = 'none';
+            } else {
+                sessionStorage.setItem(shownKey, '1');
+                window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
+            }
+        };
+
+        var triggered = false;
+        function triggerExit() {
+            if (triggered || sessionStorage.getItem(shownKey)) return;
+            triggered = true;
+            modal.style.display = 'flex';
+        }
+
+        // Masaüstü fare yukarı çıkış niyeti
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY <= 12) {
+                triggerExit();
+            }
+        });
+
+        // Mobil için 45 saniye sonra sepet terk uyarısı
+        if (window.innerWidth <= 768) {
+            setTimeout(function() {
+                triggerExit();
+            }, 45000);
+        }
+    })();
+    </script>
     <?php
 }
 
