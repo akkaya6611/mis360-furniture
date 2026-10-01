@@ -9,7 +9,7 @@
  * - Otomatik Kategori, Etiket, Meta ve İlgili Ürün CTA Entegrasyonu
  *
  * @package Mis360-Mobilya
- * @version 1.9.88
+ * @version 1.9.89
  * @author Serkan AKKAYA & MİS360
  */
 
@@ -107,6 +107,7 @@ class Emdief_AI_Blog_Generator {
 
     /**
      * API İstek Motoru (Gemini, OpenAI, Groq, Nvidia)
+     * Akıllı Otomatik Model Geçişi & Detaylı Hata Yakalama
      */
     public static function call_ai_api($system_prompt, $user_prompt, $provider = null) {
         if (empty($provider)) {
@@ -116,48 +117,75 @@ class Emdief_AI_Blog_Generator {
         // 1. GOOGLE GEMINI
         if ($provider === 'gemini') {
             $api_key = get_option('mis360_gemini_api_key');
-            $model   = get_option('mis360_gemini_model', 'gemini-1.5-flash');
+            $chosen_model = get_option('mis360_gemini_model', 'gemini-2.5-flash');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Google Gemini API Anahtarı girilmemiş.'];
             }
 
-            $endpoint = sprintf(
-                'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
-                urlencode($model),
-                urlencode($api_key)
-            );
+            // Otomatik model deneme sırası (2.5 Flash, 2.0 Flash, 2.5 Flash Lite, 1.5 Latest)
+            $models_to_try = array_values(array_unique(array_filter([
+                $chosen_model,
+                'gemini-2.5-flash',
+                'gemini-2.0-flash',
+                'gemini-2.5-flash-lite',
+                'gemini-1.5-flash-latest',
+                'gemini-1.5-flash-002',
+                'gemini-1.5-pro-latest'
+            ])));
 
-            $payload = [
-                'system_instruction' => [
-                    'parts' => [['text' => $system_prompt]]
-                ],
-                'contents' => [
-                    ['role' => 'user', 'parts' => [['text' => $user_prompt]]]
-                ],
-                'generationConfig' => [
-                    'temperature'     => 0.75,
-                    'maxOutputTokens' => 3000,
-                ]
-            ];
+            $last_error = 'Bilinmeyen Gemini yanıtı.';
+            foreach ($models_to_try as $model_item) {
+                $endpoint = sprintf(
+                    'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
+                    urlencode($model_item),
+                    urlencode($api_key)
+                );
 
-            $response = wp_remote_post($endpoint, [
-                'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
-                'body'    => wp_json_encode($payload),
-                'timeout' => 60,
-            ]);
+                $payload = [
+                    'system_instruction' => [
+                        'parts' => [['text' => $system_prompt]]
+                    ],
+                    'contents' => [
+                        ['role' => 'user', 'parts' => [['text' => $user_prompt]]]
+                    ],
+                    'generationConfig' => [
+                        'temperature'     => 0.75,
+                        'maxOutputTokens' => 3000,
+                    ]
+                ];
 
-            if (is_wp_error($response)) {
-                return ['success' => false, 'message' => 'Gemini API Hatası: ' . $response->get_error_message()];
+                $response = wp_remote_post($endpoint, [
+                    'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
+                    'body'    => wp_json_encode($payload),
+                    'timeout' => 60,
+                ]);
+
+                if (is_wp_error($response)) {
+                    $last_error = $response->get_error_message();
+                    continue;
+                }
+
+                $code = wp_remote_retrieve_response_code($response);
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+
+                if (!empty($body['candidates'][0]['content']['parts'][0]['text'])) {
+                    if ($model_item !== $chosen_model) {
+                        update_option('mis360_gemini_model', $model_item);
+                    }
+                    return ['success' => true, 'text' => $body['candidates'][0]['content']['parts'][0]['text'], 'model' => $model_item];
+                }
+
+                if (!empty($body['error']['message'])) {
+                    $last_error = $body['error']['message'];
+                    if (strpos($last_error, 'not found') !== false || strpos($last_error, 'not supported') !== false || $code === 404) {
+                        continue;
+                    }
+                    break;
+                }
             }
 
-            $body = json_decode(wp_remote_retrieve_body($response), true);
-            if (!empty($body['candidates'][0]['content']['parts'][0]['text'])) {
-                return ['success' => true, 'text' => $body['candidates'][0]['content']['parts'][0]['text']];
-            } else {
-                $err = $body['error']['message'] ?? 'Bilinmeyen Gemini API yanıtı.';
-                return ['success' => false, 'message' => 'Gemini Hata: ' . $err];
-            }
+            return ['success' => false, 'message' => 'Gemini Hata: ' . $last_error];
         }
 
         // 2. OPENAI (CHATGPT)
@@ -198,6 +226,9 @@ class Emdief_AI_Blog_Generator {
                 return ['success' => true, 'text' => $body['choices'][0]['message']['content']];
             } else {
                 $err = $body['error']['message'] ?? 'Bilinmeyen OpenAI yanıtı.';
+                if (strpos($err, 'no credits') !== false || strpos($err, 'insufficient_quota') !== false) {
+                    $err .= ' (💡 Tavsiye: OpenAI hesabınızda bakiye kalmadığında tamamen ücretsiz çalışan Google Gemini veya Groq sağlayıcısını seçebilirsiniz.)';
+                }
                 return ['success' => false, 'message' => 'OpenAI Hata: ' . $err];
             }
         }
@@ -205,85 +236,151 @@ class Emdief_AI_Blog_Generator {
         // 3. GROQ (ULTRA HIZLI LLAMA)
         elseif ($provider === 'groq') {
             $api_key = get_option('mis360_groq_api_key');
-            $model   = get_option('mis360_groq_model', 'llama-3.3-70b-versatile');
+            $chosen_model = get_option('mis360_groq_model', 'llama-3.1-8b-instant');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Groq API Anahtarı girilmemiş.'];
             }
 
+            // Groq güncel modelleri (versatile kaldırıldığı için instant & llama3 öncelikli)
+            $models_to_try = array_values(array_unique(array_filter([
+                $chosen_model,
+                'llama-3.1-8b-instant',
+                'llama-3.3-70b-specdec',
+                'llama3-70b-8192',
+                'llama3-8b-8192',
+                'mixtral-8x7b-32768',
+                'gemma2-9b-it'
+            ])));
+
             $endpoint = 'https://api.groq.com/openai/v1/chat/completions';
-            $payload  = [
-                'model'    => $model,
-                'messages' => [
-                    ['role' => 'system', 'content' => $system_prompt],
-                    ['role' => 'user', 'content' => $user_prompt]
-                ],
-                'temperature' => 0.75,
-                'max_tokens'  => 3500,
-            ];
+            $last_error = 'Bilinmeyen Groq yanıtı.';
 
-            $response = wp_remote_post($endpoint, [
-                'headers' => [
-                    'Content-Type'  => 'application/json; charset=utf-8',
-                    'Authorization' => 'Bearer ' . $api_key,
-                ],
-                'body'    => wp_json_encode($payload),
-                'timeout' => 45,
-            ]);
+            foreach ($models_to_try as $model_item) {
+                $payload  = [
+                    'model'    => $model_item,
+                    'messages' => [
+                        ['role' => 'system', 'content' => $system_prompt],
+                        ['role' => 'user', 'content' => $user_prompt]
+                    ],
+                    'temperature' => 0.75,
+                    'max_tokens'  => 3500,
+                ];
 
-            if (is_wp_error($response)) {
-                return ['success' => false, 'message' => 'Groq Hatası: ' . $response->get_error_message()];
+                $response = wp_remote_post($endpoint, [
+                    'headers' => [
+                        'Content-Type'  => 'application/json; charset=utf-8',
+                        'Authorization' => 'Bearer ' . $api_key,
+                    ],
+                    'body'    => wp_json_encode($payload),
+                    'timeout' => 45,
+                ]);
+
+                if (is_wp_error($response)) {
+                    $last_error = $response->get_error_message();
+                    continue;
+                }
+
+                $code = wp_remote_retrieve_response_code($response);
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+
+                if (!empty($body['choices'][0]['message']['content'])) {
+                    if ($model_item !== $chosen_model) {
+                        update_option('mis360_groq_model', $model_item);
+                    }
+                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                }
+
+                if (!empty($body['error']['message'])) {
+                    $last_error = $body['error']['message'];
+                    if (strpos($last_error, 'does not exist') !== false || strpos($last_error, 'decommissioned') !== false || $code === 404) {
+                        continue;
+                    }
+                    break;
+                }
             }
 
-            $body = json_decode(wp_remote_retrieve_body($response), true);
-            if (!empty($body['choices'][0]['message']['content'])) {
-                return ['success' => true, 'text' => $body['choices'][0]['message']['content']];
-            } else {
-                $err = $body['error']['message'] ?? 'Bilinmeyen Groq yanıtı.';
-                return ['success' => false, 'message' => 'Groq Hata: ' . $err];
-            }
+            return ['success' => false, 'message' => 'Groq Hata: ' . $last_error];
         }
 
         // 4. NVIDIA AI (NIM)
         elseif ($provider === 'nvidia') {
             $api_key = get_option('mis360_nvidia_api_key');
-            $model   = get_option('mis360_nvidia_model', 'meta/llama-3.3-70b-instruct');
+            $chosen_model = get_option('mis360_nvidia_model', 'nvidia/llama-3.1-nemotron-70b-instruct');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Nvidia AI API Anahtarı girilmemiş.'];
             }
 
+            $models_to_try = array_values(array_unique(array_filter([
+                $chosen_model,
+                'nvidia/llama-3.1-nemotron-70b-instruct',
+                'meta/llama-3.2-11b-vision-instruct',
+                'mistralai/mistral-large-2-instruct',
+                'deepseek-ai/deepseek-v4.1-flash',
+                'meta/llama-3.2-90b-vision-instruct'
+            ])));
+
             $endpoint = 'https://integrate.api.nvidia.com/v1/chat/completions';
-            $payload  = [
-                'model'    => $model,
-                'messages' => [
-                    ['role' => 'system', 'content' => $system_prompt],
-                    ['role' => 'user', 'content' => $user_prompt]
-                ],
-                'temperature' => 0.75,
-                'max_tokens'  => 3500,
-            ];
+            $last_error = 'Bilinmeyen Nvidia yanıtı.';
 
-            $response = wp_remote_post($endpoint, [
-                'headers' => [
-                    'Content-Type'  => 'application/json; charset=utf-8',
-                    'Authorization' => 'Bearer ' . $api_key,
-                ],
-                'body'    => wp_json_encode($payload),
-                'timeout' => 60,
-            ]);
+            foreach ($models_to_try as $model_item) {
+                $payload  = [
+                    'model'    => $model_item,
+                    'messages' => [
+                        ['role' => 'system', 'content' => $system_prompt],
+                        ['role' => 'user', 'content' => $user_prompt]
+                    ],
+                    'temperature' => 0.75,
+                    'max_tokens'  => 3500,
+                ];
 
-            if (is_wp_error($response)) {
-                return ['success' => false, 'message' => 'Nvidia Hatası: ' . $response->get_error_message()];
+                $response = wp_remote_post($endpoint, [
+                    'headers' => [
+                        'Content-Type'  => 'application/json; charset=utf-8',
+                        'Authorization' => 'Bearer ' . $api_key,
+                    ],
+                    'body'    => wp_json_encode($payload),
+                    'timeout' => 60,
+                ]);
+
+                if (is_wp_error($response)) {
+                    $last_error = $response->get_error_message();
+                    continue;
+                }
+
+                $code = wp_remote_retrieve_response_code($response);
+                $raw_body = wp_remote_retrieve_body($response);
+                $body = json_decode($raw_body, true);
+
+                if (!empty($body['choices'][0]['message']['content'])) {
+                    if ($model_item !== $chosen_model) {
+                        update_option('mis360_nvidia_model', $model_item);
+                    }
+                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                }
+
+                if (!empty($body['detail'])) {
+                    if (is_array($body['detail'])) {
+                        $last_error = json_encode($body['detail'], JSON_UNESCAPED_UNICODE);
+                    } else {
+                        $last_error = (string)$body['detail'];
+                    }
+                } elseif (!empty($body['error']['message'])) {
+                    $last_error = (string)$body['error']['message'];
+                } elseif (!empty($body['message'])) {
+                    $last_error = (string)$body['message'];
+                } else {
+                    $last_error = 'HTTP ' . $code . ': ' . substr($raw_body, 0, 200);
+                }
+
+                if ($code === 404 || strpos($last_error, 'not found') !== false || strpos($last_error, 'Model') !== false) {
+                    continue;
+                }
+                break;
             }
 
-            $body = json_decode(wp_remote_retrieve_body($response), true);
-            if (!empty($body['choices'][0]['message']['content'])) {
-                return ['success' => true, 'text' => $body['choices'][0]['message']['content']];
-            } else {
-                $err = $body['error']['message'] ?? 'Bilinmeyen Nvidia yanıtı.';
-                return ['success' => false, 'message' => 'Nvidia Hata: ' . $err];
-            }
+            return ['success' => false, 'message' => 'Nvidia Hata: ' . $last_error];
         }
 
         return ['success' => false, 'message' => 'Geçersiz AI sağlayıcısı.'];
@@ -524,13 +621,13 @@ PROMPT;
 
         update_option('mis360_ai_provider', sanitize_key($_POST['mis360_ai_provider'] ?? 'gemini'));
         update_option('mis360_gemini_api_key', trim($_POST['mis360_gemini_api_key'] ?? ''));
-        update_option('mis360_gemini_model', sanitize_text_field($_POST['mis360_gemini_model'] ?? 'gemini-1.5-flash'));
+        update_option('mis360_gemini_model', sanitize_text_field($_POST['mis360_gemini_model'] ?? 'gemini-2.5-flash'));
         update_option('mis360_openai_api_key', trim($_POST['mis360_openai_api_key'] ?? ''));
         update_option('mis360_openai_model', sanitize_text_field($_POST['mis360_openai_model'] ?? 'gpt-4o-mini'));
         update_option('mis360_groq_api_key', trim($_POST['mis360_groq_api_key'] ?? ''));
-        update_option('mis360_groq_model', sanitize_text_field($_POST['mis360_groq_model'] ?? 'llama-3.3-70b-versatile'));
+        update_option('mis360_groq_model', sanitize_text_field($_POST['mis360_groq_model'] ?? 'llama-3.1-8b-instant'));
         update_option('mis360_nvidia_api_key', trim($_POST['mis360_nvidia_api_key'] ?? ''));
-        update_option('mis360_nvidia_model', sanitize_text_field($_POST['mis360_nvidia_model'] ?? 'meta/llama-3.3-70b-instruct'));
+        update_option('mis360_nvidia_model', sanitize_text_field($_POST['mis360_nvidia_model'] ?? 'nvidia/llama-3.1-nemotron-70b-instruct'));
 
         wp_send_json_success(['message' => 'Yapay Zeka API ayarları başarıyla kaydedildi.']);
     }
@@ -862,56 +959,119 @@ PROMPT;
                         <span>🤖 Yapay Zeka Sağlayıcıları ve API Anahtarları</span>
                     </h2>
                     <p style="font-size:13px;color:#64748b;margin-bottom:20px;">
-                        Kullanmak istediğiniz servisin API anahtarını girin. Dilediğiniz zaman sağlayıcılar arasında geçiş yapabilirsiniz.
+                        Kullanmak istediğiniz servisin API anahtarını girin. Dilediğiniz zaman sağlayıcılar arasında geçiş yapabilirsiniz. Sistem otomatik model geçişi (fallback) ile kesintisiz çalışır.
                     </p>
+
+                    <?php
+                    $gemini_model = get_option('mis360_gemini_model', 'gemini-2.5-flash');
+                    $openai_model = get_option('mis360_openai_model', 'gpt-4o-mini');
+                    $groq_model   = get_option('mis360_groq_model', 'llama-3.1-8b-instant');
+                    $nvidia_model = get_option('mis360_nvidia_model', 'nvidia/llama-3.1-nemotron-70b-instruct');
+                    ?>
 
                     <form id="form-api-settings">
                         <div class="mis360-field">
                             <label>Varsayılan Aktif AI Sağlayıcı:</label>
-                            <select name="mis360_ai_provider" class="mis360-select">
-                                <option value="gemini" <?php selected($provider, 'gemini'); ?>>Google Gemini (Önerilen)</option>
-                                <option value="groq" <?php selected($provider, 'groq'); ?>>Groq (Ultra Hızlı Llama 3.3)</option>
-                                <option value="nvidia" <?php selected($provider, 'nvidia'); ?>>Nvidia AI NIM</option>
-                                <option value="openai" <?php selected($provider, 'openai'); ?>>OpenAI (ChatGPT)</option>
+                            <select name="mis360_ai_provider" class="mis360-select" style="font-weight:700;">
+                                <option value="gemini" <?php selected($provider, 'gemini'); ?>>🌟 Google Gemini (Ücretsiz Kota & Hızlı - Önerilen)</option>
+                                <option value="groq" <?php selected($provider, 'groq'); ?>>⚡ Groq Cloud (Ultra Hızlı Llama 3.1 & Ücretsiz)</option>
+                                <option value="nvidia" <?php selected($provider, 'nvidia'); ?>>🟢 Nvidia AI NIM (Nemotron 70B & Yüksek Zeka)</option>
+                                <option value="openai" <?php selected($provider, 'openai'); ?>>🧠 OpenAI (ChatGPT GPT-4o Mini)</option>
                             </select>
                         </div>
 
                         <hr style="border:none;border-top:1px solid #f1f5f9;margin:20px 0;">
 
                         <!-- Google Gemini -->
-                        <div class="mis360-field">
-                            <label>🌟 Google Gemini API Key:</label>
-                            <input type="password" name="mis360_gemini_api_key" value="<?php echo esc_attr($gemini_key); ?>" class="mis360-input" placeholder="AIzaSy..." />
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <label style="font-weight:700; color:#0f172a; margin:0;">🌟 Google Gemini API</label>
+                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a>
+                            </div>
+                            <div class="mis360-field" style="margin-bottom:10px;">
+                                <input type="password" name="mis360_gemini_api_key" value="<?php echo esc_attr($gemini_key); ?>" class="mis360-input" placeholder="AIzaSy... (Gemini API Anahtarı)" />
+                            </div>
+                            <div class="mis360-field" style="margin:0;">
+                                <label style="font-size:12px; color:#64748b;">Gemini Modeli:</label>
+                                <select name="mis360_gemini_model" class="mis360-select">
+                                    <option value="gemini-2.5-flash" <?php selected($gemini_model, 'gemini-2.5-flash'); ?>>gemini-2.5-flash (En Yeni &amp; Hızlı - Önerilen)</option>
+                                    <option value="gemini-2.0-flash" <?php selected($gemini_model, 'gemini-2.0-flash'); ?>>gemini-2.0-flash (Kararlı)</option>
+                                    <option value="gemini-2.5-flash-lite" <?php selected($gemini_model, 'gemini-2.5-flash-lite'); ?>>gemini-2.5-flash-lite (Hafif)</option>
+                                    <option value="gemini-1.5-flash-latest" <?php selected($gemini_model, 'gemini-1.5-flash-latest'); ?>>gemini-1.5-flash-latest</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Groq -->
-                        <div class="mis360-field">
-                            <label>⚡ Groq API Key:</label>
-                            <input type="password" name="mis360_groq_api_key" value="<?php echo esc_attr($groq_key); ?>" class="mis360-input" placeholder="gsk_..." />
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <label style="font-weight:700; color:#0f172a; margin:0;">⚡ Groq Cloud API</label>
+                                <a href="https://console.groq.com/keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a>
+                            </div>
+                            <div class="mis360-field" style="margin-bottom:10px;">
+                                <input type="password" name="mis360_groq_api_key" value="<?php echo esc_attr($groq_key); ?>" class="mis360-input" placeholder="gsk_... (Groq API Anahtarı)" />
+                            </div>
+                            <div class="mis360-field" style="margin:0;">
+                                <label style="font-size:12px; color:#64748b;">Groq Modeli:</label>
+                                <select name="mis360_groq_model" class="mis360-select">
+                                    <option value="llama-3.1-8b-instant" <?php selected($groq_model, 'llama-3.1-8b-instant'); ?>>llama-3.1-8b-instant (Ultra Hızlı &amp; Limitsiz Kota - Önerilen)</option>
+                                    <option value="llama-3.3-70b-specdec" <?php selected($groq_model, 'llama-3.3-70b-specdec'); ?>>llama-3.3-70b-specdec (Yeni Hızlı 70B)</option>
+                                    <option value="llama3-70b-8192" <?php selected($groq_model, 'llama3-70b-8192'); ?>>llama3-70b-8192 (Llama 3 70B)</option>
+                                    <option value="llama3-8b-8192" <?php selected($groq_model, 'llama3-8b-8192'); ?>>llama3-8b-8192 (Llama 3 8B)</option>
+                                    <option value="mixtral-8x7b-32768" <?php selected($groq_model, 'mixtral-8x7b-32768'); ?>>mixtral-8x7b-32768</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- Nvidia AI -->
-                        <div class="mis360-field">
-                            <label>🟢 Nvidia AI NIM API Key:</label>
-                            <input type="password" name="mis360_nvidia_api_key" value="<?php echo esc_attr($nvidia_key); ?>" class="mis360-input" placeholder="nvapi-..." />
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <label style="font-weight:700; color:#0f172a; margin:0;">🟢 Nvidia AI NIM API</label>
+                                <a href="https://build.nvidia.com/" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">NIM Key Al ↗</a>
+                            </div>
+                            <div class="mis360-field" style="margin-bottom:10px;">
+                                <input type="password" name="mis360_nvidia_api_key" value="<?php echo esc_attr($nvidia_key); ?>" class="mis360-input" placeholder="nvapi-... (Nvidia API Anahtarı)" />
+                            </div>
+                            <div class="mis360-field" style="margin:0;">
+                                <label style="font-size:12px; color:#64748b;">Nvidia NIM Modeli:</label>
+                                <select name="mis360_nvidia_model" class="mis360-select">
+                                    <option value="nvidia/llama-3.1-nemotron-70b-instruct" <?php selected($nvidia_model, 'nvidia/llama-3.1-nemotron-70b-instruct'); ?>>nvidia/llama-3.1-nemotron-70b-instruct (Nvidia 70B - Önerilen)</option>
+                                    <option value="meta/llama-3.2-11b-vision-instruct" <?php selected($nvidia_model, 'meta/llama-3.2-11b-vision-instruct'); ?>>meta/llama-3.2-11b-vision-instruct</option>
+                                    <option value="mistralai/mistral-large-2-instruct" <?php selected($nvidia_model, 'mistralai/mistral-large-2-instruct'); ?>>mistralai/mistral-large-2-instruct</option>
+                                    <option value="deepseek-ai/deepseek-v4.1-flash" <?php selected($nvidia_model, 'deepseek-ai/deepseek-v4.1-flash'); ?>>deepseek-ai/deepseek-v4.1-flash</option>
+                                </select>
+                            </div>
                         </div>
 
                         <!-- OpenAI -->
-                        <div class="mis360-field">
-                            <label>🧠 OpenAI (ChatGPT) API Key:</label>
-                            <input type="password" name="mis360_openai_api_key" value="<?php echo esc_attr($openai_key); ?>" class="mis360-input" placeholder="sk-proj-..." />
+                        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <label style="font-weight:700; color:#0f172a; margin:0;">🧠 OpenAI (ChatGPT) API</label>
+                                <a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">OpenAI Platform ↗</a>
+                            </div>
+                            <div class="mis360-field" style="margin-bottom:10px;">
+                                <input type="password" name="mis360_openai_api_key" value="<?php echo esc_attr($openai_key); ?>" class="mis360-input" placeholder="sk-proj-... (OpenAI API Anahtarı)" />
+                            </div>
+                            <div class="mis360-field" style="margin:0;">
+                                <label style="font-size:12px; color:#64748b;">OpenAI Modeli:</label>
+                                <select name="mis360_openai_model" class="mis360-select">
+                                    <option value="gpt-4o-mini" <?php selected($openai_model, 'gpt-4o-mini'); ?>>gpt-4o-mini (Hızlı &amp; Düşük Maliyet - Önerilen)</option>
+                                    <option value="gpt-4o" <?php selected($openai_model, 'gpt-4o'); ?>>gpt-4o (En Yüksek Kalite)</option>
+                                    <option value="gpt-3.5-turbo" <?php selected($openai_model, 'gpt-3.5-turbo'); ?>>gpt-3.5-turbo</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div style="display:flex;gap:12px;margin-top:20px;">
                             <button type="submit" class="button mis360-btn-primary">
                                 API Ayarlarını Kaydet
                             </button>
-                            <button type="button" id="btn-test-api" class="button" style="padding:8px 16px;">
+                            <button type="button" id="btn-test-api" class="button" style="padding:8px 18px; font-weight:700;">
                                 🔌 Bağlantıyı Test Et
                             </button>
                         </div>
                     </form>
-                    <div id="api-test-msg" style="margin-top:14px;font-size:13px;font-weight:600;"></div>
+                    <div id="api-test-msg" style="margin-top:14px;font-size:13.5px;font-weight:600;line-height:1.5;"></div>
                 </div>
             </div>
 
@@ -1150,21 +1310,26 @@ PROMPT;
                     });
                 });
 
-                // API Bağlantı Testi
+                // API Bağlantı Testi (Otomatik form kaydetme & anlık test)
                 $('#btn-test-api').on('click', function() {
                     var provider = $('select[name="mis360_ai_provider"]').val();
-                    var $msg = $('#api-test-msg').css('color', '#0284c7').text('Bağlantı test ediliyor (' + provider.toUpperCase() + ')...');
+                    var $msg = $('#api-test-msg').css('color', '#0284c7').html('⏳ Form ayarları kaydediliyor ve <strong>' + provider.toUpperCase() + '</strong> bağlantısı test ediliyor...');
 
-                    $.post(ajaxUrl, {
-                        action: 'mis360_ai_test_api',
-                        provider: provider,
-                        security: nonce
-                    }, function(res) {
-                        if (res.success) {
-                            $msg.css('color', '#16a34a').text(res.data.message);
-                        } else {
-                            $msg.css('color', '#dc2626').text(res.data.message);
-                        }
+                    var formData = $('#form-api-settings').serialize() + '&action=mis360_ai_save_api_settings&security=' + nonce;
+                    $.post(ajaxUrl, formData, function() {
+                        $.post(ajaxUrl, {
+                            action: 'mis360_ai_test_api',
+                            provider: provider,
+                            security: nonce
+                        }, function(res) {
+                            if (res.success) {
+                                $msg.css('color', '#16a34a').html(res.data.message);
+                            } else {
+                                $msg.css('color', '#dc2626').html(res.data.message);
+                            }
+                        }).fail(function() {
+                            $msg.css('color', '#dc2626').html('❌ Sunucu yanıt vermedi veya zaman aşımına uğradı.');
+                        });
                     });
                 });
             });
