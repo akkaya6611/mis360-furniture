@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_MOBILYA_VERSION', '1.9.87');
+define('MIS360_MOBILYA_VERSION', '1.9.88');
 define('MIS360_MOBILYA_DIR', get_template_directory());
 define('MIS360_MOBILYA_URI', get_template_directory_uri());
 
@@ -31,6 +31,7 @@ $mis360_includes = [
     '/inc/sitemap-indexing.php', // Sitemap & Hızlı İndeksleme Modülü (Google, Bing, Yandex, IndexNow) (v1.9.62)
     '/inc/visitor-tracker.php', // Ziyaretçi Yolculuğu & Sepet Takip Modülü (v1.9.65)
     '/inc/admin-orders-dashboard.php', // Admin Canlı Sipariş Yönetim Merkezi & Giriş Görünümü (v1.9.85)
+    '/inc/ai-blog-generator.php', // AI Blog & 81 İl/İlçe Yerel SEO Rehber Motoru (v1.9.88)
 ];
 
 foreach ($mis360_includes as $inc_file) {
