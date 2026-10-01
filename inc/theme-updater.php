@@ -41,8 +41,7 @@ class Mis360_Theme_Updater {
      * Güncellemeyi anında zorlamak için transient ve önbellek temizleyici
      */
     public function force_check_listener() {
-        global $pagenow;
-        if (is_admin() && in_array($pagenow, ['themes.php', 'update-core.php', 'update.php']) && current_user_can('update_themes')) {
+        if (isset($_GET['force-check']) && current_user_can('update_themes')) {
             delete_transient('mis360_github_update_data');
             delete_site_transient('update_themes');
             if (function_exists('wp_clean_themes_cache')) {
@@ -55,78 +54,77 @@ class Mis360_Theme_Updater {
      * GitHub Releases API üzerinden en güncel sürüm bilgisini çeker (0 CDN Gecikmesi)
      */
     private function get_remote_theme_data($force = false) {
+        static $runtime_cache = null;
+        if ($runtime_cache !== null && !$force) {
+            return $runtime_cache;
+        }
+
         $transient_key = 'mis360_github_update_data';
 
-        global $pagenow;
-        $is_update_page = is_admin() && in_array($pagenow, ['update-core.php', 'themes.php', 'update.php']);
-
-        if (!$force && !isset($_GET['force-check']) && !$is_update_page) {
+        if (!$force && !isset($_GET['force-check'])) {
             $cached = get_transient($transient_key);
             if ($cached !== false && is_array($cached)) {
+                $runtime_cache = $cached;
                 return $cached;
             }
         }
 
-        $headers = [
-            'User-Agent' => 'WordPress-Theme-Updater',
-            'Accept'     => 'application/vnd.github.v3+json',
-        ];
-        if (!empty($this->github_token)) {
-            $headers['Authorization'] = 'Bearer ' . $this->github_token;
-        }
-
-        // 1. Doğrudan GitHub Releases API
-        $api_url  = sprintf('https://api.github.com/repos/%s/%s/releases/latest', $this->github_user, $this->github_repo);
-        $response = wp_remote_get($api_url, [
-            'headers'   => $headers,
-            'timeout'   => 12,
-            'sslverify' => false,
-        ]);
-
         $remote_version = null;
         $package_url    = null;
 
-        if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
-            $body = json_decode(wp_remote_retrieve_body($response), true);
-            if (!empty($body['tag_name'])) {
-                $remote_version = ltrim($body['tag_name'], 'vV');
-                
-                if (!empty($body['assets']) && is_array($body['assets'])) {
-                    foreach ($body['assets'] as $asset) {
-                        if ($asset['name'] === 'mis360-mobilya.zip') {
-                            $package_url = $asset['browser_download_url'];
-                            break;
+        // 1. raw.githubusercontent.com - Hızlı (100ms) & 403 Rate-Limit olmadan doğrudan kontrol
+        $raw_url = sprintf(
+            'https://raw.githubusercontent.com/%s/%s/%s/style.css?t=%d',
+            $this->github_user,
+            $this->github_repo,
+            $this->github_branch,
+            floor(time() / 180)
+        );
+
+        $raw_response = wp_remote_get($raw_url, [
+            'headers'   => ['User-Agent' => 'WordPress-Theme-Updater'],
+            'timeout'   => 3,
+            'sslverify' => false,
+        ]);
+
+        if (!is_wp_error($raw_response) && wp_remote_retrieve_response_code($raw_response) === 200) {
+            $style_content = wp_remote_retrieve_body($raw_response);
+            if (preg_match('/Version:\s*([^\r\n]+)/i', $style_content, $matches)) {
+                $remote_version = trim($matches[1]);
+            }
+        }
+
+        // 2. Token tanımlıysa veya Releases API gerekliyse
+        if (!empty($this->github_token) && empty($remote_version)) {
+            $api_url  = sprintf('https://api.github.com/repos/%s/%s/releases/latest', $this->github_user, $this->github_repo);
+            $response = wp_remote_get($api_url, [
+                'headers'   => [
+                    'User-Agent'    => 'WordPress-Theme-Updater',
+                    'Accept'        => 'application/vnd.github.v3+json',
+                    'Authorization' => 'Bearer ' . $this->github_token
+                ],
+                'timeout'   => 3,
+                'sslverify' => false,
+            ]);
+
+            if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+                if (!empty($body['tag_name'])) {
+                    $remote_version = ltrim($body['tag_name'], 'vV');
+                    if (!empty($body['assets']) && is_array($body['assets'])) {
+                        foreach ($body['assets'] as $asset) {
+                            if ($asset['name'] === 'mis360-mobilya.zip') {
+                                $package_url = $asset['browser_download_url'];
+                                break;
+                            }
                         }
                     }
                 }
             }
         }
 
-        // 2. Fallback: style.css
         if (empty($remote_version)) {
-            $raw_url = sprintf(
-                'https://raw.githubusercontent.com/%s/%s/%s/style.css?t=%d',
-                $this->github_user,
-                $this->github_repo,
-                $this->github_branch,
-                time()
-            );
-
-            $raw_response = wp_remote_get($raw_url, [
-                'headers'   => ['User-Agent' => 'WordPress-Theme-Updater'],
-                'timeout'   => 12,
-                'sslverify' => false,
-            ]);
-
-            if (!is_wp_error($raw_response) && wp_remote_retrieve_response_code($raw_response) === 200) {
-                $style_content = wp_remote_retrieve_body($raw_response);
-                if (preg_match('/Version:\s*([^\r\n]+)/i', $style_content, $matches)) {
-                    $remote_version = trim($matches[1]);
-                }
-            }
-        }
-
-        if (empty($remote_version)) {
+            set_transient($transient_key, ['version' => '0.0.0', 'package_url' => '', 'repo_url' => ''], 10 * MINUTE_IN_SECONDS);
             return false;
         }
 
@@ -145,7 +143,8 @@ class Mis360_Theme_Updater {
             'repo_url'    => sprintf('https://github.com/%s/%s', $this->github_user, $this->github_repo),
         ];
 
-        set_transient($transient_key, $data, 5 * MINUTE_IN_SECONDS);
+        set_transient($transient_key, $data, 30 * MINUTE_IN_SECONDS);
+        $runtime_cache = $data;
 
         return $data;
     }

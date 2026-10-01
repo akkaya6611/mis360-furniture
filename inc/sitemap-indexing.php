@@ -41,9 +41,14 @@ function mis360_serve_indexnow_key_file() {
 }
 
 // 2. IndexNow API Gönderim Motoru
-function mis360_submit_to_indexnow($urls = []) {
+function mis360_submit_to_indexnow($urls = [], $non_blocking = false) {
     if (empty($urls)) {
         return ['success' => false, 'message' => 'Gönderilecek URL bulunamadı.'];
+    }
+
+    // 403 / 429 hatası alındıysa sistemi kasmamak için geçici bekleme süresi
+    if (get_transient('mis360_indexnow_cooldown')) {
+        return ['success' => false, 'message' => 'IndexNow API geçici beklemede (Cooldown).'];
     }
 
     $urls = array_unique((array) $urls);
@@ -58,10 +63,21 @@ function mis360_submit_to_indexnow($urls = []) {
         'urlList'     => array_values($urls),
     ];
 
+    // Arka planda asenkron istek (Sayfa yüklemesini 0 ms bekletir)
+    if ($non_blocking) {
+        wp_remote_post('https://api.indexnow.org/indexnow', [
+            'headers'     => ['Content-Type' => 'application/json; charset=utf-8'],
+            'body'        => wp_json_encode($body),
+            'timeout'     => 2,
+            'blocking'    => false,
+        ]);
+        return ['success' => true, 'message' => 'IndexNow arka planda asenkron gönderildi.'];
+    }
+
     $response = wp_remote_post('https://api.indexnow.org/indexnow', [
         'headers'     => ['Content-Type' => 'application/json; charset=utf-8'],
         'body'        => wp_json_encode($body),
-        'timeout'     => 15,
+        'timeout'     => 3,
         'httpversion' => '1.1',
     ]);
 
@@ -75,17 +91,21 @@ function mis360_submit_to_indexnow($urls = []) {
     $code = wp_remote_retrieve_response_code($response);
     
     if ($code === 200 || $code === 202) {
+        delete_transient('mis360_indexnow_cooldown');
         return [
             'success' => true,
             'code'    => $code,
             'message' => count($urls) . ' adet URL başarıyla IndexNow ağına (Bing, Yandex, Seznam, Naver) iletildi.'
         ];
     } else {
+        if ($code === 403 || $code === 429) {
+            set_transient('mis360_indexnow_cooldown', 1, 2 * HOUR_IN_SECONDS);
+        }
         $msg = wp_remote_retrieve_body($response);
         return [
             'success' => false,
             'code'    => $code,
-            'message' => 'IndexNow HTTP ' . $code . ': ' . ($msg ? esc_html($msg) : 'Bilinmeyen hata')
+            'message' => 'IndexNow HTTP ' . $code . ': ' . ($msg ? esc_html($msg) : 'Doğrulama hatası (2 saat mola verildi)')
         ];
     }
 }
@@ -98,24 +118,19 @@ function mis360_ping_search_engines($sitemap_url = '') {
 
     $results = [];
 
-    // Bing Ping
+    // Bing Ping (Maks 3s)
     $bing_url = 'https://www.bing.com/ping?sitemap=' . urlencode($sitemap_url);
-    $bing_res = wp_remote_get($bing_url, ['timeout' => 10]);
+    $bing_res = wp_remote_get($bing_url, ['timeout' => 3]);
     $results['Bing'] = is_wp_error($bing_res) ? $bing_res->get_error_message() : ('HTTP ' . wp_remote_retrieve_response_code($bing_res));
 
-    // Yandex Ping
+    // Yandex Ping (Maks 3s)
     $yandex_url = 'https://webmaster.yandex.com/ping?sitemap=' . urlencode($sitemap_url);
-    $yandex_res = wp_remote_get($yandex_url, ['timeout' => 10]);
+    $yandex_res = wp_remote_get($yandex_url, ['timeout' => 3]);
     $results['Yandex'] = is_wp_error($yandex_res) ? $yandex_res->get_error_message() : ('HTTP ' . wp_remote_retrieve_response_code($yandex_res));
 
-    // Google Ping
-    $google_url = 'https://www.google.com/ping?sitemap=' . urlencode($sitemap_url);
-    $google_res = wp_remote_get($google_url, ['timeout' => 10]);
-    $results['Google'] = is_wp_error($google_res) ? $google_res->get_error_message() : ('HTTP ' . wp_remote_retrieve_response_code($google_res));
-
     // IndexNow ile Sitemap ve Ana Sayfa
-    $indexnow_res = mis360_submit_to_indexnow([$sitemap_url, home_url('/')]);
-    $results['IndexNow'] = $indexnow_res['success'] ? 'Başarılı (' . ($indexnow_res['code'] ?? 200) . ')' : ('Hata: ' . $indexnow_res['message']);
+    $indexnow_res = mis360_submit_to_indexnow([$sitemap_url, home_url('/')], true);
+    $results['IndexNow'] = 'Asenkron gönderildi.';
 
     return $results;
 }
@@ -123,7 +138,15 @@ function mis360_ping_search_engines($sitemap_url = '') {
 // 4. Yeni İçerik veya Ürün Yayınlandığında Otomatik IndexNow Gönderimi
 add_action('transition_post_status', 'mis360_auto_indexnow_on_publish', 10, 3);
 function mis360_auto_indexnow_on_publish($new_status, $old_status, $post) {
-    if ($new_status !== 'publish' || !is_a($post, 'WP_Post')) {
+    if ($old_status === 'publish' || $new_status !== 'publish' || !is_a($post, 'WP_Post')) {
+        return;
+    }
+
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+
+    if (get_transient('mis360_indexnow_cooldown')) {
         return;
     }
 
@@ -138,7 +161,8 @@ function mis360_auto_indexnow_on_publish($new_status, $old_status, $post) {
 
     $permalink = get_permalink($post->ID);
     if ($permalink) {
-        mis360_submit_to_indexnow([$permalink, home_url('/sitemap.xml')]);
+        // Kesinlikle non-blocking (0 ms gecikme)
+        mis360_submit_to_indexnow([$permalink], true);
     }
 }
 

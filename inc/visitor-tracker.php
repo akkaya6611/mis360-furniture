@@ -23,7 +23,10 @@ if (!defined('ABSPATH')) {
 // -----------------------------------------------------------------------------
 // 1. VERİTABANI TABLOLARININ KURULUMU (dbDelta)
 // -----------------------------------------------------------------------------
-function mis360_tracker_install_tables() {
+function mis360_tracker_install_tables($force = false) {
+    if (!$force && get_option('mis360_tracker_db_version') === '1.0.2') {
+        return;
+    }
     global $wpdb;
 
     $sessions_table = $wpdb->prefix . 'mis360_visitor_sessions';
