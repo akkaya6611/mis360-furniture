@@ -49,7 +49,7 @@ if (function_exists('mis360_breadcrumbs')) {
 
                 <?php if (has_post_thumbnail()): ?>
                     <div class="single-thumbnail">
-                        <?php the_post_thumbnail('large'); ?>
+                        <?php the_post_thumbnail('large', ['title' => '', 'alt' => esc_attr(get_the_title())]); ?>
                     </div>
                 <?php endif; ?>
 

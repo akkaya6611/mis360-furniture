@@ -4,7 +4,7 @@ Theme URI: https://emdiefhome.com.tr/
 Author: Serkan AKKAYA & MİS360
 Author URI: https://misteknoloji360.com.tr/
 Description: Emdief Home markasına özel, Montessori felsefesiyle tasarlanmış, renkli çocuk dünyasını kurumsal güven ve yüksek e-ticaret performansıyla buluşturan ultra hızlı WooCommerce teması.
-Version: 1.9.91
+Version: 1.9.92
 Requires at least: 6.0
 Requires PHP: 7.4
 Requires Plugins: woocommerce
@@ -1098,3 +1098,185 @@ button, input, select, textarea {
         border-radius: 16px;
     }
 }
+
+/* ==========================================================================
+   Emdief Home Single Post & Blog Rehber Tasarımı (v1.9.92)
+   ========================================================================== */
+.emdief-article-wrapper {
+    max-width: 860px !important;
+    margin: 0 auto !important;
+    background: #ffffff !important;
+    padding: 42px 48px !important;
+    border-radius: 24px !important;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid #f1f5f9 !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+}
+
+.emdief-single-post {
+    display: block !important;
+    width: 100% !important;
+}
+
+.single-header {
+    margin-bottom: 24px !important;
+}
+
+.single-category {
+    margin-bottom: 12px !important;
+}
+
+.single-category a {
+    display: inline-block !important;
+    background: #fff7ed !important;
+    color: #ea580c !important;
+    padding: 4px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-decoration: none !important;
+    border: 1px solid #fed7aa !important;
+}
+
+.single-title {
+    font-size: 2rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    line-height: 1.35 !important;
+    margin: 12px 0 16px 0 !important;
+}
+
+.single-meta {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-size: 13px !important;
+    color: #64748b !important;
+    margin-bottom: 24px !important;
+    padding-bottom: 16px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.single-thumbnail {
+    margin: 20px 0 32px 0 !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    border-radius: 18px !important;
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06) !important;
+}
+
+.single-thumbnail img {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 480px !important;
+    object-fit: cover !important;
+    display: block !important;
+    border-radius: 18px !important;
+}
+
+/* Zorunlu Tek Sütun Sınırlaması (Gazete Çift Sütun Kaçaklarını Önler) */
+.single-content,
+.typography-prose,
+.emdief-single-post,
+.emdief-article-wrapper {
+    columns: 1 !important;
+    column-count: 1 !important;
+    -webkit-columns: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+}
+
+.single-content {
+    font-size: 16px !important;
+    line-height: 1.85 !important;
+    color: #334155 !important;
+}
+
+.single-content h1 {
+    display: none !important; /* Başlık header içinde zaten mevcut */
+}
+
+.single-content h2 {
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    margin: 36px 0 14px 0 !important;
+    line-height: 1.4 !important;
+    padding-bottom: 8px !important;
+    border-bottom: 2px solid #f8fafc !important;
+}
+
+.single-content h3 {
+    font-size: 1.18rem !important;
+    font-weight: 750 !important;
+    color: #1e293b !important;
+    margin: 24px 0 10px 0 !important;
+    line-height: 1.4 !important;
+}
+
+.single-content p {
+    margin: 0 0 20px 0 !important;
+    font-size: 16px !important;
+    line-height: 1.85 !important;
+    color: #334155 !important;
+}
+
+.single-content ul,
+.single-content ol {
+    margin: 0 0 24px 20px !important;
+    padding: 0 !important;
+    line-height: 1.8 !important;
+    color: #334155 !important;
+}
+
+.single-content li {
+    margin-bottom: 10px !important;
+    font-size: 15.5px !important;
+}
+
+.single-content strong {
+    color: #0f172a !important;
+    font-weight: 750 !important;
+}
+
+.single-content blockquote {
+    background: #fff7ed !important;
+    border-left: 4px solid #f97316 !important;
+    padding: 16px 22px !important;
+    margin: 24px 0 !important;
+    border-radius: 0 12px 12px 0 !important;
+    font-style: italic !important;
+    color: #9a3412 !important;
+}
+
+/* Anne Kulübü CTA Kartı Tam Genişlik Koruması */
+.emdief-blog-cta-box {
+    clear: both !important;
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    margin: 44px 0 24px 0 !important;
+    break-inside: avoid !important;
+}
+
+/* Mobil Uyum */
+@media (max-width: 768px) {
+    .emdief-article-wrapper {
+        padding: 24px 18px !important;
+        border-radius: 16px !important;
+    }
+    .single-title {
+        font-size: 1.45rem !important;
+    }
+    .single-thumbnail img {
+        max-height: 280px !important;
+        border-radius: 12px !important;
+    }
+    .emdief-blog-cta-box {
+        padding: 20px 16px !important;
+    }
+}
+

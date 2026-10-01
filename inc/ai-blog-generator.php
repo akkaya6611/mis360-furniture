@@ -83,8 +83,8 @@ class Emdief_AI_Blog_Generator {
 
                     if (!empty($models)) {
                         usort($models, function($a, $b) {
-                            $scoreA = (strpos($a, '2.0-flash') !== false ? 100 : (strpos($a, '2.5-flash') !== false ? 90 : (strpos($a, 'flash') !== false ? 80 : 50)));
-                            $scoreB = (strpos($b, '2.0-flash') !== false ? 100 : (strpos($b, '2.5-flash') !== false ? 90 : (strpos($b, 'flash') !== false ? 80 : 50)));
+                            $scoreA = (strpos($a, '2.5-flash') !== false ? 100 : (strpos($a, 'flash-latest') !== false ? 95 : (strpos($a, '2.5-flash-lite') !== false ? 90 : (strpos($a, '2.0-flash') !== false ? 85 : 50))));
+                            $scoreB = (strpos($b, '2.5-flash') !== false ? 100 : (strpos($b, 'flash-latest') !== false ? 95 : (strpos($b, '2.5-flash-lite') !== false ? 90 : (strpos($b, '2.0-flash') !== false ? 85 : 50))));
                             return $scoreB <=> $scoreA;
                         });
                         return ['success' => true, 'models' => array_values(array_unique($models))];
@@ -116,17 +116,29 @@ class Emdief_AI_Blog_Generator {
             $body = json_decode(wp_remote_retrieve_body($response), true);
             if (!empty($body['data']) && is_array($body['data'])) {
                 $models = [];
+                $excludes = ['whisper', 'guard', 'preview', 'vision', 'tool', 'distil'];
                 foreach ($body['data'] as $m) {
                     $id = $m['id'] ?? '';
-                    if (!empty($id) && strpos($id, 'whisper') === false && strpos($id, 'guard') === false) {
+                    if (empty($id)) continue;
+                    $skip = false;
+                    foreach ($excludes as $ex) {
+                        if (stripos($id, $ex) !== false) { $skip = true; break; }
+                    }
+                    if (!$skip && (stripos($id, 'llama') !== false || stripos($id, 'gemma') !== false || stripos($id, 'mixtral') !== false)) {
                         $models[] = $id;
                     }
                 }
                 if (!empty($models)) {
                     usort($models, function($a, $b) {
-                        $scoreA = (strpos($a, 'instant') !== false ? 100 : (strpos($a, 'llama-3.1') !== false ? 90 : 50));
-                        $scoreB = (strpos($b, 'instant') !== false ? 100 : (strpos($b, 'llama-3.1') !== false ? 90 : 50));
-                        return $scoreB <=> $scoreA;
+                        $getScore = function($name) {
+                            if (stripos($name, 'llama-3.1-8b-instant') !== false) return 100;
+                            if (stripos($name, 'llama-3.3-70b-specdec') !== false) return 95;
+                            if (stripos($name, 'llama3-70b-8192') !== false) return 90;
+                            if (stripos($name, 'llama-3.1-70b') !== false) return 85;
+                            if (stripos($name, 'llama3-8b-8192') !== false) return 80;
+                            return 50;
+                        };
+                        return $getScore($b) <=> $getScore($a);
                     });
                     return ['success' => true, 'models' => array_values(array_unique($models))];
                 }
@@ -153,13 +165,32 @@ class Emdief_AI_Blog_Generator {
             $body = json_decode(wp_remote_retrieve_body($response), true);
             if (!empty($body['data']) && is_array($body['data'])) {
                 $models = [];
+                // Uyumsuz veya Türkçe döngüye giren deneysel modelleri engelle
+                $excludes = ['jamba', 'clip', 'embed', 'guard', 'qa', 'whisper', 'live', 'vision', 'reward', 'arctic', 'solar', 'recurrentgemma', 'phi-3', 'bge', 'rerank', 'audio', 'tts', 'starcoder', 'codellama', 'mamba'];
                 foreach ($body['data'] as $m) {
                     $id = $m['id'] ?? '';
-                    if (!empty($id) && (strpos($id, 'nemotron') !== false || strpos($id, 'llama') !== false || strpos($id, 'instruct') !== false || strpos($id, 'mistral') !== false)) {
+                    if (empty($id)) continue;
+                    $skip = false;
+                    foreach ($excludes as $ex) {
+                        if (stripos($id, $ex) !== false) { $skip = true; break; }
+                    }
+                    if (!$skip && (stripos($id, 'nemotron') !== false || stripos($id, 'llama') !== false || stripos($id, 'mistral') !== false || stripos($id, 'deepseek') !== false)) {
                         $models[] = $id;
                     }
                 }
                 if (!empty($models)) {
+                    usort($models, function($a, $b) {
+                        $getScore = function($name) {
+                            if (stripos($name, 'nemotron-70b') !== false) return 100;
+                            if (stripos($name, 'llama-3.3-70b') !== false) return 95;
+                            if (stripos($name, 'llama-3.1-70b') !== false) return 90;
+                            if (stripos($name, 'mistral-large-2') !== false) return 85;
+                            if (stripos($name, 'llama-3.1-8b') !== false) return 80;
+                            if (stripos($name, 'deepseek') !== false) return 75;
+                            return 50;
+                        };
+                        return $getScore($b) <=> $getScore($a);
+                    });
                     return ['success' => true, 'models' => array_values(array_unique($models))];
                 }
             }
@@ -168,9 +199,10 @@ class Emdief_AI_Blog_Generator {
                 'success' => true,
                 'models' => [
                     'nvidia/llama-3.1-nemotron-70b-instruct',
-                    'meta/llama-3.2-11b-vision-instruct',
+                    'meta/llama-3.3-70b-instruct',
+                    'meta/llama-3.1-70b-instruct',
                     'mistralai/mistral-large-2-instruct',
-                    'deepseek-ai/deepseek-v4.1-flash'
+                    'meta/llama-3.1-8b-instruct'
                 ]
             ];
         }
@@ -192,13 +224,29 @@ class Emdief_AI_Blog_Generator {
             $body = json_decode(wp_remote_retrieve_body($response), true);
             if (!empty($body['data']) && is_array($body['data'])) {
                 $models = [];
+                $excludes = ['realtime', 'audio', 'embedding', 'tts', 'whisper', 'dall-e', 'babbage', 'davinci', 'curie', 'gpt-live'];
                 foreach ($body['data'] as $m) {
                     $id = $m['id'] ?? '';
-                    if (strpos($id, 'gpt-') === 0 && strpos($id, 'audio') === false && strpos($id, 'realtime') === false) {
-                        $models[] = $id;
+                    if (strpos($id, 'gpt-') === 0) {
+                        $skip = false;
+                        foreach ($excludes as $ex) {
+                            if (stripos($id, $ex) !== false) { $skip = true; break; }
+                        }
+                        if (!$skip) {
+                            $models[] = $id;
+                        }
                     }
                 }
                 if (!empty($models)) {
+                    usort($models, function($a, $b) {
+                        $getScore = function($name) {
+                            if (stripos($name, 'gpt-4o-mini') !== false) return 100;
+                            if (stripos($name, 'gpt-4o') !== false) return 90;
+                            if (stripos($name, 'gpt-3.5-turbo') !== false) return 80;
+                            return 50;
+                        };
+                        return $getScore($b) <=> $getScore($a);
+                    });
                     return ['success' => true, 'models' => array_values(array_unique($models))];
                 }
             }
@@ -250,7 +298,7 @@ class Emdief_AI_Blog_Generator {
 
         ob_start();
         ?>
-        <div class="emdief-blog-cta-box" style="margin: 35px 0 25px; padding: 26px 28px; background: linear-gradient(135deg, #fdfbf7 0%, #fff7ed 100%); border: 2px dashed #fed7aa; border-radius: 16px; font-family: inherit;">
+        <div class="emdief-blog-cta-box" style="clear: both !important; width: 100% !important; display: block !important; box-sizing: border-box !important; margin: 40px 0 20px 0 !important; padding: 28px 30px; background: linear-gradient(135deg, #fdfbf7 0%, #fff7ed 100%); border: 2px dashed #fed7aa; border-radius: 16px; font-family: inherit;">
             <div style="display:flex; align-items:center; gap:12px; margin-bottom: 12px;">
                 <span style="font-size: 28px;">🧸</span>
                 <div>
@@ -282,6 +330,46 @@ class Emdief_AI_Blog_Generator {
         $cta_html = ob_get_clean();
 
         return $content . $cta_html;
+    }
+
+    /**
+     * AI Çıktısını Doğrula ve Döngü / Hallüsinasyon Kontrolü Yap
+     */
+    public static function sanitize_and_validate_generated_text($text) {
+        $text = trim((string)$text);
+        if (empty($text) || strlen($text) < 150) {
+            return ['valid' => false, 'text' => '', 'reason' => 'Metin çok kısa.'];
+        }
+
+        // 1. Cümle / Paragraf Döngüsü Tespiti (Örn: "Kendin çocuk öğütlü anne..." tekrarları)
+        // 10-300 karakter arası bir kalıbın 3 veya daha fazla kez ardışık tekrarı
+        if (preg_match('/(.{10,300}?)\s*(\1\s*){2,}/us', $text, $matches)) {
+            $repeated_pattern = $matches[1];
+            $pos = mb_strpos($text, $repeated_pattern);
+            if ($pos !== false && $pos > 300) {
+                // Döngü başlamadan önceki kısmı al ve son cümleyi düzgün kapat
+                $clean_text = mb_substr($text, 0, $pos);
+                $last_dot = mb_strrpos($clean_text, '.');
+                if ($last_dot !== false && $last_dot > 200) {
+                    $clean_text = mb_substr($clean_text, 0, $last_dot + 1);
+                    return ['valid' => true, 'text' => $clean_text, 'reason' => 'Döngü temizlendi.'];
+                }
+            }
+            return ['valid' => false, 'text' => '', 'reason' => 'Yapay zeka tekrar döngüsüne (hallucination loop) girdi.'];
+        }
+
+        // 2. Benzersiz Kelime Oranı (Vocabulary Richness Check)
+        $words = preg_split('/\s+/u', strip_tags($text), -1, PREG_SPLIT_NO_EMPTY);
+        $total_words = count($words);
+        if ($total_words > 60) {
+            $unique_words = count(array_unique(array_map('mb_strtolower', $words)));
+            $ratio = $unique_words / $total_words;
+            if ($ratio < 0.22) {
+                return ['valid' => false, 'text' => '', 'reason' => 'Kelime çeşitliliği anormal düşük (döngü tespiti).'];
+            }
+        }
+
+        return ['valid' => true, 'text' => $text, 'reason' => 'OK'];
     }
 
     /**
@@ -320,9 +408,7 @@ class Emdief_AI_Blog_Generator {
             $last_error = 'Bilinmeyen Gemini yanıtı.';
 
             // Universal temiz payload (tüm Gemini sürümlerinde çalışır)
-            $full_text = (!empty($system_prompt) ? $system_prompt . "
-
-" : "") . $user_prompt;
+            $full_text = (!empty($system_prompt) ? $system_prompt . "\n\n" : "") . $user_prompt;
             $payload = [
                 'contents' => [
                     [
@@ -364,13 +450,18 @@ class Emdief_AI_Blog_Generator {
                     $body = json_decode(wp_remote_retrieve_body($response), true);
 
                     if (!empty($body['candidates'][0]['content']['parts'][0]['text'])) {
-                        // Çalışan modeli otomatik kaydet
-                        update_option('mis360_gemini_model', $clean_m);
-                        return [
-                            'success' => true,
-                            'text'    => $body['candidates'][0]['content']['parts'][0]['text'],
-                            'model'   => $clean_m
-                        ];
+                        $raw_gen = $body['candidates'][0]['content']['parts'][0]['text'];
+                        $val = self::sanitize_and_validate_generated_text($raw_gen);
+                        if ($val['valid']) {
+                            update_option('mis360_gemini_model', $clean_m);
+                            return [
+                                'success' => true,
+                                'text'    => $val['text'],
+                                'model'   => $clean_m
+                            ];
+                        }
+                        $last_error = 'Gemini yanıtında döngü tespit edildi: ' . $val['reason'];
+                        continue;
                     }
 
                     if (!empty($body['error']['message'])) {
@@ -411,8 +502,10 @@ class Emdief_AI_Blog_Generator {
                         ['role' => 'system', 'content' => $system_prompt],
                         ['role' => 'user', 'content' => $user_prompt]
                     ],
-                    'temperature' => 0.75,
-                    'max_tokens'  => 3000,
+                    'temperature'        => 0.75,
+                    'max_tokens'         => 3000,
+                    'frequency_penalty'  => 0.35,
+                    'presence_penalty'   => 0.25,
                 ];
 
                 $response = wp_remote_post($endpoint, [
@@ -431,8 +524,14 @@ class Emdief_AI_Blog_Generator {
 
                 $body = json_decode(wp_remote_retrieve_body($response), true);
                 if (!empty($body['choices'][0]['message']['content'])) {
-                    update_option('mis360_openai_model', $model_item);
-                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                    $raw_gen = $body['choices'][0]['message']['content'];
+                    $val = self::sanitize_and_validate_generated_text($raw_gen);
+                    if ($val['valid']) {
+                        update_option('mis360_openai_model', $model_item);
+                        return ['success' => true, 'text' => $val['text'], 'model' => $model_item];
+                    }
+                    $last_error = 'OpenAI yanıtında döngü tespit edildi: ' . $val['reason'];
+                    continue;
                 }
 
                 if (!empty($body['error']['message'])) {
@@ -476,8 +575,10 @@ class Emdief_AI_Blog_Generator {
                         ['role' => 'system', 'content' => $system_prompt],
                         ['role' => 'user', 'content' => $user_prompt]
                     ],
-                    'temperature' => 0.75,
-                    'max_tokens'  => 3500,
+                    'temperature'        => 0.75,
+                    'max_tokens'         => 3500,
+                    'frequency_penalty'  => 0.35,
+                    'presence_penalty'   => 0.25,
                 ];
 
                 $response = wp_remote_post($endpoint, [
@@ -496,8 +597,14 @@ class Emdief_AI_Blog_Generator {
 
                 $body = json_decode(wp_remote_retrieve_body($response), true);
                 if (!empty($body['choices'][0]['message']['content'])) {
-                    update_option('mis360_groq_model', $model_item);
-                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                    $raw_gen = $body['choices'][0]['message']['content'];
+                    $val = self::sanitize_and_validate_generated_text($raw_gen);
+                    if ($val['valid']) {
+                        update_option('mis360_groq_model', $model_item);
+                        return ['success' => true, 'text' => $val['text'], 'model' => $model_item];
+                    }
+                    $last_error = 'Groq yanıtında döngü tespit edildi: ' . $val['reason'];
+                    continue;
                 }
 
                 if (!empty($body['error']['message'])) {
@@ -524,9 +631,10 @@ class Emdief_AI_Blog_Generator {
             $live_models = self::fetch_available_models('nvidia', $api_key);
             $candidate_models = !empty($live_models['models']) ? $live_models['models'] : [
                 'nvidia/llama-3.1-nemotron-70b-instruct',
-                'meta/llama-3.2-11b-vision-instruct',
+                'meta/llama-3.3-70b-instruct',
+                'meta/llama-3.1-70b-instruct',
                 'mistralai/mistral-large-2-instruct',
-                'deepseek-ai/deepseek-v4.1-flash'
+                'meta/llama-3.1-8b-instruct'
             ];
             if (!empty($chosen_model)) {
                 array_unshift($candidate_models, $chosen_model);
@@ -543,8 +651,10 @@ class Emdief_AI_Blog_Generator {
                         ['role' => 'system', 'content' => $system_prompt],
                         ['role' => 'user', 'content' => $user_prompt]
                     ],
-                    'temperature' => 0.75,
-                    'max_tokens'  => 3500,
+                    'temperature'        => 0.75,
+                    'max_tokens'         => 3500,
+                    'frequency_penalty'  => 0.35,
+                    'presence_penalty'   => 0.25,
                 ];
 
                 $response = wp_remote_post($endpoint, [
@@ -563,8 +673,14 @@ class Emdief_AI_Blog_Generator {
 
                 $body = json_decode(wp_remote_retrieve_body($response), true);
                 if (!empty($body['choices'][0]['message']['content'])) {
-                    update_option('mis360_nvidia_model', $model_item);
-                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                    $raw_gen = $body['choices'][0]['message']['content'];
+                    $val = self::sanitize_and_validate_generated_text($raw_gen);
+                    if ($val['valid']) {
+                        update_option('mis360_nvidia_model', $model_item);
+                        return ['success' => true, 'text' => $val['text'], 'model' => $model_item];
+                    }
+                    $last_error = 'Nvidia yanıtında döngü tespit edildi: ' . $val['reason'];
+                    continue;
                 }
 
                 if (!empty($body['detail'])) {
@@ -598,6 +714,7 @@ YAZIM KURALLARI & ANNE DİLİ:
 1. Kesinlikle robotik, yapay zeka klişesi ("Günümüz dünyasında", "Sonuç olarak", "Bununla birlikte", "Özetlemek gerekirse") KULLANMA.
 2. Yazıların kahvesini alıp diğer annelerle dertleşen, evin dağınıklığını, miniklerin güvenliğini, düşüp çarpmalarını samimiyetle anlayan bir annenin sıcak, içten "sen" ve "biz" dilinde olsun.
 3. Çocukların boy hizasında kitaplara özgürce uzanmasının, kitap kapaklarını görerek kendi seçimlerini yapmasının onlara kattığı özgüveni vurgula.
+4. Kesinlikle aynı kelimeleri, cümleleri veya paragrafları ardı ardına TEKRARLAMA (asla tekrara düşme). Her paragrafta yeni, bilgilendirici, akıcı ve faydalı bir anlatım sun.
 
 EMDİEF HOME MARKA DEĞERLERİ & GERÇEKLERİ:
 - İmalat Yeri: Kayseri Mobilya Kent'teki kendi yüksek teknolojili CNC entegre atölyemizde sevgi ve özenle üretiyoruz.
