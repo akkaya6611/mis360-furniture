@@ -1,17 +1,20 @@
 <?php
 /**
- * Mis360 Mobilya - Sitemap & Instant Indexing (Hızlı İndeksleme) Modülü
+ * Emdief Home - SEO, GEO & Site Haritaları (Sitemaps) Yönetim Merkezi
  *
- * Google, Bing, Yandex ve IndexNow protokolü üzerinden otomatik ve manuel indeksleme sağlar.
- * 
+ * - Admin Sol Menüsünde 1. Sınıf "SEO & GEO" Yönetim Merkezi
+ * - XML Sitemap (sitemap.xml) Canlı İstatistikleri, Önizlemesi ve Yenilemesi
+ * - GEO & Yerel Konum SEO (Kayseri, Kocasinan, Koordinatlar, Meta & Schema Yönetimi)
+ * - LLMs.txt & LLMs-Full.txt (ChatGPT, Perplexity, Gemini, Claude Yapay Zeka SEO Düzenleyicisi)
+ * - Canlı Robots.txt Editörü ve AI Bot İzinleri
+ * - Google, Bing, Yandex, IndexNow Hızlı İndeksleme ve Doğrulama Kodları
+ *
  * @package Mis360-Mobilya
- * @author Serkan AKKAYA
- * @since 1.9.62
+ * @version 1.9.87
+ * @author Serkan AKKAYA & MİS360
  */
 
-if (!defined('ABSPATH')) {
-    exit;
-}
+defined('ABSPATH') || exit;
 
 // 1. IndexNow Anahtar Yönetimi & Endpoint Servisi
 function mis360_get_indexnow_key() {
@@ -71,7 +74,6 @@ function mis360_submit_to_indexnow($urls = []) {
 
     $code = wp_remote_retrieve_response_code($response);
     
-    // IndexNow Yanıt Kodları: 200 (OK), 202 (Accepted)
     if ($code === 200 || $code === 202) {
         return [
             'success' => true,
@@ -125,13 +127,11 @@ function mis360_auto_indexnow_on_publish($new_status, $old_status, $post) {
         return;
     }
 
-    // Yalnızca ürün, sayfa ve yazılarda çalıştır
     $allowed_types = ['product', 'page', 'post'];
     if (!in_array($post->post_type, $allowed_types, true)) {
         return;
     }
 
-    // Otomatik indeksleme açık mı kontrol et
     if (get_option('mis360_auto_indexnow', 'yes') !== 'yes') {
         return;
     }
@@ -148,81 +148,137 @@ function mis360_render_verification_meta($name, $val) {
     if (empty($val)) {
         return;
     }
-    // Kullanıcı tam <meta ...> etiketi girdiyse olduğu gibi bas, sadece içerik girdiyse etiketi oluştur
-    if (stripos($val, '<meta') !== false) {
-        echo $val . "\n";
+
+    if (preg_match('/content=[\'"]([^\'"]+)[\'"]/i', $val, $matches)) {
+        $clean_code = trim($matches[1]);
     } else {
-        echo '<meta name="' . esc_attr($name) . '" content="' . esc_attr($val) . '" />' . "\n";
+        $clean_code = trim(strip_tags($val));
+    }
+
+    if (!empty($clean_code)) {
+        echo '<meta name="' . esc_attr($name) . '" content="' . esc_attr($clean_code) . '">' . "\n";
     }
 }
 
-// <head> Çıktısı (Meta etiketleri & Özel Header HTML / Scriptler)
-add_action('wp_head', 'mis360_inject_head_tags_and_scripts', 1);
-function mis360_inject_head_tags_and_scripts() {
-    echo "\n<!-- Emdief Home SEO & Verification Tags -->\n";
-    mis360_render_verification_meta('google-site-verification', get_option('mis360_google_verification', ''));
-    mis360_render_verification_meta('msvalidate.01', get_option('mis360_bing_verification', ''));
-    mis360_render_verification_meta('yandex-verification', get_option('mis360_yandex_verification', ''));
-    mis360_render_verification_meta('facebook-domain-verification', get_option('mis360_facebook_verification', ''));
-    mis360_render_verification_meta('p:domain_verify', get_option('mis360_pinterest_verification', ''));
-    echo "<!-- /Emdief Home SEO & Verification Tags -->\n";
+add_action('wp_head', 'mis360_output_verification_and_custom_head', 1);
+function mis360_output_verification_and_custom_head() {
+    mis360_render_verification_meta('google-site-verification', get_option('mis360_google_verification'));
+    mis360_render_verification_meta('msvalidate.01', get_option('mis360_bing_verification'));
+    mis360_render_verification_meta('yandex-verification', get_option('mis360_yandex_verification'));
+    mis360_render_verification_meta('facebook-domain-verification', get_option('mis360_facebook_verification'));
+    mis360_render_verification_meta('p:domain_verify', get_option('mis360_pinterest_verification'));
 
-    $custom_head = get_option('mis360_custom_header_html', '');
+    $custom_head = get_option('mis360_custom_header_html');
     if (!empty($custom_head)) {
-        echo "\n<!-- Emdief Home Custom Header Scripts -->\n";
-        echo $custom_head . "\n";
-        echo "<!-- /Emdief Home Custom Header Scripts -->\n";
+        echo "\n" . $custom_head . "\n";
     }
 }
 
-// <body> Açılış Çıktısı (Örn: GTM <noscript>)
-add_action('wp_body_open', 'mis360_inject_body_scripts', 1);
-function mis360_inject_body_scripts() {
-    $custom_body = get_option('mis360_custom_body_html', '');
+add_action('wp_body_open', 'mis360_output_custom_body_html', 1);
+function mis360_output_custom_body_html() {
+    $custom_body = get_option('mis360_custom_body_html');
     if (!empty($custom_body)) {
-        echo "\n<!-- Emdief Home Custom Body Start Scripts -->\n";
-        echo $custom_body . "\n";
-        echo "<!-- /Emdief Home Custom Body Start Scripts -->\n";
+        echo "\n" . $custom_body . "\n";
     }
 }
 
-// </body> Kapanış Öncesi Çıktısı (Örn: Canlı Destek, Pixel, İstatistik)
-add_action('wp_footer', 'mis360_inject_footer_scripts', 99);
-function mis360_inject_footer_scripts() {
-    $custom_footer = get_option('mis360_custom_footer_html', '');
+add_action('wp_footer', 'mis360_output_custom_footer_html', 99);
+function mis360_output_custom_footer_html() {
+    $custom_footer = get_option('mis360_custom_footer_html');
     if (!empty($custom_footer)) {
-        echo "\n<!-- Emdief Home Custom Footer Scripts -->\n";
-        echo $custom_footer . "\n";
-        echo "<!-- /Emdief Home Custom Footer Scripts -->\n";
+        echo "\n" . $custom_footer . "\n";
     }
 }
 
-// 6. WP Admin Menüsü & Çok Sekmeli Arayüz
-add_action('admin_menu', 'mis360_indexing_admin_menu');
-function mis360_indexing_admin_menu() {
+// 6. WP ADMIN ANA MENÜSÜ: SEO & GEO YÖNETİM MERKEZİ
+add_action('admin_menu', 'mis360_seo_geo_admin_menu');
+function mis360_seo_geo_admin_menu() {
+    // 1. Ana Menü
+    add_menu_page(
+        'SEO & GEO Yönetim Merkezi',
+        'SEO & GEO',
+        'manage_options',
+        'mis360-seo-geo',
+        'mis360_seo_geo_admin_page',
+        'dashicons-chart-area',
+        58
+    );
+
+    // Alt Menüler (Hızlı Geçiş)
+    add_submenu_page(
+        'mis360-seo-geo',
+        'Site Haritaları & İndeksleme',
+        '🗺️ Sitemaps & İndeks',
+        'manage_options',
+        'mis360-seo-geo&tab=sitemaps',
+        'mis360_seo_geo_admin_page'
+    );
+
+    add_submenu_page(
+        'mis360-seo-geo',
+        'Yerel SEO & GEO Konum',
+        '📍 Yerel SEO & GEO',
+        'manage_options',
+        'mis360-seo-geo&tab=geo',
+        'mis360_seo_geo_admin_page'
+    );
+
+    add_submenu_page(
+        'mis360-seo-geo',
+        'Yapay Zeka SEO (LLMs.txt)',
+        '🤖 GEO & LLMs.txt',
+        'manage_options',
+        'mis360-seo-geo&tab=llms',
+        'mis360_seo_geo_admin_page'
+    );
+
+    add_submenu_page(
+        'mis360-seo-geo',
+        'Robots.txt Düzenleyici',
+        '🛡️ Robots.txt',
+        'manage_options',
+        'mis360-seo-geo&tab=robots',
+        'mis360_seo_geo_admin_page'
+    );
+
+    add_submenu_page(
+        'mis360-seo-geo',
+        'Doğrulama & HTML Kodları',
+        '🏷️ Doğrulama Kodları',
+        'manage_options',
+        'mis360-seo-geo&tab=html_tags',
+        'mis360_seo_geo_admin_page'
+    );
+
+    // Geriye dönük uyumluluk (Tools.php linki)
     add_submenu_page(
         'tools.php',
-        'SEO, İndeksleme & HTML Etiketleri',
-        'SEO & İndeksleme',
+        'SEO & GEO Yönetimi',
+        'SEO & GEO',
         'manage_options',
         'mis360-indexing',
-        'mis360_indexing_admin_page'
+        'mis360_seo_geo_admin_page'
     );
 }
 
-function mis360_indexing_admin_page() {
+// 7. ADMIN PANEL SAYFASI
+function mis360_seo_geo_admin_page() {
     if (!current_user_can('manage_options')) {
         wp_die(__('Bu sayfaya erişim yetkiniz bulunmuyor.', 'mis360-mobilya'));
     }
 
-    $active_tab = isset($_GET['tab']) && $_GET['tab'] === 'html_tags' ? 'html_tags' : 'indexing';
+    $active_tab = isset($_GET['tab']) ? sanitize_key($_GET['tab']) : 'sitemaps';
+    if ($active_tab === 'indexing') {
+        $active_tab = 'sitemaps';
+    }
+
     $notice = null;
     $notice_type = 'info';
 
-    // İşlem kontrolü (POST)
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('mis360_indexing_action', 'mis360_indexing_nonce')) {
-        
-        // 1. Tüm Arama Motorlarına Sitemap Ping
+    // POST İŞLEMLERİ
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && check_admin_referer('mis360_seo_geo_action', 'mis360_seo_geo_nonce')) {
+
+        // 1. Sitemap Ping
         if (isset($_POST['mis360_action_ping_all'])) {
             $sitemap_url = home_url('/sitemap.xml');
             $ping_results = mis360_ping_search_engines($sitemap_url);
@@ -240,7 +296,7 @@ function mis360_indexing_admin_page() {
             ]);
         }
 
-        // 2. IndexNow ile Tüm Siteyi (Sitemap + Ana Sayfa + Kategoriler + Son Ürünler) Gönder
+        // 2. IndexNow Toplu Gönderim
         elseif (isset($_POST['mis360_action_indexnow_bulk'])) {
             $urls = [
                 home_url('/'),
@@ -249,7 +305,6 @@ function mis360_indexing_admin_page() {
                 home_url('/llms.txt'),
             ];
 
-            // Ürün kategorilerini ekle
             $categories = get_terms(['taxonomy' => 'product_cat', 'hide_empty' => false, 'number' => 25]);
             if (!is_wp_error($categories) && !empty($categories)) {
                 foreach ($categories as $cat) {
@@ -260,8 +315,7 @@ function mis360_indexing_admin_page() {
                 }
             }
 
-            // Son 30 ürünü ekle
-            $products = get_posts(['post_type' => 'product', 'post_status' => 'publish', 'numberposts' => 30]);
+            $products = get_posts(['post_type' => 'product', 'post_status' => 'publish', 'numberposts' => 40]);
             foreach ($products as $p) {
                 $urls[] = get_permalink($p->ID);
             }
@@ -276,7 +330,7 @@ function mis360_indexing_admin_page() {
             ]);
         }
 
-        // 3. Tekil / Özel URL İndekslet
+        // 3. Tekil URL Bildir
         elseif (isset($_POST['mis360_action_custom_url'])) {
             $custom_url = esc_url_raw(trim($_POST['custom_url'] ?? ''));
             if (!empty($custom_url)) {
@@ -289,23 +343,63 @@ function mis360_indexing_admin_page() {
             }
         }
 
-        // 4. IndexNow Anahtarını Yenile
-        elseif (isset($_POST['mis360_action_regen_key'])) {
-            $new_key = wp_generate_password(32, false, false);
-            update_option('mis360_indexnow_key', $new_key);
-            $notice = 'IndexNow anahtarı başarıyla yenilendi: <code>' . esc_html($new_key) . '</code>';
+        // 4. Sitemap Ekstra URL Ayarlarını Kaydet
+        elseif (isset($_POST['mis360_action_save_sitemap_settings'])) {
+            update_option('mis360_sitemap_extra_urls', trim($_POST['mis360_sitemap_extra_urls'] ?? ''));
+            update_option('mis360_auto_indexnow', isset($_POST['mis360_auto_indexnow']) ? 'yes' : 'no');
+            $notice = 'Sitemap ayarları ve ekstra URL listesi kaydedildi.';
             $notice_type = 'success';
+            $active_tab = 'sitemaps';
         }
 
-        // 5. Otomatik İndeksleme Ayarını Güncelle
-        elseif (isset($_POST['mis360_action_save_settings'])) {
-            $auto = isset($_POST['mis360_auto_indexnow']) ? 'yes' : 'no';
-            update_option('mis360_auto_indexnow', $auto);
-            $notice = 'İndeksleme ayarları başarıyla kaydedildi.';
+        // 5. GEO & Yerel Konum Ayarlarını Kaydet
+        elseif (isset($_POST['mis360_action_save_geo'])) {
+            update_option('mis360_geo_region', sanitize_text_field($_POST['mis360_geo_region'] ?? 'TR-38'));
+            update_option('mis360_geo_city', sanitize_text_field($_POST['mis360_geo_city'] ?? 'Kayseri'));
+            update_option('mis360_geo_district', sanitize_text_field($_POST['mis360_geo_district'] ?? 'Kocasinan'));
+            update_option('mis360_geo_area', sanitize_text_field($_POST['mis360_geo_area'] ?? 'Mobilya Kent'));
+            update_option('mis360_geo_street', sanitize_text_field($_POST['mis360_geo_street'] ?? ''));
+            update_option('mis360_geo_postal', sanitize_text_field($_POST['mis360_geo_postal'] ?? '38070'));
+            update_option('mis360_geo_country', sanitize_text_field($_POST['mis360_geo_country'] ?? 'TR'));
+            update_option('mis360_geo_lat', sanitize_text_field($_POST['mis360_geo_lat'] ?? '38.7312'));
+            update_option('mis360_geo_lng', sanitize_text_field($_POST['mis360_geo_lng'] ?? '35.4787'));
+            update_option('mis360_geo_hasmap', esc_url_raw($_POST['mis360_geo_hasmap'] ?? ''));
+
+            $notice = 'GEO ve Yerel Konum SEO ayarları başarıyla kaydedildi. Meta etiketleri ve Schema.org şeması anında güncellendi.';
             $notice_type = 'success';
+            $active_tab = 'geo';
         }
 
-        // 6. HTML Doğrulama & Özel Kodları Kaydet
+        // 6. LLMs.txt & Yapay Zeka SEO Ayarlarını Kaydet
+        elseif (isset($_POST['mis360_action_save_llms'])) {
+            update_option('mis360_custom_llms_txt', wp_unslash($_POST['mis360_custom_llms_txt'] ?? ''));
+            update_option('mis360_custom_llms_full_txt', wp_unslash($_POST['mis360_custom_llms_full_txt'] ?? ''));
+            
+            update_option('mis360_bot_gpt', isset($_POST['mis360_bot_gpt']) ? 'yes' : 'no');
+            update_option('mis360_bot_claude', isset($_POST['mis360_bot_claude']) ? 'yes' : 'no');
+            update_option('mis360_bot_perplexity', isset($_POST['mis360_bot_perplexity']) ? 'yes' : 'no');
+            update_option('mis360_bot_google_ext', isset($_POST['mis360_bot_google_ext']) ? 'yes' : 'no');
+            update_option('mis360_bot_apple', isset($_POST['mis360_bot_apple']) ? 'yes' : 'no');
+
+            $notice = 'LLMs.txt dosyaları ve Yapay Zeka bot izinleri başarıyla güncellendi.';
+            $notice_type = 'success';
+            $active_tab = 'llms';
+        }
+
+        // 7. Robots.txt Kaydet
+        elseif (isset($_POST['mis360_action_save_robots'])) {
+            if (isset($_POST['mis360_action_reset_robots'])) {
+                delete_option('mis360_custom_robots_txt');
+                $notice = 'Robots.txt varsayılan e-ticaret kurallarına sıfırlandı.';
+            } else {
+                update_option('mis360_custom_robots_txt', wp_unslash($_POST['mis360_custom_robots_txt'] ?? ''));
+                $notice = 'Özel Robots.txt kuralları başarıyla kaydedildi.';
+            }
+            $notice_type = 'success';
+            $active_tab = 'robots';
+        }
+
+        // 8. HTML Doğrulama & Özel Kodları Kaydet
         elseif (isset($_POST['mis360_action_save_html_tags'])) {
             update_option('mis360_google_verification', trim($_POST['mis360_google_verification'] ?? ''));
             update_option('mis360_bing_verification', trim($_POST['mis360_bing_verification'] ?? ''));
@@ -325,348 +419,726 @@ function mis360_indexing_admin_page() {
         }
     }
 
+    // İSTATİSTİKLER & VERİLER
     $current_key = mis360_get_indexnow_key();
-    $key_url = home_url('/' . $current_key . '.txt');
-    $auto_index = get_option('mis360_auto_indexnow', 'yes');
-    $last_log = get_option('mis360_last_indexing_log');
+    $key_url     = home_url('/' . $current_key . '.txt');
+    $auto_index  = get_option('mis360_auto_indexnow', 'yes');
+    $last_log    = get_option('mis360_last_indexing_log');
 
-    $seo_files = [
-        ['name' => 'Özel XML Haritası (Tema)', 'url' => home_url('/sitemap.xml'), 'desc' => 'Tüm ürün, kategori ve sayfaların otomatik güncellenen haritası.'],
-        ['name' => 'WordPress Varsayılan Haritası', 'url' => home_url('/wp-sitemap.xml'), 'desc' => 'WordPress çekirdek sitemap haritası.'],
-        ['name' => 'Robots.txt', 'url' => home_url('/robots.txt'), 'desc' => 'Arama botları için tarama direktifleri.'],
-        ['name' => 'LLMs.txt (Yapay Zeka & GEO)', 'url' => home_url('/llms.txt'), 'desc' => 'ChatGPT, Perplexity, Gemini için optimize edilmiş site özeti.'],
-        ['name' => 'IndexNow Doğrulama Dosyası', 'url' => $key_url, 'desc' => 'Arama motorlarının API kimliğini doğrulamak için kullanılan dosya.'],
-    ];
+    // Sayım verileri
+    $product_count = class_exists('WooCommerce') ? (int) wp_count_posts('product')->publish : 0;
+    $cat_count     = class_exists('WooCommerce') ? (int) wp_count_terms(['taxonomy' => 'product_cat', 'hide_empty' => true]) : 0;
+    $page_count    = count(get_pages(['post_status' => 'publish']));
+    $total_sitemap_urls = 2 + $product_count + $cat_count + $page_count; // anasayfa + shop + diğerleri
+
+    // Mevcut LLMs.txt içeriği
+    $custom_llms = get_option('mis360_custom_llms_txt');
+    if (empty($custom_llms) && file_exists(get_template_directory() . '/llms.txt')) {
+        $custom_llms = file_get_contents(get_template_directory() . '/llms.txt');
+    }
+
+    $custom_llms_full = get_option('mis360_custom_llms_full_txt');
+    if (empty($custom_llms_full) && file_exists(get_template_directory() . '/llms-full.txt')) {
+        $custom_llms_full = file_get_contents(get_template_directory() . '/llms-full.txt');
+    }
+
+    // Mevcut Robots.txt içeriği
+    $custom_robots = get_option('mis360_custom_robots_txt');
+    if (empty($custom_robots)) {
+        // Varsayılan kural çıktısını al
+        $custom_robots = mis360_custom_robots_txt('', '1');
+    }
     ?>
-    <div class="wrap mis360-indexing-wrap">
+    <div class="wrap mis360-seo-geo-wrap">
         <style>
-        .mis360-indexing-wrap {
-            max-width: 100%;
-            overflow-x: hidden;
-            box-sizing: border-box;
-        }
-        .mis360-indexing-grid-main {
-            display: grid;
-            grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .mis360-indexing-grid-tags {
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-            gap: 20px;
-            margin-top: 10px;
-        }
-        @media (max-width: 1024px) {
-            .mis360-indexing-grid-main,
-            .mis360-indexing-grid-tags {
-                grid-template-columns: minmax(0, 1fr) !important;
+            .mis360-seo-geo-wrap {
+                max-width: 1200px;
+                margin: 20px 20px 40px 0;
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             }
-        }
-        .mis360-indexing-wrap input[type="text"],
-        .mis360-indexing-wrap input[type="url"],
-        .mis360-indexing-wrap textarea {
-            max-width: 100% !important;
-            width: 100% !important;
-            box-sizing: border-box !important;
-        }
-        .mis360-indexing-wrap table {
-            width: 100%;
-            table-layout: auto;
-            word-break: break-word;
-        }
-        .mis360-indexing-wrap .postbox {
-            box-sizing: border-box;
-            overflow: hidden;
-        }
+            .mis360-header-card {
+                background: linear-gradient(135deg, #fdfbf7 0%, #fff7ed 100%);
+                border: 1px solid #fed7aa;
+                border-radius: 14px;
+                padding: 24px 28px;
+                margin-bottom: 22px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            .mis360-header-title h1 {
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 24px !important;
+                font-weight: 800 !important;
+                color: #0f172a !important;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            .mis360-header-desc {
+                margin: 6px 0 0 !important;
+                color: #64748b;
+                font-size: 13.5px;
+            }
+            .mis360-badge {
+                background: #ea580c;
+                color: #ffffff;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                padding: 3px 9px;
+                border-radius: 12px;
+            }
+            
+            /* Nav Tabs */
+            .mis360-tabs {
+                display: flex;
+                gap: 4px;
+                border-bottom: 2px solid #e2e8f0;
+                margin-bottom: 24px;
+                flex-wrap: wrap;
+            }
+            .mis360-tab-link {
+                padding: 11px 20px;
+                font-size: 14px;
+                font-weight: 700;
+                color: #64748b;
+                text-decoration: none !important;
+                border-bottom: 2px solid transparent;
+                margin-bottom: -2px;
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                transition: all 0.2s ease;
+            }
+            .mis360-tab-link:hover { color: #0f172a; }
+            .mis360-tab-link.active {
+                color: #ea580c;
+                border-bottom-color: #ea580c;
+            }
+            
+            /* Grid & Postbox */
+            .mis360-box {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 22px 26px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                margin-bottom: 22px;
+            }
+            .mis360-box-title {
+                margin: 0 0 16px 0;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #f1f5f9;
+                font-size: 16px;
+                font-weight: 700;
+                color: #1e293b;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            /* Stat Cards */
+            .mis360-stats-row {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-bottom: 22px;
+            }
+            .mis360-stat-pill {
+                background: #ffffff;
+                border: 1px solid #e2e8f0;
+                border-radius: 10px;
+                padding: 14px 18px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .mis360-stat-icon {
+                font-size: 24px;
+                width: 42px;
+                height: 42px;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: #f8fafc;
+            }
+            .mis360-stat-val { font-size: 18px; font-weight: 800; color: #0f172a; }
+            .mis360-stat-lbl { font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+
+            /* Forms */
+            .mis360-form-row {
+                margin-bottom: 18px;
+            }
+            .mis360-form-row label {
+                display: block;
+                font-weight: 600;
+                font-size: 13px;
+                color: #334155;
+                margin-bottom: 6px;
+            }
+            .mis360-input-text, .mis360-textarea {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 9px 13px !important;
+                border: 1px solid #cbd5e1 !important;
+                border-radius: 8px !important;
+                font-size: 13px !important;
+                box-sizing: border-box !important;
+            }
+            .mis360-textarea-code {
+                font-family: Consolas, Monaco, "Courier New", monospace !important;
+                font-size: 12.5px !important;
+                line-height: 1.5 !important;
+                background: #f8fafc !important;
+                color: #0f172a !important;
+            }
+            .mis360-btn-primary {
+                background: #ea580c !important;
+                border-color: #ea580c !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                padding: 8px 20px !important;
+                height: auto !important;
+                border-radius: 8px !important;
+                box-shadow: 0 4px 12px rgba(234, 88, 12, 0.25) !important;
+                cursor: pointer;
+            }
+            .mis360-btn-primary:hover {
+                background: #c2410c !important;
+                border-color: #c2410c !important;
+            }
+            .mis360-btn-secondary {
+                background: #f1f5f9 !important;
+                border-color: #cbd5e1 !important;
+                color: #334155 !important;
+                font-weight: 700 !important;
+                padding: 8px 16px !important;
+                height: auto !important;
+                border-radius: 8px !important;
+                cursor: pointer;
+            }
+            .mis360-btn-secondary:hover { background: #e2e8f0 !important; }
+
+            .mis360-grid-2 {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+            @media (max-width: 782px) {
+                .mis360-grid-2 { grid-template-columns: 1fr; }
+            }
         </style>
 
-        <h1 style="display:flex;align-items:center;gap:10px;margin-bottom:15px;">
-            <span class="dashicons dashicons-search" style="font-size:32px;width:32px;height:32px;color:#7a00df;"></span>
-            Emdief Home - SEO, İndeksleme & HTML Doğrulama Paneli
-        </h1>
+        <!-- Üst Başlık Kartı -->
+        <div class="mis360-header-card">
+            <div class="mis360-header-title">
+                <h1>
+                    <span>🚀 Emdief Home</span>
+                    <span>SEO &amp; GEO Yönetim Merkezi</span>
+                    <span class="mis360-badge">v1.9.87</span>
+                </h1>
+                <p class="mis360-header-desc">
+                    Google, Bing, Yandex ve Yapay Zeka motorları (ChatGPT, Perplexity, Gemini, Claude) için arama motoru haritalarını, yerel konum verilerini ve AI direktiflerini canlı yönetin.
+                </p>
+            </div>
+            <div>
+                <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>" target="_blank" class="button mis360-btn-secondary" style="margin-right:8px;">
+                    👁️ Canlı Harita (sitemap.xml)
+                </a>
+                <a href="<?php echo esc_url(home_url('/llms.txt')); ?>" target="_blank" class="button mis360-btn-secondary">
+                    🤖 Yapay Zeka Özeti (llms.txt)
+                </a>
+            </div>
+        </div>
 
-        <!-- Çoklu Sekme Başlıkları -->
-        <h2 class="nav-tab-wrapper" style="margin-bottom:20px;">
-            <a href="?page=mis360-indexing&tab=indexing" class="nav-tab <?php echo $active_tab === 'indexing' ? 'nav-tab-active' : ''; ?>" style="font-weight:600;">
-                🚀 Sitemap & Hızlı İndeksleme
+        <!-- Çoklu Sekme Menüsü -->
+        <div class="mis360-tabs">
+            <a href="?page=mis360-seo-geo&tab=sitemaps" class="mis360-tab-link <?php echo $active_tab === 'sitemaps' ? 'active' : ''; ?>">
+                🗺️ Site Haritaları (Sitemaps)
             </a>
-            <a href="?page=mis360-indexing&tab=html_tags" class="nav-tab <?php echo $active_tab === 'html_tags' ? 'nav-tab-active' : ''; ?>" style="font-weight:600;">
-                🏷️ HTML Etiketleri & Doğrulama Kodları
+            <a href="?page=mis360-seo-geo&tab=geo" class="mis360-tab-link <?php echo $active_tab === 'geo' ? 'active' : ''; ?>">
+                📍 Yerel SEO &amp; GEO Konum
             </a>
-        </h2>
+            <a href="?page=mis360-seo-geo&tab=llms" class="mis360-tab-link <?php echo $active_tab === 'llms' ? 'active' : ''; ?>">
+                🤖 GEO &amp; Yapay Zeka (LLMs.txt)
+            </a>
+            <a href="?page=mis360-seo-geo&tab=robots" class="mis360-tab-link <?php echo $active_tab === 'robots' ? 'active' : ''; ?>">
+                🛡️ Robots.txt Düzenleyici
+            </a>
+            <a href="?page=mis360-seo-geo&tab=html_tags" class="mis360-tab-link <?php echo $active_tab === 'html_tags' ? 'active' : ''; ?>">
+                🏷️ Doğrulama Kodları &amp; İndeks
+            </a>
+        </div>
 
         <?php if ($notice): ?>
-            <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible" style="padding:12px 15px;border-left-width:4px;">
-                <p><?php echo wp_kses_post($notice); ?></p>
+            <div class="notice notice-<?php echo esc_attr($notice_type); ?> is-dismissible" style="padding:14px 18px;border-left-width:4px;border-radius:8px;margin-bottom:22px;">
+                <p style="margin:0;font-size:13.5px;"><?php echo wp_kses_post($notice); ?></p>
             </div>
         <?php endif; ?>
 
-        <?php if ($active_tab === 'indexing'): ?>
-            <p style="color:#646970;font-size:14px;margin-bottom:20px;">
-                Sitenizdeki sayfaları, WooCommerce ürünlerini ve XML Haritalarını Google, Bing, Yandex ve IndexNow protokolü (Bing, Yandex, Seznam, Naver) aracılığıyla anında arama motorlarına bildirin.
-            </p>
+        <!-- ================= SEKME 1: SITEMAPS ================= -->
+        <?php if ($active_tab === 'sitemaps') : ?>
+            
+            <!-- Canlı İstatistikler -->
+            <div class="mis360-stats-row">
+                <div class="mis360-stat-pill">
+                    <div class="mis360-stat-icon" style="background:#fef3c7;">📦</div>
+                    <div>
+                        <div class="mis360-stat-val"><?php echo esc_html($product_count); ?></div>
+                        <div class="mis360-stat-lbl">Yayındaki Ürün</div>
+                    </div>
+                </div>
+                <div class="mis360-stat-pill">
+                    <div class="mis360-stat-icon" style="background:#ffedd5;">🗂️</div>
+                    <div>
+                        <div class="mis360-stat-val"><?php echo esc_html($cat_count); ?></div>
+                        <div class="mis360-stat-lbl">Ürün Kategorisi</div>
+                    </div>
+                </div>
+                <div class="mis360-stat-pill">
+                    <div class="mis360-stat-icon" style="background:#e0f2fe;">📄</div>
+                    <div>
+                        <div class="mis360-stat-val"><?php echo esc_html($page_count); ?></div>
+                        <div class="mis360-stat-lbl">Kurumsal Sayfa</div>
+                    </div>
+                </div>
+                <div class="mis360-stat-pill">
+                    <div class="mis360-stat-icon" style="background:#dcfce7;">🌐</div>
+                    <div>
+                        <div class="mis360-stat-val">~<?php echo esc_html($total_sitemap_urls); ?>+</div>
+                        <div class="mis360-stat-lbl">Toplam İndeks URL</div>
+                    </div>
+                </div>
+            </div>
 
-        <div class="mis360-indexing-grid-main">
-            <!-- Sol Kolon: İşlemler & Haritalar -->
-            <div>
-                <!-- Hızlı İşlemler Kartı -->
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">🚀 Anında İndeksleme Tetikleyicileri</h2>
-                    <form method="post" action="" style="margin-top:15px;display:flex;flex-wrap:wrap;gap:12px;">
-                        <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
-                        
-                        <button type="submit" name="mis360_action_ping_all" class="button button-primary" style="background:#7a00df;border-color:#6500b8;padding:6px 16px;height:auto;font-weight:600;">
-                            📡 Tüm Motorlara Sitemap Gönder (Google, Bing, Yandex, IndexNow)
-                        </button>
-                        
-                        <button type="submit" name="mis360_action_indexnow_bulk" class="button button-secondary" style="padding:6px 16px;height:auto;font-weight:600;border-color:#7a00df;color:#7a00df;">
-                            ⚡ IndexNow ile Tüm Ürünleri & Sayfaları Bildir
-                        </button>
-                    </form>
+            <div class="mis360-grid-2">
+                <!-- Sol: Hızlı İndeks Tetikleyicileri & Ekstra URL'ler -->
+                <div>
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>📡 Arama Motoru Harita Bildirimi (Ping)</span>
+                        </h2>
+                        <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+                            Haritanızı tek tıkla Google, Bing, Yandex ve IndexNow protokolüne bildirerek yeni ürünlerin hızlı taranmasını sağlayın.
+                        </p>
+                        <form method="post" action="" style="display:flex;flex-wrap:wrap;gap:10px;">
+                            <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+                            <button type="submit" name="mis360_action_ping_all" class="button mis360-btn-primary">
+                                📡 Tüm Arama Motorlarına Sitemap Gönder
+                            </button>
+                            <button type="submit" name="mis360_action_indexnow_bulk" class="button mis360-btn-secondary">
+                                ⚡ IndexNow Toplu Gönder
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>🎯 Tekil URL Anında Bildir</span>
+                        </h2>
+                        <form method="post" action="" style="display:flex;gap:10px;">
+                            <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+                            <input type="url" name="custom_url" class="mis360-input-text" placeholder="https://emdiefhome.com.tr/urun/ornek-kitaplik" required />
+                            <button type="submit" name="mis360_action_custom_url" class="button mis360-btn-primary" style="white-space:nowrap;">
+                                URL Bildir
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>⚙️ Sitemap Ekstra URL &amp; Otomasyon</span>
+                        </h2>
+                        <form method="post" action="">
+                            <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+                            
+                            <div class="mis360-form-row">
+                                <label>Haritaya Ekstra Eklenecek Özel URL'ler (Her satıra bir URL):</label>
+                                <textarea name="mis360_sitemap_extra_urls" rows="4" class="mis360-textarea mis360-textarea-code" placeholder="https://emdiefhome.com.tr/ozel-kampanya&#10;https://emdiefhome.com.tr/montessori-rehberi"><?php echo esc_textarea(get_option('mis360_sitemap_extra_urls', '')); ?></textarea>
+                                <span style="font-size:11.5px;color:#64748b;">WordPress sayfaları ve ürünleri harici eklemek istediğiniz landing page veya özel sayfaları yazabilirsiniz.</span>
+                            </div>
+
+                            <div class="mis360-form-row">
+                                <label style="display:flex;align-items:center;gap:8px;">
+                                    <input type="checkbox" name="mis360_auto_indexnow" value="yes" <?php checked($auto_index, 'yes'); ?> />
+                                    <span>Yeni ürün/sayfa yayınlandığında arama motorlarına otomatik anında bildir</span>
+                                </label>
+                            </div>
+
+                            <button type="submit" name="mis360_action_save_sitemap_settings" class="button mis360-btn-primary">
+                                Sitemap Ayarlarını Kaydet
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- Özel URL Gönderim Kartı -->
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">🎯 Tekil URL Hızlı İndekslet</h2>
-                    <p style="font-size:13px;color:#555;">Yeni eklediğiniz veya güncellediğiniz bir ürün ya da sayfanın URL adresini girip tek tıkla IndexNow ağına bildirin:</p>
-                    <form method="post" action="" style="display:flex;gap:10px;margin-top:10px;">
-                        <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
-                        <input type="url" name="custom_url" placeholder="https://emdiefhome.com.tr/urun/ornek-montessori-yatak" style="flex:1;padding:8px 12px;" required />
-                        <button type="submit" name="mis360_action_custom_url" class="button button-primary" style="background:#2271b1;padding:6px 18px;height:auto;">
-                            URL Bildir
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Harita ve SEO Dosyaları Durumu -->
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">🗺️ Aktif Harita ve SEO Dosyaları</h2>
-                    <table class="widefat fixed striped" style="margin-top:12px;border:none;">
-                        <thead>
-                            <tr>
-                                <th style="width:28%;font-weight:600;">Dosya / Kaynak</th>
-                                <th style="width:47%;font-weight:600;">Bağlantı (URL)</th>
-                                <th style="width:25%;font-weight:600;">Durum</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($seo_files as $file): ?>
+                <!-- Sağ: Harita Dosyaları Bağlantıları & Son Ping Logu -->
+                <div>
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>🗺️ Canlı Harita Dosyaları</span>
+                        </h2>
+                        <table class="widefat fixed striped" style="border:none;">
+                            <thead>
+                                <tr>
+                                    <th>Harita / Dosya</th>
+                                    <th>Durum</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td>
-                                        <strong><?php echo esc_html($file['name']); ?></strong><br>
-                                        <small style="color:#777;"><?php echo esc_html($file['desc']); ?></small>
-                                    </td>
-                                    <td>
-                                        <a href="<?php echo esc_url($file['url']); ?>" target="_blank" rel="noopener noreferrer" style="word-break:break-all;text-decoration:underline;">
-                                            <?php echo esc_html($file['url']); ?>
+                                        <strong>Özel XML Haritası (Tema Motoru)</strong><br>
+                                        <a href="<?php echo esc_url(home_url('/sitemap.xml')); ?>" target="_blank" style="font-size:12px;word-break:break-all;">
+                                            <?php echo esc_html(home_url('/sitemap.xml')); ?>
                                         </a>
                                     </td>
-                                    <td>
-                                        <span class="dashicons dashicons-yes" style="color:#46b450;vertical-align:middle;"></span>
-                                        <span style="color:#2e7d32;font-weight:600;">Aktif & Erişilebilir</span>
-                                    </td>
+                                    <td><span style="color:#16a34a;font-weight:700;">✅ Aktif</span></td>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                                <tr>
+                                    <td>
+                                        <strong>WordPress Çekirdek Haritası</strong><br>
+                                        <a href="<?php echo esc_url(home_url('/wp-sitemap.xml')); ?>" target="_blank" style="font-size:12px;word-break:break-all;">
+                                            <?php echo esc_html(home_url('/wp-sitemap.xml')); ?>
+                                        </a>
+                                    </td>
+                                    <td><span style="color:#16a34a;font-weight:700;">✅ Aktif</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>Robots.txt</strong><br>
+                                        <a href="<?php echo esc_url(home_url('/robots.txt')); ?>" target="_blank" style="font-size:12px;word-break:break-all;">
+                                            <?php echo esc_html(home_url('/robots.txt')); ?>
+                                        </a>
+                                    </td>
+                                    <td><span style="color:#16a34a;font-weight:700;">✅ Aktif</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>LLMs.txt (Yapay Zeka)</strong><br>
+                                        <a href="<?php echo esc_url(home_url('/llms.txt')); ?>" target="_blank" style="font-size:12px;word-break:break-all;">
+                                            <?php echo esc_html(home_url('/llms.txt')); ?>
+                                        </a>
+                                    </td>
+                                    <td><span style="color:#16a34a;font-weight:700;">✅ Aktif</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong>IndexNow Kimlik Dosyası</strong><br>
+                                        <a href="<?php echo esc_url($key_url); ?>" target="_blank" style="font-size:12px;word-break:break-all;">
+                                            <?php echo esc_html($key_url); ?>
+                                        </a>
+                                    </td>
+                                    <td><span style="color:#16a34a;font-weight:700;">✅ Aktif</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <?php if ($last_log) : ?>
+                        <div class="mis360-box">
+                            <h2 class="mis360-box-title">
+                                <span>🕒 Son Arama Motoru Bildirimi</span>
+                            </h2>
+                            <p style="font-size:12.5px;color:#64748b;margin:0 0 8px 0;">
+                                <strong>Tarih:</strong> <?php echo esc_html($last_log['time'] ?? '-'); ?> | 
+                                <strong>Tür:</strong> <?php echo esc_html($last_log['type'] ?? '-'); ?>
+                            </p>
+                            <div style="background:#f8fafc;padding:12px;border-radius:8px;font-size:11.5px;max-height:180px;overflow-y:auto;border:1px solid #e2e8f0;">
+                                <pre style="margin:0;font-family:monospace;"><?php echo esc_html(wp_json_encode($last_log['detail'] ?? '', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); ?></pre>
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Sağ Kolon: Ayarlar & IndexNow Anahtarı -->
-            <div>
-                <!-- Otomasyon Ayarları -->
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">⚙️ Otomatik İndeksleme</h2>
-                    <form method="post" action="">
-                        <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
-                        <p style="font-size:13px;color:#555;">
-                            Yeni ürün veya sayfa yayınlandığında ya da güncellendiğinde IndexNow ile otomatik olarak bildir:
-                        </p>
-                        <label style="display:flex;align-items:center;gap:8px;font-weight:600;margin:15px 0;">
-                            <input type="checkbox" name="mis360_auto_indexnow" value="yes" <?php checked($auto_index, 'yes'); ?> />
-                            Otomatik Bildirimi Açık Tut (Önerilen)
-                        </label>
-                        <button type="submit" name="mis360_action_save_settings" class="button button-secondary">
-                            Ayar Kaydet
-                        </button>
-                    </form>
-                </div>
-
-                <!-- IndexNow Anahtar Bilgisi -->
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">🔑 IndexNow Kimlik Anahtarı</h2>
-                    <p style="font-size:13px;color:#555;">Arama motorları sitenizin doğruluğunu bu anahtar ile teyit eder:</p>
-                    <div style="background:#f0f0f1;padding:10px;border-radius:4px;font-family:monospace;font-size:12px;word-break:break-all;margin-bottom:12px;">
-                        <?php echo esc_html($current_key); ?>
-                    </div>
-                    <form method="post" action="" onsubmit="return confirm('Yeni bir IndexNow anahtarı üretmek istediğinize emin misiniz?');">
-                        <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
-                        <button type="submit" name="mis360_action_regen_key" class="button button-link-delete" style="color:#a00;text-decoration:underline;">
-                            Yeni Anahtar Üret
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Son İşlem Geçmişi -->
-                <?php if ($last_log): ?>
-                <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;">🕒 Son Bildirim Geçmişi</h2>
-                    <p style="font-size:12px;margin-bottom:6px;"><strong>Tarih:</strong> <?php echo esc_html($last_log['time'] ?? '-'); ?></p>
-                    <p style="font-size:12px;margin-bottom:6px;"><strong>İşlem:</strong> <?php echo esc_html($last_log['type'] ?? '-'); ?></p>
-                    <div style="background:#f6f7f7;padding:8px;border-radius:4px;font-size:11px;max-height:160px;overflow-y:auto;">
-                        <pre style="margin:0;"><?php echo esc_html(wp_json_encode($last_log['detail'] ?? '', JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)); ?></pre>
-                    </div>
-                </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-
-        <?php else: ?>
-            <!-- ================= SEKME 2: HTML ETİKETLERİ & DOĞRULAMA ================= -->
+        <!-- ================= SEKME 2: GEO & YEREL KONUM SEO ================= -->
+        <?php elseif ($active_tab === 'geo') : 
+            $geo_region    = get_option('mis360_geo_region', 'TR-38');
+            $geo_city      = get_option('mis360_geo_city', 'Kayseri');
+            $geo_district  = get_option('mis360_geo_district', 'Kocasinan');
+            $geo_area      = get_option('mis360_geo_area', 'Mobilya Kent');
+            $geo_street    = get_option('mis360_geo_street', 'Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K');
+            $geo_postal    = get_option('mis360_geo_postal', '38070');
+            $geo_country   = get_option('mis360_geo_country', 'TR');
+            $geo_lat       = get_option('mis360_geo_lat', '38.7312');
+            $geo_lng       = get_option('mis360_geo_lng', '35.4787');
+            $geo_hasmap    = get_option('mis360_geo_hasmap', 'https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111');
+        ?>
             <form method="post" action="">
-                <?php wp_nonce_field('mis360_indexing_action', 'mis360_indexing_nonce'); ?>
+                <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
 
-                <div class="mis360-indexing-grid-tags">
-                    <!-- Sol Kolon: Arama Motoru Doğrulama Kodları -->
-                    <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                        <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;color:#1d2327;">
-                            🔍 Arama Motoru Doğrulama Meta Etiketleri
+                <div class="mis360-grid-2">
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>📍 Yerel İşletme &amp; GEO Konum Bilgileri</span>
                         </h2>
-                        <p style="color:#646970;font-size:13px;line-height:1.5;">
-                            Google Search Console, Bing, Yandex veya Meta (Facebook) gibi platformların sağladığı doğrulama kodlarını buraya ekleyebilirsiniz. 
-                            <em>İster doğrudan <code>&lt;meta name="..." content="..." /&gt;</code> etiketinin tamamını yapıştırın, ister sadece içindeki doğrulama anahtarını yazın; sistem otomatik tanır.</em>
+                        <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+                            Bu bilgiler Google Haritalar, yerel arama sonuçları ve yapay zeka sorgularında Emdief Home'un Kayseri/Kocasinan merkezli ahşap çocuk mobilyası üreticisi olarak ön plana çıkmasını sağlar.
                         </p>
 
-                        <!-- Google Search Console -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🔴 Google Search Console Doğrulama
-                            </label>
-                            <input type="text" name="mis360_google_verification" 
-                                   value="<?php echo esc_attr(get_option('mis360_google_verification', '')); ?>" 
-                                   placeholder='google-site-verification veya <meta name="google-site-verification" content="..." />' 
-                                   class="large-text" style="padding:7px 10px;" />
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Örnek: <code>google-site-verification=abc123xyz</code> veya tüm <code>&lt;meta&gt;</code> etiketi.
-                            </p>
+                        <div class="mis360-grid-2">
+                            <div class="mis360-form-row">
+                                <label>Şehir (City):</label>
+                                <input type="text" name="mis360_geo_city" value="<?php echo esc_attr($geo_city); ?>" class="mis360-input-text" required />
+                            </div>
+                            <div class="mis360-form-row">
+                                <label>İlçe (District):</label>
+                                <input type="text" name="mis360_geo_district" value="<?php echo esc_attr($geo_district); ?>" class="mis360-input-text" required />
+                            </div>
                         </div>
 
-                        <!-- Bing Webmaster Tools -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🔵 Bing & Yahoo Webmaster Doğrulama
-                            </label>
-                            <input type="text" name="mis360_bing_verification" 
-                                   value="<?php echo esc_attr(get_option('mis360_bing_verification', '')); ?>" 
-                                   placeholder='msvalidate.01 doğrulama kodu veya tam meta etiketi' 
-                                   class="large-text" style="padding:7px 10px;" />
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Örnek: <code>&lt;meta name="msvalidate.01" content="91283019283..." /&gt;</code>
-                            </p>
+                        <div class="mis360-grid-2">
+                            <div class="mis360-form-row">
+                                <label>Sanayi / Bölge Adı:</label>
+                                <input type="text" name="mis360_geo_area" value="<?php echo esc_attr($geo_area); ?>" class="mis360-input-text" />
+                            </div>
+                            <div class="mis360-form-row">
+                                <label>Bölge Kodu (ISO 3166-2):</label>
+                                <input type="text" name="mis360_geo_region" value="<?php echo esc_attr($geo_region); ?>" class="mis360-input-text" placeholder="TR-38" required />
+                            </div>
                         </div>
 
-                        <!-- Yandex Webmaster -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🟡 Yandex Webmaster Doğrulama
-                            </label>
-                            <input type="text" name="mis360_yandex_verification" 
-                                   value="<?php echo esc_attr(get_option('mis360_yandex_verification', '')); ?>" 
-                                   placeholder='yandex-verification kodu veya tam meta etiketi' 
-                                   class="large-text" style="padding:7px 10px;" />
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Örnek: <code>&lt;meta name="yandex-verification" content="abcdef012345" /&gt;</code>
-                            </p>
+                        <div class="mis360-form-row">
+                            <label>Açık Fabrika / Atölye Adresi:</label>
+                            <input type="text" name="mis360_geo_street" value="<?php echo esc_attr($geo_street); ?>" class="mis360-input-text" />
                         </div>
 
-                        <!-- Meta (Facebook) Domain Verification -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🔷 Meta (Facebook) Alan Adı Doğrulama
-                            </label>
-                            <input type="text" name="mis360_facebook_verification" 
-                                   value="<?php echo esc_attr(get_option('mis360_facebook_verification', '')); ?>" 
-                                   placeholder='facebook-domain-verification kodu' 
-                                   class="large-text" style="padding:7px 10px;" />
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Facebook Business Manager alan adı doğrulama meta kodu.
-                            </p>
+                        <div class="mis360-grid-2">
+                            <div class="mis360-form-row">
+                                <label>Posta Kodu:</label>
+                                <input type="text" name="mis360_geo_postal" value="<?php echo esc_attr($geo_postal); ?>" class="mis360-input-text" />
+                            </div>
+                            <div class="mis360-form-row">
+                                <label>Ülke Kodu:</label>
+                                <input type="text" name="mis360_geo_country" value="<?php echo esc_attr($geo_country); ?>" class="mis360-input-text" placeholder="TR" />
+                            </div>
                         </div>
 
-                        <!-- Pinterest Domain Verification -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                📌 Pinterest Alan Doğrulama
-                            </label>
-                            <input type="text" name="mis360_pinterest_verification" 
-                                   value="<?php echo esc_attr(get_option('mis360_pinterest_verification', '')); ?>" 
-                                   placeholder='p:domain_verify kodu' 
-                                   class="large-text" style="padding:7px 10px;" />
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Pinterest işletme hesabı için site doğrulama kodu.
-                            </p>
+                        <div class="mis360-grid-2">
+                            <div class="mis360-form-row">
+                                <label>Coğrafi Enlem (Latitude):</label>
+                                <input type="text" name="mis360_geo_lat" value="<?php echo esc_attr($geo_lat); ?>" class="mis360-input-text" placeholder="38.7312" required />
+                            </div>
+                            <div class="mis360-form-row">
+                                <label>Coğrafi Boylam (Longitude):</label>
+                                <input type="text" name="mis360_geo_lng" value="<?php echo esc_attr($geo_lng); ?>" class="mis360-input-text" placeholder="35.4787" required />
+                            </div>
                         </div>
+
+                        <div class="mis360-form-row">
+                            <label>Google Haritalar (Maps) Paylaşım Linki:</label>
+                            <input type="url" name="mis360_geo_hasmap" value="<?php echo esc_attr($geo_hasmap); ?>" class="mis360-input-text" />
+                        </div>
+
+                        <button type="submit" name="mis360_action_save_geo" class="button mis360-btn-primary">
+                            GEO &amp; Konum Ayarlarını Kaydet
+                        </button>
                     </div>
 
-                    <!-- Sağ Kolon: Serbest HTML, Head, Body & Footer Kodları -->
-                    <div class="postbox" style="background:#fff;border:1px solid #ccd0d4;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                        <h2 style="margin-top:0;border-bottom:1px solid #eee;padding-bottom:10px;font-size:16px;color:#1d2327;">
-                            💻 Serbest HTML & Takip Scriptleri
-                        </h2>
-                        <p style="color:#646970;font-size:13px;line-height:1.5;">
-                            Google Tag Manager, Google Analytics (GA4), Meta Pixel, Yandex Metrica veya özel CSS/JS kodlarınızı sitenizin ilgili kısımlarına güvenle ekleyin.
-                        </p>
-
-                        <!-- Header Kodları -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🌐 &lt;head&gt; Kodları (Header HTML & Scriptler)
-                            </label>
-                            <textarea name="mis360_custom_header_html" rows="5" class="large-text" 
-                                      style="font-family:monospace;font-size:12px;padding:8px;" 
-                                      placeholder="&lt;!-- Google Analytics, GTM, Meta Etiketleri veya Özel CSS --&gt;"><?php echo esc_textarea(get_option('mis360_custom_header_html', '')); ?></textarea>
-                            <p class="description" style="font-size:11px;color:#777;">
-                                <code>&lt;head&gt;</code> etiketinin hemen içine yerleştirilir (GA4, GTM ana kodu, özel meta tagler).
-                            </p>
+                    <!-- Canlı GEO Meta & Schema Önizleme -->
+                    <div>
+                        <div class="mis360-box">
+                            <h2 class="mis360-box-title">
+                                <span>🌐 Sitede Üretilen Canlı GEO Meta Etiketleri</span>
+                            </h2>
+                            <p style="font-size:12.5px;color:#64748b;">Arama motorları sayfa kaynak kodunda bu etiketleri görür:</p>
+                            <div style="background:#f8fafc;padding:14px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;font-family:monospace;line-height:1.6;">
+                                &lt;meta name="geo.region" content="<?php echo esc_attr($geo_region); ?>"&gt;<br>
+                                &lt;meta name="geo.placename" content="<?php echo esc_attr($geo_city . ', ' . $geo_district . ', ' . $geo_area); ?>"&gt;<br>
+                                &lt;meta name="geo.position" content="<?php echo esc_attr($geo_lat . ';' . $geo_lng); ?>"&gt;<br>
+                                &lt;meta name="ICBM" content="<?php echo esc_attr($geo_lat . ', ' . $geo_lng); ?>"&gt;<br>
+                                &lt;meta name="geo.country" content="<?php echo esc_attr($geo_country); ?>"&gt;<br>
+                                &lt;meta name="DC.spatial" content="<?php echo esc_attr($geo_district . ', ' . $geo_city . ', Türkiye'); ?>"&gt;
+                            </div>
                         </div>
 
-                        <!-- Body Açılış Kodları -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                🚪 &lt;body&gt; Başlangıç Kodları (Body Start HTML)
-                            </label>
-                            <textarea name="mis360_custom_body_html" rows="4" class="large-text" 
-                                      style="font-family:monospace;font-size:12px;padding:8px;" 
-                                      placeholder="&lt;!-- Google Tag Manager (noscript) veya açılış scriptleri --&gt;"><?php echo esc_textarea(get_option('mis360_custom_body_html', '')); ?></textarea>
-                            <p class="description" style="font-size:11px;color:#777;">
-                                <code>&lt;body&gt;</code> etiketinin hemen ardından çalıştırılır (Örn: GTM noscript iframe kodu).
-                            </p>
-                        </div>
-
-                        <!-- Footer Kapanış Kodları -->
-                        <div style="margin-top:18px;">
-                            <label style="display:block;font-weight:600;margin-bottom:5px;">
-                                ⚓ &lt;/body&gt; Öncesi Kodlar (Footer HTML & Scriptler)
-                            </label>
-                            <textarea name="mis360_custom_footer_html" rows="4" class="large-text" 
-                                      style="font-family:monospace;font-size:12px;padding:8px;" 
-                                      placeholder="&lt;!-- Canlı Destek Widget, WhatsApp balonu, Meta Pixel veya takip JS --&gt;"><?php echo esc_textarea(get_option('mis360_custom_footer_html', '')); ?></textarea>
-                            <p class="description" style="font-size:11px;color:#777;">
-                                Sayfa altındaki <code>&lt;/body&gt;</code> kapanışından hemen önce basılır (Canlı destek, piksel kodları).
-                            </p>
+                        <div class="mis360-box">
+                            <h2 class="mis360-box-title">
+                                <span>🏢 Schema.org FurnitureStore (JSON-LD)</span>
+                            </h2>
+                            <p style="font-size:12.5px;color:#64748b;">Google 2026 Merchant Center ve Haritalar entegrasyonu:</p>
+                            <div style="background:#f8fafc;padding:14px;border-radius:8px;border:1px solid #e2e8f0;font-size:12px;font-family:monospace;line-height:1.6;">
+                                "@type": "FurnitureStore",<br>
+                                "name": "Emdief Home",<br>
+                                "address": {<br>
+                                &nbsp;&nbsp;"streetAddress": "<?php echo esc_attr($geo_street); ?>",<br>
+                                &nbsp;&nbsp;"addressLocality": "<?php echo esc_attr($geo_district); ?>",<br>
+                                &nbsp;&nbsp;"addressRegion": "<?php echo esc_attr($geo_city); ?>",<br>
+                                &nbsp;&nbsp;"addressCountry": "<?php echo esc_attr($geo_country); ?>"<br>
+                                },<br>
+                                "geo": {<br>
+                                &nbsp;&nbsp;"latitude": "<?php echo esc_attr($geo_lat); ?>",<br>
+                                &nbsp;&nbsp;"longitude": "<?php echo esc_attr($geo_lng); ?>"<br>
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
+            </form>
 
-                <div style="margin-top:20px;">
-                    <button type="submit" name="mis360_action_save_html_tags" class="button button-primary" style="background:#7a00df;border-color:#6500b8;padding:8px 24px;font-size:14px;font-weight:600;height:auto;">
-                        💾 Tüm HTML Etiketlerini ve Kodları Kaydet
+        <!-- ================= SEKME 3: LLMS.TXT (YAPAY ZEKA SEO) ================= -->
+        <?php elseif ($active_tab === 'llms') : 
+            $allow_gpt     = get_option('mis360_bot_gpt', 'yes') === 'yes';
+            $allow_claude  = get_option('mis360_bot_claude', 'yes') === 'yes';
+            $allow_perp    = get_option('mis360_bot_perplexity', 'yes') === 'yes';
+            $allow_g_ext   = get_option('mis360_bot_google_ext', 'yes') === 'yes';
+            $allow_apple   = get_option('mis360_bot_apple', 'yes') === 'yes';
+        ?>
+            <form method="post" action="">
+                <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+
+                <div class="mis360-box">
+                    <h2 class="mis360-box-title">
+                        <span>🤖 Yapay Zeka Arama Bot İzinleri (Generative Engine Optimization)</span>
+                    </h2>
+                    <p style="font-size:13px;color:#64748b;margin-bottom:16px;">
+                        Kullanıcılar ChatGPT, Claude veya Perplexity gibi yapay zeka asistanlarına *"En kaliteli Montessori çocuk kitaplığı markası hangisi?"* diye sorduğunda sitenizin taranıp önerilmesi için aşağıdaki bot izinlerini açık tutun:
+                    </p>
+                    <div style="display:flex;flex-wrap:wrap;gap:20px;">
+                        <label style="font-weight:600;"><input type="checkbox" name="mis360_bot_gpt" value="yes" <?php checked($allow_gpt); ?> /> GPTBot &amp; ChatGPT</label>
+                        <label style="font-weight:600;"><input type="checkbox" name="mis360_bot_claude" value="yes" <?php checked($allow_claude); ?> /> ClaudeBot (Anthropic)</label>
+                        <label style="font-weight:600;"><input type="checkbox" name="mis360_bot_perplexity" value="yes" <?php checked($allow_perp); ?> /> PerplexityBot</label>
+                        <label style="font-weight:600;"><input type="checkbox" name="mis360_bot_google_ext" value="yes" <?php checked($allow_g_ext); ?> /> Google-Extended (Gemini)</label>
+                        <label style="font-weight:600;"><input type="checkbox" name="mis360_bot_apple" value="yes" <?php checked($allow_apple); ?> /> Applebot (Siri &amp; Apple Intelligence)</label>
+                    </div>
+                </div>
+
+                <div class="mis360-grid-2">
+                    <!-- LLMs.txt Editörü -->
+                    <div class="mis360-box">
+                        <div class="mis360-box-title">
+                            <span>📄 llms.txt (Özet Marka &amp; Koleksiyon Dosyası)</span>
+                            <a href="<?php echo esc_url(home_url('/llms.txt')); ?>" target="_blank" style="font-size:12px;font-weight:normal;text-decoration:underline;">Canlı Aç ↗</a>
+                        </div>
+                        <p style="font-size:12.5px;color:#64748b;margin-bottom:10px;">
+                            Yapay zeka modellerinin ilk okuduğu özet tanıtım metni:
+                        </p>
+                        <textarea name="mis360_custom_llms_txt" rows="18" class="mis360-textarea mis360-textarea-code"><?php echo esc_textarea($custom_llms); ?></textarea>
+                    </div>
+
+                    <!-- LLMs-Full.txt Editörü -->
+                    <div class="mis360-box">
+                        <div class="mis360-box-title">
+                            <span>📚 llms-full.txt (Genişletilmiş Katalog &amp; Detaylar)</span>
+                            <a href="<?php echo esc_url(home_url('/llms-full.txt')); ?>" target="_blank" style="font-size:12px;font-weight:normal;text-decoration:underline;">Canlı Aç ↗</a>
+                        </div>
+                        <p style="font-size:12.5px;color:#64748b;margin-bottom:10px;">
+                            Tüm ürün serilerini, ahşap malzeme detaylarını ve montaj bilgilerini içeren derin dosya:
+                        </p>
+                        <textarea name="mis360_custom_llms_full_txt" rows="18" class="mis360-textarea mis360-textarea-code"><?php echo esc_textarea($custom_llms_full); ?></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top:10px;">
+                    <button type="submit" name="mis360_action_save_llms" class="button mis360-btn-primary">
+                        Yapay Zeka (LLMs.txt) Dosyalarını Kaydet
                     </button>
                 </div>
             </form>
+
+        <!-- ================= SEKME 4: ROBOTS.TXT ================= -->
+        <?php elseif ($active_tab === 'robots') : ?>
+            <form method="post" action="">
+                <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+
+                <div class="mis360-box">
+                    <div class="mis360-box-title">
+                        <span>🛡️ Canlı Robots.txt Düzenleyicisi</span>
+                        <a href="<?php echo esc_url(home_url('/robots.txt')); ?>" target="_blank" style="font-size:12px;font-weight:normal;text-decoration:underline;">Canlı robots.txt Görüntüle ↗</a>
+                    </div>
+                    <p style="font-size:13px;color:#64748b;margin-bottom:14px;">
+                        Arama motoru botlarının hangi sayfaları tarayıp hangilerini hariç tutacağını belirler. Sepet, ödeme ve hesap sayfaları gereksiz tarama bütçesi harcamamak için varsayılan olarak engellenmiştir.
+                    </p>
+                    
+                    <textarea name="mis360_custom_robots_txt" rows="18" class="mis360-textarea mis360-textarea-code"><?php echo esc_textarea($custom_robots); ?></textarea>
+
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button type="submit" name="mis360_action_save_robots" class="button mis360-btn-primary">
+                            Robots.txt Kurallarını Kaydet
+                        </button>
+                        <button type="submit" name="mis360_action_reset_robots" class="button mis360-btn-secondary" onclick="return confirm('Varsayılan e-ticaret kurallarına dönmek istediğinize emin misiniz?');">
+                            Varsayılan Kurallara Sıfırla
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+        <!-- ================= SEKME 5: HTML ETİKETLERİ & DOĞRULAMA ================= -->
+        <?php elseif ($active_tab === 'html_tags') : ?>
+            <form method="post" action="">
+                <?php wp_nonce_field('mis360_seo_geo_action', 'mis360_seo_geo_nonce'); ?>
+
+                <div class="mis360-grid-2">
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>🔍 Arama Motoru Doğrulama Kodları</span>
+                        </h2>
+                        
+                        <div class="mis360-form-row">
+                            <label>🔴 Google Search Console Doğrulama Kodu:</label>
+                            <input type="text" name="mis360_google_verification" value="<?php echo esc_attr(get_option('mis360_google_verification', '')); ?>" class="mis360-input-text" placeholder="google-site-verification kodu veya tam meta etiketi" />
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>🔵 Bing &amp; Yahoo Webmaster Doğrulama:</label>
+                            <input type="text" name="mis360_bing_verification" value="<?php echo esc_attr(get_option('mis360_bing_verification', '')); ?>" class="mis360-input-text" placeholder="msvalidate.01 kodu" />
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>🟡 Yandex Webmaster Doğrulama:</label>
+                            <input type="text" name="mis360_yandex_verification" value="<?php echo esc_attr(get_option('mis360_yandex_verification', '')); ?>" class="mis360-input-text" placeholder="yandex-verification kodu" />
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>🔷 Meta (Facebook) Alan Adı Doğrulama:</label>
+                            <input type="text" name="mis360_facebook_verification" value="<?php echo esc_attr(get_option('mis360_facebook_verification', '')); ?>" class="mis360-input-text" placeholder="facebook-domain-verification kodu" />
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>📌 Pinterest Doğrulama:</label>
+                            <input type="text" name="mis360_pinterest_verification" value="<?php echo esc_attr(get_option('mis360_pinterest_verification', '')); ?>" class="mis360-input-text" placeholder="p:domain_verify kodu" />
+                        </div>
+
+                        <button type="submit" name="mis360_action_save_html_tags" class="button mis360-btn-primary">
+                            Doğrulama Kodlarını Kaydet
+                        </button>
+                    </div>
+
+                    <div class="mis360-box">
+                        <h2 class="mis360-box-title">
+                            <span>💻 Özel HTML / JavaScript Kodları</span>
+                        </h2>
+
+                        <div class="mis360-form-row">
+                            <label>Header Kodları (&lt;head&gt; içine enjekte edilir):</label>
+                            <textarea name="mis360_custom_header_html" rows="4" class="mis360-textarea mis360-textarea-code" placeholder="<!-- Google Analytics / Meta Pixel vb. -->"><?php echo esc_textarea(get_option('mis360_custom_header_html', '')); ?></textarea>
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>Body Kodları (&lt;body&gt; açılışından hemen sonra):</label>
+                            <textarea name="mis360_custom_body_html" rows="4" class="mis360-textarea mis360-textarea-code" placeholder="<!-- GTM NoScript vb. -->"><?php echo esc_textarea(get_option('mis360_custom_body_html', '')); ?></textarea>
+                        </div>
+
+                        <div class="mis360-form-row">
+                            <label>Footer Kodları (&lt;/body&gt; kapanışından hemen önce):</label>
+                            <textarea name="mis360_custom_footer_html" rows="4" class="mis360-textarea mis360-textarea-code" placeholder="<!-- Canlı Destek Widget vb. -->"><?php echo esc_textarea(get_option('mis360_custom_footer_html', '')); ?></textarea>
+                        </div>
+
+                        <button type="submit" name="mis360_action_save_html_tags" class="button mis360-btn-primary">
+                            Özel Kodları Kaydet
+                        </button>
+                    </div>
+                </div>
+            </form>
         <?php endif; ?>
+
     </div>
     <?php
 }

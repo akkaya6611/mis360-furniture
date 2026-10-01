@@ -263,16 +263,26 @@ function mis360_output_seo_meta_tags(): void {
     echo '<meta name="format-detection" content="telephone=no">' . "
 ";
 
-    // GEO & Coğrafi Hedefleme (Yerel SEO & Local Business - Kayseri Mobilya Kent)
-    echo '<meta name="geo.region" content="TR-38">' . "\n";
-    echo '<meta name="geo.placename" content="Kayseri, Kocasinan, Mobilya Kent">' . "\n";
-    echo '<meta name="geo.position" content="38.7312;35.4787">' . "\n";
-    echo '<meta name="ICBM" content="38.7312, 35.4787">' . "\n";
-    echo '<meta name="geo.country" content="TR">' . "\n";
-    echo '<meta name="DC.title" content="Emdief Home | Montessori Çocuk Mobilyaları">' . "\n";
+    // GEO & Coğrafi Hedefleme (Yerel SEO & Local Business - Panelden Dinamik Yönetilebilir)
+    $geo_region    = get_option('mis360_geo_region', 'TR-38');
+    $geo_city      = get_option('mis360_geo_city', 'Kayseri');
+    $geo_district  = get_option('mis360_geo_district', 'Kocasinan');
+    $geo_area      = get_option('mis360_geo_area', 'Mobilya Kent');
+    $geo_lat       = get_option('mis360_geo_lat', '38.7312');
+    $geo_lng       = get_option('mis360_geo_lng', '35.4787');
+    $geo_country   = get_option('mis360_geo_country', 'TR');
+    $geo_placename = get_option('mis360_geo_placename', trim($geo_city . ', ' . $geo_district . ', ' . $geo_area));
+    $geo_spatial   = get_option('mis360_geo_spatial', trim($geo_district . ', ' . $geo_city . ', Türkiye'));
+
+    echo '<meta name="geo.region" content="' . esc_attr($geo_region) . '">' . "\n";
+    echo '<meta name="geo.placename" content="' . esc_attr($geo_placename) . '">' . "\n";
+    echo '<meta name="geo.position" content="' . esc_attr($geo_lat . ';' . $geo_lng) . '">' . "\n";
+    echo '<meta name="ICBM" content="' . esc_attr($geo_lat . ', ' . $geo_lng) . '">' . "\n";
+    echo '<meta name="geo.country" content="' . esc_attr($geo_country) . '">' . "\n";
+    echo '<meta name="DC.title" content="' . esc_attr($title) . '">' . "\n";
     echo '<meta name="DC.creator" content="Emdief Home &amp; Serkan AKKAYA">' . "\n";
     echo '<meta name="DC.coverage" content="Turkey">' . "\n";
-    echo '<meta name="DC.spatial" content="Kocasinan, Kayseri, Türkiye">' . "\n";
+    echo '<meta name="DC.spatial" content="' . esc_attr($geo_spatial) . '">' . "\n";
     echo '<meta http-equiv="content-language" content="tr">' . "\n";
 
     // OpenGraph (Facebook, WhatsApp, Instagram, LinkedIn, Telegram)
@@ -417,16 +427,16 @@ function mis360_output_json_ld(): void {
         ],
         'address'         => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => 'Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K',
-            'addressLocality' => 'Kocasinan',
-            'addressRegion'   => 'Kayseri',
-            'postalCode'      => '38070',
-            'addressCountry'  => 'TR',
+            'streetAddress'   => get_option('mis360_geo_street', 'Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K'),
+            'addressLocality' => get_option('mis360_geo_district', 'Kocasinan'),
+            'addressRegion'   => get_option('mis360_geo_city', 'Kayseri'),
+            'postalCode'      => get_option('mis360_geo_postal', '38070'),
+            'addressCountry'  => get_option('mis360_geo_country', 'TR'),
         ],
         'geo'             => [
             '@type'     => 'GeoCoordinates',
-            'latitude'  => '38.7312',
-            'longitude' => '35.4787',
+            'latitude'  => (string) get_option('mis360_geo_lat', '38.7312'),
+            'longitude' => (string) get_option('mis360_geo_lng', '35.4787'),
         ],
         'openingHoursSpecification' => [
             [
@@ -1029,71 +1039,67 @@ function mis360_custom_robots_txt($output, $public) {
         return $output;
     }
 
+    $custom_robots = get_option('mis360_custom_robots_txt');
+    if (!empty($custom_robots)) {
+        return trim($custom_robots) . "\n";
+    }
+
     $sitemap_url   = home_url('/sitemap.xml');
     $llms_url      = home_url('/llms.txt');
     $llms_full_url = home_url('/llms-full.txt');
 
-    $rules  = "
-# Emdief Home Advanced E-Commerce SEO & AI Directives (v2.0)
-";
-    $rules .= "User-agent: *
-";
-    $rules .= "Disallow: /wp-admin/
-";
-    $rules .= "Allow: /wp-admin/admin-ajax.php
-";
-    $rules .= "Disallow: /sepet/
-";
-    $rules .= "Disallow: /odeme/
-";
-    $rules .= "Disallow: /hesabim/
-";
-    $rules .= "Disallow: /cart/
-";
-    $rules .= "Disallow: /checkout/
-";
-    $rules .= "Disallow: /my-account/
-";
-    $rules .= "Disallow: /*?*orderby=
-";
-    $rules .= "Disallow: /*?*filter_*
-";
-    $rules .= "Disallow: /*?*min_price=
-";
-    $rules .= "Disallow: /*?*max_price=
-";
-    $rules .= "Disallow: /*?*add-to-cart=
-";
-    $rules .= "
-# AI / LLM Bot İzinleri (Generative Engine Optimization)
-";
-    $rules .= "User-agent: GPTBot
-Allow: /
-";
-    $rules .= "User-agent: ChatGPT-User
-Allow: /
-";
-    $rules .= "User-agent: ClaudeBot
-Allow: /
-";
-    $rules .= "User-agent: PerplexityBot
-Allow: /
-";
-    $rules .= "User-agent: Google-Extended
-Allow: /
-";
-    $rules .= "User-agent: Applebot
-Allow: /
-";
-    $rules .= "
-# XML Site Haritası & LLMs Standartları
-";
-    $rules .= "Sitemap: " . esc_url($sitemap_url) . "
-";
-    $rules .= "# LLMs Context: " . esc_url($llms_url) . "
-";
-    $rules .= "# LLMs Full Catalog: " . esc_url($llms_full_url) . "
-";
+    $rules  = "\n# Emdief Home Advanced E-Commerce SEO & AI Directives (v2.0)\n";
+    $rules .= "User-agent: *\n";
+    $rules .= "Disallow: /wp-admin/\n";
+    $rules .= "Allow: /wp-admin/admin-ajax.php\n";
+    $rules .= "Disallow: /sepet/\n";
+    $rules .= "Disallow: /odeme/\n";
+    $rules .= "Disallow: /hesabim/\n";
+    $rules .= "Disallow: /cart/\n";
+    $rules .= "Disallow: /checkout/\n";
+    $rules .= "Disallow: /my-account/\n";
+    $rules .= "Disallow: /*?*orderby=\n";
+    $rules .= "Disallow: /*?*filter_*\n";
+    $rules .= "Disallow: /*?*min_price=\n";
+    $rules .= "Disallow: /*?*max_price=\n";
+    $rules .= "Disallow: /*?*add-to-cart=\n\n";
+
+    // AI Bot İzinleri
+    $allow_gpt     = get_option('mis360_bot_gpt', 'yes') === 'yes';
+    $allow_claude  = get_option('mis360_bot_claude', 'yes') === 'yes';
+    $allow_perp    = get_option('mis360_bot_perplexity', 'yes') === 'yes';
+    $allow_g_ext   = get_option('mis360_bot_google_ext', 'yes') === 'yes';
+    $allow_apple   = get_option('mis360_bot_apple', 'yes') === 'yes';
+
+    $rules .= "# AI / LLM Bot İzinleri (Generative Engine Optimization)\n";
+    if ($allow_gpt) {
+        $rules .= "User-agent: GPTBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: GPTBot\nDisallow: /\nUser-agent: ChatGPT-User\nDisallow: /\n";
+    }
+    if ($allow_claude) {
+        $rules .= "User-agent: ClaudeBot\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: ClaudeBot\nDisallow: /\n";
+    }
+    if ($allow_perp) {
+        $rules .= "User-agent: PerplexityBot\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: PerplexityBot\nDisallow: /\n";
+    }
+    if ($allow_g_ext) {
+        $rules .= "User-agent: Google-Extended\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: Google-Extended\nDisallow: /\n";
+    }
+    if ($allow_apple) {
+        $rules .= "User-agent: Applebot\nAllow: /\n";
+    }
+
+    $rules .= "\n# XML Site Haritası & LLMs Standartları\n";
+    $rules .= "Sitemap: " . esc_url($sitemap_url) . "\n";
+    $rules .= "# LLMs Context: " . esc_url($llms_url) . "\n";
+    $rules .= "# LLMs Full Catalog: " . esc_url($llms_full_url) . "\n";
 
     return $output . $rules;
 }
@@ -1111,14 +1117,16 @@ function mis360_serve_llms_txt() {
         header('X-Robots-Tag: all');
         header('Cache-Control: public, max-age=86400');
 
-        $theme_file = get_template_directory() . '/llms.txt';
-        if (file_exists($theme_file)) {
-            echo file_get_contents($theme_file);
+        $custom = get_option('mis360_custom_llms_txt');
+        if (!empty($custom)) {
+            echo $custom;
         } else {
-            echo "# Emdief Home
-
-1. Sınıf MDF & Masif Ahşap Montessori çocuk mobilyaları üreticisi.
-Web: " . home_url('/');
+            $theme_file = get_template_directory() . '/llms.txt';
+            if (file_exists($theme_file)) {
+                echo file_get_contents($theme_file);
+            } else {
+                echo "# Emdief Home\n\n1. Sınıf MDF & Masif Ahşap Montessori çocuk mobilyaları üreticisi.\nWeb: " . home_url('/');
+            }
         }
         exit;
     }
@@ -1128,11 +1136,16 @@ Web: " . home_url('/');
         header('X-Robots-Tag: all');
         header('Cache-Control: public, max-age=86400');
 
-        $theme_file = get_template_directory() . '/llms-full.txt';
-        if (file_exists($theme_file)) {
-            echo file_get_contents($theme_file);
+        $custom_full = get_option('mis360_custom_llms_full_txt');
+        if (!empty($custom_full)) {
+            echo $custom_full;
         } else {
-            echo file_get_contents(get_template_directory() . '/llms.txt');
+            $theme_file = get_template_directory() . '/llms-full.txt';
+            if (file_exists($theme_file)) {
+                echo file_get_contents($theme_file);
+            } else {
+                echo file_get_contents(get_template_directory() . '/llms.txt');
+            }
         }
         exit;
     }
@@ -1260,6 +1273,21 @@ function mis360_serve_xml_sitemap() {
                 echo '    <changefreq>' . ($is_important ? 'weekly' : 'monthly') . '</changefreq>' . "\n";
                 echo '    <priority>' . ($is_important ? '0.8' : '0.5') . '</priority>' . "\n";
                 echo '  </url>' . "\n";
+            }
+        }
+
+        // 6. Özel Eklenen Ekstra URL'ler
+        $extra_urls_raw = get_option('mis360_sitemap_extra_urls', '');
+        if (!empty($extra_urls_raw)) {
+            $extra_lines = array_filter(array_map('trim', explode("\n", $extra_urls_raw)));
+            foreach ($extra_lines as $u) {
+                if (filter_var($u, FILTER_VALIDATE_URL)) {
+                    echo '  <url>' . "\n";
+                    echo '    <loc>' . esc_url($u) . '</loc>' . "\n";
+                    echo '    <changefreq>weekly</changefreq>' . "\n";
+                    echo '    <priority>0.7</priority>' . "\n";
+                    echo '  </url>' . "\n";
+                }
             }
         }
 
