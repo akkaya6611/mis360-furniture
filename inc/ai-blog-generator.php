@@ -1048,6 +1048,9 @@ PROMPT;
             'meta_value'     => '1',
             'post_status'    => ['publish', 'draft'],
         ]);
+        if (!empty($ai_posts)) {
+            update_post_caches($ai_posts, 'post', false, true);
+        }
         ?>
         <div class="wrap mis360-ai-blog-wrap">
             <style>

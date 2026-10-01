@@ -386,3 +386,12 @@ function mis360_performance_remove_jquery_migrate($scripts) {
 }
 add_action('wp_default_scripts', 'mis360_performance_remove_jquery_migrate');
 
+/**
+ * 15. Veritabanını Yoran Olmayan Opsiyon Sorgularını Bellekte Kısa Devre Et (Slow Query Önleyici)
+ */
+add_filter('pre_option_woocommerce_address_autocomplete_provider', function() {
+    return 'none';
+});
+add_filter('pre_option_woocommerce_show_marketplace_suggestions', function() {
+    return 'no';
+});
