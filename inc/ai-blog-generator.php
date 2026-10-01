@@ -9,7 +9,7 @@
  * - Otomatik Kategori, Etiket, Meta ve İlgili Ürün CTA Entegrasyonu
  *
  * @package Mis360-Mobilya
- * @version 1.9.89
+ * @version 1.9.90
  * @author Serkan AKKAYA & MİS360
  */
 
@@ -28,9 +28,188 @@ class Emdief_AI_Blog_Generator {
         add_action('wp_ajax_mis360_ai_generate_single', [$this, 'ajax_generate_single_post']);
         add_action('wp_ajax_mis360_ai_test_api', [$this, 'ajax_test_api_connection']);
         add_action('wp_ajax_mis360_ai_save_api_settings', [$this, 'ajax_save_api_settings']);
+        add_action('wp_ajax_mis360_ai_fetch_models', [$this, 'ajax_fetch_models']);
 
         // Blog Tekil Yazı İçine Samimi Emdief Home CTA Kartı Enjeksiyonu
         add_filter('the_content', [$this, 'inject_blog_post_cta']);
+    }
+
+    /**
+     * Sağlayıcı API'sinden Canlı Model Listesini Çek
+     */
+    public static function fetch_available_models($provider, $api_key = null) {
+        if (empty($api_key)) {
+            $api_key = get_option('mis360_' . $provider . '_api_key');
+        }
+        $api_key = trim((string)$api_key);
+        if (empty($api_key)) {
+            return ['success' => false, 'message' => 'API anahtarı bulunamadı.', 'models' => []];
+        }
+
+        // 1. GOOGLE GEMINI
+        if ($provider === 'gemini') {
+            $urls = [
+                'https://generativelanguage.googleapis.com/v1beta/models?key=' . urlencode($api_key),
+                'https://generativelanguage.googleapis.com/v1/models?key=' . urlencode($api_key)
+            ];
+
+            $last_err = 'Bilinmeyen hata';
+            foreach ($urls as $url) {
+                $response = wp_remote_get($url, [
+                    'timeout' => 15,
+                    'headers' => [
+                        'Content-Type'   => 'application/json; charset=utf-8',
+                        'x-goog-api-key' => $api_key
+                    ]
+                ]);
+
+                if (is_wp_error($response)) {
+                    $last_err = $response->get_error_message();
+                    continue;
+                }
+
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+                if (!empty($body['models']) && is_array($body['models'])) {
+                    $models = [];
+                    foreach ($body['models'] as $m) {
+                        $name = str_replace('models/', '', $m['name'] ?? '');
+                        $methods = $m['supportedGenerationMethods'] ?? [];
+                        if (in_array('generateContent', $methods, true) && !empty($name)) {
+                            if (strpos($name, 'embedding') === false && strpos($name, 'aqa') === false) {
+                                $models[] = $name;
+                            }
+                        }
+                    }
+
+                    if (!empty($models)) {
+                        usort($models, function($a, $b) {
+                            $scoreA = (strpos($a, '2.0-flash') !== false ? 100 : (strpos($a, '2.5-flash') !== false ? 90 : (strpos($a, 'flash') !== false ? 80 : 50)));
+                            $scoreB = (strpos($b, '2.0-flash') !== false ? 100 : (strpos($b, '2.5-flash') !== false ? 90 : (strpos($b, 'flash') !== false ? 80 : 50)));
+                            return $scoreB <=> $scoreA;
+                        });
+                        return ['success' => true, 'models' => array_values(array_unique($models))];
+                    }
+                }
+
+                if (!empty($body['error']['message'])) {
+                    $last_err = $body['error']['message'];
+                }
+            }
+
+            return ['success' => false, 'message' => 'Gemini Hatası: ' . $last_err, 'models' => []];
+        }
+
+        // 2. GROQ
+        elseif ($provider === 'groq') {
+            $response = wp_remote_get('https://api.groq.com/openai/v1/models', [
+                'timeout' => 15,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $api_key,
+                    'Content-Type'  => 'application/json; charset=utf-8'
+                ]
+            ]);
+
+            if (is_wp_error($response)) {
+                return ['success' => false, 'message' => 'Groq Hatası: ' . $response->get_error_message(), 'models' => []];
+            }
+
+            $body = json_decode(wp_remote_retrieve_body($response), true);
+            if (!empty($body['data']) && is_array($body['data'])) {
+                $models = [];
+                foreach ($body['data'] as $m) {
+                    $id = $m['id'] ?? '';
+                    if (!empty($id) && strpos($id, 'whisper') === false && strpos($id, 'guard') === false) {
+                        $models[] = $id;
+                    }
+                }
+                if (!empty($models)) {
+                    usort($models, function($a, $b) {
+                        $scoreA = (strpos($a, 'instant') !== false ? 100 : (strpos($a, 'llama-3.1') !== false ? 90 : 50));
+                        $scoreB = (strpos($b, 'instant') !== false ? 100 : (strpos($b, 'llama-3.1') !== false ? 90 : 50));
+                        return $scoreB <=> $scoreA;
+                    });
+                    return ['success' => true, 'models' => array_values(array_unique($models))];
+                }
+            }
+
+            $err = $body['error']['message'] ?? 'Modeller listelenemedi.';
+            return ['success' => false, 'message' => 'Groq Hatası: ' . $err, 'models' => []];
+        }
+
+        // 3. NVIDIA AI (NIM)
+        elseif ($provider === 'nvidia') {
+            $response = wp_remote_get('https://integrate.api.nvidia.com/v1/models', [
+                'timeout' => 15,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $api_key,
+                    'Content-Type'  => 'application/json; charset=utf-8'
+                ]
+            ]);
+
+            if (is_wp_error($response)) {
+                return ['success' => false, 'message' => 'Nvidia Hatası: ' . $response->get_error_message(), 'models' => []];
+            }
+
+            $body = json_decode(wp_remote_retrieve_body($response), true);
+            if (!empty($body['data']) && is_array($body['data'])) {
+                $models = [];
+                foreach ($body['data'] as $m) {
+                    $id = $m['id'] ?? '';
+                    if (!empty($id) && (strpos($id, 'nemotron') !== false || strpos($id, 'llama') !== false || strpos($id, 'instruct') !== false || strpos($id, 'mistral') !== false)) {
+                        $models[] = $id;
+                    }
+                }
+                if (!empty($models)) {
+                    return ['success' => true, 'models' => array_values(array_unique($models))];
+                }
+            }
+
+            return [
+                'success' => true,
+                'models' => [
+                    'nvidia/llama-3.1-nemotron-70b-instruct',
+                    'meta/llama-3.2-11b-vision-instruct',
+                    'mistralai/mistral-large-2-instruct',
+                    'deepseek-ai/deepseek-v4.1-flash'
+                ]
+            ];
+        }
+
+        // 4. OPENAI
+        elseif ($provider === 'openai') {
+            $response = wp_remote_get('https://api.openai.com/v1/models', [
+                'timeout' => 15,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $api_key,
+                    'Content-Type'  => 'application/json; charset=utf-8'
+                ]
+            ]);
+
+            if (is_wp_error($response)) {
+                return ['success' => false, 'message' => 'OpenAI Hatası: ' . $response->get_error_message(), 'models' => []];
+            }
+
+            $body = json_decode(wp_remote_retrieve_body($response), true);
+            if (!empty($body['data']) && is_array($body['data'])) {
+                $models = [];
+                foreach ($body['data'] as $m) {
+                    $id = $m['id'] ?? '';
+                    if (strpos($id, 'gpt-') === 0 && strpos($id, 'audio') === false && strpos($id, 'realtime') === false) {
+                        $models[] = $id;
+                    }
+                }
+                if (!empty($models)) {
+                    return ['success' => true, 'models' => array_values(array_unique($models))];
+                }
+            }
+
+            return [
+                'success' => true,
+                'models' => ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo']
+            ];
+        }
+
+        return ['success' => false, 'message' => 'Geçersiz sağlayıcı.', 'models' => []];
     }
 
     /**
@@ -590,7 +769,44 @@ PROMPT;
     }
 
     /**
-     * AJAX: API Bağlantı Testi
+     * AJAX: Canlı Model Listesi Getir
+     */
+    public function ajax_fetch_models() {
+        check_ajax_referer('mis360_ai_blog_nonce', 'security');
+        if (!current_user_can('manage_options')) {
+            wp_send_json_error(['message' => 'Yetkiniz bulunmuyor.']);
+        }
+
+        $provider = sanitize_key($_POST['provider'] ?? 'gemini');
+        $key      = trim($_POST['key'] ?? '');
+
+        if (empty($key)) {
+            $key = get_option('mis360_' . $provider . '_api_key', '');
+        }
+
+        if (empty($key)) {
+            wp_send_json_error(['message' => 'Lütfen önce geçerli bir API anahtarı girin.']);
+        }
+
+        $res = self::fetch_available_models($provider, $key);
+        if ($res['success'] && !empty($res['models'])) {
+            update_option('mis360_' . $provider . '_api_key', $key);
+            update_option('mis360_' . $provider . '_model', $res['models'][0]);
+
+            wp_send_json_success([
+                'models'  => $res['models'],
+                'current' => $res['models'][0],
+                'message' => sprintf('✅ %d adet aktif uyumlu model bulundu! İlk çalışan model (%s) seçildi.', count($res['models']), $res['models'][0])
+            ]);
+        } else {
+            wp_send_json_error([
+                'message' => $res['message'] ?? 'Modeller listelenemedi. Lütfen API anahtarınızı kontrol edin.'
+            ]);
+        }
+    }
+
+    /**
+     * AJAX: API Bağlantı Testi (Otomatik Model Eşleştirme & Canlı Doğrulama)
      */
     public function ajax_test_api_connection() {
         check_ajax_referer('mis360_ai_blog_nonce', 'security');
@@ -600,12 +816,50 @@ PROMPT;
         }
 
         $provider = sanitize_key($_POST['provider'] ?? 'gemini');
-        $res = self::call_ai_api('Sen bir test asistanısın.', 'Kısaca 1 cümleyle selam ver.', $provider);
+        $key      = trim($_POST['key'] ?? '');
+        $model    = sanitize_text_field($_POST['model'] ?? '');
+
+        if (!empty($key)) {
+            update_option('mis360_' . $provider . '_api_key', $key);
+        } else {
+            $key = get_option('mis360_' . $provider . '_api_key');
+        }
+        if (!empty($model)) {
+            update_option('mis360_' . $provider . '_model', $model);
+        }
+
+        if (empty($key)) {
+            wp_send_json_error(['message' => '❌ API anahtarı boş. Lütfen ' . strtoupper($provider) . ' API anahtarınızı girin.']);
+        }
+
+        // Önce canlı modelleri sorgula ve en uyumlu olanı garantile
+        $models_check = self::fetch_available_models($provider, $key);
+        if ($models_check['success'] && !empty($models_check['models'])) {
+            if (empty($model) || !in_array($model, $models_check['models'], true)) {
+                $model = $models_check['models'][0];
+                update_option('mis360_' . $provider . '_model', $model);
+            }
+        }
+
+        // Test isteği gönder
+        $res = self::call_ai_api('Sen bir çocuk odası mobilya uzmanı test asistanısın.', 'Kısaca 1 cümleyle selam ver.', $provider);
 
         if ($res['success']) {
-            wp_send_json_success(['message' => '✅ ' . strtoupper($provider) . ' API bağlantısı başarılı! Yanıt: ' . esc_html($res['text'])]);
+            $used_model = $res['model'] ?? get_option('mis360_' . $provider . '_model');
+            wp_send_json_success([
+                'message' => sprintf(
+                    '🎉 <strong>%s API Bağlantısı Başarılı!</strong><br><span style="color:#0284c7;">✓ Aktif Model:</span> <code>%s</code><br><span style="color:#16a34a;">✓ Model Yanıtı:</span> <em>"%s"</em>',
+                    strtoupper($provider),
+                    esc_html($used_model),
+                    esc_html($res['text'])
+                )
+            ]);
         } else {
-            wp_send_json_error(['message' => '❌ Bağlantı Başarısız: ' . esc_html($res['message'])]);
+            $err_msg = $res['message'];
+            if (!empty($models_check['models'])) {
+                $err_msg .= '<br><small>Hesabınızdaki diğer modeller: ' . implode(', ', array_slice($models_check['models'], 0, 5)) . '</small>';
+            }
+            wp_send_json_error(['message' => '❌ ' . $err_msg]);
         }
     }
 
@@ -986,7 +1240,7 @@ PROMPT;
                         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                                 <label style="font-weight:700; color:#0f172a; margin:0;">🌟 Google Gemini API</label>
-                                <a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a>
+                                <div><button type="button" class="button btn-fetch-models" data-provider="gemini" style="font-size:11.5px;padding:2px 8px;margin-right:8px;font-weight:600;">🔄 Modelleri Canlı Getir</button><a href="https://aistudio.google.com/app/apikey" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a></div>
                             </div>
                             <div class="mis360-field" style="margin-bottom:10px;">
                                 <input type="password" name="mis360_gemini_api_key" value="<?php echo esc_attr($gemini_key); ?>" class="mis360-input" placeholder="AIzaSy... (Gemini API Anahtarı)" />
@@ -1006,7 +1260,7 @@ PROMPT;
                         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                                 <label style="font-weight:700; color:#0f172a; margin:0;">⚡ Groq Cloud API</label>
-                                <a href="https://console.groq.com/keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a>
+                                <div><button type="button" class="button btn-fetch-models" data-provider="groq" style="font-size:11.5px;padding:2px 8px;margin-right:8px;font-weight:600;">🔄 Modelleri Canlı Getir</button><a href="https://console.groq.com/keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">Ücretsiz Key Al ↗</a></div>
                             </div>
                             <div class="mis360-field" style="margin-bottom:10px;">
                                 <input type="password" name="mis360_groq_api_key" value="<?php echo esc_attr($groq_key); ?>" class="mis360-input" placeholder="gsk_... (Groq API Anahtarı)" />
@@ -1027,7 +1281,7 @@ PROMPT;
                         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                                 <label style="font-weight:700; color:#0f172a; margin:0;">🟢 Nvidia AI NIM API</label>
-                                <a href="https://build.nvidia.com/" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">NIM Key Al ↗</a>
+                                <div><button type="button" class="button btn-fetch-models" data-provider="nvidia" style="font-size:11.5px;padding:2px 8px;margin-right:8px;font-weight:600;">🔄 Modelleri Canlı Getir</button><a href="https://build.nvidia.com/" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">NIM Key Al ↗</a></div>
                             </div>
                             <div class="mis360-field" style="margin-bottom:10px;">
                                 <input type="password" name="mis360_nvidia_api_key" value="<?php echo esc_attr($nvidia_key); ?>" class="mis360-input" placeholder="nvapi-... (Nvidia API Anahtarı)" />
@@ -1047,7 +1301,7 @@ PROMPT;
                         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:16px; margin-bottom:16px;">
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
                                 <label style="font-weight:700; color:#0f172a; margin:0;">🧠 OpenAI (ChatGPT) API</label>
-                                <a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">OpenAI Platform ↗</a>
+                                <div><button type="button" class="button btn-fetch-models" data-provider="openai" style="font-size:11.5px;padding:2px 8px;margin-right:8px;font-weight:600;">🔄 Modelleri Canlı Getir</button><a href="https://platform.openai.com/api-keys" target="_blank" style="font-size:12px; color:#2563eb; text-decoration:none;">OpenAI Platform ↗</a></div>
                             </div>
                             <div class="mis360-field" style="margin-bottom:10px;">
                                 <input type="password" name="mis360_openai_api_key" value="<?php echo esc_attr($openai_key); ?>" class="mis360-input" placeholder="sk-proj-... (OpenAI API Anahtarı)" />
@@ -1310,16 +1564,62 @@ PROMPT;
                     });
                 });
 
-                // API Bağlantı Testi (Otomatik form kaydetme & anlık test)
+                // Aktif Modelleri Canlı Getir Butonları
+                $(document).on('click', '.btn-fetch-models', function(e) {
+                    e.preventDefault();
+                    var provider = $(this).data('provider');
+                    var $keyInput = $('input[name="mis360_' + provider + '_api_key"]');
+                    var keyVal = $keyInput.val().trim();
+                    var $select = $('select[name="mis360_' + provider + '_model"]');
+                    var $msg = $('#api-test-msg');
+
+                    if (!keyVal) {
+                        alert('Lütfen önce ' + provider.toUpperCase() + ' API anahtarınızı girin.');
+                        $keyInput.focus();
+                        return;
+                    }
+
+                    var $btn = $(this).prop('disabled', true).text('⏳ Aranıyor...');
+                    $msg.css('color', '#0284c7').html('🔍 ' + provider.toUpperCase() + ' hesabınızdaki aktif modeller taranıyor...');
+
+                    $.post(ajaxUrl, {
+                        action: 'mis360_ai_fetch_models',
+                        provider: provider,
+                        key: keyVal,
+                        security: nonce
+                    }, function(res) {
+                        $btn.prop('disabled', false).text('🔄 Modelleri Canlı Getir');
+                        if (res.success && res.data.models.length > 0) {
+                            $select.empty();
+                            $.each(res.data.models, function(i, m) {
+                                var opt = $('<option></option>').attr('value', m).text(m);
+                                if (m === res.data.current) opt.prop('selected', true);
+                                $select.append(opt);
+                            });
+                            $msg.css('color', '#16a34a').html(res.data.message);
+                        } else {
+                            $msg.css('color', '#dc2626').html('❌ ' + (res.data.message || 'Modeller bulunamadı.'));
+                        }
+                    }).fail(function() {
+                        $btn.prop('disabled', false).text('🔄 Modelleri Canlı Getir');
+                        $msg.css('color', '#dc2626').html('❌ Sunucu zaman aşımı.');
+                    });
+                });
+
+                // API Bağlantı Testi (Otomatik Model Algılama & Doğrulama)
                 $('#btn-test-api').on('click', function() {
                     var provider = $('select[name="mis360_ai_provider"]').val();
-                    var $msg = $('#api-test-msg').css('color', '#0284c7').html('⏳ Form ayarları kaydediliyor ve <strong>' + provider.toUpperCase() + '</strong> bağlantısı test ediliyor...');
+                    var keyVal = $('input[name="mis360_' + provider + '_api_key"]').val().trim();
+                    var modelVal = $('select[name="mis360_' + provider + '_model"]').val();
+                    var $msg = $('#api-test-msg').css('color', '#0284c7').html('⏳ <strong>' + provider.toUpperCase() + '</strong> bağlantısı ve modelleri test ediliyor, lütfen bekleyin...');
 
                     var formData = $('#form-api-settings').serialize() + '&action=mis360_ai_save_api_settings&security=' + nonce;
                     $.post(ajaxUrl, formData, function() {
                         $.post(ajaxUrl, {
                             action: 'mis360_ai_test_api',
                             provider: provider,
+                            key: keyVal,
+                            model: modelVal,
                             security: nonce
                         }, function(res) {
                             if (res.success) {
