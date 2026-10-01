@@ -9,7 +9,7 @@
  * - Otomatik Kategori, Etiket, Meta ve İlgili Ürün CTA Entegrasyonu
  *
  * @package Mis360-Mobilya
- * @version 1.9.90
+ * @version 1.9.91
  * @author Serkan AKKAYA & MİS360
  */
 
@@ -288,7 +288,7 @@ class Emdief_AI_Blog_Generator {
      * API İstek Motoru (Gemini, OpenAI, Groq, Nvidia)
      * Akıllı Otomatik Model Geçişi & Detaylı Hata Yakalama
      */
-    public static function call_ai_api($system_prompt, $user_prompt, $provider = null) {
+    public static function call_ai_api($system_prompt, $user_prompt, $provider = null, $custom_model = null) {
         if (empty($provider)) {
             $provider = get_option('mis360_ai_provider', 'gemini');
         }
@@ -296,71 +296,89 @@ class Emdief_AI_Blog_Generator {
         // 1. GOOGLE GEMINI
         if ($provider === 'gemini') {
             $api_key = get_option('mis360_gemini_api_key');
-            $chosen_model = get_option('mis360_gemini_model', 'gemini-2.5-flash');
+            $chosen_model = !empty($custom_model) ? $custom_model : get_option('mis360_gemini_model', 'gemini-2.5-flash');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Google Gemini API Anahtarı girilmemiş.'];
             }
 
-            // Otomatik model deneme sırası (2.5 Flash, 2.0 Flash, 2.5 Flash Lite, 1.5 Latest)
-            $models_to_try = array_values(array_unique(array_filter([
-                $chosen_model,
+            // Hesaptaki gerçek modelleri çek
+            $live_models = self::fetch_available_models('gemini', $api_key);
+            $candidate_models = !empty($live_models['models']) ? $live_models['models'] : [
                 'gemini-2.5-flash',
-                'gemini-2.0-flash',
+                'gemini-flash-latest',
                 'gemini-2.5-flash-lite',
-                'gemini-1.5-flash-latest',
-                'gemini-1.5-flash-002',
-                'gemini-1.5-pro-latest'
-            ])));
+                'gemini-2.0-flash'
+            ];
+
+            $clean_chosen = preg_replace('#^models/#', '', trim((string)$chosen_model));
+            if (!empty($clean_chosen)) {
+                array_unshift($candidate_models, $clean_chosen);
+            }
+            $models_to_try = array_values(array_unique(array_filter($candidate_models)));
 
             $last_error = 'Bilinmeyen Gemini yanıtı.';
-            foreach ($models_to_try as $model_item) {
-                $endpoint = sprintf(
-                    'https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s',
-                    urlencode($model_item),
-                    urlencode($api_key)
-                );
 
-                $payload = [
-                    'system_instruction' => [
-                        'parts' => [['text' => $system_prompt]]
-                    ],
-                    'contents' => [
-                        ['role' => 'user', 'parts' => [['text' => $user_prompt]]]
-                    ],
-                    'generationConfig' => [
-                        'temperature'     => 0.75,
-                        'maxOutputTokens' => 3000,
+            // Universal temiz payload (tüm Gemini sürümlerinde çalışır)
+            $full_text = (!empty($system_prompt) ? $system_prompt . "
+
+" : "") . $user_prompt;
+            $payload = [
+                'contents' => [
+                    [
+                        'role'  => 'user',
+                        'parts' => [['text' => $full_text]]
                     ]
+                ],
+                'generationConfig' => [
+                    'temperature'     => 0.7,
+                    'maxOutputTokens' => 3000,
+                ]
+            ];
+
+            foreach ($models_to_try as $model_item) {
+                $clean_m = preg_replace('#^models/#', '', trim($model_item));
+                
+                // Hem v1beta hem de v1 uç noktalarını dene
+                $endpoints = [
+                    sprintf('https://generativelanguage.googleapis.com/v1beta/models/%s:generateContent?key=%s', urlencode($clean_m), urlencode($api_key)),
+                    sprintf('https://generativelanguage.googleapis.com/v1/models/%s:generateContent?key=%s', urlencode($clean_m), urlencode($api_key))
                 ];
 
-                $response = wp_remote_post($endpoint, [
-                    'headers' => ['Content-Type' => 'application/json; charset=utf-8'],
-                    'body'    => wp_json_encode($payload),
-                    'timeout' => 60,
-                ]);
+                foreach ($endpoints as $endpoint) {
+                    $response = wp_remote_post($endpoint, [
+                        'headers' => [
+                            'Content-Type'   => 'application/json; charset=utf-8',
+                            'x-goog-api-key' => $api_key
+                        ],
+                        'body'    => wp_json_encode($payload),
+                        'timeout' => 45,
+                    ]);
 
-                if (is_wp_error($response)) {
-                    $last_error = $response->get_error_message();
-                    continue;
-                }
-
-                $code = wp_remote_retrieve_response_code($response);
-                $body = json_decode(wp_remote_retrieve_body($response), true);
-
-                if (!empty($body['candidates'][0]['content']['parts'][0]['text'])) {
-                    if ($model_item !== $chosen_model) {
-                        update_option('mis360_gemini_model', $model_item);
-                    }
-                    return ['success' => true, 'text' => $body['candidates'][0]['content']['parts'][0]['text'], 'model' => $model_item];
-                }
-
-                if (!empty($body['error']['message'])) {
-                    $last_error = $body['error']['message'];
-                    if (strpos($last_error, 'not found') !== false || strpos($last_error, 'not supported') !== false || $code === 404) {
+                    if (is_wp_error($response)) {
+                        $last_error = $response->get_error_message();
                         continue;
                     }
-                    break;
+
+                    $code = wp_remote_retrieve_response_code($response);
+                    $body = json_decode(wp_remote_retrieve_body($response), true);
+
+                    if (!empty($body['candidates'][0]['content']['parts'][0]['text'])) {
+                        // Çalışan modeli otomatik kaydet
+                        update_option('mis360_gemini_model', $clean_m);
+                        return [
+                            'success' => true,
+                            'text'    => $body['candidates'][0]['content']['parts'][0]['text'],
+                            'model'   => $clean_m
+                        ];
+                    }
+
+                    if (!empty($body['error']['message'])) {
+                        $last_error = $body['error']['message'];
+                        if (strpos($last_error, 'not found') !== false || strpos($last_error, 'not supported') !== false || $code === 404) {
+                            continue 2; // Sonraki modele geç
+                        }
+                    }
                 }
             }
 
@@ -370,73 +388,89 @@ class Emdief_AI_Blog_Generator {
         // 2. OPENAI (CHATGPT)
         elseif ($provider === 'openai') {
             $api_key = get_option('mis360_openai_api_key');
-            $model   = get_option('mis360_openai_model', 'gpt-4o-mini');
+            $chosen_model = !empty($custom_model) ? $custom_model : get_option('mis360_openai_model', 'gpt-4o-mini');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'OpenAI API Anahtarı girilmemiş.'];
             }
 
+            $live_models = self::fetch_available_models('openai', $api_key);
+            $candidate_models = !empty($live_models['models']) ? $live_models['models'] : ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo'];
+            if (!empty($chosen_model)) {
+                array_unshift($candidate_models, $chosen_model);
+            }
+            $models_to_try = array_values(array_unique(array_filter($candidate_models)));
+
             $endpoint = 'https://api.openai.com/v1/chat/completions';
-            $payload  = [
-                'model'    => $model,
-                'messages' => [
-                    ['role' => 'system', 'content' => $system_prompt],
-                    ['role' => 'user', 'content' => $user_prompt]
-                ],
-                'temperature' => 0.75,
-                'max_tokens'  => 3000,
-            ];
+            $last_error = 'Bilinmeyen OpenAI yanıtı.';
 
-            $response = wp_remote_post($endpoint, [
-                'headers' => [
-                    'Content-Type'  => 'application/json; charset=utf-8',
-                    'Authorization' => 'Bearer ' . $api_key,
-                ],
-                'body'    => wp_json_encode($payload),
-                'timeout' => 60,
-            ]);
+            foreach ($models_to_try as $model_item) {
+                $payload = [
+                    'model'    => $model_item,
+                    'messages' => [
+                        ['role' => 'system', 'content' => $system_prompt],
+                        ['role' => 'user', 'content' => $user_prompt]
+                    ],
+                    'temperature' => 0.75,
+                    'max_tokens'  => 3000,
+                ];
 
-            if (is_wp_error($response)) {
-                return ['success' => false, 'message' => 'OpenAI Hatası: ' . $response->get_error_message()];
-            }
+                $response = wp_remote_post($endpoint, [
+                    'headers' => [
+                        'Content-Type'  => 'application/json; charset=utf-8',
+                        'Authorization' => 'Bearer ' . $api_key,
+                    ],
+                    'body'    => wp_json_encode($payload),
+                    'timeout' => 60,
+                ]);
 
-            $body = json_decode(wp_remote_retrieve_body($response), true);
-            if (!empty($body['choices'][0]['message']['content'])) {
-                return ['success' => true, 'text' => $body['choices'][0]['message']['content']];
-            } else {
-                $err = $body['error']['message'] ?? 'Bilinmeyen OpenAI yanıtı.';
-                if (strpos($err, 'no credits') !== false || strpos($err, 'insufficient_quota') !== false) {
-                    $err .= ' (💡 Tavsiye: OpenAI hesabınızda bakiye kalmadığında tamamen ücretsiz çalışan Google Gemini veya Groq sağlayıcısını seçebilirsiniz.)';
+                if (is_wp_error($response)) {
+                    $last_error = $response->get_error_message();
+                    continue;
                 }
-                return ['success' => false, 'message' => 'OpenAI Hata: ' . $err];
+
+                $body = json_decode(wp_remote_retrieve_body($response), true);
+                if (!empty($body['choices'][0]['message']['content'])) {
+                    update_option('mis360_openai_model', $model_item);
+                    return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
+                }
+
+                if (!empty($body['error']['message'])) {
+                    $last_error = $body['error']['message'];
+                    if (strpos($last_error, 'no credits') !== false || strpos($last_error, 'insufficient_quota') !== false) {
+                        return ['success' => false, 'message' => 'OpenAI Hata: Bakiye kalmamış ($0.00). Google Gemini veya Groq ücretsizdir.'];
+                    }
+                    if (strpos($last_error, 'does not exist') !== false || strpos($last_error, 'model') !== false) {
+                        continue;
+                    }
+                    break;
+                }
             }
+
+            return ['success' => false, 'message' => 'OpenAI Hata: ' . $last_error];
         }
 
         // 3. GROQ (ULTRA HIZLI LLAMA)
         elseif ($provider === 'groq') {
             $api_key = get_option('mis360_groq_api_key');
-            $chosen_model = get_option('mis360_groq_model', 'llama-3.1-8b-instant');
+            $chosen_model = !empty($custom_model) ? $custom_model : get_option('mis360_groq_model', 'llama-3.1-8b-instant');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Groq API Anahtarı girilmemiş.'];
             }
 
-            // Groq güncel modelleri (versatile kaldırıldığı için instant & llama3 öncelikli)
-            $models_to_try = array_values(array_unique(array_filter([
-                $chosen_model,
-                'llama-3.1-8b-instant',
-                'llama-3.3-70b-specdec',
-                'llama3-70b-8192',
-                'llama3-8b-8192',
-                'mixtral-8x7b-32768',
-                'gemma2-9b-it'
-            ])));
+            $live_models = self::fetch_available_models('groq', $api_key);
+            $candidate_models = !empty($live_models['models']) ? $live_models['models'] : ['llama-3.1-8b-instant', 'llama-3.3-70b-specdec', 'llama3-70b-8192'];
+            if (!empty($chosen_model)) {
+                array_unshift($candidate_models, $chosen_model);
+            }
+            $models_to_try = array_values(array_unique(array_filter($candidate_models)));
 
             $endpoint = 'https://api.groq.com/openai/v1/chat/completions';
             $last_error = 'Bilinmeyen Groq yanıtı.';
 
             foreach ($models_to_try as $model_item) {
-                $payload  = [
+                $payload = [
                     'model'    => $model_item,
                     'messages' => [
                         ['role' => 'system', 'content' => $system_prompt],
@@ -460,19 +494,15 @@ class Emdief_AI_Blog_Generator {
                     continue;
                 }
 
-                $code = wp_remote_retrieve_response_code($response);
                 $body = json_decode(wp_remote_retrieve_body($response), true);
-
                 if (!empty($body['choices'][0]['message']['content'])) {
-                    if ($model_item !== $chosen_model) {
-                        update_option('mis360_groq_model', $model_item);
-                    }
+                    update_option('mis360_groq_model', $model_item);
                     return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
                 }
 
                 if (!empty($body['error']['message'])) {
                     $last_error = $body['error']['message'];
-                    if (strpos($last_error, 'does not exist') !== false || strpos($last_error, 'decommissioned') !== false || $code === 404) {
+                    if (strpos($last_error, 'does not exist') !== false || strpos($last_error, 'decommissioned') !== false) {
                         continue;
                     }
                     break;
@@ -485,26 +515,29 @@ class Emdief_AI_Blog_Generator {
         // 4. NVIDIA AI (NIM)
         elseif ($provider === 'nvidia') {
             $api_key = get_option('mis360_nvidia_api_key');
-            $chosen_model = get_option('mis360_nvidia_model', 'nvidia/llama-3.1-nemotron-70b-instruct');
+            $chosen_model = !empty($custom_model) ? $custom_model : get_option('mis360_nvidia_model', 'nvidia/llama-3.1-nemotron-70b-instruct');
 
             if (empty($api_key)) {
                 return ['success' => false, 'message' => 'Nvidia AI API Anahtarı girilmemiş.'];
             }
 
-            $models_to_try = array_values(array_unique(array_filter([
-                $chosen_model,
+            $live_models = self::fetch_available_models('nvidia', $api_key);
+            $candidate_models = !empty($live_models['models']) ? $live_models['models'] : [
                 'nvidia/llama-3.1-nemotron-70b-instruct',
                 'meta/llama-3.2-11b-vision-instruct',
                 'mistralai/mistral-large-2-instruct',
-                'deepseek-ai/deepseek-v4.1-flash',
-                'meta/llama-3.2-90b-vision-instruct'
-            ])));
+                'deepseek-ai/deepseek-v4.1-flash'
+            ];
+            if (!empty($chosen_model)) {
+                array_unshift($candidate_models, $chosen_model);
+            }
+            $models_to_try = array_values(array_unique(array_filter($candidate_models)));
 
             $endpoint = 'https://integrate.api.nvidia.com/v1/chat/completions';
             $last_error = 'Bilinmeyen Nvidia yanıtı.';
 
             foreach ($models_to_try as $model_item) {
-                $payload  = [
+                $payload = [
                     'model'    => $model_item,
                     'messages' => [
                         ['role' => 'system', 'content' => $system_prompt],
@@ -528,32 +561,21 @@ class Emdief_AI_Blog_Generator {
                     continue;
                 }
 
-                $code = wp_remote_retrieve_response_code($response);
-                $raw_body = wp_remote_retrieve_body($response);
-                $body = json_decode($raw_body, true);
-
+                $body = json_decode(wp_remote_retrieve_body($response), true);
                 if (!empty($body['choices'][0]['message']['content'])) {
-                    if ($model_item !== $chosen_model) {
-                        update_option('mis360_nvidia_model', $model_item);
-                    }
+                    update_option('mis360_nvidia_model', $model_item);
                     return ['success' => true, 'text' => $body['choices'][0]['message']['content'], 'model' => $model_item];
                 }
 
                 if (!empty($body['detail'])) {
-                    if (is_array($body['detail'])) {
-                        $last_error = json_encode($body['detail'], JSON_UNESCAPED_UNICODE);
-                    } else {
-                        $last_error = (string)$body['detail'];
-                    }
+                    $last_error = is_array($body['detail']) ? json_encode($body['detail'], JSON_UNESCAPED_UNICODE) : (string)$body['detail'];
                 } elseif (!empty($body['error']['message'])) {
                     $last_error = (string)$body['error']['message'];
-                } elseif (!empty($body['message'])) {
-                    $last_error = (string)$body['message'];
                 } else {
-                    $last_error = 'HTTP ' . $code . ': ' . substr($raw_body, 0, 200);
+                    $last_error = (string)($body['message'] ?? 'Bilinmeyen yanıt');
                 }
 
-                if ($code === 404 || strpos($last_error, 'not found') !== false || strpos($last_error, 'Model') !== false) {
+                if (strpos($last_error, 'not found') !== false || strpos($last_error, 'model') !== false) {
                     continue;
                 }
                 break;
