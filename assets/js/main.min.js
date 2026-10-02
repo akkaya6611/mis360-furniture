@@ -91,19 +91,23 @@ function mis360Init() {
         });
     }
 
-    // 1.1. Masaüstü Dropdown Menü Tıklama Desteği
+    // 1.1. Masaüstü Dropdown Menü Tıklama & Hover Desteği
     const dropdownParents = document.querySelectorAll('.emdief-nav-menu li.menu-item-has-children');
     dropdownParents.forEach(item => {
         const link = item.querySelector(':scope > a');
         if (link) {
             link.addEventListener('click', (e) => {
-                // Eğer menü henüz açık değilse dropdown'ı aç
-                if (!item.classList.contains('is-open')) {
-                    e.preventDefault();
-                    dropdownParents.forEach(other => {
-                        if (other !== item) other.classList.remove('is-open');
-                    });
+                e.preventDefault();
+                e.stopPropagation();
+                const wasOpen = item.classList.contains('is-open');
+                dropdownParents.forEach(other => {
+                    other.classList.remove('is-open');
+                    const otherLink = other.querySelector(':scope > a');
+                    if (otherLink) otherLink.setAttribute('aria-expanded', 'false');
+                });
+                if (!wasOpen) {
                     item.classList.add('is-open');
+                    link.setAttribute('aria-expanded', 'true');
                 }
             });
         }
@@ -112,7 +116,22 @@ function mis360Init() {
     // Sayfa dışına tıklandığında açık dropdown'ı kapat
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.menu-item-has-children')) {
-            dropdownParents.forEach(item => item.classList.remove('is-open'));
+            dropdownParents.forEach(item => {
+                item.classList.remove('is-open');
+                const link = item.querySelector(':scope > a');
+                if (link) link.setAttribute('aria-expanded', 'false');
+            });
+        }
+    });
+
+    // ESC tuşuna basıldığında açık dropdown'ı kapat
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdownParents.forEach(item => {
+                item.classList.remove('is-open');
+                const link = item.querySelector(':scope > a');
+                if (link) link.setAttribute('aria-expanded', 'false');
+            });
         }
     });
 

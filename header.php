@@ -171,12 +171,14 @@ if (!defined('ABSPATH')) {
                     <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">📦 <?php esc_html_e('Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🛠️ <?php esc_html_e('Kurulum', 'mis360-mobilya'); ?></a></li>
                     <li class="menu-item-has-children">
-                        <a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Kurumsal', 'mis360-mobilya'); ?> <span class="nav-arrow-down">▾</span></a>
+                        <a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>" class="nav-corp-trigger" aria-haspopup="true" aria-expanded="false"><?php esc_html_e('Kurumsal', 'mis360-mobilya'); ?> <span class="nav-arrow-down">▾</span></a>
                         <ul class="sub-menu">
-                            <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">🧸 <?php esc_html_e('Hakkımızda & Montessori Felsefesi', 'mis360-mobilya'); ?></a></li>
-                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('Kargo & İade Koşulları', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">🧸 <?php esc_html_e('Hakkımızda & Montessori', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('Teslimat ve İade Koşulları', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>">📝 <?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>">🍪 <?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>">🛡️ <?php esc_html_e('Gizlilik & KVKK Metni', 'mis360-mobilya'); ?></a></li>
                             <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📍 <?php esc_html_e('İletişim & Atölye', 'mis360-mobilya'); ?></a></li>
-                            <li><a href="<?php echo esc_url(home_url('/gizlilik-ve-kvkk/')); ?>">🛡️ <?php esc_html_e('Gizlilik & KVKK', 'mis360-mobilya'); ?></a></li>
                         </ul>
                     </li>
                 </ul>
