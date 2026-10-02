@@ -341,6 +341,29 @@ function mis360_setup_corporate_pages() {
             $existing = get_page_by_title($page_data['title'], OBJECT, 'page');
         }
 
+        // Çöp kutusunda (trash) veya başka durumda kalmışsa kurtar ve yayına al
+        if (!$existing) {
+            $trashed_row = $wpdb->get_row($wpdb->prepare(
+                "SELECT * FROM {$wpdb->posts} WHERE (post_name = %s OR post_name LIKE %s) AND post_type = 'page' ORDER BY ID DESC LIMIT 1",
+                $slug,
+                $slug . '__trashed%'
+            ));
+            if ($trashed_row) {
+                $wpdb->update(
+                    $wpdb->posts,
+                    [
+                        'post_status' => 'publish',
+                        'post_name'   => $slug,
+                    ],
+                    ['ID' => $trashed_row->ID]
+                );
+                clean_post_cache($trashed_row->ID);
+                $existing = get_post($trashed_row->ID);
+            }
+        }
+
+        $target_template = isset($page_data['template']) ? $page_data['template'] : 'page-corporate.php';
+
         if (!$existing) {
             $page_id = wp_insert_post([
                 'post_title'     => $page_data['title'],
@@ -353,10 +376,24 @@ function mis360_setup_corporate_pages() {
             ]);
 
             if ($page_id && !is_wp_error($page_id)) {
-                $target_template = isset($page_data['template']) ? $page_data['template'] : 'page-corporate.php';
                 update_post_meta($page_id, '_wp_page_template', $target_template);
             }
         } else {
+            // Yayında değilse hemen yayına al
+            if ($existing->post_status !== 'publish') {
+                wp_update_post([
+                    'ID'          => $existing->ID,
+                    'post_status' => 'publish',
+                    'post_name'   => $slug,
+                ]);
+            }
+
+            // Mevcut sayfa şablonunu garantiye al
+            $current_template = get_post_meta($existing->ID, '_wp_page_template', true);
+            if (empty($current_template) || $current_template === 'default' || $current_template !== $target_template) {
+                update_post_meta($existing->ID, '_wp_page_template', $target_template);
+            }
+
             // Eğer içerikte eski unvan, eksik adres veya eski Kredi Kartı ibaresi varsa ya da Banka Havalesi / geniş Montessori ürünleri eksikse güncelle
             $needs_refresh = false;
             if (!empty($existing->post_content)) {
@@ -386,12 +423,6 @@ function mis360_setup_corporate_pages() {
                     'post_content' => $page_data['content'],
                 ]);
             }
-
-            // Mevcut sayfa şablonunu kontrol et
-            $current_template = get_post_meta($existing->ID, '_wp_page_template', true);
-            if (empty($current_template) || $current_template === 'default') {
-                update_post_meta($existing->ID, '_wp_page_template', 'page-corporate.php');
-            }
         }
     }
 }
@@ -399,13 +430,16 @@ add_action('after_switch_theme', 'mis360_setup_corporate_pages');
 add_action('admin_init', 'mis360_setup_corporate_pages');
 
 /**
- * İlk sayfa yüklemesinde (ön yüz veya arka yüz) veritabanı senkronizasyonunu tetikle
+ * Her tema sürümünde kurumsal sayfaları ve yardım merkezini otomatik senkronize et
  */
 function mis360_maybe_sync_corporate_pages() {
-    $version_key = 'mis360_corporate_v151_synced';
-    if (!get_option($version_key) || is_admin()) {
+    $synced_version = get_option('mis360_corporate_synced_version');
+    $current_theme_version = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION : '1.9.94';
+    if ($synced_version !== $current_theme_version || is_admin()) {
         mis360_setup_corporate_pages();
-        update_option($version_key, 1);
+        update_option('mis360_corporate_synced_version', $current_theme_version);
+        // Rewrite kurallarını 1 kez yenile
+        flush_rewrite_rules(false);
     }
 }
 add_action('init', 'mis360_maybe_sync_corporate_pages');
@@ -436,36 +470,126 @@ function mis360_clean_corporate_content($content) {
 add_filter('the_content', 'mis360_clean_corporate_content', 1);
 
 /**
- * Sayfa Görüntülenirken Kurumsal Şablonu Otomatik Filtrele
+ * İstek URL'sinden veya sorgu değişkenlerinden hedef slug'ı çözümle
  */
-function mis360_corporate_template_include($template) {
-    if (is_page()) {
-        global $post;
-        if ($post && in_array($post->post_name, ['yardim-merkezi', 'help-center', 'kurulum-videolari'], true)) {
-            $help_template = locate_template(['page-help-center.php']);
-            if (!empty($help_template)) {
-                return $help_template;
-            }
+function mis360_extract_request_slug() {
+    global $wp, $post;
+
+    if ($post && !empty($post->post_name)) {
+        return sanitize_title($post->post_name);
+    }
+
+    if (!empty(get_query_var('pagename'))) {
+        return sanitize_title(get_query_var('pagename'));
+    }
+
+    if (!empty(get_query_var('name'))) {
+        return sanitize_title(get_query_var('name'));
+    }
+
+    if (!empty($wp->request)) {
+        $parts = explode('/', trim($wp->request, '/'));
+        return sanitize_title(end($parts));
+    }
+
+    $req_path = trim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/');
+    if (!empty($req_path)) {
+        $parts = explode('/', $req_path);
+        return sanitize_title(end($parts));
+    }
+
+    return '';
+}
+
+/**
+ * Yardım Merkezi & Kurumsal Sayfalar 404 Kalkanı ve Sanal Sayfa Çözümleyici
+ * Herhangi bir rewrite kuralı veya eksik veritabanı kaydı durumunda 404 hatasını önler ve 200 OK ile açar.
+ */
+function mis360_corporate_and_help_fallback() {
+    $slug = mis360_extract_request_slug();
+    if (empty($slug)) {
+        return;
+    }
+
+    $help_slugs = ['yardim-merkezi', 'help-center', 'kurulum-videolari'];
+    $corp_aliases = [
+        'about-us'      => 'hakkimizda',
+        'teslimat-iade' => 'teslimat-ve-iade',
+        'kvkk'          => 'gizlilik-ve-kvkk',
+    ];
+    $corp_pages = mis360_get_corporate_pages_data();
+
+    $is_help = in_array($slug, $help_slugs, true);
+    $target_corp_slug = null;
+
+    if (isset($corp_pages[$slug])) {
+        $target_corp_slug = $slug;
+    } elseif (isset($corp_aliases[$slug])) {
+        $target_corp_slug = $corp_aliases[$slug];
+    }
+
+    if ($is_help || $target_corp_slug) {
+        $resolved_slug = $is_help ? 'yardim-merkezi' : $target_corp_slug;
+        $page = get_page_by_path($resolved_slug, OBJECT, 'page');
+
+        if (!$page || $page->post_status !== 'publish') {
+            mis360_setup_corporate_pages();
+            $page = get_page_by_path($resolved_slug, OBJECT, 'page');
         }
 
-        $corp_slugs = [
-            'cerez-politikasi',
-            'gizlilik-ve-kvkk',
-            'mesafeli-satis-sozlesmesi',
-            'teslimat-ve-iade',
-            'hakkimizda',
-            'iletisim',
-            'about-us',
-            'teslimat-iade',
-            'kvkk'
-        ];
-        if ($post && in_array($post->post_name, $corp_slugs, true)) {
-            $corp_template = locate_template(['page-corporate.php']);
-            if (!empty($corp_template)) {
-                return $corp_template;
+        global $wp_query, $post;
+        status_header(200);
+
+        if ($wp_query) {
+            $wp_query->is_404      = false;
+            $wp_query->is_page     = true;
+            $wp_query->is_singular = true;
+
+            if ($page) {
+                $wp_query->post              = $page;
+                $wp_query->posts             = [$page];
+                $wp_query->post_count        = 1;
+                $wp_query->queried_object    = $page;
+                $wp_query->queried_object_id = $page->ID;
+                $GLOBALS['post']             = $page;
             }
         }
     }
+}
+add_action('template_redirect', 'mis360_corporate_and_help_fallback', 1);
+
+/**
+ * Sayfa Görüntülenirken Kurumsal ve Yardım Şablonunu Kesin Olarak Dahil Et
+ */
+function mis360_corporate_template_include($template) {
+    $slug = mis360_extract_request_slug();
+
+    $help_slugs = ['yardim-merkezi', 'help-center', 'kurulum-videolari'];
+    if (in_array($slug, $help_slugs, true) || is_page_template('page-help-center.php')) {
+        $help_template = locate_template(['page-help-center.php']);
+        if (!empty($help_template)) {
+            return $help_template;
+        }
+    }
+
+    $corp_slugs = [
+        'cerez-politikasi',
+        'gizlilik-ve-kvkk',
+        'mesafeli-satis-sozlesmesi',
+        'teslimat-ve-iade',
+        'hakkimizda',
+        'iletisim',
+        'about-us',
+        'teslimat-iade',
+        'kvkk',
+    ];
+    if (in_array($slug, $corp_slugs, true) || is_page_template('page-corporate.php')) {
+        $corp_template = locate_template(['page-corporate.php']);
+        if (!empty($corp_template)) {
+            return $corp_template;
+        }
+    }
+
     return $template;
 }
 add_filter('template_include', 'mis360_corporate_template_include', 99);

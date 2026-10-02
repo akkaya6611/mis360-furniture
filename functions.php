@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_MOBILYA_VERSION', '1.9.93');
+define('MIS360_MOBILYA_VERSION', '1.9.94');
 define('MIS360_MOBILYA_DIR', get_template_directory());
 define('MIS360_MOBILYA_URI', get_template_directory_uri());
 
@@ -63,6 +63,18 @@ function mis360_cleanup_head() {
     remove_action('wp_head', 'wp_shortlink_wp_head');
 }
 add_action('init', 'mis360_cleanup_head');
+
+/**
+ * Tema güncellemesinde veya kurumsal sayfalarda rewrite kurallarını bir kez yenile
+ */
+function mis360_maybe_flush_rewrites() {
+    $flushed_ver = get_option('mis360_rewrite_flushed_ver');
+    if ($flushed_ver !== MIS360_MOBILYA_VERSION) {
+        flush_rewrite_rules(false);
+        update_option('mis360_rewrite_flushed_ver', MIS360_MOBILYA_VERSION);
+    }
+}
+add_action('init', 'mis360_maybe_flush_rewrites', 99);
 
 /**
  * WooCommerce Bilgilendirme Uyarısı (WooCommerce yoksa gösterilir)
