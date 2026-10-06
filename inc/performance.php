@@ -132,18 +132,25 @@ function mis360_performance_image_editor_output_format($formats) {
 add_filter('image_editor_output_format', 'mis360_performance_image_editor_output_format');
 
 /**
- * 8. On-the-fly WebP Delivery Filter
+ * 8. On-the-fly WebP Delivery Filter (Yalnızca Mevcut WebP'leri Sunar, Asla Senkron Dönüştürme ile Sunucuyu Kilitlemez)
  */
 function mis360_performance_serve_webp_attachment($image, $attachment_id, $size, $icon) {
+    static $webp_cache = [];
+
     try {
         if (!$image || !is_array($image) || empty($image[0])) {
             return $image;
         }
 
         $url = $image[0];
-        $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
+        if (isset($webp_cache[$url])) {
+            $image[0] = $webp_cache[$url];
+            return $image;
+        }
 
+        $ext = strtolower(pathinfo(parse_url($url, PHP_URL_PATH), PATHINFO_EXTENSION));
         if (!in_array($ext, ['jpg', 'jpeg', 'png'], true)) {
+            $webp_cache[$url] = $url;
             return $image;
         }
 
@@ -156,42 +163,23 @@ function mis360_performance_serve_webp_attachment($image, $attachment_id, $size,
         $base_dir   = $upload_dir['basedir'];
 
         if (strpos($url, $base_url) !== 0) {
+            $webp_cache[$url] = $url;
             return $image;
         }
 
-        $rel_path    = substr($url, strlen($base_url));
-        $file_path   = $base_dir . $rel_path;
-        $webp_path   = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_path);
-        $webp_url    = preg_replace('/\.(jpe?g|png)$/i', '.webp', $url);
+        $rel_path  = substr($url, strlen($base_url));
+        $file_path = $base_dir . $rel_path;
+        $webp_path = preg_replace('/\.(jpe?g|png)$/i', '.webp', $file_path);
+        $webp_url  = preg_replace('/\.(jpe?g|png)$/i', '.webp', $url);
 
+        // Yalnızca diskte zaten hazır webp varsa yönlendir (CPU kilitleyen GD encode yok)
         if (file_exists($webp_path)) {
+            $webp_cache[$url] = $webp_url;
             $image[0] = $webp_url;
             return $image;
         }
 
-        if (file_exists($file_path) && function_exists('imagewebp') && is_readable($file_path)) {
-            $created = false;
-            if ($ext === 'png' && function_exists('imagecreatefrompng')) {
-                $img = @imagecreatefrompng($file_path);
-                if ($img) {
-                    imagepalettetotruecolor($img);
-                    imagealphablending($img, true);
-                    imagesavealpha($img, true);
-                    $created = @imagewebp($img, $webp_path, 80);
-                    imagedestroy($img);
-                }
-            } elseif (in_array($ext, ['jpg', 'jpeg'], true) && function_exists('imagecreatefromjpeg')) {
-                $img = @imagecreatefromjpeg($file_path);
-                if ($img) {
-                    $created = @imagewebp($img, $webp_path, 82);
-                    imagedestroy($img);
-                }
-            }
-
-            if ($created && file_exists($webp_path)) {
-                $image[0] = $webp_url;
-            }
-        }
+        $webp_cache[$url] = $url;
     } catch (Throwable $e) {
         // Fail gracefully
     }

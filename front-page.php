@@ -312,6 +312,22 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8, array 
         return [];
     }
 
+    $cache_key = 'emdief_slider_v3_' . md5($type . '_' . $limit . '_' . implode(',', $exclude_ids));
+    $cached_ids = get_transient($cache_key);
+
+    if (is_array($cached_ids) && !empty($cached_ids)) {
+        $cached_prods = [];
+        foreach ($cached_ids as $p_id) {
+            $p = wc_get_product($p_id);
+            if ($p && $p->is_visible()) {
+                $cached_prods[] = $p;
+            }
+        }
+        if (!empty($cached_prods)) {
+            return $cached_prods;
+        }
+    }
+
     $base_args = [
         'limit'   => $limit,
         'status'  => 'publish',
@@ -381,6 +397,11 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8, array 
             'status'  => 'publish',
             'orderby' => 'rand',
         ]);
+    }
+
+    if (!empty($prods)) {
+        $prod_ids = wp_list_pluck($prods, 'id');
+        set_transient($cache_key, $prod_ids, 2 * HOUR_IN_SECONDS);
     }
 
     return $prods;

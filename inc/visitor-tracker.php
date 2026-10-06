@@ -133,7 +133,8 @@ function mis360_tracker_install_tables($force = false) {
 
     update_option('mis360_tracker_db_version', '1.0.2');
 }
-add_action('init', 'mis360_tracker_install_tables');
+add_action('after_switch_theme', 'mis360_tracker_install_tables');
+add_action('admin_init', 'mis360_tracker_install_tables');
 
 // -----------------------------------------------------------------------------
 // 2. YARDIMCI FONKSİYONLAR: BOT, CİHAZ, IP & REFERRER TESPİTİ
@@ -693,7 +694,8 @@ function mis360_tracker_register_cron() {
         wp_schedule_event(time() + 3600, 'daily', 'mis360_tracker_daily_purge_cron');
     }
 }
-add_action('init', 'mis360_tracker_register_cron');
+add_action('after_switch_theme', 'mis360_tracker_register_cron');
+add_action('admin_init', 'mis360_tracker_register_cron');
 
 function mis360_tracker_execute_purge() {
     global $wpdb;

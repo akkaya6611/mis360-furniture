@@ -427,19 +427,16 @@ function mis360_setup_corporate_pages() {
     }
 }
 add_action('after_switch_theme', 'mis360_setup_corporate_pages');
-add_action('admin_init', 'mis360_setup_corporate_pages');
 
 /**
- * Her tema sürümünde kurumsal sayfaları ve yardım merkezini otomatik senkronize et
+ * Her yeni tema sürümünde kurumsal sayfaları ve yardım merkezini bir kereliğine senkronize et
  */
 function mis360_maybe_sync_corporate_pages() {
     $synced_version = get_option('mis360_corporate_synced_version');
-    $current_theme_version = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION : '1.9.94';
-    if ($synced_version !== $current_theme_version || is_admin()) {
+    $current_theme_version = defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION : '1.9.97';
+    if ($synced_version !== $current_theme_version) {
         mis360_setup_corporate_pages();
         update_option('mis360_corporate_synced_version', $current_theme_version);
-        // Rewrite kurallarını 1 kez yenile
-        flush_rewrite_rules(false);
     }
 }
 add_action('init', 'mis360_maybe_sync_corporate_pages');

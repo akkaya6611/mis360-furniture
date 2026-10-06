@@ -67,6 +67,11 @@ class Mis360_Theme_Updater {
                 $runtime_cache = $cached;
                 return $cached;
             }
+
+            // Frontend sayfalarında önbellek yoksa asla GitHub'a senkron istek atıp sayfayı bekletme
+            if (!is_admin() && (!defined('DOING_CRON') || !DOING_CRON)) {
+                return false;
+            }
         }
 
         $remote_version = null;
