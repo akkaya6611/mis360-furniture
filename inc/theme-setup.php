@@ -88,3 +88,23 @@ function mis360_single_product_carousel_options($options) {
     return $options;
 }
 add_filter('woocommerce_single_product_carousel_options', 'mis360_single_product_carousel_options');
+
+/**
+ * /shop/ veya /shop/* İsteklerini Otomatik /magaza/ Sayfasına 301 Yönlendir (Kırık Link Engeli - v1.9.80)
+ */
+add_action('template_redirect', 'mis360_redirect_legacy_shop_urls', 1);
+function mis360_redirect_legacy_shop_urls() {
+    $uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = parse_url($uri, PHP_URL_PATH);
+    if ($path === '/shop' || $path === '/shop/') {
+        $shop_url = class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/magaza/');
+        if (empty($shop_url) || $shop_url === home_url('/')) {
+            $shop_url = home_url('/magaza/');
+        }
+        $query = parse_url($uri, PHP_URL_QUERY);
+        $target = $query ? ($shop_url . '?' . $query) : $shop_url;
+        wp_safe_redirect($target, 301);
+        exit;
+    }
+}
+

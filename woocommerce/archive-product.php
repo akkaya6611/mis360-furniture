@@ -54,7 +54,7 @@ if (function_exists('mis360_breadcrumbs')) {
             <div class="shop-category-bar-wrapper">
                 <div class="shop-category-pills" role="navigation" aria-label="<?php esc_attr_e('Ürün Kategorileri', 'mis360-mobilya'); ?>">
                     <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="cat-pill-item <?php echo $is_all_active ? 'is-active' : ''; ?>">
-                        <span class="cat-pill-icon">✨</span>
+                        <span class="cat-pill-icon"><?php echo function_exists('mis360_get_category_svg') ? mis360_get_category_svg('all') : '🛍️'; ?></span>
                         <span class="cat-pill-name"><?php esc_html_e('Tüm Ürünler', 'mis360-mobilya'); ?></span>
                         <?php if ($total_products > 0): ?>
                             <span class="cat-pill-count"><?php echo esc_html($total_products); ?></span>
@@ -111,4 +111,5 @@ if (function_exists('mis360_breadcrumbs')) {
 </div>
 
 <?php
+if (function_exists('mis360_render_seo_topical_silo')) { mis360_render_seo_topical_silo(); }
 get_footer('shop');

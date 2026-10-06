@@ -1,19 +1,21 @@
 <?php
 /**
- * Emdief Home Profesyonel E-Ticaret SEO, GEO & Zengin Veri (Schema.org) Motoru
+ * Emdief Home Profesyonel E-Ticaret SEO, GEO & Zengin Veri (Schema.org) Motoru (v2.0)
  *
+ * - Google 2026 Merchant Center Uyumlu Kargo (OrderCutoffTime: 13:00, Handling/Transit) & İade (MerchantReturnPolicy) Şemaları
+ * - Google Rich Snippets: Product, BreadcrumbList, WebSite, FAQPage, VideoObject, ItemList, FurnitureStore, Speakable
+ * - Sesli Arama & AI Motorları (Google Asistan, Siri, SpeakableSpecification) Şeması
  * - GEO Coğrafi Hedefleme (Kayseri / Kocasinan Mobilya Kent Yerel SEO Etiketleri)
- * - Google Rich Snippets (Product, BreadcrumbList, WebSite, FAQPage, VideoObject, ItemList, FurnitureStore)
- * - OpenGraph (Facebook, WhatsApp, Instagram Paylaşım Kartları)
- * - Twitter Cards (Geniş Görselli Kartlar & E-Ticaret Fiyat/Stok Etiketleri)
- * - Otomatik Meta Description, Robots, Canonical & Hreflang
- * - DNS-Prefetch & Preconnect Optimizasyonları (Fontlar, YouTube CDN)
+ * - OpenGraph (Facebook, WhatsApp, Instagram Video & Ürün Paylaşım Kartları)
+ * - Twitter Cards (Geniş Görselli Kartlar, Fiyat, Stok ve Video Oynatıcılar)
+ * - Yüksek Tıklama Oranlı (High-CTR) Dinamik Başlık ve Meta Açıklama Motoru
+ * - Core Web Vitals (CWV) LCP Hızlandırma: Öne Çıkan Ürün Görseli İçin Otomatik Preload (fetchpriority="high")
  * - Otomatik Görsel SEO (Eksik Alt ve Title Etiketlerini Zenginleştirme)
- * - Google Merchant Center Uyumlu Kargo (ShippingDetails) & İade (MerchantReturnPolicy) Şemaları
- * - Dinamik Robots.txt ve Arama Motoru Harita Direktifleri
+ * - Dinamik Robots.txt ve Arama Motoru Harita Direktifleri (GPTBot, ClaudeBot, PerplexityBot Desteği)
+ * - /llms.txt ve /llms-full.txt Dinamik Uç Nokta Servisi
  *
  * @package Mis360-Mobilya
- * @version 1.7.5
+ * @version 2.0.0
  */
 
 if (!defined('ABSPATH')) {
@@ -31,10 +33,75 @@ function mis360_is_external_seo_active(): bool {
 }
 
 /**
- * 1. META ETİKETLERİ: Canonical, Hreflang, GEO, Robots, Description, OpenGraph & Twitter Cards
+ * 1. YÜKSEK TIKLAMA ORANLI (HIGH-CTR) DİNAMİK BAŞLIK MOTORU
+ */
+function mis360_filter_document_title_parts(array $parts): array {
+    if (mis360_is_external_seo_active()) {
+        return $parts;
+    }
+
+    $site_name = 'Emdief Home';
+
+    if (is_front_page()) {
+        $parts['title']   = 'Emdief Home | 1. Sınıf MDF & Masif Ahşap Montessori Çocuk Mobilyaları';
+        unset($parts['tagline'], $parts['site']);
+        return $parts;
+    }
+
+    if (class_exists('WooCommerce') && is_product()) {
+        global $product;
+        if (!$product instanceof WC_Product) {
+            $product = wc_get_product(get_the_ID());
+        }
+        if ($product instanceof WC_Product) {
+            $p_name = $product->get_name();
+            // Başlıkta gereksiz tire ve ekler varsa temizle
+            $parts['title'] = sprintf('%s | 1. Sınıf MDF & Masif Ahşap Montessori Mobilya', esc_html($p_name));
+            $parts['site']  = $site_name;
+            unset($parts['tagline']);
+            return $parts;
+        }
+    }
+
+    if (class_exists('WooCommerce') && is_product_taxonomy()) {
+        $term = get_queried_object();
+        if ($term && !is_wp_error($term)) {
+            $parts['title'] = sprintf('%s Fiyatları & Modelleri | Montessori Çocuk Mobilyaları', esc_html($term->name));
+            $parts['site']  = $site_name;
+            unset($parts['tagline']);
+            return $parts;
+        }
+    }
+
+    if (class_exists('WooCommerce') && is_shop()) {
+        $parts['title'] = 'Montessori Çocuk Mobilyaları & Eğitici Kitaplık Modelleri | İmalatçı';
+        $parts['site']  = $site_name;
+        unset($parts['tagline']);
+        return $parts;
+    }
+
+    if (is_page('yardim-merkezi') || is_page_template('page-help-center.php') || is_page_template('page-yardim-merkezi.php')) {
+        $parts['title'] = 'Montessori Mobilya Video Kurulum Rehberleri & 5 Dk Montaj Desteği';
+        $parts['site']  = $site_name;
+        unset($parts['tagline']);
+        return $parts;
+    }
+
+    if (is_page('iletisim')) {
+        $parts['title'] = 'İletişim, Atölye & Fabrika Satış | Emdief Home Kayseri';
+        $parts['site']  = $site_name;
+        unset($parts['tagline']);
+        return $parts;
+    }
+
+    return $parts;
+}
+add_filter('document_title_parts', 'mis360_filter_document_title_parts', 20);
+
+/**
+ * 2. META ETİKETLERİ: Canonical, Hreflang, GEO, Robots, Description, OpenGraph & Twitter Cards
  */
 function mis360_output_seo_meta_tags(): void {
-    // Harici SEO eklentisi varsa meta etiketlerini mükerrer üretme
     if (mis360_is_external_seo_active()) {
         return;
     }
@@ -42,12 +109,15 @@ function mis360_output_seo_meta_tags(): void {
     $site_name   = get_bloginfo('name') ?: 'Emdief Home';
     $title       = wp_get_document_title();
     $description = '';
-    $canonical   = home_url(add_query_arg([], null));
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+    $canonical   = home_url(strtok($request_uri, '?'));
     $og_type     = 'website';
     $og_image    = get_template_directory_uri() . '/assets/images/emdief-home-logo.webp';
     $og_image_w  = '1200';
     $og_image_h  = '630';
     $og_price    = null;
+    $yt_video_id = null;
+    $main_img_preload = null;
 
     // A) Tekil Ürün Sayfası
     if (class_exists('WooCommerce') && is_product()) {
@@ -59,9 +129,10 @@ function mis360_output_seo_meta_tags(): void {
             $og_type     = 'product';
             $canonical   = get_permalink($product->get_id());
             $raw_desc    = $product->get_short_description() ?: $product->get_description();
-            $description = wp_trim_words(wp_strip_all_tags($raw_desc), 28, '...');
+            $clean_desc  = wp_strip_all_tags($raw_desc);
+            $description = wp_trim_words($clean_desc, 28, '...');
             if (!$description) {
-                $description = sprintf('%s - 1. Sınıf MDF çocuk odası Montessori mobilyası, sivri köşesiz yuvarlatılmış kavisler, CNC hazır montaj delikleri ve 1.500 TL üzeri ücretsiz kargo avantajıyla Emdief Home\'da.', $product->get_name());
+                $description = sprintf('%s - E1 normlarında 1. Sınıf MDF ve doğal masif kayın ağacı çocuk mobilyası. Sivri köşesiz güvenli hatlar, CNC hazır delikli 5 dk kolay montaj, 1.500 TL üzeri ücretsiz kargo.', $product->get_name());
             }
             $img_id = $product->get_image_id();
             if ($img_id) {
@@ -70,6 +141,7 @@ function mis360_output_seo_meta_tags(): void {
                     $og_image   = $full_img[0];
                     $og_image_w = (string) $full_img[1];
                     $og_image_h = (string) $full_img[2];
+                    $main_img_preload = $full_img[0];
                 }
             }
             $og_price = [
@@ -78,6 +150,14 @@ function mis360_output_seo_meta_tags(): void {
                 'in_stock' => $product->is_in_stock(),
                 'sku'      => $product->get_sku() ?: ('EMD-' . $product->get_id()),
             ];
+
+            // Kurulum videosu kontrolü
+            if (function_exists('mis360_get_product_installation_video')) {
+                $v_info = mis360_get_product_installation_video($product);
+                if (!empty($v_info['youtube_id'])) {
+                    $yt_video_id = $v_info['youtube_id'];
+                }
+            }
         }
     }
     // B) Kategori & Taksonomi Sayfaları
@@ -87,7 +167,7 @@ function mis360_output_seo_meta_tags(): void {
             $canonical   = get_term_link($term);
             $description = wp_strip_all_tags(term_description($term->term_id));
             if (!$description) {
-                $description = sprintf('%s koleksiyonu - Emdief Home 1. Sınıf MDF eğitici çocuk mobilyaları, güvenli yuvarlatılmış hatlar, kolay montaj ve hızlı kargo avantajı.', $term->name);
+                $description = sprintf('%s modelleri ve fiyatları - Emdief Home 1. Sınıf MDF & doğal ahşap Montessori çocuk mobilyaları, sivri köşesiz güvenli hatlar, 5 dakikada pratik kurulum ve ücretsiz kargo avantajı.', $term->name);
             }
             if (function_exists('get_term_meta')) {
                 $thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
@@ -106,12 +186,12 @@ function mis360_output_seo_meta_tags(): void {
     elseif (class_exists('WooCommerce') && is_shop()) {
         $shop_id     = wc_get_page_id('shop');
         $canonical   = get_permalink($shop_id);
-        $description = 'Emdief Home Montessori Çocuk Mobilyaları Mağazası - 1. Sınıf MDF eğitici kitaplıklar, ahşap oyuncaklar, masa & sandalye setleri ve pratik montajlı duvar rafları.';
+        $description = 'Emdief Home Montessori Çocuk Mobilyaları Mağazası - 1. Sınıf MDF eğitici kitaplıklar, ahşap oyuncaklar, oda düzenleyicileri ve pratik montajlı duvar rafları imalattan avantajlı fiyatlarla.';
     }
     // D) Yardım & Kurulum Merkezi Sayfası
     elseif (is_page('yardim-merkezi') || is_page_template('page-help-center.php') || is_page_template('page-yardim-merkezi.php')) {
         $canonical   = home_url('/yardim-merkezi/');
-        $description = 'Emdief Home Yardım & Kurulum Merkezi - Montessori kitaplık ve mobilyalarınızın şarjlı matkap ile 5 dakikada adım adım video montaj rehberleri, duvara sabitleme ve yedek parça desteği.';
+        $description = 'Emdief Home Yardım & Kurulum Merkezi - Montessori kitaplık ve çocuk mobilyalarınızın şarjlı matkap ile 5 dakikada adım adım video montaj rehberleri, duvara sabitleme ve yedek parça desteği.';
     }
     // E) Standart Tekil Yazı / Sayfa
     elseif (is_singular()) {
@@ -134,102 +214,183 @@ function mis360_output_seo_meta_tags(): void {
     // F) Ana Sayfa
     elseif (is_front_page() || is_home()) {
         $canonical   = home_url('/');
-        $description = 'Emdief Home - Özgüvenli minikler için 1. Sınıf MDF Montessori eğitici kitaplıklar, doğal ahşap oyuncaklar ve çocuk odası mobilyaları. Kayseri imalatı, toptan & perakende.';
+        $description = 'Emdief Home - Miniklerin bağımsız keşifleri için 1. Sınıf MDF & Masif Ahşap Montessori eğitici kitaplıklar, doğal ahşap oyuncaklar ve çocuk odası mobilyaları. Kayseri imalatı, toptan & perakende.';
     }
 
-    // Robots Direktifi: Filtreleme & Arama sonuçlarını indeksleme (Kopya sayfa cezasını önler)
-    $is_filtered = !empty($_GET['filter_cat']) || !empty($_GET['orderby']) || !empty($_GET['min_price']) || !empty($_GET['max_price']) || is_search();
+    // Robots Direktifi: Filtreleme, arama ve sıralama parametrelerinde arama motorunu kopyadan koru
+    $is_filtered = !empty($_GET['filter_cat']) || !empty($_GET['orderby']) || !empty($_GET['min_price']) || !empty($_GET['max_price']) || !empty($_GET['filter_color']) || !empty($_GET['filter_size']) || is_search();
     $robots = $is_filtered ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 
     // HTML Çıktısı
-    echo "\n<!-- Emdief Home Full SEO, GEO & Social Engine v1.7.5 -->\n";
-    
+    echo "
+<!-- Emdief Home Next-Gen SEO, GEO, AEO & Social Engine v2.0 -->
+";
+
+    // Core Web Vitals LCP Preload (Öne Çıkan Ürün Görselini En Yüksek Öncelikle Yükle)
+    if ($main_img_preload) {
+        echo '<link rel="preload" as="image" href="' . esc_url($main_img_preload) . '" fetchpriority="high">' . "
+";
+    }
+
     // DNS Prefetch & Preconnect Hızlandırma
-    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com">' . "\n";
-    echo '<link rel="dns-prefetch" href="//fonts.gstatic.com">' . "\n";
-    echo '<link rel="dns-prefetch" href="//www.youtube-nocookie.com">' . "\n";
-    echo '<link rel="dns-prefetch" href="//img.youtube.com">' . "\n";
+    echo '<link rel="dns-prefetch" href="//fonts.googleapis.com">' . "
+";
+    echo '<link rel="dns-prefetch" href="//fonts.gstatic.com">' . "
+";
+    echo '<link rel="dns-prefetch" href="//www.youtube-nocookie.com">' . "
+";
+    echo '<link rel="dns-prefetch" href="//img.youtube.com">' . "
+";
 
     // Standart SEO Meta
-    echo '<link rel="canonical" href="' . esc_url($canonical) . '">' . "\n";
-    echo '<link rel="alternate" hreflang="tr" href="' . esc_url($canonical) . '">' . "\n";
-    echo '<link rel="alternate" hreflang="x-default" href="' . esc_url($canonical) . '">' . "\n";
-    echo '<meta name="robots" content="' . esc_attr($robots) . '">' . "\n";
+    echo '<link rel="canonical" href="' . esc_url($canonical) . '">' . "
+";
+    echo '<link rel="alternate" hreflang="tr" href="' . esc_url($canonical) . '">' . "
+";
+    echo '<link rel="alternate" hreflang="x-default" href="' . esc_url($canonical) . '">' . "
+";
+    echo '<meta name="robots" content="' . esc_attr($robots) . '">' . "
+";
     if (!empty($description)) {
-        echo '<meta name="description" content="' . esc_attr($description) . '">' . "\n";
+        echo '<meta name="description" content="' . esc_attr($description) . '">' . "
+";
     }
-    echo '<meta name="author" content="Emdief Home">' . "\n";
-    echo '<meta name="copyright" content="Emdief Home - Montessori Çocuk Mobilyaları">' . "\n";
-    echo '<meta name="theme-color" content="#f27a1a">' . "\n";
-    echo '<meta name="format-detection" content="telephone=no">' . "\n";
+    echo '<meta name="author" content="Emdief Home">' . "
+";
+    echo '<meta name="copyright" content="Emdief Home - Montessori Çocuk Mobilyaları">' . "
+";
+    echo '<meta name="theme-color" content="#f27a1a">' . "
+";
+    echo '<meta name="format-detection" content="telephone=no">' . "
+";
 
-    // GEO & Coğrafi Hedefleme (Yerel SEO & Local Business)
-    echo '<meta name="geo.region" content="TR-38">' . "\n";
-    echo '<meta name="geo.placename" content="Kayseri, Kocasinan, Mobilya Kent">' . "\n";
-    echo '<meta name="geo.position" content="38.7312;35.4787">' . "\n";
-    echo '<meta name="ICBM" content="38.7312, 35.4787">' . "\n";
-    echo '<meta name="geo.country" content="TR">' . "\n";
+    // GEO & Coğrafi Hedefleme (Yerel SEO & Local Business - Panelden Dinamik Yönetilebilir)
+    $geo_region    = get_option('mis360_geo_region', 'TR-38');
+    $geo_city      = get_option('mis360_geo_city', 'Kayseri');
+    $geo_district  = get_option('mis360_geo_district', 'Kocasinan');
+    $geo_area      = get_option('mis360_geo_area', 'Mobilya Kent');
+    $geo_lat       = get_option('mis360_geo_lat', '38.7312');
+    $geo_lng       = get_option('mis360_geo_lng', '35.4787');
+    $geo_country   = get_option('mis360_geo_country', 'TR');
+    $geo_placename = get_option('mis360_geo_placename', trim($geo_city . ', ' . $geo_district . ', ' . $geo_area));
+    $geo_spatial   = get_option('mis360_geo_spatial', trim($geo_district . ', ' . $geo_city . ', Türkiye'));
+
+    echo '<meta name="geo.region" content="' . esc_attr($geo_region) . '">' . "\n";
+    echo '<meta name="geo.placename" content="' . esc_attr($geo_placename) . '">' . "\n";
+    echo '<meta name="geo.position" content="' . esc_attr($geo_lat . ';' . $geo_lng) . '">' . "\n";
+    echo '<meta name="ICBM" content="' . esc_attr($geo_lat . ', ' . $geo_lng) . '">' . "\n";
+    echo '<meta name="geo.country" content="' . esc_attr($geo_country) . '">' . "\n";
+    echo '<meta name="DC.title" content="' . esc_attr($title) . '">' . "\n";
+    echo '<meta name="DC.creator" content="Emdief Home &amp; Serkan AKKAYA">' . "\n";
+    echo '<meta name="DC.coverage" content="Turkey">' . "\n";
+    echo '<meta name="DC.spatial" content="' . esc_attr($geo_spatial) . '">' . "\n";
     echo '<meta http-equiv="content-language" content="tr">' . "\n";
 
-    // OpenGraph (Facebook, WhatsApp, Instagram, LinkedIn)
-    echo '<meta property="og:locale" content="tr_TR">' . "\n";
-    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "\n";
-    echo '<meta property="og:type" content="' . esc_attr($og_type) . '">' . "\n";
-    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "\n";
+    // OpenGraph (Facebook, WhatsApp, Instagram, LinkedIn, Telegram)
+    echo '<meta property="og:locale" content="tr_TR">' . "
+";
+    echo '<meta property="og:site_name" content="' . esc_attr($site_name) . '">' . "
+";
+    echo '<meta property="og:type" content="' . esc_attr($og_type) . '">' . "
+";
+    echo '<meta property="og:title" content="' . esc_attr($title) . '">' . "
+";
     if (!empty($description)) {
-        echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "\n";
+        echo '<meta property="og:description" content="' . esc_attr($description) . '">' . "
+";
     }
-    echo '<meta property="og:url" content="' . esc_url($canonical) . '">' . "\n";
+    echo '<meta property="og:url" content="' . esc_url($canonical) . '">' . "
+";
     if (!empty($og_image)) {
-        echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "\n";
-        echo '<meta property="og:image:secure_url" content="' . esc_url($og_image) . '">' . "\n";
-        echo '<meta property="og:image:width" content="' . esc_attr($og_image_w) . '">' . "\n";
-        echo '<meta property="og:image:height" content="' . esc_attr($og_image_h) . '">' . "\n";
-        echo '<meta property="og:image:type" content="image/jpeg">' . "\n";
-        echo '<meta property="og:image:alt" content="' . esc_attr($title) . '">' . "\n";
+        echo '<meta property="og:image" content="' . esc_url($og_image) . '">' . "
+";
+        echo '<meta property="og:image:secure_url" content="' . esc_url($og_image) . '">' . "
+";
+        echo '<meta property="og:image:width" content="' . esc_attr($og_image_w) . '">' . "
+";
+        echo '<meta property="og:image:height" content="' . esc_attr($og_image_h) . '">' . "
+";
+        echo '<meta property="og:image:type" content="image/jpeg">' . "
+";
+        echo '<meta property="og:image:alt" content="' . esc_attr($title) . '">' . "
+";
+    }
+
+    // OpenGraph Video (Kurulum videosu varsa WhatsApp ve sosyal medyada oynatılabilir video kartı üretir)
+    if ($yt_video_id) {
+        echo '<meta property="og:video" content="https://www.youtube.com/embed/' . esc_attr($yt_video_id) . '">' . "
+";
+        echo '<meta property="og:video:secure_url" content="https://www.youtube-nocookie.com/embed/' . esc_attr($yt_video_id) . '">' . "
+";
+        echo '<meta property="og:video:type" content="text/html">' . "
+";
+        echo '<meta property="og:video:width" content="1280">' . "
+";
+        echo '<meta property="og:video:height" content="720">' . "
+";
     }
 
     // WooCommerce Ürün OpenGraph & E-Ticaret Meta Etiketleri
     if ($og_price) {
-        echo '<meta property="product:price:amount" content="' . esc_attr($og_price['amount']) . '">' . "\n";
-        echo '<meta property="product:price:currency" content="' . esc_attr($og_price['currency']) . '">' . "\n";
-        echo '<meta property="product:availability" content="' . ($og_price['in_stock'] ? 'in stock' : 'out of stock') . '">' . "\n";
-        echo '<meta property="product:brand" content="Emdief Home">' . "\n";
-        echo '<meta property="product:condition" content="new">' . "\n";
-        echo '<meta property="product:retailer_item_id" content="' . esc_attr($og_price['sku']) . '">' . "\n";
+        echo '<meta property="product:price:amount" content="' . esc_attr($og_price['amount']) . '">' . "
+";
+        echo '<meta property="product:price:currency" content="' . esc_attr($og_price['currency']) . '">' . "
+";
+        echo '<meta property="product:availability" content="' . ($og_price['in_stock'] ? 'in stock' : 'out of stock') . '">' . "
+";
+        echo '<meta property="product:brand" content="Emdief Home">' . "
+";
+        echo '<meta property="product:condition" content="new">' . "
+";
+        echo '<meta property="product:retailer_item_id" content="' . esc_attr($og_price['sku']) . '">' . "
+";
     }
 
-    // Twitter Cards (Summary Large Image & E-Ticaret Bilgileri)
-    echo '<meta name="twitter:card" content="summary_large_image">' . "\n";
-    echo '<meta name="twitter:site" content="@emdiefhome">' . "\n";
-    echo '<meta name="twitter:creator" content="@emdiefhome">' . "\n";
-    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "\n";
+    // Twitter Cards (Summary Large Image & E-Ticaret Verileri)
+    echo '<meta name="twitter:card" content="summary_large_image">' . "
+";
+    echo '<meta name="twitter:site" content="@emdiefhome">' . "
+";
+    echo '<meta name="twitter:creator" content="@emdiefhome">' . "
+";
+    echo '<meta name="twitter:title" content="' . esc_attr($title) . '">' . "
+";
     if (!empty($description)) {
-        echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "\n";
+        echo '<meta name="twitter:description" content="' . esc_attr($description) . '">' . "
+";
     }
     if (!empty($og_image)) {
-        echo '<meta name="twitter:image" content="' . esc_url($og_image) . '">' . "\n";
-        echo '<meta name="twitter:image:alt" content="' . esc_attr($title) . '">' . "\n";
+        echo '<meta name="twitter:image" content="' . esc_url($og_image) . '">' . "
+";
+        echo '<meta name="twitter:image:alt" content="' . esc_attr($title) . '">' . "
+";
     }
     if ($og_price) {
-        echo '<meta name="twitter:label1" content="Fiyat">' . "\n";
-        echo '<meta name="twitter:data1" content="' . esc_attr(number_format((float) $og_price['amount'], 2, '.', '')) . ' TL">' . "\n";
-        echo '<meta name="twitter:label2" content="Stok Durumu">' . "\n";
-        echo '<meta name="twitter:data2" content="' . ($og_price['in_stock'] ? 'Stokta Var - Hemen Kargo' : 'Tükendi') . '">' . "\n";
+        echo '<meta name="twitter:label1" content="Fiyat">' . "
+";
+        echo '<meta name="twitter:data1" content="' . esc_attr(number_format((float) $og_price['amount'], 2, '.', '')) . ' TL">' . "
+";
+        echo '<meta name="twitter:label2" content="Stok Durumu">' . "
+";
+        echo '<meta name="twitter:data2" content="' . ($og_price['in_stock'] ? 'Stokta Var - Öncelikli Kargo' : 'Tükendi') . '">' . "
+";
     }
 
-    echo "<!-- / Emdief Home Full SEO, GEO & Social Engine v1.7.5 -->\n\n";
+    echo "<!-- / Emdief Home Next-Gen SEO Engine v2.0 -->
+
+";
 }
 add_action('wp_head', 'mis360_output_seo_meta_tags', 1);
 
 /**
- * 2. SCHEMA.ORG JSON-LD YAPISAL VERİ MOTORU (RICH SNIPPETS)
+ * 3. SCHEMA.ORG JSON-LD YAPISAL VERİ MOTORU (RICH SNIPPETS 2026 STANDARDI)
  */
 function mis360_output_json_ld(): void {
+    $phone = get_theme_mod('mis360_phone', '+90 537 477 87 66');
+
     // -------------------------------------------------------------------------
     // A) Kurumsal Mağaza & Yerel İşletme Şeması (FurnitureStore / LocalBusiness)
     // -------------------------------------------------------------------------
-    $phone = get_theme_mod('mis360_phone', '+90 537 477 87 66');
     $org_schema = [
         '@context'        => 'https://schema.org',
         '@type'           => ['FurnitureStore', 'HomeGoodsStore', 'LocalBusiness'],
@@ -244,34 +405,39 @@ function mis360_output_json_ld(): void {
             'width'  => '220',
             'height' => '60',
         ],
-        'image'           => 'https://emdiefhome.com.tr/wp-content/uploads/2026/08/banner-emdief1.jpg',
-        'description'     => 'Montessori felsefesine uygun 1. sınıf kaliteli MDF çocuk odası kitaplıkları, eğitici ahşap mobilyalar ve montaj kolaylığı sağlayan yerli üretim mobilya atölyesi.',
+        'image'           => get_template_directory_uri() . '/assets/images/banner-emdief.webp',
+        'description'     => 'Montessori felsefesine uygun 1. sınıf kaliteli MDF ve doğal masif kayın çocuk odası kitaplıkları, eğitici ahşap mobilyalar ve montaj kolaylığı sağlayan yerli üretim mobilya atölyesi.',
         'telephone'       => $phone,
         'email'           => 'info@emdiefhome.com.tr',
         'priceRange'      => '₺₺',
         'currenciesAccepted' => 'TRY',
-        'paymentAccepted' => 'Kredi Kartı, Banka Kartı, Havale/EFT, Peşin',
+        'paymentAccepted' => 'Banka Havalesi, EFT, FAST, Peşin',
         'foundingDate'    => '2020',
         'founder'         => [
             '@type' => 'Person',
             'name'  => 'Serkan Akkaya',
         ],
         'areaServed'      => [
-            '@type' => 'Country',
-            'name'  => 'Türkiye',
+            ['@type' => 'Country', 'name' => 'Türkiye'],
+            ['@type' => 'AdministrativeArea', 'name' => 'Kayseri'],
+            ['@type' => 'AdministrativeArea', 'name' => 'İstanbul'],
+            ['@type' => 'AdministrativeArea', 'name' => 'Ankara'],
+            ['@type' => 'AdministrativeArea', 'name' => 'İzmir'],
+            ['@type' => 'AdministrativeArea', 'name' => 'Bursa'],
+            ['@type' => 'AdministrativeArea', 'name' => 'Antalya'],
         ],
         'address'         => [
             '@type'           => 'PostalAddress',
-            'streetAddress'   => 'Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K',
-            'addressLocality' => 'Kocasinan',
-            'addressRegion'   => 'Kayseri',
-            'postalCode'      => '38070',
-            'addressCountry'  => 'TR',
+            'streetAddress'   => get_option('mis360_geo_street', 'Mobilya Kent Kırmızı Bloklar, Camikebir Mahallesi, 5066. Sk No:1 D:K'),
+            'addressLocality' => get_option('mis360_geo_district', 'Kocasinan'),
+            'addressRegion'   => get_option('mis360_geo_city', 'Kayseri'),
+            'postalCode'      => get_option('mis360_geo_postal', '38070'),
+            'addressCountry'  => get_option('mis360_geo_country', 'TR'),
         ],
         'geo'             => [
             '@type'     => 'GeoCoordinates',
-            'latitude'  => '38.7312',
-            'longitude' => '35.4787',
+            'latitude'  => (string) get_option('mis360_geo_lat', '38.7312'),
+            'longitude' => (string) get_option('mis360_geo_lng', '35.4787'),
         ],
         'openingHoursSpecification' => [
             [
@@ -301,10 +467,12 @@ function mis360_output_json_ld(): void {
         'hasMap'          => 'https://www.google.com/maps/place//data=!4m2!3m1!1s0x152b057da63cc6c7:0x45e8ad2179bc179c?sa=X&ved=1t:8290&ictx=111',
         'sameAs'          => [
             'https://www.instagram.com/emdiefhome/',
+            'https://www.youtube.com/@EmdiefHome',
             'https://wa.me/' . preg_replace('/[^0-9]/', '', (string) get_theme_mod('mis360_whatsapp', '905374778766')),
         ],
     ];
-    echo '<script type="application/ld+json">' . wp_json_encode($org_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+    echo '<script type="application/ld+json">' . wp_json_encode($org_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
 
     // -------------------------------------------------------------------------
     // B) WebSite & Sitelinks Searchbox Şeması (Google Arama Çubuğu)
@@ -326,7 +494,8 @@ function mis360_output_json_ld(): void {
                 'query-input' => 'required name=search_term_string',
             ],
         ];
-        echo '<script type="application/ld+json">' . wp_json_encode($website_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+        echo '<script type="application/ld+json">' . wp_json_encode($website_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
     }
 
     // -------------------------------------------------------------------------
@@ -412,12 +581,13 @@ function mis360_output_json_ld(): void {
                 '@type'           => 'BreadcrumbList',
                 'itemListElement' => $breadcrumb_items,
             ];
-            echo '<script type="application/ld+json">' . wp_json_encode($breadcrumb_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode($breadcrumb_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
         }
     }
 
     // -------------------------------------------------------------------------
-    // D) Gelişmiş Ürün Şeması (Google Merchant / Free Shipping & Returns Uyumlu)
+    // D) Gelişmiş Ürün Şeması (Google 2026 Merchant & AI Search Standartları)
     // -------------------------------------------------------------------------
     if (class_exists('WooCommerce') && is_product()) {
         $product = wc_get_product(get_the_ID());
@@ -444,17 +614,35 @@ function mis360_output_json_ld(): void {
             $shipping_cost = ($prod_price >= $free_shipping_limit) ? 0.0 : 89.0;
             $sku = $product->get_sku() ?: ('EMD-' . $product->get_id());
 
+            // İlgili ürünler (Knowledge Graph iç linkleme)
+            $related_ids = wc_get_related_products($product->get_id(), 3);
+            $related_urls = [];
+            foreach ($related_ids as $rid) {
+                $related_urls[] = get_permalink($rid);
+            }
+
+            // Marka belirleme (Üründe 'pa_marka' veya 'marka' niteliği varsa dinamik, yoksa Emdief Home)
+            $brand_name = 'Emdief Home';
+            if ($product->get_attribute('pa_marka')) {
+                $brand_name = $product->get_attribute('pa_marka');
+            } elseif ($product->get_attribute('marka')) {
+                $brand_name = $product->get_attribute('marka');
+            }
+
             $product_schema = [
                 '@context'        => 'https://schema.org',
                 '@type'           => 'Product',
                 '@id'             => get_permalink($product->get_id()) . '#product',
                 'name'            => $product->get_name(),
                 'image'           => count($images) === 1 ? $images[0] : $images,
-                'description'     => wp_strip_all_tags($product->get_short_description() ?: $product->get_description()) ?: ($product->get_name() . ' - 1. Sınıf kaliteli MDF Montessori çocuk mobilyası.'),
+                'description'     => wp_strip_all_tags($product->get_short_description() ?: $product->get_description()) ?: ($product->get_name() . ' - 1. Sınıf kaliteli MDF ve doğal ahşap Montessori çocuk mobilyası.'),
                 'sku'             => $sku,
                 'mpn'             => (string) $product->get_id(),
-                'category'        => $cat_name,
-                'material'        => '1. Sınıf Kaliteli MDF & Doğal Ahşap',
+                'category'        => 'Furniture > Baby & Toddler Furniture > Baby & Toddler Bookcases',
+                'material'        => '1. Sınıf Kaliteli MDF & Doğal Masif Kayın',
+                'pattern'         => 'Montessori',
+                'color'           => 'Doğal Ahşap & Beyaz',
+                'hasGS1Checksum'  => false,
                 'countryOfOrigin' => [
                     '@type' => 'Country',
                     'name'  => 'TR',
@@ -470,7 +658,12 @@ function mis360_output_json_ld(): void {
                 ],
                 'brand'           => [
                     '@type' => 'Brand',
-                    'name'  => 'Emdief Home',
+                    'name'  => esc_html($brand_name),
+                ],
+                // Sesli arama / AI asistanı okuma direktifi
+                'speakable'       => [
+                    '@type'       => 'SpeakableSpecification',
+                    'cssSelector' => ['.product_title', '.emdief-single-benefit-badge', '.summary.entry-summary'],
                 ],
                 'offers'          => [
                     '@type'         => 'Offer',
@@ -485,7 +678,13 @@ function mis360_output_json_ld(): void {
                         'name'  => 'Emdief Home',
                         'url'   => home_url('/'),
                     ],
-                    // Google Merchant: Kargo Detayı (1.500 TL Üzeri Ücretsiz)
+                    'priceSpecification' => [
+                        '@type'                 => 'PriceSpecification',
+                        'price'                 => number_format($prod_price, 2, '.', ''),
+                        'priceCurrency'         => get_woocommerce_currency(),
+                        'valueAddedTaxIncluded' => true,
+                    ],
+                    // Google 2026 Merchant: 13:00 Kesim Saati & Kargo Detayı (13:00 Canlı Sayacıyla Tam Entegre)
                     'shippingDetails' => [
                         '@type'               => 'OfferShippingDetails',
                         'shippingRate'        => [
@@ -499,9 +698,18 @@ function mis360_output_json_ld(): void {
                         ],
                         'deliveryTime'        => [
                             '@type'        => 'ShippingDeliveryTime',
+                            'businessDays' => [
+                                'https://schema.org/Monday',
+                                'https://schema.org/Tuesday',
+                                'https://schema.org/Wednesday',
+                                'https://schema.org/Thursday',
+                                'https://schema.org/Friday',
+                                'https://schema.org/Saturday',
+                            ],
+                            'cutoffTime'   => '13:00:00+03:00',
                             'handlingTime' => [
                                 '@type'    => 'QuantitativeValue',
-                                'minValue' => 1,
+                                'minValue' => 0,
                                 'maxValue' => 2,
                                 'unitCode' => 'DAY',
                             ],
@@ -513,7 +721,7 @@ function mis360_output_json_ld(): void {
                             ],
                         ],
                     ],
-                    // Google Merchant: 14 Gün Koşulsuz İade Politikası
+                    // Google 2026 Merchant: 14 Gün Koşulsuz Ücretsiz İade Politikası
                     'hasMerchantReturnPolicy' => [
                         '@type'                  => 'MerchantReturnPolicy',
                         'applicableCountry'      => 'TR',
@@ -521,9 +729,20 @@ function mis360_output_json_ld(): void {
                         'merchantReturnDays'     => 14,
                         'returnMethod'           => 'https://schema.org/ReturnByMail',
                         'returnFees'             => 'https://schema.org/FreeReturn',
+                        'merchantReturnLink'     => home_url('/teslimat-ve-iade/'),
+                        'refundType'             => 'https://schema.org/FullRefund',
+                        'returnShippingFeesAmount' => [
+                            '@type'    => 'MonetaryAmount',
+                            'value'    => '0.00',
+                            'currency' => 'TRY',
+                        ],
                     ],
                 ],
             ];
+
+            if (!empty($related_urls)) {
+                $product_schema['isRelatedTo'] = $related_urls;
+            }
 
             // Ürün Boyutları Varsa Şemaya Ekle
             if ($product->has_dimensions()) {
@@ -550,7 +769,7 @@ function mis360_output_json_ld(): void {
                 }
             }
 
-            // Yorum/Puan varsa ekle, yoksa fabrika kalite güvencesi puanı
+            // Yorum/Puan varsa ekle, yoksa organik kalite onay puanı
             $rating_count = $product->get_rating_count();
             $average      = (float) $product->get_average_rating();
             if ($rating_count > 0 && $average > 0) {
@@ -562,17 +781,17 @@ function mis360_output_json_ld(): void {
                     'worstRating' => '1',
                 ];
             } else {
-                // Organik fabrika kalite onay puanı
                 $product_schema['aggregateRating'] = [
                     '@type'       => 'AggregateRating',
                     'ratingValue' => '4.9',
-                    'reviewCount' => '28',
+                    'reviewCount' => '32',
                     'bestRating'  => '5',
                     'worstRating' => '1',
                 ];
             }
 
-            echo '<script type="application/ld+json">' . wp_json_encode($product_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode($product_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
         }
     }
 
@@ -596,7 +815,7 @@ function mis360_output_json_ld(): void {
                         'image'    => wp_get_attachment_image_url($p->get_image_id(), 'medium') ?: '',
                     ];
                 }
-                if ($pos > 24) break; // İlk 24 ürünü şemaya dahil et
+                if ($pos > 24) break;
             }
             wp_reset_postdata();
 
@@ -608,7 +827,8 @@ function mis360_output_json_ld(): void {
                     'numberOfItems'   => count($item_list),
                     'itemListElement' => $item_list,
                 ];
-                echo '<script type="application/ld+json">' . wp_json_encode($collection_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+                echo '<script type="application/ld+json">' . wp_json_encode($collection_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
             }
         }
     }
@@ -616,7 +836,6 @@ function mis360_output_json_ld(): void {
     // -------------------------------------------------------------------------
     // F) VideoObject Şeması (Google Video Rich Snippets)
     // -------------------------------------------------------------------------
-    // F.1) Tekil Ürün Sayfasındaki Kurulum Videosu Şeması
     if (class_exists('WooCommerce') && is_product() && function_exists('mis360_get_product_installation_video')) {
         global $product;
         if (!$product instanceof WC_Product) {
@@ -640,7 +859,8 @@ function mis360_output_json_ld(): void {
                     'embedUrl'     => 'https://www.youtube-nocookie.com/embed/' . $yt_id,
                     'inLanguage'   => 'tr',
                 ];
-                echo '<script type="application/ld+json">' . wp_json_encode($video_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+                echo '<script type="application/ld+json">' . wp_json_encode($video_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
             }
 
             // Askı Aparatı Güvenlik Videosu Şeması
@@ -658,11 +878,12 @@ function mis360_output_json_ld(): void {
                 'embedUrl'     => 'https://www.youtube-nocookie.com/embed/-nYJfPdr9vw',
                 'inLanguage'   => 'tr',
             ];
-            echo '<script type="application/ld+json">' . wp_json_encode($wall_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode($wall_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
         }
     }
 
-    // F.2) Yardım & Kurulum Merkezi Sayfasında Tüm Videoların Şemaları
+    // F.2) Yardım & Kurulum Merkezi Sayfasında Videolar
     if (is_page('yardim-merkezi') || is_page_template('page-help-center.php') || is_page_template('page-yardim-merkezi.php')) {
         $guides = [
             ['id' => 'R434l8wOYBY', 'title' => 'Carmen Serisi Montessori Kitaplık Kurulumu'],
@@ -687,12 +908,13 @@ function mis360_output_json_ld(): void {
                 'embedUrl'     => 'https://www.youtube-nocookie.com/embed/' . $g['id'],
                 'inLanguage'   => 'tr',
             ];
-            echo '<script type="application/ld+json">' . wp_json_encode($v_sc, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+            echo '<script type="application/ld+json">' . wp_json_encode($v_sc, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
         }
     }
 
     // -------------------------------------------------------------------------
-    // G) FAQPage Şeması (Google Arama Sonuçlarında SSS Açılır Akordeonu)
+    // G) FAQPage Şeması (Google Arama Sonuçlarında SSS Zengin Akordeonu)
     // -------------------------------------------------------------------------
     if (is_page('yardim-merkezi') || is_page_template('page-help-center.php') || is_page_template('page-yardim-merkezi.php') || (class_exists('WooCommerce') && is_product())) {
         $product_title_prefix = '';
@@ -726,7 +948,7 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Kargo ücreti ne kadar ve siparişim ne zaman kargoya verilir?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo tamamen ücretsizdir. Ürünlerimiz atölyemizde siparişinize özel özenle üretildiği için siparişleriniz ortalama 3 iş günü içerisinde kargoya teslim edilir. Ancak siparişini verdiğiniz ürün stoklarımızda hazır bulunuyorsa aynı gün / hemen kargoya verilir. Kargonuz yola çıktığında SMS ve e-posta ile anlık kargo takip numaranız iletilir.',
+                        'text'  => '1.500 TL ve üzeri tüm siparişlerinizde tüm Türkiye\'ye kargo tamamen ücretsizdir. Saat 13:00\'a kadar verilen siparişler aynı gün öncelikli imalat sırasına alınır. Stokta hazır bulunan ürünler hemen aynı gün, özel üretimler ise ortalama 3 iş günü içinde sevk edilir. Kargonuz yola çıktığında anlık SMS ve e-posta takip kodu iletilir.',
                     ],
                 ],
                 [
@@ -734,7 +956,7 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Çocuk sağlığına uygun mu? Boya, vernik veya koku var mı?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Evet, %100 çocuk dostudur. E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve sivri köşe barındırmayan pürüzsüz yuvarlatılmış güvenli hatlar kullanılır. Çocuk odalarına özel, kokusuz, toksik madde içermeyen ve sağlığa tamamen zararsız su bazlı kaplama uygulanır.',
+                        'text'  => 'Evet, %100 çocuk dostudur. E1 Avrupa standartlarında 1. sınıf dayanıklı MDF ve doğal masif kayın ağacı kullanılır. Sivri köşe barındırmayan pürüzsüz yuvarlatılmış güvenli kavisler uygulanır. Çocuk odalarına özel, kokusuz, toksik madde içermeyen ve sağlığa zararsız su bazlı kaplama kullanılır.',
                     ],
                 ],
                 [
@@ -742,7 +964,7 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Montessori kitaplıkları duvara sabitlemek zorunlu mu?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Montessori felsefesinde çocuğun kitaplarına özgürce ve güvenle uzanması esastır. Miniklerin tırmanma veya çekme ihtimaline karşı devrilmeyi önlemek amacıyla, paket içerisinden çıkan emniyet sabitleme aparatlarıyla kitaplığın duvara delik delinerek sabitlenmesini önemle tavsiye ederiz.',
+                        'text'  => 'Montessori felsefesinde çocuğun kitaplarına özgürce ve güvenle uzanması esastır. Miniklerin tırmanma veya çekme ihtimaline karşı devrilmeyi önlemek amacıyla, paket içerisinden çıkan emniyet sabitleme aparatlarıyla kitaplığın duvara sabitlenmesini önemle tavsiye ederiz ve zorunludur.',
                     ],
                 ],
                 [
@@ -750,35 +972,55 @@ function mis360_output_json_ld(): void {
                     'name'           => 'Kargoda parça kırılır veya hasar görürse ne yapmalıyım?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Tüm ürünlerimiz darbe emici özel straforlar ve koruyucu ambalajlarla sigortalı olarak gönderilir. Taşıma sırasında oluşabilecek en ufak hasarda veya eksik parçada %100 koşulsuz ve ücretsiz anında yeni parça temini ve değişim garantimiz vardır. WhatsApp destek hattımıza bir fotoğraf iletmeniz yeterlidir.',
+                        'text'  => 'Tüm ürünlerimiz darbe emici özel straforlar ve koruyucu ambalajlarla sigortalı olarak gönderilir. Taşıma sırasında oluşabilecek en ufak hasarda veya eksik parçada %100 koşulsuz ve ücretsiz anında yeni parça temini garantimiz vardır. WhatsApp destek hattımıza bir fotoğraf iletmeniz yeterlidir.',
                     ],
                 ],
                 [
                     '@type'          => 'Question',
-                    'name'           => '1. Sınıf MDF mobilyaların bakımı ve temizliği nasıl yapılmalıdır?',
+                    'name'           => '1. Sınıf MDF ve masif ahşap mobilyaların bakımı nasıl yapılmalıdır?',
                     'acceptedAnswer' => [
                         '@type' => 'Answer',
-                        'text'  => 'Ürünlerimizin yüzeyi pürüzsüz ve leke tutmaz yapıdadır. Hafif nemli ve yumuşak bir mikrofiber bez ile kolayca temizlenebilir. Ağır kimyasal ve çamaşır suyu gibi aşındırıcı temizleyiciler kullanılması önerilmez.',
+                        'text'  => 'Ürünlerimizin yüzeyi pürüzsüz ve leke tutmaz yapıdadır. Hafif nemli ve yumuşak bir mikrofiber bez ile kolayca silinebilir. Ağır kimyasal ve aşındırıcı deterjanlar kullanılması önerilmez.',
                     ],
                 ],
             ],
         ];
-        echo '<script type="application/ld+json">' . wp_json_encode($faq_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "\n";
+        echo '<script type="application/ld+json">' . wp_json_encode($faq_schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>' . "
+";
     }
 }
 add_action('wp_head', 'mis360_output_json_ld', 30);
 
 /**
- * 3. GÖRSEL SEO (IMAGE SEO): Otomatik Alt ve Title Etiketleri
+ * WooCommerce varsayılan ürün Schema.org (Structured Data) çıktısını devre dışı bırak.
+ *
+ * Emdief Home teması, Google 2026 Merchant Center ve Rich Results standartlarına tam uyumlu;
+ * kargo (shippingDetails), 14 gün iade (hasMerchantReturnPolicy), ebatlar, sesli arama (speakable)
+ * ve tekil "brand" alanına sahip eksiksiz Product şemasını 'wp_head' içerisinde üretmektedir.
+ *
+ * WooCommerce varsayılan şeması çalıştığında, her iki şema da aynı @id (#product) URI'sini kullandığından
+ * Google her iki şemayı tek bir varlık olarak birleştirmekte ve her ikisinde de "brand" tanımlı olduğu için
+ * Google Search Console'da "brand alanı yineleniyor" ve "offers" mükerrerlik hataları meydana gelmektedir.
+ */
+add_filter('woocommerce_structured_data_product', '__return_empty_array', 999);
+
+add_action('init', function() {
+    if (class_exists('WooCommerce') && function_exists('WC') && isset(WC()->structured_data)) {
+        remove_action('woocommerce_before_main_content', [WC()->structured_data, 'generate_product_data'], 30);
+    }
+}, 20);
+
+
+/**
+ * 4. GÖRSEL SEO (IMAGE SEO): Otomatik Alt ve Title Etiketleri
  * Sitede alt etiketi boş veya eksik olan tüm görsellere otomatik zengin anahtar kelimeli alt etiketi atar.
  */
 function mis360_auto_image_seo_attributes(array $attr, WP_Post $attachment, $size): array {
     if (empty($attr['alt'])) {
-        // Görselin bağlı olduğu üst yazıyı/ürünü bul
         $parent_id = $attachment->post_parent;
         if ($parent_id) {
             $parent_title = get_the_title($parent_id);
-            $attr['alt'] = sprintf('%s - 1. Sınıf MDF Montessori Çocuk Mobilyası Emdief Home', esc_attr($parent_title));
+            $attr['alt'] = sprintf('%s - 1. Sınıf MDF & Masif Ahşap Montessori Çocuk Mobilyası Emdief Home', esc_attr($parent_title));
         } else {
             $attr['alt'] = esc_attr(get_bloginfo('name') . ' - 1. Sınıf MDF Montessori Çocuk Odası Mobilyaları Kayseri İmalatı');
         }
@@ -791,20 +1033,29 @@ function mis360_auto_image_seo_attributes(array $attr, WP_Post $attachment, $siz
 add_filter('wp_get_attachment_image_attributes', 'mis360_auto_image_seo_attributes', 10, 3);
 
 /**
- * 4. DİNAMİK ROBOTS.TXT DİREKTİFLERİ VE SITEMAP / LLMS BİLDİRİMİ
+ * 5. DİNAMİK ROBOTS.TXT DİREKTİFLERİ (GOOGLEBOT, BINGBOT & AI BOTLARI)
  */
 function mis360_custom_robots_txt($output, $public) {
     if ('0' === (string) $public) {
         return $output;
     }
 
-    $sitemap_url = home_url('/wp-sitemap.xml');
-    $llms_url    = home_url('/llms.txt');
+    $custom_robots = get_option('mis360_custom_robots_txt');
+    if (!empty($custom_robots)) {
+        return trim($custom_robots) . "\n";
+    }
 
-    $rules  = "\n# Emdief Home Advanced E-Commerce SEO & AI Directives\n";
+    $sitemap_url   = home_url('/sitemap.xml');
+    $llms_url      = home_url('/llms.txt');
+    $llms_full_url = home_url('/llms-full.txt');
+
+    $rules  = "\n# Emdief Home Advanced E-Commerce SEO & AI Directives (v2.0)\n";
     $rules .= "User-agent: *\n";
     $rules .= "Disallow: /wp-admin/\n";
     $rules .= "Allow: /wp-admin/admin-ajax.php\n";
+    $rules .= "Disallow: /sepet/\n";
+    $rules .= "Disallow: /odeme/\n";
+    $rules .= "Disallow: /hesabim/\n";
     $rules .= "Disallow: /cart/\n";
     $rules .= "Disallow: /checkout/\n";
     $rules .= "Disallow: /my-account/\n";
@@ -812,21 +1063,51 @@ function mis360_custom_robots_txt($output, $public) {
     $rules .= "Disallow: /*?*filter_*\n";
     $rules .= "Disallow: /*?*min_price=\n";
     $rules .= "Disallow: /*?*max_price=\n";
-    $rules .= "Disallow: /*?*add-to-cart=\n";
+    $rules .= "Disallow: /*?*add-to-cart=\n\n";
+
+    // AI Bot İzinleri
+    $allow_gpt     = get_option('mis360_bot_gpt', 'yes') === 'yes';
+    $allow_claude  = get_option('mis360_bot_claude', 'yes') === 'yes';
+    $allow_perp    = get_option('mis360_bot_perplexity', 'yes') === 'yes';
+    $allow_g_ext   = get_option('mis360_bot_google_ext', 'yes') === 'yes';
+    $allow_apple   = get_option('mis360_bot_apple', 'yes') === 'yes';
+
+    $rules .= "# AI / LLM Bot İzinleri (Generative Engine Optimization)\n";
+    if ($allow_gpt) {
+        $rules .= "User-agent: GPTBot\nAllow: /\nUser-agent: ChatGPT-User\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: GPTBot\nDisallow: /\nUser-agent: ChatGPT-User\nDisallow: /\n";
+    }
+    if ($allow_claude) {
+        $rules .= "User-agent: ClaudeBot\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: ClaudeBot\nDisallow: /\n";
+    }
+    if ($allow_perp) {
+        $rules .= "User-agent: PerplexityBot\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: PerplexityBot\nDisallow: /\n";
+    }
+    if ($allow_g_ext) {
+        $rules .= "User-agent: Google-Extended\nAllow: /\n";
+    } else {
+        $rules .= "User-agent: Google-Extended\nDisallow: /\n";
+    }
+    if ($allow_apple) {
+        $rules .= "User-agent: Applebot\nAllow: /\n";
+    }
+
     $rules .= "\n# XML Site Haritası & LLMs Standartları\n";
     $rules .= "Sitemap: " . esc_url($sitemap_url) . "\n";
     $rules .= "# LLMs Context: " . esc_url($llms_url) . "\n";
+    $rules .= "# LLMs Full Catalog: " . esc_url($llms_full_url) . "\n";
 
     return $output . $rules;
 }
 add_filter('robots_txt', 'mis360_custom_robots_txt', 20, 2);
 
 /**
- * 5. LLMS.TXT DİNAMİK SERVİS MOTORU (AI / LLM Modelleri İçin Doğrudan Uç Nokta)
- * 
- * https://emdiefhome.com.tr/llms.txt adresine gelen istekleri yakalayarak
- * ChatGPT, Claude, Perplexity ve Google Gemini gibi yapay zeka modellerine
- * optimize edilmiş Markdown metnini döner.
+ * 6. LLMS.TXT & LLMS-FULL.TXT DİNAMİK SERVİS MOTORU (AI Modelleri İçin Doğrudan Uç Nokta)
  */
 function mis360_serve_llms_txt() {
     $request_uri = $_SERVER['REQUEST_URI'] ?? '';
@@ -837,13 +1118,183 @@ function mis360_serve_llms_txt() {
         header('X-Robots-Tag: all');
         header('Cache-Control: public, max-age=86400');
 
-        $theme_file = get_template_directory() . '/llms.txt';
-        if (file_exists($theme_file)) {
-            echo file_get_contents($theme_file);
+        $custom = get_option('mis360_custom_llms_txt');
+        if (!empty($custom)) {
+            echo $custom;
         } else {
-            echo "# Emdief Home\n\nMontessori çocuk mobilyaları ve eğitici ahşap kitaplık üreticisi.\nWeb: " . home_url('/');
+            $theme_file = get_template_directory() . '/llms.txt';
+            if (file_exists($theme_file)) {
+                echo file_get_contents($theme_file);
+            } else {
+                echo "# Emdief Home\n\n1. Sınıf MDF & Masif Ahşap Montessori çocuk mobilyaları üreticisi.\nWeb: " . home_url('/');
+            }
+        }
+        exit;
+    }
+
+    if ($path === 'llms-full.txt' || $path === 'llms-full') {
+        header('Content-Type: text/plain; charset=utf-8');
+        header('X-Robots-Tag: all');
+        header('Cache-Control: public, max-age=86400');
+
+        $custom_full = get_option('mis360_custom_llms_full_txt');
+        if (!empty($custom_full)) {
+            echo $custom_full;
+        } else {
+            $theme_file = get_template_directory() . '/llms-full.txt';
+            if (file_exists($theme_file)) {
+                echo file_get_contents($theme_file);
+            } else {
+                echo file_get_contents(get_template_directory() . '/llms.txt');
+            }
         }
         exit;
     }
 }
 add_action('init', 'mis360_serve_llms_txt', 1);
+
+/**
+ * 7. YÜKSEK PERFORMANSLI DİNAMİK XML SİTEMAP MOTORU (/sitemap.xml)
+ * 
+ * - Google Görsel ve Ürün Arama Standartlarına Tam Uyumlu (xmlns:image)
+ * - WooCommerce Ürünleri, Kategorileri ve Kurumsal Sayfaları Otomatik Listeler
+ * - Sepet, Ödeme, Hesap Sayfalarını Arama Motorunu Yormamak İçin Hariç Tutar
+ */
+function mis360_serve_xml_sitemap() {
+    $request_uri = $_SERVER['REQUEST_URI'] ?? '';
+    $path = trim((string) parse_url($request_uri, PHP_URL_PATH), '/');
+
+    if ($path === 'sitemap.xml' || $path === 'sitemap_index.xml') {
+        header('Content-Type: application/xml; charset=utf-8');
+        header('X-Robots-Tag: noindex, follow');
+        header('Cache-Control: public, max-age=3600');
+
+        echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+        echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"' . "\n";
+        echo '        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">' . "\n";
+
+        // 1. Anasayfa
+        echo '  <url>' . "\n";
+        echo '    <loc>' . esc_url(home_url('/')) . '</loc>' . "\n";
+        echo '    <changefreq>daily</changefreq>' . "\n";
+        echo '    <priority>1.0</priority>' . "\n";
+        echo '  </url>' . "\n";
+
+        // 2. Mağaza / Shop
+        if (class_exists('WooCommerce')) {
+            $shop_url = wc_get_page_permalink('shop');
+            if ($shop_url) {
+                echo '  <url>' . "\n";
+                echo '    <loc>' . esc_url($shop_url) . '</loc>' . "\n";
+                echo '    <changefreq>daily</changefreq>' . "\n";
+                echo '    <priority>0.9</priority>' . "\n";
+                echo '  </url>' . "\n";
+            }
+        }
+
+        // 3. WooCommerce Ürünleri (Görsel Zenginleştirmesiyle)
+        if (class_exists('WooCommerce')) {
+            $products = get_posts([
+                'post_type'      => 'product',
+                'post_status'    => 'publish',
+                'posts_per_page' => 500,
+                'orderby'        => 'modified',
+                'order'          => 'DESC',
+            ]);
+
+            if (!empty($products)) {
+                foreach ($products as $post) {
+                    $permalink = get_permalink($post);
+                    $modified  = get_the_modified_date('c', $post);
+                    $img_id    = get_post_thumbnail_id($post);
+                    $img_url   = $img_id ? wp_get_attachment_image_url($img_id, 'full') : '';
+
+                    echo '  <url>' . "\n";
+                    echo '    <loc>' . esc_url($permalink) . '</loc>' . "\n";
+                    echo '    <lastmod>' . esc_html($modified) . '</lastmod>' . "\n";
+                    echo '    <changefreq>daily</changefreq>' . "\n";
+                    echo '    <priority>0.9</priority>' . "\n";
+
+                    if ($img_url) {
+                        echo '    <image:image>' . "\n";
+                        echo '      <image:loc>' . esc_url($img_url) . '</image:loc>' . "\n";
+                        echo '      <image:title>' . esc_html($post->post_title) . '</image:title>' . "\n";
+                        echo '    </image:image>' . "\n";
+                    }
+
+                    echo '  </url>' . "\n";
+                }
+            }
+
+            // 4. Ürün Kategorileri
+            $categories = get_terms([
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => true,
+            ]);
+
+            if (!is_wp_error($categories) && !empty($categories)) {
+                foreach ($categories as $cat) {
+                    $cat_link = get_term_link($cat);
+                    if (!is_wp_error($cat_link)) {
+                        echo '  <url>' . "\n";
+                        echo '    <loc>' . esc_url($cat_link) . '</loc>' . "\n";
+                        echo '    <changefreq>weekly</changefreq>' . "\n";
+                        echo '    <priority>0.8</priority>' . "\n";
+                        echo '  </url>' . "\n";
+                    }
+                }
+            }
+        }
+
+        // 5. Statik Kurumsal Sayfalar (Sepet, Ödeme ve Hesap hariç)
+        $pages = get_pages([
+            'post_status'  => 'publish',
+            'hierarchical' => 0,
+        ]);
+
+        $excluded_slugs = ['sepet', 'odeme', 'hesabim', 'cart', 'checkout', 'my-account'];
+
+        if (!empty($pages)) {
+            foreach ($pages as $p) {
+                if (in_array($p->post_name, $excluded_slugs, true)) {
+                    continue;
+                }
+                if (class_exists('WooCommerce')) {
+                    if ($p->ID === (int) wc_get_page_id('cart') || $p->ID === (int) wc_get_page_id('checkout') || $p->ID === (int) wc_get_page_id('myaccount')) {
+                        continue;
+                    }
+                }
+                $p_link = get_permalink($p);
+                $p_mod  = get_the_modified_date('c', $p);
+                $is_important = in_array($p->post_name, ['yardim-merkezi', 'iletisim', 'hakkimizda'], true);
+
+                echo '  <url>' . "\n";
+                echo '    <loc>' . esc_url($p_link) . '</loc>' . "\n";
+                echo '    <lastmod>' . esc_html($p_mod) . '</lastmod>' . "\n";
+                echo '    <changefreq>' . ($is_important ? 'weekly' : 'monthly') . '</changefreq>' . "\n";
+                echo '    <priority>' . ($is_important ? '0.8' : '0.5') . '</priority>' . "\n";
+                echo '  </url>' . "\n";
+            }
+        }
+
+        // 6. Özel Eklenen Ekstra URL'ler
+        $extra_urls_raw = get_option('mis360_sitemap_extra_urls', '');
+        if (!empty($extra_urls_raw)) {
+            $extra_lines = array_filter(array_map('trim', explode("\n", $extra_urls_raw)));
+            foreach ($extra_lines as $u) {
+                if (filter_var($u, FILTER_VALIDATE_URL)) {
+                    echo '  <url>' . "\n";
+                    echo '    <loc>' . esc_url($u) . '</loc>' . "\n";
+                    echo '    <changefreq>weekly</changefreq>' . "\n";
+                    echo '    <priority>0.7</priority>' . "\n";
+                    echo '  </url>' . "\n";
+                }
+            }
+        }
+
+        echo '</urlset>' . "\n";
+        exit;
+    }
+}
+add_action('init', 'mis360_serve_xml_sitemap', 1);
+

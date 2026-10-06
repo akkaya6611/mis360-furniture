@@ -104,52 +104,101 @@ function mis360_render_trust_badges() {
 }
 
 /**
- * Ekmek Kırıntısı (Breadcrumbs)
+ * Ekmek Kırıntısı (Breadcrumbs - Schema.org Microdata Zenginleştirilmiş)
  */
 function mis360_breadcrumbs() {
     if (is_front_page()) {
         return;
     }
 
+    $pos = 1;
     echo '<nav class="emdief-breadcrumbs" aria-label="' . esc_attr__('Ekmek Kırıntısı', 'mis360-mobilya') . '">';
-    echo '<div class="emdief-container">';
-    echo '<a href="' . esc_url(home_url('/')) . '">' . esc_html__('Anasayfa', 'mis360-mobilya') . '</a>';
-    echo '<span class="separator">/</span>';
+    echo '<div class="emdief-container" itemscope itemtype="https://schema.org/BreadcrumbList">';
+    
+    // 1. Anasayfa
+    echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+    echo '<a itemprop="item" href="' . esc_url(home_url('/')) . '"><span itemprop="name">' . esc_html__('Anasayfa', 'mis360-mobilya') . '</span></a>';
+    echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+    echo '</span>';
+    echo '<span class="separator" aria-hidden="true">/</span>';
 
     if (class_exists('WooCommerce') && (is_woocommerce() || is_cart() || is_checkout())) {
         $shop_page_id = wc_get_page_id('shop');
         if ($shop_page_id && !is_shop()) {
-            echo '<a href="' . esc_url(get_permalink($shop_page_id)) . '">' . esc_html(get_the_title($shop_page_id)) . '</a>';
-            echo '<span class="separator">/</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<a itemprop="item" href="' . esc_url(get_permalink($shop_page_id)) . '"><span itemprop="name">' . esc_html(get_the_title($shop_page_id)) . '</span></a>';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
+            echo '<span class="separator" aria-hidden="true">/</span>';
         }
         if (is_product()) {
             $terms = get_the_terms(get_the_ID(), 'product_cat');
             if ($terms && !is_wp_error($terms)) {
                 $term = current($terms);
-                echo '<a href="' . esc_url(get_term_link($term)) . '">' . esc_html($term->name) . '</a>';
-                echo '<span class="separator">/</span>';
+                echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+                echo '<a itemprop="item" href="' . esc_url(get_term_link($term)) . '"><span itemprop="name">' . esc_html($term->name) . '</span></a>';
+                echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+                echo '</span>';
+                echo '<span class="separator" aria-hidden="true">/</span>';
             }
-            echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_product_taxonomy()) {
-            echo '<span class="current">' . esc_html(single_term_title('', false)) . '</span>';
+            $term = get_queried_object();
+            $term_url = ($term && !is_wp_error($term)) ? get_term_link($term) : '';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(single_term_title('', false)) . '</span>';
+            if ($term_url) echo '<meta itemprop="item" content="' . esc_url($term_url) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_cart()) {
-            echo '<span class="current">' . esc_html__('Sepet', 'mis360-mobilya') . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html__('Sepet', 'mis360-mobilya') . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(wc_get_cart_url()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } elseif (is_checkout()) {
-            echo '<span class="current">' . esc_html__('Ödeme', 'mis360-mobilya') . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html__('Ödeme', 'mis360-mobilya') . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(wc_get_checkout_url()) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         } else {
-            echo '<span class="current">' . esc_html(get_the_title($shop_page_id)) . '</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<span class="current" itemprop="name">' . esc_html(get_the_title($shop_page_id)) . '</span>';
+            echo '<meta itemprop="item" content="' . esc_url(get_permalink($shop_page_id)) . '" />';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
         }
     } elseif (is_single()) {
         $categories = get_the_category();
         if ($categories) {
-            echo '<a href="' . esc_url(get_category_link($categories[0]->term_id)) . '">' . esc_html($categories[0]->name) . '</a>';
-            echo '<span class="separator">/</span>';
+            echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+            echo '<a itemprop="item" href="' . esc_url(get_category_link($categories[0]->term_id)) . '"><span itemprop="name">' . esc_html($categories[0]->name) . '</span></a>';
+            echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+            echo '</span>';
+            echo '<span class="separator" aria-hidden="true">/</span>';
         }
-        echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     } elseif (is_page()) {
-        echo '<span class="current">' . esc_html(get_the_title()) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(get_the_title()) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(get_permalink()) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     } elseif (is_category() || is_tag()) {
-        echo '<span class="current">' . esc_html(single_cat_title('', false)) . '</span>';
+        echo '<span itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">';
+        echo '<span class="current" itemprop="name">' . esc_html(single_cat_title('', false)) . '</span>';
+        echo '<meta itemprop="item" content="' . esc_url(home_url(add_query_arg([], null))) . '" />';
+        echo '<meta itemprop="position" content="' . ($pos++) . '" />';
+        echo '</span>';
     }
     echo '</div>';
     echo '</nav>';
@@ -594,6 +643,8 @@ function mis360_get_category_url($slug, $fallback_search = '') {
         'duzenleyiciler'         => ['duzenleyiciler', 'duzenleyici', 'duvar-rafi', 'banyo-raflari', 'askilik', 'dekoratif-kutu'],
         'duvar-rafi'             => ['duvar-rafi', 'duzenleyiciler', 'banyo-raflari'],
         'banyo-raflari'          => ['banyo-raflari', 'duvar-rafi', 'duzenleyiciler'],
+        'duvar-masasi'           => ['duvar-masasi', 'duvar-masalari', 'masa', 'masalar'],
+        'duvar-masalari'         => ['duvar-masasi', 'duvar-masalari', 'masa', 'masalar'],
     ];
 
     $candidates = [];
@@ -661,12 +712,71 @@ function mis360_get_category_url($slug, $fallback_search = '') {
  * @param WP_Term $term Kategori terim nesnesi
  * @return string HTML veya Emoji
  */
+/**
+ * Modern Minimalist SVG Kategori İkon Motoru
+ *
+ * @param string $type İkon tipi anahtarı
+ * @param int $size Boyut (piksel)
+ * @return string SVG HTML çıktısı
+ */
+function mis360_get_category_svg($type = 'default', $size = 16) {
+    $size = (int)$size;
+    $svgs = [
+        // Tüm Ürünler / Koleksiyon (Mağaza Izgarası)
+        'all' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>',
+        
+        // Duvar Masası & Masalar (Çalışma Masası / Katlanır Masa)
+        'desk' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h18"/><path d="M4 8v11"/><path d="M20 8v11"/><path d="M4 12h16"/><path d="M9 8v4"/><path d="M15 8v4"/></svg>',
+        
+        // Çocuk & Montessori Kitaplık (Kitaplık & Raflar)
+        'bookcase' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><line x1="9" y1="6" x2="16" y2="6"/><line x1="9" y1="10" x2="16" y2="10"/></svg>',
+        
+        // Ahşap Oyuncak & Eğitici Oyuncaklar (Geometrik Yapı Taşları / Ahşap Bloklar)
+        'toy' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="13" width="9" height="8" rx="1.5"/><rect x="13" y="13" width="9" height="8" rx="1.5"/><rect x="7.5" y="3" width="9" height="8" rx="1.5"/></svg>',
+        
+        // Duvar Rafı & Duvar Üniteleri (Duvara Monte Şık Ahşap Raf)
+        'shelf' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="9" x2="22" y2="9"/><rect x="2" y="9" width="20" height="3" rx="1"/><path d="M6 12v6"/><path d="M18 12v6"/><path d="M6 18h12"/></svg>',
+        
+        // Banyo Rafları & Bebek Banyo Aksesuarları (Banyo & Hijyen Rafı)
+        'bath' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7a5.5 5.5 0 0 0-5.5 5.5c0 3.3 5.5 9.8 5.5 9.8s5.5-6.5 5.5-9.8A5.5 5.5 0 0 0 12 2.7z"/><circle cx="12" cy="8.2" r="2"/></svg>',
+        
+        // Mobilya Hırdavatı & Yedek Parça & Kurulum (İngiliz Anahtarı & Tornavida)
+        'tools' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>',
+        
+        // Askılık & Duvar Askılığı (Montessori Elbise & Çanta Askısı)
+        'hanger' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7a2 2 0 1 0-2-2v4l-7.7 5.1A1 1 0 0 0 2 15v1a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1v-1a1 1 0 0 0-.3-.9L14 9V5a2 2 0 0 0-2-2z"/></svg>',
+        
+        // Dekoratif Kutu & Düzenleyiciler (Bölmeli Kutu / Organizer)
+        'organizer' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="12" y1="10" x2="12" y2="20"/></svg>',
+        
+        // Masa Saati & Saatler
+        'clock' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>',
+        
+        // Ajanda & Defterler
+        'planner' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><line x1="8" y1="3" x2="8" y2="21"/><line x1="12" y1="8" x2="16" y2="8"/><line x1="12" y1="12" x2="16" y2="12"/></svg>',
+        
+        // Bebek Ürünleri
+        'baby' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="5"/><path d="M12 14c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/><circle cx="9" cy="7.5" r="0.8" fill="currentColor"/><circle cx="15" cy="7.5" r="0.8" fill="currentColor"/><path d="M10.5 10a2 2 0 0 0 3 0"/></svg>',
+        
+        // Varsayılan / Diğer Kategoriler (Minimal Ürün Etiketi)
+        'default' => '<svg width="' . $size . '" height="' . $size . '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'
+    ];
+
+    return $svgs[$type] ?? $svgs['default'];
+}
+
+/**
+ * Ürün Kategorisi İçin Akıllı İkon / Görsel Çözücü
+ *
+ * @param WP_Term $term Kategori terim nesnesi
+ * @return string HTML (SVG veya Kategori Görseli)
+ */
 function mis360_get_category_icon($term) {
     if (!is_object($term)) {
-        return '🏷️';
+        return mis360_get_category_svg('default');
     }
 
-    // Varsa WooCommerce kategori görselini kontrol et
+    // 1. Varsa WooCommerce kategori görselini kullan
     $thumb_id = get_term_meta($term->term_id, 'thumbnail_id', true);
     if ($thumb_id) {
         $thumb_url = wp_get_attachment_image_url($thumb_id, [48, 48]);
@@ -678,17 +788,117 @@ function mis360_get_category_icon($term) {
     $name = function_exists('mb_strtolower') ? mb_strtolower($term->name, 'UTF-8') : strtolower($term->name);
     $slug = $term->slug;
 
-    if (strpos($name, 'kitap') !== false || strpos($slug, 'kitap') !== false) return '📚';
-    if (strpos($name, 'oyuncak') !== false || strpos($slug, 'oyuncak') !== false) return '🧸';
-    if (strpos($name, 'banyo') !== false || strpos($slug, 'banyo') !== false) return '🛁';
-    if (strpos($name, 'hırdavat') !== false || strpos($slug, 'hirdavat') !== false) return '🔧';
-    if (strpos($name, 'duvar') !== false || strpos($name, 'raf') !== false || strpos($slug, 'raf') !== false) return '🖼️';
-    if (strpos($name, 'askı') !== false || strpos($slug, 'aski') !== false) return '🧥';
-    if (strpos($name, 'kutu') !== false || strpos($slug, 'kutu') !== false) return '📦';
-    if (strpos($name, 'saat') !== false || strpos($slug, 'saat') !== false) return '⏰';
-    if (strpos($name, 'ajanda') !== false || strpos($slug, 'ajanda') !== false) return '📓';
-    if (strpos($name, 'bebek') !== false || strpos($slug, 'bebek') !== false) return '👶';
-    if (strpos($name, 'dekoratif') !== false) return '✨';
+    // 2. Doğrudan Kategori Eşleştirmesi (Öncelik Sırasına Göre)
+    if (strpos($name, 'masa') !== false || strpos($slug, 'masa') !== false) {
+        return mis360_get_category_svg('desk');
+    }
+    if (strpos($name, 'kitap') !== false || strpos($slug, 'kitap') !== false) {
+        return mis360_get_category_svg('bookcase');
+    }
+    if (strpos($name, 'oyuncak') !== false || strpos($slug, 'oyuncak') !== false) {
+        return mis360_get_category_svg('toy');
+    }
+    if (strpos($name, 'banyo') !== false || strpos($slug, 'banyo') !== false) {
+        return mis360_get_category_svg('bath');
+    }
+    if (strpos($name, 'hırdavat') !== false || strpos($slug, 'hirdavat') !== false) {
+        return mis360_get_category_svg('tools');
+    }
+    if (strpos($name, 'raf') !== false || strpos($slug, 'raf') !== false) {
+        return mis360_get_category_svg('shelf');
+    }
+    if (strpos($name, 'askı') !== false || strpos($slug, 'aski') !== false) {
+        return mis360_get_category_svg('hanger');
+    }
+    if (strpos($name, 'kutu') !== false || strpos($slug, 'kutu') !== false || strpos($name, 'düzen') !== false || strpos($slug, 'duzen') !== false) {
+        return mis360_get_category_svg('organizer');
+    }
+    if (strpos($name, 'saat') !== false || strpos($slug, 'saat') !== false) {
+        return mis360_get_category_svg('clock');
+    }
+    if (strpos($name, 'ajanda') !== false || strpos($slug, 'ajanda') !== false) {
+        return mis360_get_category_svg('planner');
+    }
+    if (strpos($name, 'bebek') !== false || strpos($slug, 'bebek') !== false) {
+        return mis360_get_category_svg('baby');
+    }
 
-    return '🏷️';
+    return mis360_get_category_svg('default');
 }
+
+/**
+ * T.C. Ticaret Bakanlığı ETBİS Resmi Doğrulama & Karekod Kartı
+ */
+function mis360_render_etbis_footer_card() {
+    $enabled = get_theme_mod('mis360_etbis_enabled', true);
+    if (!$enabled) {
+        return;
+    }
+
+    $custom_code = get_theme_mod('mis360_etbis_custom_code', '');
+    if (!empty($custom_code)) {
+        echo '<div class="footer-etbis-wrapper">' . wp_kses_post($custom_code) . '</div>';
+        return;
+    }
+
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
+    $qr_image  = get_theme_mod('mis360_etbis_qr_image', '');
+
+    $local_qr = get_template_directory_uri() . '/assets/images/etbis-qr.webp';
+    $qr_src   = !empty($qr_image) ? $qr_image : (file_exists(get_template_directory() . '/assets/images/etbis-qr.webp') ? $local_qr : 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&margin=6&data=' . rawurlencode($etbis_url));
+    ?>
+    <div class="footer-etbis-card">
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-qr-box" title="<?php esc_attr_e('T.C. Ticaret Bakanlığı ETBİS Kaydını Doğrulamak İçin Tıklayın', 'mis360-mobilya'); ?>">
+            <img src="<?php echo esc_url($qr_src); ?>" alt="<?php esc_attr_e('Emdief Home ETBİS Karekod Doğrulama', 'mis360-mobilya'); ?>" width="72" height="72" loading="lazy" class="etbis-qr-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <div class="etbis-qr-fallback" style="display:none;">
+                <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14 0h4v4h-4v-4zm-4 4h4v4h-4v-4zm4-4h-4v-4h4v4zm-8-6h4v4h-4v-4zm4 4h4v4h-4v-4zm0-8h4v4h-4V6z"/></svg>
+            </div>
+            <span class="qr-label"><?php esc_html_e('ETBİS KAREKOD', 'mis360-mobilya'); ?></span>
+        </a>
+        <div class="etbis-details">
+            <div class="etbis-badge-pill">
+                <span class="flag-icon">🇹🇷</span>
+                <span class="pill-name"><?php esc_html_e('T.C. TİCARET BAKANLIĞI', 'mis360-mobilya'); ?></span>
+            </div>
+            <strong class="etbis-main-title">
+                <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?>
+                <span class="etbis-check-icon">✓</span>
+            </strong>
+            <p class="etbis-sub-text">
+                <?php esc_html_e('Emdief Home; Elektronik Ticaret Bilgi Sistemi\'ne (ETBİS) kayıtlı ve doğrulanmış yasal e-ticaret işletmesidir.', 'mis360-mobilya'); ?>
+            </p>
+            <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-verify-link">
+                <?php esc_html_e('Bakanlık Kaydını Sorgula', 'mis360-mobilya'); ?> &rarr;
+            </a>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Ürün Detay Sayfası ETBİS Güven Rozeti
+ */
+function mis360_render_etbis_product_badge() {
+    if (!get_theme_mod('mis360_etbis_enabled', true) || !get_theme_mod('mis360_etbis_show_product', true)) {
+        return;
+    }
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
+    ?>
+    <div class="single-product-etbis-badge">
+        <div class="etbis-seal">
+            <span class="seal-emoji">🏛️</span>
+        </div>
+        <div class="etbis-body">
+            <div class="etbis-headline">
+                <strong><?php esc_html_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Satıcı', 'mis360-mobilya'); ?></strong>
+                <span class="verified-tag">✓ Doğrulanmış Mağaza</span>
+            </div>
+            <p class="etbis-p"><?php esc_html_e('Emdief Home resmi onaylı üreticidir. Siparişleriniz faturalı, yasal tüketici hakları ve 14 gün ücretsiz iade güvencesindedir.', 'mis360-mobilya'); ?></p>
+        </div>
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-btn-check">
+            <?php esc_html_e('Sorgula', 'mis360-mobilya'); ?> &rarr;
+        </a>
+    </div>
+    <?php
+}
+

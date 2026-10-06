@@ -1,10 +1,9 @@
 <?php
 /**
- * Archive Template
+ * Archive Template (Montessori Blog & Guides)
  *
  * @package Mis360-Mobilya
  */
-
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,6 +26,7 @@ if (function_exists('mis360_breadcrumbs')) {
         if (have_posts()):
             while (have_posts()):
                 the_post();
+                $card_city = get_post_meta(get_the_ID(), '_mis360_ai_city', true);
                 ?>
                 <article id="post-<?php the_ID(); ?>" <?php post_class('emdief-blog-card'); ?>>
                     <?php if (has_post_thumbnail()): ?>
@@ -38,7 +38,10 @@ if (function_exists('mis360_breadcrumbs')) {
                     <?php endif; ?>
                     <div class="card-body">
                         <div class="card-meta">
-                            <span><?php echo get_the_date(); ?></span>
+                            <span>📅 <?php echo get_the_date(); ?></span>
+                            <?php if (!empty($card_city)) : ?>
+                                <span class="card-loc-pill" style="background:#fff7ed;color:#ea580c;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;">📍 <?php echo esc_html($card_city); ?></span>
+                            <?php endif; ?>
                         </div>
                         <h2 class="card-title">
                             <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
@@ -47,7 +50,7 @@ if (function_exists('mis360_breadcrumbs')) {
                             <?php the_excerpt(); ?>
                         </div>
                         <a href="<?php the_permalink(); ?>" class="card-read-more">
-                            <?php esc_html_e('Devam�n� Oku &rarr;', 'mis360-mobilya'); ?>
+                            <?php esc_html_e('Devamını Oku &rarr;', 'mis360-mobilya'); ?>
                         </a>
                     </div>
                 </article>
@@ -57,7 +60,7 @@ if (function_exists('mis360_breadcrumbs')) {
             the_posts_pagination();
         else:
             ?>
-            <p><?php esc_html_e('Bu kategoride hen�z yaz� bulunamad�.', 'mis360-mobilya'); ?></p>
+            <p><?php esc_html_e('Bu kategoride henüz yazı bulunamadı.', 'mis360-mobilya'); ?></p>
         <?php endif; ?>
     </div>
 </div>

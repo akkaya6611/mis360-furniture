@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Mis360-Mobilya Theme Functions & Definitions
  *
@@ -11,20 +11,27 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_MOBILYA_VERSION', '1.2.1789172600');
+define('MIS360_MOBILYA_VERSION', '1.9.101');
 define('MIS360_MOBILYA_DIR', get_template_directory());
 define('MIS360_MOBILYA_URI', get_template_directory_uri());
 
-// Modüler Bileşen Yükleyici
+// ModÃ¼ler BileÅŸen YÃ¼kleyici
 $mis360_includes = [
-    '/inc/theme-setup.php',    // Tema desteği, menüler, görsel boyutları
+    '/inc/theme-setup.php',    // Tema desteÄŸi, menÃ¼ler, gÃ¶rsel boyutlarÄ±
     '/inc/enqueue.php',        // CSS, Google Fonts ve defer scriptler
-    '/inc/template-tags.php',  // SVG ikonlar, rozetler ve yardımcı fonksiyonlar
-    '/inc/customizer.php',     // Tema ayarları (Duyuru çubuğu, telefon, kargo limiti)
+    '/inc/performance.php',    // Core Web Vitals, WebP, Defer JS, LCP ve TarayÄ±cÄ± Ã–nbellekleme (v1.9.13)
+    '/inc/template-tags.php',  // SVG ikonlar, rozetler ve yardÄ±mcÄ± fonksiyonlar
+    '/inc/customizer.php',     // Tema ayarlarÄ± (Duyuru Ã§ubuÄŸu, telefon, kargo limiti)
     '/inc/seo-schema.php',     // Schema.org Product ve Organization
-    '/inc/theme-updater.php',  // GitHub Otomatik Güncelleyici
+    '/inc/theme-updater.php',  // GitHub Otomatik GÃ¼ncelleyici
     '/inc/corporate-pages.php',// Kurumsal sayfalar ve yasal metinler motoru
-    '/inc/montessori-features.php', // Özel Montessori Satış & Dönüşüm Modülleri (v1.9.0)
+    '/inc/montessori-features.php', // Ã–zel Montessori SatÄ±ÅŸ & DÃ¶nÃ¼ÅŸÃ¼m ModÃ¼lleri (v1.9.0)
+    '/inc/login-customizer.php', // Ã–zel Emdief Home wp-login.php giriÅŸ sayfasÄ± tasarÄ±mÄ± (v1.9.42)
+    '/inc/security.php',       // KapsamlÄ± GÃ¼venlik & Zafiyet KalkanÄ± (v1.9.53)
+    '/inc/sitemap-indexing.php', // Sitemap & HÄ±zlÄ± Ä°ndeksleme ModÃ¼lÃ¼ (Google, Bing, Yandex, IndexNow) (v1.9.62)
+    '/inc/visitor-tracker.php', // ZiyaretÃ§i YolculuÄŸu & Sepet Takip ModÃ¼lÃ¼ (v1.9.65)
+    '/inc/admin-orders-dashboard.php', // Admin CanlÄ± SipariÅŸ YÃ¶netim Merkezi & GiriÅŸ GÃ¶rÃ¼nÃ¼mÃ¼ (v1.9.85)
+    '/inc/ai-blog-generator.php', // AI Blog & 81 Ä°l/Ä°lÃ§e Yerel SEO Rehber Motoru (v1.9.88)
 ];
 
 foreach ($mis360_includes as $inc_file) {
@@ -36,7 +43,7 @@ foreach ($mis360_includes as $inc_file) {
     }
 }
 
-// WooCommerce Entegrasyonu (Sadece WooCommerce aktifken yüklenir)
+// WooCommerce Entegrasyonu (Sadece WooCommerce aktifken yÃ¼klenir)
 if (class_exists('WooCommerce')) {
     $wc_inc = __DIR__ . '/inc/woocommerce.php';
     if (file_exists($wc_inc)) {
@@ -47,7 +54,7 @@ if (class_exists('WooCommerce')) {
 }
 
 /**
- * Güvenlik ve Temizlik
+ * GÃ¼venlik ve Temizlik
  */
 function mis360_cleanup_head() {
     remove_action('wp_head', 'wp_generator');
@@ -58,14 +65,26 @@ function mis360_cleanup_head() {
 add_action('init', 'mis360_cleanup_head');
 
 /**
- * WooCommerce Bilgilendirme Uyarısı (WooCommerce yoksa gösterilir)
+ * Tema gÃ¼ncellemesinde veya kurumsal sayfalarda rewrite kurallarÄ±nÄ± bir kez yenile
+ */
+function mis360_maybe_flush_rewrites() {
+    $flushed_ver = get_option('mis360_rewrite_flushed_ver');
+    if ($flushed_ver !== MIS360_MOBILYA_VERSION) {
+        flush_rewrite_rules(false);
+        update_option('mis360_rewrite_flushed_ver', MIS360_MOBILYA_VERSION);
+    }
+}
+add_action('init', 'mis360_maybe_flush_rewrites', 99);
+
+/**
+ * WooCommerce Bilgilendirme UyarÄ±sÄ± (WooCommerce yoksa gÃ¶sterilir)
  */
 function mis360_check_woocommerce_dependency() {
     if (!class_exists('WooCommerce')) {
         add_action('admin_notices', function() {
             ?>
             <div class="notice notice-warning is-dismissible">
-                <p><strong>Mis360-Mobilya:</strong> Bu temanın tüm e-ticaret özelliklerinin çalışması için lütfen <a href="<?php echo esc_url(admin_url('plugin-install.php?s=woocommerce&tab=search&type=term')); ?>">WooCommerce</a> eklentisini etkinleştirin.</p>
+                <p><strong>Mis360-Mobilya:</strong> Bu temanÄ±n tÃ¼m e-ticaret Ã¶zelliklerinin Ã§alÄ±ÅŸmasÄ± iÃ§in lÃ¼tfen <a href="<?php echo esc_url(admin_url('plugin-install.php?s=woocommerce&tab=search&type=term')); ?>">WooCommerce</a> eklentisini etkinleÅŸtirin.</p>
             </div>
             <?php
         });
@@ -75,7 +94,7 @@ add_action('admin_init', 'mis360_check_woocommerce_dependency');
  
 /**
  * Fail-Safe Helper Functions
- * (Temanın herhangi bir sunucu veya dosya izin probleminde dahi çökmesini %100 engeller)
+ * (TemanÄ±n herhangi bir sunucu veya dosya izin probleminde dahi Ã§Ã¶kmesini %100 engeller)
  */
 if (!function_exists('mis360_icon')) {
     function mis360_icon($name, $size = 20, $class = '') {
@@ -119,11 +138,6 @@ if (!function_exists('mis360_render_trust_badges')) {
     }
 }
 
-if (!function_exists('mis360_product_badges')) {
-    function mis360_product_badges($product = null) {
-        return '';
-    }
-}
 
 if (!function_exists('mis360_get_category_url')) {
     function mis360_get_category_url($slug, $fallback_search = '') {
@@ -142,24 +156,24 @@ if (!function_exists('mis360_get_category_url')) {
 
 if (!function_exists('mis360_get_category_icon')) {
     function mis360_get_category_icon($term) {
-        return '🏷️';
+        return 'ğŸ·ï¸';
     }
 }
 
 if (!function_exists('mis360_bear_shopping_cart')) {
     function mis360_bear_shopping_cart($w = 190, $h = 105, $c = '') {
-        return '<div class="bear-fallback" style="font-size:48px;">🧸🛒</div>';
+        return '<div class="bear-fallback" style="font-size:48px;">ğŸ§¸ğŸ›’</div>';
     }
 }
 
 if (!function_exists('mis360_bear_empty_cart')) {
     function mis360_bear_empty_cart($w = 190, $h = 105, $c = '') {
-        return '<div class="bear-fallback" style="font-size:48px;">🥺🧸</div>';
+        return '<div class="bear-fallback" style="font-size:48px;">ğŸ¥ºğŸ§¸</div>';
     }
 }
 
 if (!function_exists('mis360_teddy_bear_avatar')) {
     function mis360_teddy_bear_avatar($s = 68, $c = '') {
-        return '<div class="bear-fallback" style="font-size:36px;">🧸</div>';
+        return '<div class="bear-fallback" style="font-size:36px;">ğŸ§¸</div>';
     }
 }

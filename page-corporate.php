@@ -18,6 +18,17 @@ if (function_exists('mis360_breadcrumbs')) {
 // Mevcut sayfa slug'ı
 global $post;
 $current_slug = $post ? $post->post_name : '';
+if (empty($current_slug) && function_exists('mis360_extract_request_slug')) {
+    $current_slug = mis360_extract_request_slug();
+}
+$corp_aliases = [
+    'about-us'      => 'hakkimizda',
+    'teslimat-iade' => 'teslimat-ve-iade',
+    'kvkk'          => 'gizlilik-ve-kvkk',
+];
+if (isset($corp_aliases[$current_slug])) {
+    $current_slug = $corp_aliases[$current_slug];
+}
 ?>
 
 <div class="emdief-corporate-page-wrap py-8">
@@ -81,22 +92,34 @@ $current_slug = $post ? $post->post_name : '';
                             <span class="corp-pill">Emdief Home Resmi Belgesi</span>
                             <span class="corp-date">Son Güncelleme: <?php echo get_the_modified_date('d F Y'); ?></span>
                         </div>
-                        <h1 class="corp-title"><?php the_title(); ?></h1>
+                        <h1 class="corp-title"><?php 
+                            $corporate_data = function_exists('mis360_get_corporate_pages_data') ? mis360_get_corporate_pages_data() : [];
+                            if (have_posts()) {
+                                the_title();
+                            } elseif (isset($corporate_data[$current_slug]['title'])) {
+                                echo esc_html($corporate_data[$current_slug]['title']);
+                            } else {
+                                echo esc_html__('Kurumsal Bilgilendirme', 'mis360-mobilya');
+                            }
+                        ?></h1>
                     </header>
                     <div class="corporate-body typography-prose">
                         <?php
-                        while (have_posts()):
-                            the_post();
-                            $raw_content = get_the_content();
-                            $corporate_data = function_exists('mis360_get_corporate_pages_data') ? mis360_get_corporate_pages_data() : [];
-                            
-                            // Eğer veritabanındaki içerikte Orhan TEBER yoksa veya eski ise doğrudan güncel şablon içeriğini göster
-                            if (isset($corporate_data[$current_slug]) && (strpos($raw_content, 'Orhan TEBER') === false || strpos($raw_content, 'MİS360 Teknoloji') !== false)) {
-                                echo apply_filters('the_content', $corporate_data[$current_slug]['content']);
-                            } else {
-                                the_content();
-                            }
-                        endwhile;
+                        if (have_posts()) {
+                            while (have_posts()):
+                                the_post();
+                                $raw_content = get_the_content();
+                                
+                                // Eğer veritabanındaki içerikte Orhan TEBER yoksa veya eski ise doğrudan güncel şablon içeriğini göster
+                                if (isset($corporate_data[$current_slug]) && (strpos($raw_content, 'Orhan TEBER') === false || strpos($raw_content, 'MİS360 Teknoloji') !== false)) {
+                                    echo apply_filters('the_content', $corporate_data[$current_slug]['content']);
+                                } else {
+                                    the_content();
+                                }
+                            endwhile;
+                        } elseif (isset($corporate_data[$current_slug]['content'])) {
+                            echo apply_filters('the_content', $corporate_data[$current_slug]['content']);
+                        }
                         ?>
                     </div>
                 </article>

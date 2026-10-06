@@ -91,19 +91,23 @@ function mis360Init() {
         });
     }
 
-    // 1.1. Masaüstü Dropdown Menü Tıklama Desteği
+    // 1.1. Masaüstü Dropdown Menü Tıklama & Hover Desteği
     const dropdownParents = document.querySelectorAll('.emdief-nav-menu li.menu-item-has-children');
     dropdownParents.forEach(item => {
         const link = item.querySelector(':scope > a');
         if (link) {
             link.addEventListener('click', (e) => {
-                // Eğer menü henüz açık değilse dropdown'ı aç
-                if (!item.classList.contains('is-open')) {
-                    e.preventDefault();
-                    dropdownParents.forEach(other => {
-                        if (other !== item) other.classList.remove('is-open');
-                    });
+                e.preventDefault();
+                e.stopPropagation();
+                const wasOpen = item.classList.contains('is-open');
+                dropdownParents.forEach(other => {
+                    other.classList.remove('is-open');
+                    const otherLink = other.querySelector(':scope > a');
+                    if (otherLink) otherLink.setAttribute('aria-expanded', 'false');
+                });
+                if (!wasOpen) {
                     item.classList.add('is-open');
+                    link.setAttribute('aria-expanded', 'true');
                 }
             });
         }
@@ -112,7 +116,22 @@ function mis360Init() {
     // Sayfa dışına tıklandığında açık dropdown'ı kapat
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.menu-item-has-children')) {
-            dropdownParents.forEach(item => item.classList.remove('is-open'));
+            dropdownParents.forEach(item => {
+                item.classList.remove('is-open');
+                const link = item.querySelector(':scope > a');
+                if (link) link.setAttribute('aria-expanded', 'false');
+            });
+        }
+    });
+
+    // ESC tuşuna basıldığında açık dropdown'ı kapat
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            dropdownParents.forEach(item => {
+                item.classList.remove('is-open');
+                const link = item.querySelector(':scope > a');
+                if (link) link.setAttribute('aria-expanded', 'false');
+            });
         }
     });
 
@@ -135,12 +154,19 @@ function mis360Init() {
     const authClose = document.getElementById('emdief-auth-close');
     const authOverlay = document.getElementById('emdief-auth-overlay');
 
-    function openAuthModal() {
+    function openAuthModal(defaultTab) {
         if (authModal) {
+            if (defaultTab) {
+                const targetBtn = authModal.querySelector(`.auth-tab-btn[data-tab="${defaultTab}"]`);
+                if (targetBtn) {
+                    targetBtn.click();
+                }
+            }
             authModal.classList.add('is-active');
             authModal.setAttribute('aria-hidden', 'false');
             document.body.style.overflow = 'hidden';
-            const firstInput = authModal.querySelector('input[type="text"], input[type="email"]');
+            const activePanel = authModal.querySelector('.auth-form-panel.is-active');
+            const firstInput = (activePanel || authModal).querySelector('input[type="text"], input[type="email"]');
             if (firstInput) setTimeout(() => firstInput.focus(), 150);
         }
     }
@@ -153,9 +179,62 @@ function mis360Init() {
         }
     }
 
-    if (authTrigger) authTrigger.addEventListener('click', openAuthModal);
+    // Global erişim
+    window.mis360OpenAuthModal = openAuthModal;
+    window.mis360CloseAuthModal = closeAuthModal;
+
+    if (authTrigger) authTrigger.addEventListener('click', () => openAuthModal('login'));
     if (authClose) authClose.addEventListener('click', closeAuthModal);
-    if (authOverlay) authOverlay.addEventListener('click', closeAuthModal);
+    // Misafir kullanıcılar doğrudan ödeme sayfasına geçebilir (Engelsiz Guest Checkout)
+    function optimizeCheckoutFormFields() {
+        // 1. Posta kodunu sessizce doldur (React doğrulaması için)
+        const postcodeInputs = document.querySelectorAll('input[id*="postcode"], input[name*="postcode"], .wc-block-components-address-form__postcode input');
+        postcodeInputs.forEach(input => {
+            if (!input.value) {
+                input.value = '34000';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+
+        // 2. Telefon alanını ZORUNLU yap & '(isteğe bağlı)' ibaresini temizle
+        const phoneLabels = document.querySelectorAll('.wc-block-components-address-form__phone label, label[for*="phone"], #billing_phone_field label');
+        phoneLabels.forEach(lbl => {
+            if (lbl.textContent.includes('isteğe bağlı') || lbl.textContent.includes('optional')) {
+                lbl.innerHTML = 'Cep Telefonu <span class="wc-block-components-address-form__required-marker" aria-hidden="true" style="color:#ef4444;font-weight:bold;">*</span>';
+            }
+        });
+
+        const phoneInputs = document.querySelectorAll('input[id*="phone"], input[name*="phone"], .wc-block-components-address-form__phone input');
+        phoneInputs.forEach(inp => {
+            inp.setAttribute('required', 'required');
+            inp.setAttribute('aria-required', 'true');
+            if (inp.placeholder && (inp.placeholder.includes('isteğe bağlı') || inp.placeholder.includes('optional'))) {
+                inp.placeholder = '0 (5XX) XXX XX XX';
+            }
+        });
+
+        // 3. 'Daire, süit vb. ekle' toggle linkini gizle
+        const address2Toggles = document.querySelectorAll('.wc-block-components-address-form__address_2-toggle, button[class*="address_2"], a[class*="address_2"]');
+        address2Toggles.forEach(t => { t.style.display = 'none'; });
+    }
+
+    if (window.location.pathname.indexOf('/odeme') !== -1 || window.location.pathname.indexOf('/checkout') !== -1) {
+        optimizeCheckoutFormFields();
+        setTimeout(optimizeCheckoutFormFields, 400);
+        setTimeout(optimizeCheckoutFormFields, 1000);
+        setTimeout(optimizeCheckoutFormFields, 2500);
+
+        if (window.MutationObserver) {
+            const checkoutObserver = new MutationObserver(() => {
+                optimizeCheckoutFormFields();
+            });
+            const targetContainer = document.querySelector('.woocommerce, main#primary, body');
+            if (targetContainer) {
+                checkoutObserver.observe(targetContainer, { childList: true, subtree: true });
+            }
+        }
+    }
 
     // Modal ??i Tab De?i?imi (Giri? Yap / Kay?t Ol)
     const tabButtons = document.querySelectorAll('.auth-tab-btn');
@@ -177,20 +256,215 @@ function mis360Init() {
         });
     });
 
-    // ?ifre G?ster / Gizle
-    const togglePassBtn = document.getElementById('emdief-toggle-pass');
-    const passInput = document.getElementById('emdief-user-pass');
-    if (togglePassBtn && passInput) {
-        togglePassBtn.addEventListener('click', () => {
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                togglePassBtn.textContent = '??';
-            } else {
-                passInput.type = 'password';
-                togglePassBtn.textContent = '???';
+    // Modal Formları AJAX ile Gönderme (Sayfa yenilenmesini ve /my-account/'a fırlatılmasını engeller)
+    const authModalForms = document.querySelectorAll('#emdief-auth-modal .emdief-auth-form');
+    authModalForms.forEach((form) => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const isRegister = form.closest('#auth-tab-register') !== null;
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+            // Mevcut bildirim mesajını temizle
+            const oldFeedback = form.querySelector('.auth-feedback-msg');
+            if (oldFeedback) oldFeedback.remove();
+
+            function showFeedback(type, message) {
+                const msgEl = document.createElement('div');
+                msgEl.className = 'auth-feedback-msg ' + type;
+                msgEl.innerHTML = (type === 'success' ? '✅ ' : '❌ ') + message;
+                form.insertBefore(msgEl, form.firstChild);
+            }
+
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = isRegister ? '<span>Hesap Oluşturuluyor... ⏳</span>' : '<span>Giriş Yapılıyor... ⏳</span>';
+            }
+
+            const formData = new FormData(form);
+            
+            // WordPress kanonik AJAX adresi
+            let ajaxUrl = (window.mis360Data && window.mis360Data.ajaxUrl) ? window.mis360Data.ajaxUrl : '/wp-admin/admin-ajax.php';
+            const nonce = (window.mis360Data && window.mis360Data.nonce) ? window.mis360Data.nonce : '';
+
+            // WooCommerce çekirdek process_registration kancasını bypass et (AJAX akışını kesmesin)
+            formData.delete('register');
+            formData.delete('woocommerce-register-nonce');
+
+            formData.append('action', isRegister ? 'mis360_ajax_register' : 'mis360_ajax_login');
+            formData.append('security', nonce);
+
+            function handleAuthResponse(rawText) {
+                if (!rawText) {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    showFeedback('error', 'Sunucudan yanıt alınamadı. Lütfen tekrar deneyiniz.');
+                    return;
+                }
+
+                let data = null;
+                try {
+                    data = JSON.parse(rawText);
+                } catch (jsonErr) {
+                    console.warn('Auth raw response (non-json):', rawText);
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    // Eğer dönen cevap bir HTML sayfası veya uzun metin ise ASLA ekrana ham kod dökümü yapma!
+                    const trimmed = rawText.trim();
+                    if (trimmed.startsWith('<') || trimmed.indexOf('<!DOCTYPE') !== -1 || trimmed.indexOf('<html') !== -1 || trimmed.length > 250) {
+                        // Eğer oturum açıldıysa sayfayı doğrudan ödemeye yönlendir
+                        if (trimmed.indexOf('wp-login.php?action=logout') !== -1 || trimmed.indexOf('logged-in') !== -1) {
+                            showFeedback('success', 'Giriş başarılı! Yönlendiriliyorsunuz...');
+                            setTimeout(() => {
+                                window.location.href = (window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/';
+                            }, 500);
+                            return;
+                        }
+                        showFeedback('error', 'İşlem gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                    } else {
+                        const cleanErr = trimmed.replace(/<[^>]*>?/gm, '').trim();
+                        if (cleanErr && cleanErr !== '-1' && cleanErr !== '0') {
+                            showFeedback('error', cleanErr);
+                        } else {
+                            showFeedback('error', 'İşlem gerçekleştirilemedi. Lütfen bilgilerinizi kontrol edip tekrar deneyiniz.');
+                        }
+                    }
+                    return;
+                }
+
+                if (data && data.success) {
+                    showFeedback('success', (data.data && data.data.message) ? data.data.message : 'Başarılı! Yönlendiriliyorsunuz...');
+                    setTimeout(() => {
+                        const targetUrl = (data.data && data.data.redirect) ? data.data.redirect : ((window.mis360Data && window.mis360Data.checkoutUrl) ? window.mis360Data.checkoutUrl : '/odeme/');
+                        window.location.href = targetUrl;
+                    }, 500);
+                } else {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalBtnHtml;
+                    }
+                    const errorMsg = (data && data.data && data.data.message) ? data.data.message : 'Bir hata oluştu. Lütfen bilgilerinizi kontrol ediniz.';
+                    showFeedback('error', errorMsg);
+                }
+            }
+
+            // Evrensel ve her tarayıcıda (Chrome, Firefox, Safari) %100 kararlı XMLHttpRequest
+            try {
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', ajaxUrl, true);
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+                xhr.withCredentials = true;
+
+                xhr.onload = function() {
+                    if (xhr.status >= 200 && xhr.status < 400) {
+                        handleAuthResponse(xhr.responseText);
+                    } else {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHtml;
+                        }
+                        showFeedback('error', 'Sunucu yanıt vermedi (' + xhr.status + '). Lütfen tekrar deneyiniz.');
+                    }
+                };
+
+                xhr.onerror = function() {
+                    // XHR bağlantı hatası durumunda jQuery veya doğrudan hata bildirimi
+                    if (window.jQuery) {
+                        window.jQuery.ajax({
+                            url: ajaxUrl,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            xhrFields: { withCredentials: true },
+                            success: function(resp) {
+                                handleAuthResponse(typeof resp === 'object' ? JSON.stringify(resp) : resp);
+                            },
+                            error: function() {
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.innerHTML = originalBtnHtml;
+                                }
+                                showFeedback('error', 'Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.');
+                            }
+                        });
+                    } else {
+                        if (submitBtn) {
+                            submitBtn.disabled = false;
+                            submitBtn.innerHTML = originalBtnHtml;
+                        }
+                        showFeedback('error', 'Bağlantı kurulamadı. Lütfen internet bağlantınızı kontrol edip tekrar deneyiniz.');
+                    }
+                };
+
+                xhr.send(formData);
+            } catch (xhrErr) {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnHtml;
+                }
+                showFeedback('error', 'İstek gönderilemedi: ' + xhrErr.message);
             }
         });
+    });
+
+    // Şifre Göster / Gizle (Tüm formlar için evrensel)
+    document.querySelectorAll('.toggle-password-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const wrap = btn.closest('.input-password-wrap');
+            if (!wrap) return;
+            const input = wrap.querySelector('input');
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                btn.textContent = '👁️';
+            }
+        });
+    });
+
+    // Telefon Numarası Otomatik Formatlama / Maskeleme (0 (5XX) XXX XX XX)
+    function formatTurkishPhone(value) {
+        let digits = value.replace(/\D/g, '');
+        if (digits.startsWith('90') && digits.length > 10) {
+            digits = digits.substring(2);
+        }
+        if (!digits.startsWith('0') && digits.length > 0) {
+            digits = '0' + digits;
+        }
+        digits = digits.substring(0, 11);
+
+        let res = '';
+        if (digits.length > 0) res += digits.substring(0, 1);
+        if (digits.length > 1) res += ' (' + digits.substring(1, Math.min(4, digits.length));
+        if (digits.length >= 4) res += ') ';
+        if (digits.length > 4) res += digits.substring(4, Math.min(7, digits.length));
+        if (digits.length >= 7) res += ' ';
+        if (digits.length > 7) res += digits.substring(7, Math.min(9, digits.length));
+        if (digits.length >= 9) res += ' ';
+        if (digits.length > 9) res += digits.substring(9, 11);
+        return res;
     }
+
+    document.addEventListener('input', (e) => {
+        const target = e.target;
+        if (!target) return;
+        if (target.classList.contains('emdief-phone-input') || target.name === 'billing_phone' || target.id === 'emdief-reg-phone' || target.id === 'reg_billing_phone') {
+            const prevVal = target.value;
+            const formatted = formatTurkishPhone(prevVal);
+            if (prevVal !== formatted) {
+                target.value = formatted;
+            }
+        }
+    });
 
     // 4. Sayfa Ba??na D?n (Back to Top)
     const backToTopBtn = document.getElementById('emdief-back-to-top');
@@ -282,24 +556,43 @@ function mis360Init() {
     if (stickyBuyBar) {
         const mainAddToCartBtn = document.querySelector('form.cart .single_add_to_cart_button') || document.querySelector('button[name="add-to-cart"]');
 
-        window.addEventListener('scroll', () => {
-            if (window.innerWidth <= 768) {
-                if (mainAddToCartBtn) {
-                    const rect = mainAddToCartBtn.getBoundingClientRect();
-                    if (rect.bottom < 0) {
-                        stickyBuyBar.classList.add('is-visible');
-                    } else {
-                        stickyBuyBar.classList.remove('is-visible');
-                    }
-                } else if (window.scrollY > 350) {
-                    stickyBuyBar.classList.add('is-visible');
+        if ('IntersectionObserver' in window && mainAddToCartBtn) {
+            const observer = new IntersectionObserver((entries) => {
+                if (window.innerWidth <= 768) {
+                    entries.forEach(entry => {
+                        // When main button is scrolled past viewport, reveal sticky bar
+                        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                            stickyBuyBar.classList.add('is-visible');
+                        } else {
+                            stickyBuyBar.classList.remove('is-visible');
+                        }
+                    });
                 } else {
                     stickyBuyBar.classList.remove('is-visible');
                 }
-            } else {
-                stickyBuyBar.classList.remove('is-visible');
-            }
-        }, { passive: true });
+            }, { threshold: 0 });
+
+            observer.observe(mainAddToCartBtn);
+        } else {
+            let ticking = false;
+            window.addEventListener('scroll', () => {
+                if (!ticking) {
+                    window.requestAnimationFrame(() => {
+                        if (window.innerWidth <= 768) {
+                            if (window.scrollY > 400) {
+                                stickyBuyBar.classList.add('is-visible');
+                            } else {
+                                stickyBuyBar.classList.remove('is-visible');
+                            }
+                        } else {
+                            stickyBuyBar.classList.remove('is-visible');
+                        }
+                        ticking = false;
+                    });
+                    ticking = true;
+                }
+            }, { passive: true });
+        }
 
         if (triggerStickyAddToCart && mainAddToCartBtn) {
             triggerStickyAddToCart.addEventListener('click', (e) => {
@@ -585,8 +878,9 @@ function mis360Init() {
         notice.style.display = 'flex';
 
         wrapper.classList.remove('is-shaking');
-        void wrapper.offsetWidth;
-        wrapper.classList.add('is-shaking');
+        requestAnimationFrame(() => {
+            wrapper.classList.add('is-shaking');
+        });
 
         clearTimeout(wrapper._noticeTimer);
         wrapper._noticeTimer = setTimeout(() => {
@@ -796,6 +1090,39 @@ function mis360Init() {
                 }, 1600);
             }
         });
+    }
+
+    // 16. Ziyaretçi & Sayfa/Ürün İzleme Motoru (0 ms Gecikmeli Asenkron Beacon)
+    if (typeof window.mis360TrackerData !== 'undefined') {
+        try {
+            const td = window.mis360TrackerData;
+            const isProd = Boolean(td.isProduct && td.product);
+            const p = isProd ? td.product : null;
+            const beaconPayload = JSON.stringify({
+                event: isProd ? 'view_product' : 'page_view',
+                product_id: p ? p.id : 0,
+                product_name: p ? p.name : (document.title || 'Sayfa Ziyareti'),
+                product_price: p ? p.price : 0,
+                product_image: p ? p.image : '',
+                page_url: window.location.href,
+                referrer: document.referrer || '',
+                sid: td.sid || ''
+            });
+
+            const beaconEndpoint = td.ajaxUrl + '?action=mis360_track_beacon';
+
+            if (navigator.sendBeacon) {
+                const blob = new Blob([beaconPayload], { type: 'application/json' });
+                navigator.sendBeacon(beaconEndpoint, blob);
+            } else {
+                fetch(beaconEndpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: beaconPayload,
+                    keepalive: true
+                }).catch(() => {});
+            }
+        } catch (e) {}
     }
 }
 
