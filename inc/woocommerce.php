@@ -67,21 +67,13 @@ function mis360_cart_count_fragment($fragments) {
 
 
     $fragments['#emdief-cart-count'] = '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>';
-
-
-
     $fragments['#emdief-bottom-cart-count'] = '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>';
-
-
-
     $fragments['#emdief-drawer-count-badge'] = '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>';
 
-
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
+    $fragments['.emdief-cart-total'] = '<strong class="emdief-cart-total">' . $subtotal . '</strong>';
 
     return $fragments;
-
-
-
 }
 
 
@@ -222,86 +214,34 @@ function mis360_render_drawer_cart_content() {
 
 
 
-    <div id="emdief-drawer-cart-content" class="emdief-drawer-body">
+    <div id="emdief-drawer-cart-content" class="emdief-drawer-body" style="opacity: 1 !important;">
 
 
 
         <!-- Maskottan Mesaj Var: Canlı Kargo Tavsiye Kutusu -->
-
-
-
-        <div class="mascot-speech-bubble-box <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'is-free-shipping' : ''; ?>">
-
-
-
+        <div class="mascot-speech-bubble-box <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'is-free-shipping' : ''; ?>" <?php echo ($diff <= 0 && $cart_subtotal > 0) ? 'data-free-shipping="true"' : ''; ?>>
             <div class="mascot-bubble-avatar-col">
-
-
-
                 <div class="mascot-avatar-wrapper">
-
-
-
                     <?php echo function_exists('mis360_teddy_bear_avatar') ? mis360_teddy_bear_avatar(44, 'mascot-chat-bear') : '🧸'; ?>
-
-
-
                     <span class="mascot-live-indicator" title="Maskot Çevrimiçi"></span>
-
-
-
                 </div>
-
-
-
             </div>
-
-
-
             <div class="mascot-speech-body">
-
-
-
                 <div class="mascot-speech-top">
-
-
-
                     <span class="mascot-label-tag">
-
-
-
                         <span class="tag-pulse"></span>
-
-
-
                         💬 MASKOTTAN MESAJ VAR!
-
-
-
                     </span>
-
-
-
                     <span class="mascot-time-tag">Canlı İpucu</span>
-
-
-
                 </div>
-
-
-
                 <div class="mascot-speech-msg">
-
-
-
                     <?php if ($diff <= 0 && $cart_subtotal > 0): ?>
-
-
-
-                        🎉 <strong>Harika seçim!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı, kargo ücreti ödemeyeceksiniz!
-
-
-
+                        <div class="mascot-celebrate-badge" style="color: #ffffff !important;">
+                            <span>🎉</span> <strong style="color: #ffffff !important;">TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
+                        </div>
+                        <div class="mascot-celebrate-text" style="color: #0f172a !important;">
+                            Harika seçim! Sepetiniz <strong style="color: #047857 !important;">1.500 TL</strong> limitini aştı ve <strong style="color: #047857 !important;">ÜCRETSİZ KARGO</strong> kazandı! Kargo ücreti ödemeyeceksiniz!
+                        </div>
                     <?php elseif ($cart_subtotal > 0): ?>
 
 
@@ -388,7 +328,13 @@ function mis360_render_drawer_cart_content() {
 
         <?php if ($cart && !$cart->is_empty()): ?>
 
-
+            <div class="drawer-items-header">
+                <span class="drawer-items-title"><?php esc_html_e('Sepetteki Ürünler', 'mis360-mobilya'); ?></span>
+                <button type="button" class="drawer-empty-cart-btn emdief-empty-cart-trigger" title="<?php esc_attr_e('Sepetteki tüm ürünleri temizle', 'mis360-mobilya'); ?>">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+                    <span><?php esc_html_e('Sepeti Boşalt', 'mis360-mobilya'); ?></span>
+                </button>
+            </div>
 
             <div class="emdief-drawer-items">
 
@@ -600,59 +546,32 @@ function mis360_render_drawer_cart_content() {
 
                 <div class="drawer-actions">
 
+                    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block drawer-btn-checkout">
+                        <span><?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?></span>
+                        <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-left:4px;"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+                    </a>
 
+                    <?php if (function_exists('mis360_render_cart_whatsapp_btn')) { mis360_render_cart_whatsapp_btn('drawer-btn-wa'); } ?>
 
-                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="emdief-btn btn-outline btn-block">
-
-
+                    <a href="<?php echo esc_url(wc_get_cart_url()); ?>" class="emdief-btn btn-outline btn-block drawer-btn-cart">
 
                         <?php esc_html_e('Sepeti Görüntüle', 'mis360-mobilya'); ?>
 
-
-
                     </a>
-
-
-
-                    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="emdief-btn btn-primary btn-block">
-
-
-
-                        <?php esc_html_e('Siparişi Tamamla', 'mis360-mobilya'); ?>
-
-
-
-                    </a>
-
-
 
                 </div>
 
-
-
-                <!-- Sepet Güven İpuçları (v1.8.0 4 Güven Öğesi) -->
-
-
+                <!-- Sepet Güven İpuçları (v1.9.74) -->
 
                 <div class="drawer-trust-check-list">
 
+                    <span class="drawer-trust-badge">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
 
+                    <span class="drawer-trust-badge">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
 
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Güvenli Ödeme', 'mis360-mobilya'); ?></span>
+                    <span class="drawer-trust-badge">🏦 <?php esc_html_e('Havale / FAST İndirimi', 'mis360-mobilya'); ?></span>
 
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Hızlı Kargo', 'mis360-mobilya'); ?></span>
-
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('Kolay Kurulum', 'mis360-mobilya'); ?></span>
-
-
-
-                    <span class="drawer-trust-badge">✓ <?php esc_html_e('WhatsApp Destek', 'mis360-mobilya'); ?></span>
-
-
+                    <span class="drawer-trust-badge">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
 
                 </div>
 
@@ -743,66 +662,281 @@ function mis360_render_drawer_cart_content() {
 
 
 function mis360_ajax_remove_cart_item() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
 
-
-
-    check_ajax_referer('mis360_cart_nonce', 'nonce');
-
-
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
 
     $cart_item_key = isset($_POST['cart_item_key']) ? sanitize_text_field(wp_unslash($_POST['cart_item_key'])) : '';
 
-
-
     if (!empty($cart_item_key) && function_exists('WC') && WC()->cart) {
-
-
-
         WC()->cart->remove_cart_item($cart_item_key);
+        WC()->cart->calculate_totals();
+    }
+
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
+
+    $count = (function_exists('WC') && WC()->cart) ? (string) WC()->cart->get_cart_contents_count() : '0';
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
+
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
+
+    wp_send_json_success([
+        'fragments' => $fragments,
+        'count'     => $count,
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
+    ]);
+}
+add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_mis360_ajax_remove_cart_item', 'mis360_ajax_remove_cart_item');
+add_action('wp_ajax_nopriv_mis360_ajax_remove_cart_item', 'mis360_ajax_remove_cart_item');
+
+/**
+ * AJAX Empty Cart Handler (Tek Tıkla Sepeti Boşalt Motoru)
+ */
+function mis360_ajax_empty_cart() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
+
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+
+    if (function_exists('WC') && WC()->cart) {
+        WC()->cart->empty_cart();
+        WC()->cart->calculate_totals();
+    }
+
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
+
+    $count = '0';
+    $subtotal = function_exists('wc_price') ? wc_price(0) : '0,00 TL';
+
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">0</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">0</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), '0') . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
+
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
+
+    wp_send_json_success([
+        'fragments' => $fragments,
+        'count'     => '0',
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
+        'is_empty'  => true,
+    ]);
+}
+add_action('wp_ajax_mis360_ajax_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_nopriv_mis360_ajax_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_mis360_empty_cart', 'mis360_ajax_empty_cart');
+add_action('wp_ajax_nopriv_mis360_empty_cart', 'mis360_ajax_empty_cart');
+
+/**
+ * Sepet Sayfası Tablo Altı Butonlarına "Sepeti Boşalt" Butonu Ekle
+ */
+add_action('woocommerce_cart_actions', 'mis360_add_empty_cart_button_to_cart_page');
+function mis360_add_empty_cart_button_to_cart_page() {
+    $nonce = wp_create_nonce('mis360_empty_cart_nonce');
+    $empty_url = add_query_arg(['mis360_empty_cart' => 1, '_wpnonce' => $nonce], wc_get_cart_url());
+    ?>
+    <a href="<?php echo esc_url($empty_url); ?>" class="button emdief-btn-empty-cart emdief-empty-cart-trigger" id="emdief-page-empty-cart-btn" title="<?php esc_attr_e('Sepetteki tüm ürünleri temizle', 'mis360-mobilya'); ?>">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px; margin-right: 5px;"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2M10 11v6M14 11v6"/></svg>
+        <span><?php esc_html_e('Sepeti Boşalt', 'mis360-mobilya'); ?></span>
+    </a>
+    <?php
+}
+
+/**
+ * Sepet Sayfası URL Fallback ile Sepeti Boşaltma İşlemi
+ */
+add_action('template_redirect', 'mis360_handle_empty_cart_action');
+function mis360_handle_empty_cart_action() {
+    if (isset($_GET['mis360_empty_cart']) && wp_verify_nonce($_GET['_wpnonce'] ?? '', 'mis360_empty_cart_nonce')) {
+        if (function_exists('WC') && WC()->cart) {
+            WC()->cart->empty_cart();
+            wc_add_notice(__('Sepetinizdeki tüm ürünler başarıyla temizlendi.', 'mis360-mobilya'), 'notice');
+            wp_safe_redirect(wc_get_cart_url());
+            exit;
+        }
+    }
+}
+
+/**
+ * AJAX Add to Cart Handler (Ultra Hızlı ve Güvenilir Sepete Ekle Motoru)
+ */
+function mis360_ajax_add_to_cart() {
+    check_ajax_referer('mis360_cart_nonce', 'nonce', false);
+
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+    if (!isset(WC()->cart) || null === WC()->cart) {
+        if (function_exists('WC') && method_exists(WC(), 'initialize_cart')) {
+            WC()->initialize_session();
+            WC()->initialize_cart();
+        }
+    }
+
+    if (function_exists('WC') && WC()->session) {
+        if (!WC()->session->has_session()) {
+            WC()->session->set_customer_session_cookie(true);
+        }
+    }
+
+    $product_id   = apply_filters('woocommerce_add_to_cart_product_id', absint($_POST['product_id'] ?? 0));
+    $quantity     = empty($_POST['quantity']) ? 1 : wc_stock_amount(wp_unslash($_POST['quantity']));
+    $variation_id = absint($_POST['variation_id'] ?? 0);
+    $variations   = [];
+
+    foreach ($_POST as $key => $value) {
+        if (strpos($key, 'attribute_') === 0) {
+            $variations[$key] = sanitize_text_field(wp_unslash($value));
+        }
+    }
+
+    $cart_item_data = [];
 
 
+    $passed_validation = apply_filters('woocommerce_add_to_cart_validation', true, $product_id, $quantity, $variation_id, $variations);
+
+    if ($passed_validation && function_exists('WC') && WC()->cart && false !== WC()->cart->add_to_cart($product_id, $quantity, $variation_id, $variations, $cart_item_data)) {
+        do_action('woocommerce_ajax_added_to_cart', $product_id);
 
         WC()->cart->calculate_totals();
 
+        if (WC()->session) {
+            WC()->session->set_customer_session_cookie(true);
+        }
 
+        ob_start();
+        mis360_render_drawer_cart_content();
+        $drawer_html = ob_get_clean();
 
+        $count = (string) WC()->cart->get_cart_contents_count();
+        $subtotal = WC()->cart->get_cart_subtotal();
+
+        $fragments = [
+            '#emdief-drawer-cart-content' => $drawer_html,
+            '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+            '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+            '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+            '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+        ];
+
+        $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
+        $cart_hash = WC()->cart->get_cart_hash();
+
+        if (!headers_sent() && function_exists('wc_setcookie')) {
+            wc_setcookie('woocommerce_items_in_cart', $count);
+            wc_setcookie('woocommerce_cart_hash', $cart_hash);
+        }
+
+        wp_send_json_success([
+            'fragments' => $fragments,
+            'count'     => $count,
+            'subtotal'  => $subtotal,
+            'cart_hash' => $cart_hash,
+            'product_id'=> $product_id,
+            'message'   => __('Ürün sepete eklendi.', 'mis360-mobilya'),
+        ]);
+    } else {
+        $notices = function_exists('wc_get_notices') ? wc_get_notices('error') : [];
+        $msg = __('Ürün sepete eklenemedi.', 'mis360-mobilya');
+        if (!empty($notices)) {
+            $msg = wp_strip_all_tags($notices[0]['notice'] ?? $msg);
+            if (function_exists('wc_clear_notices')) {
+                wc_clear_notices();
+            }
+        }
+        $data = [
+            'error'       => true,
+            'product_url' => apply_filters('woocommerce_cart_redirect_after_error', get_permalink($product_id), $product_id),
+            'message'     => $msg,
+        ];
+        wp_send_json_error($data);
+    }
+    wp_die();
+}
+add_action('wp_ajax_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
+add_action('wp_ajax_nopriv_mis360_ajax_add_to_cart', 'mis360_ajax_add_to_cart');
+
+/**
+ * AJAX Cart Fragments Endpoint (Önbelleğe Alınmış Sayfalarda Canlı Senkronizasyon)
+ */
+function mis360_ajax_get_cart_fragments() {
+    if (function_exists('wc_load_cart')) {
+        wc_load_cart();
+    }
+    if (!isset(WC()->cart) || null === WC()->cart) {
+        if (function_exists('WC') && method_exists(WC(), 'initialize_cart')) {
+            WC()->initialize_session();
+            WC()->initialize_cart();
+        }
     }
 
+    ob_start();
+    mis360_render_drawer_cart_content();
+    $drawer_html = ob_get_clean();
 
+    $count = (function_exists('WC') && WC()->cart) ? (string) WC()->cart->get_cart_contents_count() : '0';
+    $subtotal = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_subtotal() : '0,00 TL';
 
-    $fragments = apply_filters('woocommerce_add_to_cart_fragments', []);
+    $fragments = [
+        '#emdief-drawer-cart-content' => $drawer_html,
+        '#emdief-cart-count'          => '<span class="emdief-cart-count" id="emdief-cart-count">' . $count . '</span>',
+        '#emdief-bottom-cart-count'   => '<span class="bottom-cart-badge" id="emdief-bottom-cart-count">' . $count . '</span>',
+        '#emdief-drawer-count-badge'  => '<span class="drawer-count-badge" id="emdief-drawer-count-badge">' . sprintf(esc_html__('%s ürün', 'mis360-mobilya'), $count) . '</span>',
+        '.emdief-cart-total'          => '<strong class="emdief-cart-total">' . $subtotal . '</strong>',
+    ];
 
-
-
-    $cart_hash = (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '';
-
-
+    $fragments = apply_filters('woocommerce_add_to_cart_fragments', $fragments);
 
     wp_send_json_success([
-
-
-
         'fragments' => $fragments,
-
-
-
-        'cart_hash' => $cart_hash,
-
-
-
+        'count'     => $count,
+        'subtotal'  => $subtotal,
+        'cart_hash' => (function_exists('WC') && WC()->cart) ? WC()->cart->get_cart_hash() : '',
     ]);
-
-
-
 }
+add_action('wp_ajax_mis360_get_cart_fragments', 'mis360_ajax_get_cart_fragments');
+add_action('wp_ajax_nopriv_mis360_get_cart_fragments', 'mis360_ajax_get_cart_fragments');
 
+/**
+ * AJAX ve Sepet Yönlendirme Kontrolleri
+ * - WooCommerce standart AJAX sepete eklemeyi daima zorunlu kılar
+ * - Sepete eklendikten sonra /sepet/ sayfasına yönlendirmeyi %100 engeller (Çekmece açılması için)
+ */
+add_filter('pre_option_woocommerce_enable_ajax_add_to_cart', function() { return 'yes'; });
+add_filter('option_woocommerce_enable_ajax_add_to_cart', function() { return 'yes'; });
+add_filter('pre_option_woocommerce_cart_redirect_after_add', function() { return 'no'; });
+add_filter('option_woocommerce_cart_redirect_after_add', function() { return 'no'; });
+add_filter('woocommerce_add_to_cart_redirect', '__return_false', 999);
+add_filter('woocommerce_get_script_data', function($params, $handle) {
+    if ($handle === 'wc-add-to-cart' && is_array($params)) {
+        $params['cart_redirect_after_add'] = 'no';
+    }
+    return $params;
+}, 10, 2);
 
-
-add_action('wp_ajax_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
-
-
-
-add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_item');
+/* Flaş indirim motoru kaldırıldı (Kupon koduna hazır) */
 
 
 
@@ -818,6 +952,7 @@ add_action('wp_ajax_nopriv_mis360_remove_cart_item', 'mis360_ajax_remove_cart_it
 
 
 
+if (!function_exists('mis360_product_badges')) {
 function mis360_product_badges() {
 
 
@@ -890,6 +1025,7 @@ function mis360_product_badges() {
 
 
 
+}
 }
 
 
@@ -1072,22 +1208,11 @@ function mis360_single_product_benefit_badge() {
 
 }
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_benefit_badge', 6);
-
-
+// add_action('woocommerce_single_product_summary', 'mis360_single_product_benefit_badge', 6); // Kullanici talebiyle kalabaligi azaltmak icin kaldirildi
 
 function mis360_single_product_trust_box() {
-
-
-
     ?>
-
-
-
     <!-- 4 Öğeli Güven Rozetleri (v1.8.0 Standart) -->
-
-
-
     <div class="emdief-single-trust-badges">
 
 
@@ -1108,7 +1233,7 @@ function mis360_single_product_trust_box() {
 
 
 
-                <span class="badge-sub"><?php esc_html_e('256-Bit SSL & 3D Secure Güvencesi', 'mis360-mobilya'); ?></span>
+                <span class="badge-sub"><?php esc_html_e('Komisyonsuz Banka Havalesi & FAST Güvencesi', 'mis360-mobilya'); ?></span>
 
 
 
@@ -1214,9 +1339,23 @@ function mis360_single_product_trust_box() {
 
 }
 
+// add_action('mis360_under_product_gallery', 'mis360_single_product_trust_box', 15); // Kullanici talebiyle 4'lu guven rozetleri kaldirildi
 
+/**
+ * Ürün Detay Sol Sütun Kapsayıcısı (Galeri + Sol Bilgi ve Güven Rozetleri)
+ */
+function mis360_open_product_media_col() {
+    echo '<div class="emdief-product-media-col">';
+}
+add_action('woocommerce_before_single_product_summary', 'mis360_open_product_media_col', 5);
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_trust_box', 35);
+function mis360_close_product_media_col() {
+    echo '<div class="emdief-under-gallery-widgets">';
+    do_action('mis360_under_product_gallery');
+    echo '</div>';
+    echo '</div><!-- .emdief-product-media-col -->';
+}
+add_action('woocommerce_before_single_product_summary', 'mis360_close_product_media_col', 35);
 
 
 
@@ -2836,7 +2975,7 @@ function mis360_single_product_mascot_advice() {
 
 
 
-add_action('woocommerce_single_product_summary', 'mis360_single_product_mascot_advice', 35);
+add_action('mis360_under_product_gallery', 'mis360_single_product_mascot_advice', 20);
 
 
 
@@ -2884,7 +3023,7 @@ function mis360_cart_page_mascot_notice() {
 
 
 
-    <div class="mascot-speech-bubble-box cart-page-mascot-box <?php echo ($diff <= 0) ? 'is-free-shipping' : ''; ?>">
+    <div class="mascot-speech-bubble-box cart-page-mascot-box <?php echo ($diff <= 0) ? 'is-free-shipping' : ''; ?>" <?php echo ($diff <= 0) ? 'data-free-shipping="true"' : ''; ?>>
 
 
 
@@ -2949,13 +3088,12 @@ function mis360_cart_page_mascot_notice() {
 
 
                 <?php if ($diff <= 0): ?>
-
-
-
-                    🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>1.500 TL</strong> limitini aştı ve <strong>ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
-
-
-
+                    <div class="mascot-celebrate-badge" style="color: #ffffff !important;">
+                        <span>🎉</span> <strong style="color: #ffffff !important;">TEBRİKLER! KARGONUZ ÜCRETSİZ!</strong> <span>🚚</span>
+                    </div>
+                    <div class="mascot-celebrate-text" style="color: #0f172a !important;">
+                        Harika seçim! Sepetiniz <strong style="color: #047857 !important;">1.500 TL</strong> limitini aştı ve <strong style="color: #047857 !important;">ÜCRETSİZ KARGO</strong> kazandınız! Kargo ücreti bizden!
+                    </div>
                 <?php else: ?>
 
 
@@ -3945,6 +4083,18 @@ function mis360_cart_free_shipping_popup() {
 
 
                 if (barMsgEl) barMsgEl.innerHTML = '🎉 <strong>Tebrikler!</strong> Sepetiniz <strong>ÜCRETSİZ KARGO</strong> kazandı!';
+
+
+
+                if (typeof window.mis360LaunchConfetti === 'function') {
+
+
+
+                    window.mis360LaunchConfetti();
+
+
+
+                }
 
 
 
@@ -6582,179 +6732,6 @@ function mis360_render_product_faq_tab() {
 /**
 
 
-
- * 3. Mobilde Yapışkan Sepete Ekle Çubuğu (Sticky Add to Cart Bar - v1.8.0)
-
-
-
- */
-
-
-
-function mis360_mobile_sticky_product_bar() {
-
-
-
-    if (!function_exists('is_product') || !is_product()) {
-
-
-
-        return;
-
-
-
-    }
-
-
-
-    global $product;
-
-
-
-    if (!$product || !$product->is_purchasable()) {
-
-
-
-        return;
-
-
-
-    }
-
-
-
-    $price = $product->get_price_html();
-
-
-
-    $title = $product->get_title();
-
-
-
-    $thumb = get_the_post_thumbnail_url($product->get_id(), 'thumbnail');
-
-
-
-    ?>
-
-
-
-    <div class="emdief-mobile-sticky-bar" id="emdiefMobileStickyBar">
-
-
-
-        <div class="sticky-bar-container">
-
-
-
-            <div class="sticky-product-info">
-
-
-
-                <?php if ($thumb): ?>
-
-
-
-                    <img src="<?php echo esc_url($thumb); ?>" alt="<?php echo esc_attr($title); ?>" class="sticky-thumb" loading="lazy" />
-
-
-
-                <?php endif; ?>
-
-
-
-                <div class="sticky-title-price">
-
-
-
-                    <span class="sticky-title"><?php echo esc_html(wp_trim_words($title, 3, '...')); ?></span>
-
-
-
-                    <span class="sticky-price"><?php echo $price; ?></span>
-
-
-
-                </div>
-
-
-
-            </div>
-
-
-
-            <div class="sticky-btn-action">
-
-
-
-                <?php if ($product->is_type('simple') && $product->is_in_stock()): ?>
-
-
-
-                    <form class="cart sticky-cart-form" action="<?php echo esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post" enctype='multipart/form-data'>
-
-
-
-                        <button type="submit" name="add-to-cart" value="<?php echo esc_attr((string) $product->get_id()); ?>" class="emdief-btn btn-primary sticky-btn-cart">
-
-
-
-                            <span><?php esc_html_e('Sepete Ekle', 'mis360-mobilya'); ?></span>
-
-
-
-                        </button>
-
-
-
-                    </form>
-
-
-
-                <?php else: ?>
-
-
-
-                    <a href="#emdief-main-cart-area" class="emdief-btn btn-primary sticky-btn-cart">
-
-
-
-                        <span><?php esc_html_e('İncele & Satın Al', 'mis360-mobilya'); ?></span>
-
-
-
-                    </a>
-
-
-
-                <?php endif; ?>
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-    <?php
-
-
-
-}
-
-
-
-add_action('wp_footer', 'mis360_mobile_sticky_product_bar', 50);
-
-
-
 /**
 
  * Ürün Hikayesi & Pedagojik Fayda Tab Render (v1.8.5)
@@ -6986,4 +6963,762 @@ function mis360_render_product_usage_tab() {
     <?php
 
 }
+
+/**
+ * Montessori Çocuk Odası SEO Kategori & Otorite Silosu (Topical Authority Silo - v2.0)
+ */
+function mis360_render_seo_topical_silo() {
+    ?>
+    <section class="emdief-seo-silo-section" aria-label="<?php esc_attr_e('Montessori Çocuk Odası Rehberi', 'mis360-mobilya'); ?>">
+        <div class="emdief-container">
+            <div class="seo-silo-card">
+                <div class="silo-header">
+                    <span class="silo-badge"><?php esc_html_e('EMDİEF HOME MONTESSORİ REHBERİ', 'mis360-mobilya'); ?></span>
+                    <h3 class="silo-title"><?php esc_html_e('1. Sınıf MDF & Masif Ahşap Montessori Çocuk Odası Mobilyaları', 'mis360-mobilya'); ?></h3>
+                    <p class="silo-desc"><?php esc_html_e('Emdief Home; çocukların kendi başlarına öğrenmelerini, keşfetmelerini ve özgüven kazanmalarını destekleyen Montessori felsefesine uygun ergonomik çocuk mobilyaları üreticisidir. Sivri köşesiz %100 yuvarlatılmış kavisler, E1 Avrupa hijyen standartlarında 1. sınıf dayanıklı MDF ve doğal masif kayın ağacı ile Kayseri Mobilya Kent atölyemizde sevgiyle üretiyoruz.', 'mis360-mobilya'); ?></p>
+                </div>
+
+                <div class="silo-grid">
+                    <div class="silo-col">
+                        <h4>📚 <?php esc_html_e('Popüler Montessori Kategorileri', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('cocuk-montessori-kitaplik', 'kitaplık') : home_url('/shop/?s=kitapl%C4%B1k')); ?>"><?php esc_html_e('Montessori Çocuk Kitaplıkları (Carmen, Melis, Safir)', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>"><?php esc_html_e('Eğitici Ahşap Oyuncaklar & Motor Beceri Setleri', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>"><?php esc_html_e('Oyuncak & Eşya Düzenleyiciler (Açık Bölmeli)', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duvar-rafi', 'raf') : home_url('/shop/?s=raf')); ?>"><?php esc_html_e('Çocuk Odası, Banyo & Salon Duvar Rafları', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(class_exists('WooCommerce') ? wc_get_page_permalink('shop') : home_url('/shop/')); ?>"><?php esc_html_e('Tüm Montessori Mobilya Koleksiyonu & Fiyatları', 'mis360-mobilya'); ?></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="silo-col">
+                        <h4>🛡️ <?php esc_html_e('Üretim & Kalite Standartlarımız', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><strong><?php esc_html_e('1. Sınıf E1 Kalite MDF:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Sağlığa zararsız su bazlı kaplama, formaldehit içermez.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('%100 Yuvarlatılmış Hatlar:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Sivri köşe barındırmayan çocuk emniyetli CNC kavisler.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('Şarjlı Matkap ile 5 Dk Montaj:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Parçalarda CNC hazır delikler açılmıştır, alyan gerekmez.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('Zorunlu Duvar Sabitleme:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Devrilmeyi önleyici emniyet askı aparatı paket içinde hediye.', 'mis360-mobilya'); ?></li>
+                            <li><strong><?php esc_html_e('13:00 Öncelikli İmalat:', 'mis360-mobilya'); ?></strong> <?php esc_html_e('Saat 13:00\'a kadar verilen siparişler aynı gün üretim sırasına girer.', 'mis360-mobilya'); ?></li>
+                        </ul>
+                    </div>
+
+                    <div class="silo-col">
+                        <h4>🚚 <?php esc_html_e('Teslimat & Kurumsal Destek', 'mis360-mobilya'); ?></h4>
+                        <ul>
+                            <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🎬 <?php esc_html_e('Adım Adım Video Kurulum Kılavuzları & Yardım', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">📦 <?php esc_html_e('1.500 TL Üzeri Ücretsiz Kargo & Taşıma Güvencesi', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">🔄 <?php esc_html_e('%100 Kargo Hasar Garantisi & 14 Gün Koşulsuz İade', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="<?php echo esc_url(home_url('/iletisim/')); ?>">📍 <?php esc_html_e('Fabrika Satış & Atölye: Mobilya Kent, Kocasinan / Kayseri', 'mis360-mobilya'); ?></a></li>
+                            <li><a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>" target="_blank" rel="noopener">💬 <?php esc_html_e('WhatsApp Canlı Danışma & Sipariş Destek Hattı', 'mis360-mobilya'); ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php
+}
+
+/* ==========================================================================
+   ÖDEME AŞAMASINDA ZORUNLU ÜYELİK & AKILLI YÖNLENDİRME (v1.9.30)
+   Sepete ekleme serbesttir; ödeme (checkout) aşamasında üyelik zorunludur.
+    ========================================================================== */
+
+// 1. Misafir ödemesini daima aktif tut (Sepet Terkini Önleyen En Önemli Adım)
+add_filter('pre_option_woocommerce_enable_guest_checkout', function() {
+    return 'yes';
+});
+add_filter('woocommerce_checkout_registration_required', '__return_false');
+
+// 2. Ödeme sayfasında hesap oluşturma ve girişi aktif tut (İsteyen üye olabilir)
+add_filter('pre_option_woocommerce_enable_signup_and_login_from_checkout', function() {
+    return 'yes';
+});
+
+// 3. E-posta adresinden otomatik kullanıcı adı üret (Müşteriyi ekstra kullanıcı adı yazmakla yormaz)
+add_filter('pre_option_woocommerce_registration_generate_username', function() {
+    return 'yes';
+});
+
+// 4. Kullanıcı hesap şifresini kendisi belirleyebilsin
+add_filter('pre_option_woocommerce_registration_generate_password', function() {
+    return 'no';
+});
+
+// 4b. Hesabım sayfasında kayıt olmayı daima aktif tut
+add_filter('pre_option_woocommerce_enable_myaccount_registration', function() {
+    return 'yes';
+});
+
+// 5. Sepet doluyken giriş veya kayıt yapıldığında doğrudan Ödeme Sayfasına (Checkout) yönlendir
+add_filter('woocommerce_login_redirect', 'mis360_redirect_to_checkout_after_auth', 10, 2);
+add_filter('woocommerce_registration_redirect', 'mis360_redirect_to_checkout_after_auth', 10, 1);
+function mis360_redirect_to_checkout_after_auth($redirect, $user = null) {
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        return wc_get_checkout_url();
+    }
+    return $redirect;
+}
+
+// 6. Standart wp-login üzerinden giriş yapıldığında da sepet doluysa ödeme sayfasına gönder
+add_filter('login_redirect', function($redirect_to, $request, $user) {
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty() && !is_wp_error($user) && is_a($user, 'WP_User')) {
+        if (!in_array('administrator', (array) $user->roles, true)) {
+            return wc_get_checkout_url();
+        }
+    }
+    return $redirect_to;
+}, 10, 3);
+
+// 7. Sepet Sayfası (Cart Page) Doğrudan Siparişi Tamamla Butonu (Engelsiz & Hızlı)
+remove_action('woocommerce_proceed_to_checkout', 'woocommerce_button_proceed_to_checkout', 20);
+add_action('woocommerce_proceed_to_checkout', 'mis360_button_proceed_to_checkout', 20);
+function mis360_button_proceed_to_checkout() {
+    ?>
+    <a href="<?php echo esc_url(wc_get_checkout_url()); ?>" class="checkout-button button alt wc-forward emdief-btn btn-primary btn-block btn-lg" style="margin-bottom: 10px;">
+        <span><?php esc_html_e('Siparişi Tamamla & Ödemeye Geç', 'mis360-mobilya'); ?></span>
+        <svg viewBox="0 0 20 20" width="18" height="18" fill="currentColor" style="display:inline-block;vertical-align:middle;margin-left:6px;"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+    </a>
+    <?php
+}
+
+// 8. Sepeti WhatsApp ile Sipariş Ver Butonu (Hem Sepet Sayfası Hem Drawer İçin)
+function mis360_render_cart_whatsapp_btn($custom_class = '') {
+    $whatsapp_num = get_theme_mod('mis360_whatsapp', '905374778766');
+    if (empty($whatsapp_num) || !class_exists('WooCommerce') || !WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    $clean_num = preg_replace('/[^0-9]/', '', $whatsapp_num);
+
+    $items_text = [];
+    foreach (WC()->cart->get_cart() as $item) {
+        $prod = $item['data'] ?? null;
+        if ($prod) {
+            $items_text[] = '• ' . $prod->get_name() . ' (' . $item['quantity'] . ' Adet) - ' . html_entity_decode(strip_tags(wc_price($item['line_total'])));
+        }
+    }
+    $total = html_entity_decode(strip_tags(WC()->cart->get_total()));
+
+    $msg = "Merhaba Emdief Home, sepetimdeki ürünleri sipariş vermek istiyorum:\n\n" 
+         . implode("\n", $items_text) . "\n\n"
+         . "Toplam Tutar: " . $total . "\n"
+         . "Siparişim ve ödeme detayları için yardımcı olabilir misiniz?";
+
+    $wa_url = 'https://wa.me/' . $clean_num . '?text=' . rawurlencode($msg);
+    ?>
+    <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" class="emdief-btn btn-whatsapp-order btn-block <?php echo esc_attr($custom_class); ?>" title="<?php esc_attr_e('Sepeti WhatsApp üzerinden hızlıca sipariş verin', 'mis360-mobilya'); ?>">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.777 2.796.777 3.182 0 5.768-2.587 5.768-5.766.001-3.187-2.575-5.763-5.768-5.763zm4.521 8.243c-.19.534-.997.989-1.391 1.042-.379.051-.875.074-2.825-.694-2.348-.925-3.837-3.328-3.954-3.483-.117-.156-.949-1.262-.949-2.408 0-1.146.601-1.709.814-1.942.213-.233.466-.291.621-.291.155 0 .31.002.446.009.144.007.338-.055.528.401.198.475.679 1.658.738 1.776.059.117.098.254.019.41-.078.156-.117.253-.233.389-.117.136-.246.304-.351.408-.117.117-.239.244-.103.478.136.234.606.999 1.3 1.617.893.796 1.646 1.043 1.88 1.159.233.117.37.098.506-.058.136-.156.583-.68.738-.913.155-.234.31-.195.524-.117.214.078 1.359.641 1.592.758.233.117.389.175.447.272.058.098.058.564-.132 1.098z"/></svg>
+        <span><?php esc_html_e('WhatsApp ile Hızlı Sipariş Ver', 'mis360-mobilya'); ?></span>
+    </a>
+    <?php
+}
+add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_whatsapp_btn', 22);
+
+// 9. Sepet Sayfası Güven Rozetleri (v1.9.74)
+function mis360_render_cart_page_trust_badges() {
+    ?>
+    <div class="cart-page-trust-pills">
+        <span class="trust-pill-item">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🏦 <?php esc_html_e('Havale / FAST ile Komisyonsuz İndirim', 'mis360-mobilya'); ?></span>
+        <span class="trust-pill-item">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
+    </div>
+    <?php
+}
+add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_page_trust_badges', 25);
+
+// 9b. Ödeme Sayfasında Komisyonsuz Havale / FAST İndirim Avantajı Kutusu (v1.9.75)
+function mis360_checkout_havale_discount_advantage_notice() {
+    ?>
+    <div class="checkout-havale-advantage-box">
+        <div class="havale-adv-icon">🏷️</div>
+        <div class="havale-adv-content">
+            <strong><?php esc_html_e('Kredi Kartı Komisyonu Yok, Doğrudan İndirimli Fiyat!', 'mis360-mobilya'); ?></strong>
+            <p><?php esc_html_e('Banka ve kredi kartı komisyon/vade maliyetlerini aracı kurumlara ödemek yerine doğrudan müşterilerimize indirim olarak yansıtıyoruz. 7/24 FAST veya Havale ile ek masrafsız, en uygun üretici fiyatıyla güvenle sipariş verebilirsiniz.', 'mis360-mobilya'); ?></p>
+        </div>
+    </div>
+    <?php
+}
+add_action('woocommerce_review_order_before_payment', 'mis360_checkout_havale_discount_advantage_notice', 5);
+
+// 9c. Ödeme Formunu Sadeleştir & Telefonu Zorunlu Yap (v1.9.79)
+// Telefon kargo teslimatı için zorunludur; Posta kodu, Şirket adı ve 2. Adres satırı kaldırılmıştır.
+add_filter('pre_option_woocommerce_checkout_phone_field', function() {
+    return 'required';
+});
+
+add_filter('woocommerce_default_address_fields', 'mis360_optimize_default_address_fields', 9999);
+function mis360_optimize_default_address_fields($fields) {
+    if (isset($fields['postcode'])) {
+        $fields['postcode']['required'] = false;
+        $fields['postcode']['hidden']   = true;
+        unset($fields['postcode']);
+    }
+    if (isset($fields['company'])) {
+        $fields['company']['required'] = false;
+        $fields['company']['hidden']   = true;
+        unset($fields['company']);
+    }
+    if (isset($fields['address_2'])) {
+        $fields['address_2']['required'] = false;
+        $fields['address_2']['hidden']   = true;
+        unset($fields['address_2']);
+    }
+    if (isset($fields['phone'])) {
+        $fields['phone']['required'] = true;
+        $fields['phone']['hidden']   = false;
+        $fields['phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
+    }
+    if (isset($fields['address_1'])) {
+        $fields['address_1']['label']       = __('Açık Teslimat Adresi', 'mis360-mobilya');
+        $fields['address_1']['placeholder'] = __('Mahalle, cadde, sokak, bina ve daire numarası...', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_checkout_fields', 'mis360_optimize_checkout_fields', 9999);
+function mis360_optimize_checkout_fields($fields) {
+    unset($fields['billing']['billing_postcode']);
+    unset($fields['billing']['billing_company']);
+    unset($fields['billing']['billing_address_2']);
+
+    unset($fields['shipping']['shipping_postcode']);
+    unset($fields['shipping']['shipping_company']);
+    unset($fields['shipping']['shipping_address_2']);
+
+    if (isset($fields['billing']['billing_first_name'])) {
+        $fields['billing']['billing_first_name']['placeholder'] = __('Adınız', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_last_name'])) {
+        $fields['billing']['billing_last_name']['placeholder'] = __('Soyadınız', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_phone'])) {
+        $fields['billing']['billing_phone']['required']    = true;
+        $fields['billing']['billing_phone']['label']       = __('Cep Telefonu', 'mis360-mobilya');
+        $fields['billing']['billing_phone']['placeholder'] = __('0 (5XX) XXX XX XX', 'mis360-mobilya');
+    }
+    if (isset($fields['billing']['billing_email'])) {
+        $fields['billing']['billing_email']['placeholder'] = __('ornek@gmail.com', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_billing_fields', 'mis360_optimize_billing_fields', 9999);
+function mis360_optimize_billing_fields($fields) {
+    unset($fields['billing_postcode']);
+    unset($fields['billing_company']);
+    unset($fields['billing_address_2']);
+
+    if (isset($fields['billing_phone'])) {
+        $fields['billing_phone']['required'] = true;
+        $fields['billing_phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_shipping_fields', 'mis360_optimize_shipping_fields', 9999);
+function mis360_optimize_shipping_fields($fields) {
+    unset($fields['shipping_postcode']);
+    unset($fields['shipping_company']);
+    unset($fields['shipping_address_2']);
+
+    if (isset($fields['shipping_phone'])) {
+        $fields['shipping_phone']['required'] = true;
+        $fields['shipping_phone']['label']    = __('Cep Telefonu', 'mis360-mobilya');
+    }
+    return $fields;
+}
+
+add_filter('woocommerce_get_country_locale', 'mis360_remove_tr_postcode_requirement', 9999);
+function mis360_remove_tr_postcode_requirement($locale) {
+    if (isset($locale['TR']['postcode'])) {
+        $locale['TR']['postcode']['required'] = false;
+        $locale['TR']['postcode']['hidden']   = true;
+    }
+    if (isset($locale['TR']['phone'])) {
+        $locale['TR']['phone']['required'] = true;
+        $locale['TR']['phone']['hidden']   = false;
+    }
+    return $locale;
+}
+
+add_filter('woocommerce_checkout_posted_data', 'mis360_prevent_postcode_validation_errors');
+function mis360_prevent_postcode_validation_errors($data) {
+    if (empty($data['billing_postcode'])) {
+        $data['billing_postcode'] = '34000';
+    }
+    if (empty($data['shipping_postcode'])) {
+        $data['shipping_postcode'] = '34000';
+    }
+    return $data;
+}
+
+// Ödeme onayında telefon numarasının eksiksiz girildiğini doğrula
+add_action('woocommerce_after_checkout_validation', 'mis360_validate_checkout_phone', 10, 2);
+function mis360_validate_checkout_phone($data, $errors) {
+    $phone = sanitize_text_field($data['billing_phone'] ?? '');
+    $clean = preg_replace('/[^0-9]/', '', $phone);
+    if (empty($clean) || strlen($clean) < 10) {
+        $errors->add('billing_phone_required', __('<strong>Telefon Numarası Zorunludur:</strong> Kargo takip SMS bildirimleri ve teslimat için lütfen geçerli bir cep telefonu numarası giriniz (örn: 05XX XXX XX XX).', 'mis360-mobilya'));
+    }
+}
+
+// 10. Terk Edilen Sepet Kurtarma Kuponunu Otomatik Tanımla (EMDIEF5)
+add_action('init', 'mis360_ensure_exit_intent_coupon');
+function mis360_ensure_exit_intent_coupon() {
+    if (!class_exists('WooCommerce')) return;
+    $coupon_code = 'emdief5';
+    $coupon_id = wc_get_coupon_id_by_code($coupon_code);
+    if (!$coupon_id) {
+        $coupon = new WC_Coupon();
+        $coupon->set_code($coupon_code);
+        $coupon->set_discount_type('percent');
+        $coupon->set_amount(5);
+        $coupon->set_description(__('Sepet Terk Kurtarma - Özel %5 İndirim Kuponu', 'mis360-mobilya'));
+        $coupon->set_individual_use(false);
+        $coupon->save();
+    }
+}
+
+// 11. Çıkış Niyeti (Exit-Intent) İndirim Pop-up'ı (Modal & Trigger)
+add_action('wp_footer', 'mis360_render_exit_intent_popup', 35);
+function mis360_render_exit_intent_popup() {
+    if (!class_exists('WooCommerce') || !WC()->cart || WC()->cart->is_empty()) {
+        return;
+    }
+    // Sipariş teşekkür sayfasında gösterme
+    if (function_exists('is_order_received_page') && is_order_received_page()) {
+        return;
+    }
+    ?>
+    <div id="emdief-exit-modal" class="emdief-exit-modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="exit-modal-title">
+        <div class="exit-modal-backdrop" onclick="window.mis360CloseExitModal()"></div>
+        <div class="exit-modal-container">
+            <button type="button" class="exit-modal-close" onclick="window.mis360CloseExitModal()" aria-label="<?php esc_attr_e('Kapat', 'mis360-mobilya'); ?>">&times;</button>
+            <div class="exit-modal-content">
+                <div class="exit-modal-icon-wrap">
+                    <span class="exit-gift-badge">🎁 <?php esc_html_e('Özel Fırsat', 'mis360-mobilya'); ?></span>
+                    <div class="exit-mascot-icon">🧸</div>
+                </div>
+                <h3 id="exit-modal-title" class="exit-modal-title"><?php esc_html_e('Gitmeden Önce Küçük Bir Sürprizimiz Var!', 'mis360-mobilya'); ?></h3>
+                <p class="exit-modal-desc">
+                    <?php esc_html_e('Çocuğunuzun odasına Montessori konforu katacak sepetinizdeki ürünler için sana özel ekstra %5 indirim tanımladık!', 'mis360-mobilya'); ?>
+                </p>
+                <div class="exit-coupon-box">
+                    <span class="coupon-label"><?php esc_html_e('İndirim Kodunuz:', 'mis360-mobilya'); ?></span>
+                    <strong class="coupon-code">EMDIEF5</strong>
+                </div>
+                <div class="exit-modal-actions">
+                    <button type="button" class="emdief-btn btn-primary btn-block exit-btn-apply" onclick="window.mis360ApplyExitCoupon()">
+                        ✨ <?php esc_html_e('Kuponu Uygula & Siparişi Tamamla', 'mis360-mobilya'); ?>
+                    </button>
+                    <button type="button" class="exit-btn-dismiss" onclick="window.mis360CloseExitModal()">
+                        <?php esc_html_e('Teşekkürler, indirimsiz devam etmek istiyorum', 'mis360-mobilya'); ?>
+                    </button>
+                </div>
+                <div class="exit-modal-footer-trust">
+                    <span>🛡️ 1. Sınıf E1 MDF</span>
+                    <span>🏛️ ETBİS Kayıtlı</span>
+                    <span>🏦 Komisyonsuz FAST / Havale</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function(){
+        if (typeof window === 'undefined') return;
+        var modal = document.getElementById('emdief-exit-modal');
+        if (!modal) return;
+        
+        var shownKey = 'emdief_exit_intent_shown_v1';
+        if (sessionStorage.getItem(shownKey)) return;
+
+        window.mis360CloseExitModal = function() {
+            modal.style.display = 'none';
+            sessionStorage.setItem(shownKey, '1');
+        };
+
+        window.mis360ApplyExitCoupon = function() {
+            var btn = document.querySelector('.exit-btn-apply');
+            if (btn) btn.innerHTML = '⏳ <?php esc_html_e("Uygulanıyor...", "mis360-mobilya"); ?>';
+            
+            // Sepette kupon inputu varsa doldur ve submit et, yoksa checkout'a kuponlu yönlendir
+            var couponInput = document.querySelector('input[name="coupon_code"]');
+            var couponBtn = document.querySelector('button[name="apply_coupon"]');
+            if (couponInput && couponBtn) {
+                couponInput.value = 'EMDIEF5';
+                sessionStorage.setItem(shownKey, '1');
+                couponBtn.click();
+                modal.style.display = 'none';
+            } else {
+                sessionStorage.setItem(shownKey, '1');
+                window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
+            }
+        };
+
+        var triggered = false;
+        function triggerExit() {
+            if (triggered || sessionStorage.getItem(shownKey)) return;
+            triggered = true;
+            modal.style.display = 'flex';
+        }
+
+        // Masaüstü fare yukarı çıkış niyeti
+        document.addEventListener('mouseleave', function(e) {
+            if (e.clientY <= 12) {
+                triggerExit();
+            }
+        });
+
+        // Mobil için 45 saniye sonra sepet terk uyarısı
+        if (window.innerWidth <= 768) {
+            setTimeout(function() {
+                triggerExit();
+            }, 45000);
+        }
+    })();
+    </script>
+    <?php
+}
+
+// 11. Kayıt Formunda Telefon Numarası Alanı (Standart WooCommerce Hesabım Sayfası)
+add_action('woocommerce_register_form', 'mis360_add_phone_field_to_register_form', 15);
+function mis360_add_phone_field_to_register_form() {
+    ?>
+    <p class="woocommerce-form-row woocommerce-form-row--wide form-row form-row-wide">
+        <label for="reg_billing_phone">
+            <?php esc_html_e('Cep Telefonu Numarası', 'mis360-mobilya'); ?>&nbsp;<span class="required">*</span>
+        </label>
+        <input type="tel" class="woocommerce-Input woocommerce-Input--text input-text emdief-phone-input" name="billing_phone" id="reg_billing_phone" autocomplete="tel" value="<?php echo (!empty($_POST['billing_phone'])) ? esc_attr(wp_unslash($_POST['billing_phone'])) : ''; ?>" placeholder="0 (5XX) XXX XX XX" required />
+    </p>
+    <?php
+}
+
+// 12. Kayıt Esnasında Telefon Numarası Doğrulaması
+add_filter('woocommerce_registration_errors', 'mis360_validate_register_phone_field', 10, 3);
+function mis360_validate_register_phone_field($errors, $username, $email) {
+    if (empty($_POST['billing_phone'])) {
+        $errors->add('billing_phone_error', __('<strong>Hata:</strong> Lütfen geçerli bir cep telefonu numarası giriniz.', 'mis360-mobilya'));
+    } else {
+        $clean = preg_replace('/[^0-9]/', '', sanitize_text_field($_POST['billing_phone']));
+        if (strlen($clean) < 10 || strlen($clean) > 13) {
+            $errors->add('billing_phone_error', __('<strong>Hata:</strong> Lütfen geçerli bir cep telefonu numarası giriniz (örn: 0 (5XX) XXX XX XX).', 'mis360-mobilya'));
+        }
+    }
+    return $errors;
+}
+
+// 13. Yeni Üye Oluşturulduğunda Telefon Numarasını Kaydetme (Ödeme Sayfasında Otomatik Dolar)
+add_action('woocommerce_created_customer', 'mis360_save_register_phone_field');
+function mis360_save_register_phone_field($customer_id) {
+    if (!empty($_POST['billing_phone'])) {
+        $raw_phone = sanitize_text_field($_POST['billing_phone']);
+        $clean_phone = preg_replace('/[^0-9]/', '', $raw_phone);
+
+        update_user_meta($customer_id, 'billing_phone', $raw_phone);
+        update_user_meta($customer_id, 'billing_phone_clean', $clean_phone);
+
+        // WC Müşteri nesnesine de fatura telefonu olarak kaydet
+        if (class_exists('WC_Customer')) {
+            try {
+                $customer = new WC_Customer($customer_id);
+                if ($customer) {
+                    $customer->set_billing_phone($raw_phone);
+                    $customer->save();
+                }
+            } catch (Exception $e) {
+                // Sessizce logla
+            }
+        }
+    }
+}
+
+// 14. Telefon Numarası veya E-posta ile Giriş Yapabilme Desteği
+function mis360_find_user_by_phone($phone) {
+    $clean = preg_replace('/[^0-9]/', '', (string)$phone);
+    if (strlen($clean) < 10) {
+        return null;
+    }
+
+    $search_variants = [$clean];
+    if (strpos($clean, '90') === 0 && strlen($clean) === 12) {
+        $search_variants[] = substr($clean, 2);
+        $search_variants[] = '0' . substr($clean, 2);
+    } elseif (strpos($clean, '0') === 0 && strlen($clean) === 11) {
+        $search_variants[] = substr($clean, 1);
+        $search_variants[] = '90' . substr($clean, 1);
+    } elseif (strlen($clean) === 10) {
+        $search_variants[] = '0' . $clean;
+        $search_variants[] = '90' . $clean;
+    }
+
+    $meta_query = ['relation' => 'OR'];
+    foreach (array_unique($search_variants) as $var) {
+        $meta_query[] = [
+            'key'     => 'billing_phone_clean',
+            'value'   => $var,
+            'compare' => '='
+        ];
+        $meta_query[] = [
+            'key'     => 'billing_phone',
+            'value'   => $var,
+            'compare' => 'LIKE'
+        ];
+    }
+
+    $found_users = get_users([
+        'meta_query' => $meta_query,
+        'number'     => 1
+    ]);
+
+    if (!empty($found_users)) {
+        return reset($found_users);
+    }
+
+    return null;
+}
+
+add_filter('authenticate', 'mis360_authenticate_by_phone_or_email', 25, 3);
+function mis360_authenticate_by_phone_or_email($user, $username, $password) {
+    if ($user instanceof WP_User) {
+        return $user;
+    }
+    if (empty($username) || empty($password)) {
+        return $user;
+    }
+
+    $matched_user = mis360_find_user_by_phone($username);
+    if ($matched_user && wp_check_password($password, $matched_user->user_pass, $matched_user->ID)) {
+        return $matched_user;
+    }
+
+    return $user;
+}
+
+// 15. AJAX ile Anında ve Kesintisiz Giriş Yapma (Login)
+add_action('wp_ajax_nopriv_mis360_ajax_login', 'mis360_ajax_login_handler');
+add_action('wp_ajax_mis360_ajax_login', 'mis360_ajax_login_handler');
+function mis360_ajax_login_handler() {
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $redirect = (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) ? wc_get_checkout_url() : home_url('/');
+        wp_send_json_success([
+            'message'  => sprintf(__('Oturumunuz zaten açık (%s). Yönlendiriliyorsunuz...', 'mis360-mobilya'), $current_user->user_email),
+            'redirect' => $redirect,
+        ]);
+    }
+
+    if (!empty($_POST['security'])) {
+        wp_verify_nonce(sanitize_text_field($_POST['security']), 'mis360_cart_nonce');
+    }
+
+    $log = sanitize_text_field($_POST['log'] ?? '');
+    $pwd = $_POST['pwd'] ?? '';
+    $remember = !empty($_POST['rememberme']);
+
+    if (empty($log) || empty($pwd)) {
+        wp_send_json_error(['message' => __('Lütfen kullanıcı adı / e-posta ve şifrenizi giriniz.', 'mis360-mobilya')]);
+    }
+
+    $creds = [
+        'user_login'    => $log,
+        'user_password' => $pwd,
+        'remember'      => $remember,
+    ];
+
+    $user = wp_signon($creds, is_ssl());
+
+    if (is_wp_error($user)) {
+        $err_msg = wp_strip_all_tags($user->get_error_message());
+        wp_send_json_error(['message' => $err_msg ?: __('Girdiğiniz kullanıcı bilgileri veya şifre hatalı.', 'mis360-mobilya')]);
+    }
+
+    wp_set_current_user($user->ID);
+    if (function_exists('wc_set_customer_auth_cookie')) {
+        wc_set_customer_auth_cookie($user->ID);
+    } else {
+        wp_set_auth_cookie($user->ID, $remember);
+    }
+    if (class_exists('WooCommerce') && WC()->session) {
+        WC()->session->init();
+    }
+
+    // Sepet doluysa doğrudan ödeme sayfasına git
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        $redirect = wc_get_checkout_url();
+    } elseif (!empty($_POST['redirect_to'])) {
+        $redirect = esc_url_raw($_POST['redirect_to']);
+    } else {
+        $redirect = class_exists('WooCommerce') ? wc_get_page_permalink('myaccount') : home_url('/');
+    }
+
+    wp_send_json_success([
+        'message'  => __('Giriş başarılı! Yönlendiriliyorsunuz...', 'mis360-mobilya'),
+        'redirect' => $redirect,
+    ]);
+}
+
+// 16. AJAX ile Anında ve Kesintisiz Kayıt Olma (Register)
+add_action('wp_ajax_nopriv_mis360_ajax_register', 'mis360_ajax_register_handler');
+add_action('wp_ajax_mis360_ajax_register', 'mis360_ajax_register_handler');
+function mis360_ajax_register_handler() {
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
+    if (is_user_logged_in()) {
+        $current_user = wp_get_current_user();
+        $redirect = (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) ? wc_get_checkout_url() : home_url('/');
+        wp_send_json_success([
+            'message'  => sprintf(__('Oturumunuz zaten açık (%s). Yönlendiriliyorsunuz...', 'mis360-mobilya'), $current_user->user_email),
+            'redirect' => $redirect,
+        ]);
+    }
+
+    if (!empty($_POST['security'])) {
+        wp_verify_nonce(sanitize_text_field($_POST['security']), 'mis360_cart_nonce');
+    }
+
+    $email = sanitize_email($_POST['email'] ?? '');
+    $phone = sanitize_text_field($_POST['billing_phone'] ?? '');
+    $password = $_POST['password'] ?? '';
+
+    // 1. E-posta Kontrolü
+    if (empty($email) || !is_email($email)) {
+        wp_send_json_error(['message' => __('Lütfen geçerli bir e-posta adresi giriniz.', 'mis360-mobilya')]);
+    }
+
+    if (email_exists($email)) {
+        wp_send_json_error(['message' => __('Bu e-posta adresiyle kayıtlı bir hesap zaten var. Lütfen "Giriş Yap" sekmesinden giriş yapın.', 'mis360-mobilya')]);
+    }
+
+    // 2. Cep Telefonu Kontrolü
+    $clean_phone = preg_replace('/[^0-9]/', '', $phone);
+    if (empty($phone) || strlen($clean_phone) < 10 || strlen($clean_phone) > 13) {
+        wp_send_json_error(['message' => __('Lütfen geçerli bir cep telefonu numarası giriniz (örn: 0 (5XX) XXX XX XX).', 'mis360-mobilya')]);
+    }
+
+    $existing_phone_user = mis360_find_user_by_phone($clean_phone);
+    if ($existing_phone_user) {
+        wp_send_json_error(['message' => __('Bu cep telefonu numarası ile kayıtlı bir hesap zaten var. Lütfen "Giriş Yap" sekmesinden giriş yapın.', 'mis360-mobilya')]);
+    }
+
+    // 3. Şifre Kontrolü
+    if (empty($password) || strlen($password) < 6) {
+        wp_send_json_error(['message' => __('Şifreniz en az 6 karakterden oluşmalıdır.', 'mis360-mobilya')]);
+    }
+
+    // Müşteriyi oluştur
+    $customer_id = wc_create_new_customer($email, '', $password);
+
+    if (is_wp_error($customer_id)) {
+        $err_msg = wp_strip_all_tags($customer_id->get_error_message());
+        wp_send_json_error(['message' => $err_msg ?: __('Hesap oluşturulamadı. Lütfen bilgilerinizi kontrol ediniz.', 'mis360-mobilya')]);
+    }
+
+    // Telefon numarasını meta ve fatura alanına işle
+    update_user_meta($customer_id, 'billing_phone', $phone);
+    update_user_meta($customer_id, 'billing_phone_clean', $clean_phone);
+
+    if (class_exists('WC_Customer')) {
+        try {
+            $customer = new WC_Customer($customer_id);
+            if ($customer) {
+                $customer->set_billing_phone($phone);
+                $customer->save();
+            }
+        } catch (Exception $e) {}
+    }
+
+    // Giriş çerezini ayarla
+    wp_set_current_user($customer_id);
+    if (function_exists('wc_set_customer_auth_cookie')) {
+        wc_set_customer_auth_cookie($customer_id);
+    } else {
+        wp_set_auth_cookie($customer_id, true);
+    }
+    if (class_exists('WooCommerce') && WC()->session) {
+        WC()->session->init();
+    }
+
+    // Sepet doluysa doğrudan ödeme sayfasına git
+    if (class_exists('WooCommerce') && WC()->cart && !WC()->cart->is_empty()) {
+        $redirect = wc_get_checkout_url();
+    } elseif (!empty($_POST['redirect'])) {
+        $redirect = esc_url_raw($_POST['redirect']);
+    } else {
+        $redirect = wc_get_page_permalink('myaccount');
+    }
+
+    wp_send_json_success([
+        'message'  => __('Hesabınız başarıyla oluşturuldu! Yönlendiriliyorsunuz...', 'mis360-mobilya'),
+        'redirect' => $redirect,
+    ]);
+}
+
+/**
+ * Banka Havalesi / EFT Siparişleri İçin Teşekkür Sayfasında WhatsApp Dekont Butonu
+ */
+function mis360_thankyou_whatsapp_dekont_notice($order_id) {
+    if (!$order_id) {
+        return;
+    }
+    $order = wc_get_order($order_id);
+    if (!$order) {
+        return;
+    }
+
+    $payment_method = $order->get_payment_method();
+    $order_number = $order->get_order_number();
+    $order_total = $order->get_total();
+    
+    $wa_phone = '905374778766';
+    $msg = "Merhaba Emdief Home, #" . $order_number . " numaralı siparişimin (" . $order_total . " TL) banka havalesi/FAST ödemesini gerçekleştirdim. Dekontumu iletiyorum.";
+    $wa_url = "https://wa.me/" . $wa_phone . "?text=" . rawurlencode($msg);
+    ?>
+    <div class="emdief-thankyou-bacs-card" style="margin: 25px 0; padding: 22px 24px; background: #f0fdf4; border: 2px solid #86efac; border-radius: 16px; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.08); text-align: center;">
+        <div style="font-size: 2.2rem; margin-bottom: 8px;">📲</div>
+        <h3 style="color: #15803d; font-size: 1.25rem; font-weight: 800; margin-bottom: 8px;">
+            Ödemenizi Yaptınız mı? Hızlı Onay İçin Dekontunuzu İletin!
+        </h3>
+        <p style="color: #166534; font-size: 0.95rem; margin-bottom: 18px; max-width: 580px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+            Siparişiniz <strong>#<?php echo esc_html($order_number); ?></strong> koduyla sisteme kaydedildi. Banka havalesi veya FAST işleminizi tamamladıktan sonra siparişinizin anında öncelikli üretime alınması için tek tıkla dekontunuzu WhatsApp hattımıza iletebilirsiniz.
+        </p>
+        <a href="<?php echo esc_url($wa_url); ?>" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; justify-content: center; gap: 10px; background: #22c55e; color: #ffffff; font-weight: 700; font-size: 1rem; padding: 13px 26px; border-radius: 9999px; text-decoration: none; box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35); transition: transform 0.2s, background 0.2s;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.971.53 1.838.777 2.796.777 3.182 0 5.768-2.587 5.768-5.766.001-3.187-2.575-5.763-5.768-5.763zm4.521 8.243c-.19.534-.997.989-1.391 1.042-.379.051-.875.074-2.825-.694-2.348-.925-3.837-3.328-3.954-3.483-.117-.156-.949-1.262-.949-2.408 0-1.146.601-1.709.814-1.942.213-.233.466-.291.621-.291.155 0 .31.002.446.009.144.007.338-.055.528.401.198.475.679 1.658.738 1.776.059.117.098.254.019.41-.078.156-.117.253-.233.389-.117.136-.246.304-.351.408-.117.117-.239.244-.103.478.136.234.606.999 1.3 1.617.893.796 1.646 1.043 1.88 1.159.233.117.37.098.506-.058.136-.156.583-.68.738-.913.155-.234.31-.195.524-.117.214.078 1.359.641 1.592.758.233.117.389.175.447.272.058.098.058.564-.132 1.098z"/></svg>
+            WhatsApp ile Dekont İlet
+        </a>
+    </div>
+    <?php
+}
+add_action('woocommerce_thankyou', 'mis360_thankyou_whatsapp_dekont_notice', 5);
+
+/**
+ * Ödeme (Checkout) Sayfasında ETBİS Resmi Güven Notu
+ */
+function mis360_checkout_etbis_trust_note() {
+    if (!get_theme_mod('mis360_etbis_enabled', true)) {
+        return;
+    }
+    $etbis_url = get_theme_mod('mis360_etbis_url', 'https://etbis.ticaret.gov.tr/tr/SiteSorgulamaSonuc?siteId=416b7951-542c-4db2-a53f-d5fca36e23fb');
+    ?>
+    <div class="checkout-etbis-trust-box">
+        <div class="etbis-box-icon">🏛️</div>
+        <div class="etbis-box-text">
+            <strong><?php esc_html_e('T.C. Ticaret Bakanlığı ETBİS Kayıtlı Resmi E-Ticaret Sitesi', 'mis360-mobilya'); ?></strong>
+            <span><?php esc_html_e('Emdief Home doğrulanmış resmi üretici mağazasıdır. 256-Bit SSL şifreleme ve 14 gün koşulsuz iade güvencesiyle alışveriş yapıyorsunuz.', 'mis360-mobilya'); ?></span>
+        </div>
+        <a href="<?php echo esc_url($etbis_url); ?>" target="_blank" rel="noopener noreferrer" class="etbis-box-link">
+            <?php esc_html_e('Doğrula', 'mis360-mobilya'); ?> &rarr;
+        </a>
+    </div>
+    <?php
+}
+add_action('woocommerce_review_order_after_submit', 'mis360_checkout_etbis_trust_note', 10);
+
+
+
 
