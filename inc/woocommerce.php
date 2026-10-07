@@ -7935,3 +7935,92 @@ function mis360_dynamic_tax_class_by_category($tax_class, $product) {
     // Otherwise, standard (10%)
     return ''; // Standard class is empty string
 }
+
+// --- EMDIEF HOME: BirFatura Native Checkout Fields ---
+add_filter('woocommerce_checkout_fields', 'mis360_add_birfatura_checkout_fields');
+function mis360_add_birfatura_checkout_fields($fields) {
+    // Fatura Tipi Secimi (Bireysel / Kurumsal)
+    $fields['billing']['billing_invoice_type'] = [
+        'type'        => 'select',
+        'label'       => 'Fatura Tipi',
+        'required'    => true,
+        'class'       => ['form-row-wide'],
+        'options'     => [
+            'bireysel' => 'Bireysel Fatura',
+            'kurumsal' => 'Kurumsal Fatura'
+        ],
+        'priority'    => 25,
+    ];
+
+    $fields['billing']['billing_tcno'] = [
+        'type'        => 'text',
+        'label'       => 'T.C. Kimlik veya Vergi No',
+        'placeholder' => '11 Haneli TCKN veya 10 Haneli VKN',
+        'required'    => true,
+        'class'       => ['form-row-wide'],
+        'clear'       => true,
+        'priority'    => 26,
+    ];
+
+    $fields['billing']['billing_vergi_dairesi'] = [
+        'type'        => 'text',
+        'label'       => 'Vergi Dairesi (Kurumsal ise)',
+        'placeholder' => 'Vergi Dairesi',
+        'required'    => false,
+        'class'       => ['form-row-wide'],
+        'clear'       => true,
+        'priority'    => 27,
+    ];
+
+    return $fields;
+}
+
+// Frontend Javascript for dynamically showing/hiding Vergi Dairesi
+add_action('wp_footer', 'mis360_birfatura_checkout_js');
+function mis360_birfatura_checkout_js() {
+    if (!is_checkout() || is_wc_endpoint_url()) return;
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        function toggleInvoiceFields() {
+            var val = $('#billing_invoice_type').val();
+            var vdWrapper = $('#billing_vergi_dairesi_field');
+            if (val === 'kurumsal') {
+                vdWrapper.show();
+            } else {
+                vdWrapper.hide();
+                $('#billing_vergi_dairesi').val('');
+            }
+        }
+        $('#billing_invoice_type').on('change', toggleInvoiceFields);
+        toggleInvoiceFields();
+    });
+    </script>
+    <?php
+}
+
+// Backend Validation for Vergi Dairesi if Kurumsal is selected
+add_action('woocommerce_checkout_process', 'mis360_birfatura_checkout_validation');
+function mis360_birfatura_checkout_validation() {
+    if (isset($_POST['billing_invoice_type']) && $_POST['billing_invoice_type'] === 'kurumsal') {
+        if (empty($_POST['billing_vergi_dairesi'])) {
+            wc_add_notice('Kurumsal fatura seçtiğiniz için <strong>Vergi Dairesi</strong> alanını doldurmanız gerekmektedir.', 'error');
+        }
+    }
+}
+
+// Admin panelinde siparis detaylarinda gosterme
+add_action('woocommerce_admin_order_data_after_billing_address', 'mis360_birfatura_checkout_display_admin_order_meta', 10, 1);
+function mis360_birfatura_checkout_display_admin_order_meta($order) {
+    $type = $order->get_meta('_billing_invoice_type');
+    $tcno = $order->get_meta('_billing_tcno');
+    $vd   = $order->get_meta('_billing_vergi_dairesi');
+    
+    echo '<p><strong>Fatura Tipi:</strong> ' . esc_html($type === 'kurumsal' ? 'Kurumsal' : 'Bireysel') . '</p>';
+    if (!empty($tcno)) {
+        echo '<p><strong>TC/Vergi No:</strong> ' . esc_html($tcno) . '</p>';
+    }
+    if (!empty($vd)) {
+        echo '<p><strong>Vergi Dairesi:</strong> ' . esc_html($vd) . '</p>';
+    }
+}
