@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_MOBILYA_VERSION', '1.9.119');
+define('MIS360_MOBILYA_VERSION', '1.9.120');
 define('MIS360_MOBILYA_DIR', get_template_directory());
 define('MIS360_MOBILYA_URI', get_template_directory_uri());
 

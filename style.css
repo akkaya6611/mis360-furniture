@@ -4,7 +4,7 @@ Theme URI: https://mis360.com.tr
 Author: mis360
 Author URI: https://mis360.com.tr
 Description: Trendyol benzeri e-ticaret temasi. Ahsap ve Egitici Oyuncak, Montessori Kitaplik ve Duvar Masasi.
-Version: 1.9.119
+Version: 1.9.120
 Text Domain: mis360-mobilya
 */
 
@@ -14,34 +14,61 @@ Text Domain: mis360-mobilya
 /* Main Checkout Container Grid */
 @media (min-width: 992px) {
     .woocommerce-checkout form.checkout {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 40px;
-        align-items: flex-start;
+        display: grid !important;
+        grid-template-columns: 58% 38% !important;
+        gap: 0 4% !important;
+        align-items: start !important;
     }
     
     .woocommerce-checkout form.checkout #customer_details {
-        width: calc(60% - 20px);
+        grid-column: 1 !important;
+        grid-row: 1 / span 20 !important;
+        width: 100% !important;
+        float: none !important;
     }
     
-    .woocommerce-checkout form.checkout #order_review_heading,
-    .woocommerce-checkout form.checkout #order_review {
-        width: calc(40% - 20px);
+    .woocommerce-checkout form.checkout #order_review_heading {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        width: 100% !important;
+        float: none !important;
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+        padding-top: 0 !important;
     }
 
     /* Sticky Right Column */
     .woocommerce-checkout form.checkout #order_review {
-        position: sticky;
-        top: 30px;
-        background: #f8fafc;
-        padding: 30px;
-        border-radius: 20px;
-        border: 1px solid #e2e8f0;
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        width: 100% !important;
+        float: none !important;
+        position: sticky !important;
+        top: 30px !important;
+        background: #f8fafc !important;
+        padding: 30px !important;
+        border-radius: 20px !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
     }
-    
-    .woocommerce-checkout form.checkout #order_review_heading {
-        margin-top: 0;
-        padding-top: 15px;
+}
+
+@media (max-width: 991px) {
+    .woocommerce-checkout form.checkout {
+        display: block !important;
+    }
+    .woocommerce-checkout form.checkout #customer_details,
+    .woocommerce-checkout form.checkout #order_review_heading,
+    .woocommerce-checkout form.checkout #order_review {
+        width: 100% !important;
+        float: none !important;
+    }
+    .woocommerce-checkout form.checkout #order_review {
+        margin-top: 25px !important;
+        padding: 20px !important;
+        background: #f8fafc !important;
+        border-radius: 16px !important;
+        border: 1px solid #e2e8f0 !important;
     }
 }
 
