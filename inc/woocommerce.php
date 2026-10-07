@@ -7723,7 +7723,7 @@ add_action('woocommerce_review_order_after_submit', 'mis360_checkout_etbis_trust
 
 
 
-// �cretsiz kargo aktif oldu�unda di�er kargo se�eneklerini gizle
+// �cretsiz kargo aktif oldu�unda di�er kargo se�eneklerini gizle
 function mis360_hide_shipping_when_free_is_available( $rates ) {
     $free = array();
     foreach ( $rates as $rate_id => $rate ) {
@@ -7956,6 +7956,7 @@ function mis360_add_birfatura_checkout_fields($fields) {
         'type'        => 'text',
         'label'       => 'T.C. Kimlik veya Vergi No',
         'placeholder' => '11 Haneli TCKN veya 10 Haneli VKN',
+        'description' => '<small style="color: #64748b; font-size: 12px; display: block; margin-top: 4px;">Yasal e-fatura zorunluluğu nedeniyle gereklidir. T.C. paylaşmak istemiyorsanız <strong>11111111111</strong> girebilirsiniz.</small>',
         'required'    => true,
         'class'       => ['form-row-wide'],
         'clear'       => true,
@@ -8023,4 +8024,14 @@ function mis360_birfatura_checkout_display_admin_order_meta($order) {
     if (!empty($vd)) {
         echo '<p><strong>Vergi Dairesi:</strong> ' . esc_html($vd) . '</p>';
     }
+}
+
+
+// E-Fatura Bilgilendirme Uyarisi
+add_action('woocommerce_before_checkout_billing_form', 'mis360_tc_billing_notice');
+function mis360_tc_billing_notice() {
+    echo '<div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid #3b82f6; padding: 12px 16px; border-radius: 6px; margin-bottom: 24px; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: flex-start; gap: 12px;">';
+    echo '<span style="font-size:18px; line-height: 1;">📄</span>';
+    echo '<div><strong>E-Fatura Bilgilendirmesi:</strong> Mevzuat gereği tüm siparişlere resmi e-fatura kesilmektedir. T.C. Kimlik numaranızı paylaşmak istemiyorsanız ilgili alana <strong>11111111111</strong> (11 adet 1) yazarak alışverişinizi tamamlayabilirsiniz.</div>';
+    echo '</div>';
 }
