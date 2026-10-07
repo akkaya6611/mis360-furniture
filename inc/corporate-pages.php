@@ -587,6 +587,14 @@ function mis360_corporate_template_include($template) {
         }
     }
 
+    // ANA SAYFA GARANTİSİ: Eğer ana sayfadaysak kesinlikle front-page.php'yi yükle
+    if (is_front_page()) {
+        $front_template = locate_template(['front-page.php']);
+        if (!empty($front_template)) {
+            return $front_template;
+        }
+    }
+
     if ($slug === 'blog' || is_page('blog') || is_page_template('page-blog.php')) {
         $blog_template = locate_template(['page-blog.php']);
         if (!empty($blog_template)) {
@@ -610,6 +618,10 @@ function mis360_ensure_blog_page_safe() {
     $current_posts_page = (int) get_option('page_for_posts');
     if ($current_posts_page > 0) {
         update_option('page_for_posts', 0);
+    }
+    // WordPress okuma ayarını posts moduna çek (böylece temadaki front-page.php her zaman kök dizinde 1. sırayı alır)
+    if (get_option('show_on_front') === 'page' && (int) get_option('page_on_front') === 0) {
+        update_option('show_on_front', 'posts');
     }
 
     $blog_page = get_page_by_path('blog');
