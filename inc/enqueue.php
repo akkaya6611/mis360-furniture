@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * Enqueue Styles and Scripts
  *
