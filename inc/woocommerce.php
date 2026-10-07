@@ -8063,3 +8063,15 @@ function mis360_force_classic_checkout_once() {
     update_option('mis360_classic_checkout_forced_v2', 'yes');
 }
 
+
+// Ensure classes are set for form-row-first and form-row-last
+add_filter('woocommerce_checkout_fields', 'mis360_ensure_form_row_classes', 99999);
+function mis360_ensure_form_row_classes() {
+    if(isset(['billing']['billing_first_name'])) ['billing']['billing_first_name']['class'] = ['form-row-first'];
+    if(isset(['billing']['billing_last_name'])) ['billing']['billing_last_name']['class'] = ['form-row-last'];
+    if(isset(['billing']['billing_phone'])) ['billing']['billing_phone']['class'] = ['form-row-first'];
+    if(isset(['billing']['billing_email'])) ['billing']['billing_email']['class'] = ['form-row-last'];
+    if(isset(['shipping']['shipping_first_name'])) ['shipping']['shipping_first_name']['class'] = ['form-row-first'];
+    if(isset(['shipping']['shipping_last_name'])) ['shipping']['shipping_last_name']['class'] = ['form-row-last'];
+    return ;
+}
