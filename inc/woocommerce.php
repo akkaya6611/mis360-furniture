@@ -7767,3 +7767,88 @@ function mis360_single_product_fake_rating_and_favorite() {
     </style>
     <?php
 }
+
+// --- EMDIEF HOME: AJAX Favorites Endpoint ---
+add_action('wp_ajax_mis360_get_favorites', 'mis360_ajax_get_favorites');
+add_action('wp_ajax_nopriv_mis360_get_favorites', 'mis360_ajax_get_favorites');
+function mis360_ajax_get_favorites() {
+    $ids = isset($_GET['ids']) ? explode(',', sanitize_text_field($_GET['ids'])) : [];
+    if (empty($ids)) {
+        echo 'Favori bulunamadı.';
+        wp_die();
+    }
+    
+    $args = [
+        'post_type'      => 'product',
+        'post__in'       => array_map('intval', $ids),
+        'posts_per_page' => -1,
+        'orderby'        => 'post__in'
+    ];
+    
+    $query = new WP_Query($args);
+    if ($query->have_posts()) {
+        while ($query->have_posts()) {
+            $query->the_post();
+            wc_get_template_part('content', 'product');
+        }
+        wp_reset_postdata();
+    } else {
+        echo 'Ürünler bulunamadı veya yayından kaldırılmış.';
+    }
+    wp_die();
+}
+
+// --- EMDIEF HOME: Fake Reviews Tab Override ---
+add_filter('woocommerce_product_tabs', 'mis360_override_reviews_tab', 98);
+function mis360_override_reviews_tab($tabs) {
+    // Show reviews tab even if no actual comments exist
+    $tabs['reviews'] = [
+        'title'    => 'Değerlendirmeler',
+        'priority' => 30,
+        'callback' => 'mis360_fake_reviews_tab_callback'
+    ];
+    return $tabs;
+}
+
+function mis360_fake_reviews_tab_callback() {
+    global $product;
+    if (!$product) return;
+    $id = $product->get_id();
+    $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
+    $review_count = 160 + (($id * 13) % 240);
+    
+    // Generate 3 fake comments deterministically based on product ID
+    $names = ['Ayşe T.', 'Merve K.', 'Fatma Y.', 'Zeynep A.', 'Burcu S.', 'Tuğba C.', 'Ceren D.', 'Selin M.'];
+    $texts = [
+        'Kızım çok sevdi, malzemesi gerçekten çok kaliteli ve kurulumu çok kolaydı. Teşekkürler Emdief Home!',
+        'Ürün tam görseldeki gibi geldi. Ahşap kokusu ve dokusu harika. Kargo da çok hızlıydı.',
+        'Montessori eğitimine uygun, boyutu tam ideal. Çocuğum kitaplarını artık kendi alıp koyabiliyor.',
+        'Çok şık duruyor, odanın havasını değiştirdi. Kesinlikle tavsiye ederim.',
+        'Kurulum kılavuzu çok açıklayıcıydı, 15 dakikada tek başıma kurdum. Sağlam bir ürün.'
+    ];
+    
+    echo '<div id="reviews" class="woocommerce-Reviews">';
+    echo '<div id="comments">';
+    echo '<h2 class="woocommerce-Reviews-title">' . esc_html($product->get_name()) . ' için ' . esc_html($review_count) . ' değerlendirme</h2>';
+    
+    echo '<ol class="commentlist">';
+    for ($i = 0; $i < 3; $i++) {
+        $name_idx = ($id + $i * 7) % count($names);
+        $text_idx = ($id + $i * 11) % count($texts);
+        $date = date_i18n('j F Y', strtotime('-' . (($id % 30) + $i * 15) . ' days'));
+        
+        echo '<li class="review">';
+        echo '<div class="comment_container">';
+        echo '<img alt="" src="https://secure.gravatar.com/avatar/?s=60&d=mm&r=g" class="avatar avatar-60 photo" height="60" width="60" style="border-radius:50%; margin-right:15px;">';
+        echo '<div class="comment-text" style="background:#f8fafc; padding:15px 20px; border-radius:12px; width:100%;">';
+        echo '<div class="star-rating" style="color:#f27a1a; font-size:14px; margin-bottom:5px;">&#9733;&#9733;&#9733;&#9733;&#9733;</div>';
+        echo '<p class="meta"><strong class="woocommerce-review__author">' . esc_html($names[$name_idx]) . '</strong> <span class="woocommerce-review__dash">&ndash;</span> <time class="woocommerce-review__published-date">' . esc_html($date) . '</time></p>';
+        echo '<div class="description"><p>' . esc_html($texts[$text_idx]) . '</p></div>';
+        echo '</div>';
+        echo '</div>';
+        echo '</li>';
+    }
+    echo '</ol>';
+    echo '</div>';
+    echo '</div>';
+}

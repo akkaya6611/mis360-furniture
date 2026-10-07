@@ -703,18 +703,38 @@ function mis360Init() {
         });
     });
 
-    // 3. Wishlist Heart Button Toggling
+    // 3. Wishlist Heart Button Toggling & LocalStorage Sync
     document.querySelectorAll('.btn-wishlist-heart, .trendyol-heart-btn').forEach(btn => {
+        const pid = btn.getAttribute('data-product-id');
+        if (pid) {
+            let list = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
+            if (list.includes(pid)) {
+                btn.classList.add('is-active');
+                const svg = btn.querySelector('svg');
+                if(svg){ svg.setAttribute('fill', '#ef4444'); svg.setAttribute('stroke', '#ef4444'); }
+            }
+        }
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             this.classList.toggle('is-active');
             const svg = this.querySelector('svg');
-            if (this.classList.contains('is-active')) {
-                svg.setAttribute('fill', '#ef4444');
-                svg.setAttribute('stroke', '#ef4444');
+            const isActive = this.classList.contains('is-active');
+            if (isActive) {
+                if(svg){ svg.setAttribute('fill', '#ef4444'); svg.setAttribute('stroke', '#ef4444'); }
+                if(typeof showToast === 'function') showToast('Ürün favorilere eklendi! ⭐');
             } else {
-                svg.setAttribute('fill', 'none');
-                svg.setAttribute('stroke', 'currentColor');
+                if(svg){ svg.setAttribute('fill', 'none'); svg.setAttribute('stroke', 'currentColor'); }
+                if(typeof showToast === 'function') showToast('Ürün favorilerden çıkarıldı.');
+            }
+            if (pid) {
+                let list = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
+                const idx = list.indexOf(pid);
+                if (isActive && idx === -1) {
+                    list.push(pid);
+                } else if (!isActive && idx !== -1) {
+                    list.splice(idx, 1);
+                }
+                localStorage.setItem('emdief_wishlist', JSON.stringify(list));
             }
         });
     });

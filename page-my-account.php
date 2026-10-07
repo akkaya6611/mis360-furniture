@@ -480,6 +480,28 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                                     </div>
                                 </div>
                             </div>
+                        <?php elseif ($current_tab === 'favorilerim'): ?>
+                            <div class="account-section-header">
+                                <h3>Favori Ürünlerim</h3>
+                                <p>Beğendiğiniz ve daha sonra satın almak üzere kaydettiğiniz Montessori mobilyaları.</p>
+                            </div>
+                            <div id="emdief-favorites-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; min-height: 200px;">
+                                <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748b;">Favorileriniz yükleniyor...</div>
+                            </div>
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                const container = document.getElementById('emdief-favorites-container');
+                                let list = JSON.parse(localStorage.getItem('emdief_wishlist') || '[]');
+                                if(list.length === 0){
+                                    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px 20px; background: #fff; border-radius: 16px; border: 1px dashed #cbd5e1;"><div style="font-size: 3rem; margin-bottom: 15px;">🧩</div><h4 style="margin:0 0 10px 0; color:#1e293b;">Henüz Favori Ürününüz Yok</h4><p style="color:#64748b; font-size: 0.9rem; margin:0 0 20px 0;">Beğendiğiniz ürünleri kalp ikonuna tıklayarak favorilerinize ekleyebilirsiniz.</p><a href="<?php echo esc_url(wc_get_page_permalink("shop")); ?>" class="emdief-btn btn-primary btn-sm">Ürünleri İncele</a></div>';
+                                    return;
+                                }
+                                fetch('<?php echo admin_url("admin-ajax.php"); ?>?action=mis360_get_favorites&ids=' + list.join(','))
+                                    .then(r => r.text())
+                                    .then(html => { container.innerHTML = html; })
+                                    .catch(e => { container.innerHTML = '<div style="color:red; grid-column:1/-1;">Bir hata oluştu.</div>'; });
+                            });
+                            </script>
                         <?php else: ?>
                             <!-- SİPARİŞ YOKSA TEMİZ BOŞ DURUM -->
                             <div class="order-tracker-card no-orders-card" style="padding: 3rem 2rem; text-align: center; background: #fff; border-radius: 18px; border: 1px dashed #cbd5e1;">
