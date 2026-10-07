@@ -100,16 +100,7 @@ function mis360_mobilya_scripts() {
 add_action('wp_enqueue_scripts', 'mis360_mobilya_scripts');
 
 
-function mis360_dequeue_woo_on_front_page() {
-    if ( is_front_page() || is_home() ) {
-        wp_dequeue_style( 'woocommerce-general' );
-        wp_dequeue_style( 'woocommerce-layout' );
-        wp_dequeue_style( 'woocommerce-smallscreen' );
-        wp_dequeue_style( 'woocommerce-block-library' );
-        wp_dequeue_style( 'wc-blocks-style' );
-        wp_dequeue_style( 'wc-blocks-vendors-style' );
-    }
-}
-add_action( 'wp_enqueue_scripts', 'mis360_dequeue_woo_on_front_page', 99 );
+
+
 
 
