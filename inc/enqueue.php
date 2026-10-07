@@ -49,7 +49,7 @@ function mis360_mobilya_scripts() {
     );
 
     // 4. WooCommerce Ã–zel Stilleri (Sadece WooCommerce aktifken)
-    if (class_exists('WooCommerce') && !is_front_page() && !is_home()) {
+    if (class_exists('WooCommerce')) {
         wp_enqueue_style(
             'mis360-woocommerce',
             MIS360_MOBILYA_URI . $wc_css_file,
