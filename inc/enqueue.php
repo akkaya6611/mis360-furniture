@@ -132,3 +132,15 @@ function mis360_inject_cart_checkout_inline_css() {
     }
 }
 add_action('wp_enqueue_scripts', 'mis360_inject_cart_checkout_inline_css', 999);
+// Blog Sayfası CSS'ini Yükle
+function mis360_enqueue_blog_css() {
+    if (is_home() || is_category() || is_tag() || is_archive()) {
+        wp_enqueue_style(
+            'mis360-blog',
+            get_template_directory_uri() . '/assets/css/blog.css',
+            ['mis360-style'],
+            defined('MIS360_MOBILYA_VERSION') ? MIS360_MOBILYA_VERSION : '1.0'
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'mis360_enqueue_blog_css');
