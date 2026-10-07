@@ -7737,3 +7737,33 @@ function mis360_hide_shipping_when_free_is_available( $rates ) {
 add_filter( 'woocommerce_package_rates', 'mis360_hide_shipping_when_free_is_available', 100 );
 
 
+
+// --- EMDIEF HOME: Single Product Fake Rating & Favorite ---
+add_action('woocommerce_single_product_summary', 'mis360_single_product_fake_rating_and_favorite', 7);
+function mis360_single_product_fake_rating_and_favorite() {
+    global $product;
+    if (!$product) return;
+    
+    $id = $product->get_id();
+    $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
+    $review_count = 160 + (($id * 13) % 240);
+    ?>
+    <div class="emdief-single-rating-favorite-wrap" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 10px;">
+        <div class="trendyol-stars" style="display: flex; align-items: center; gap: 4px; font-size: 13px; color: #666;">
+            <?php echo str_repeat('<span class="star-icon" style="color: #f27a1a; font-size: 14px;">&#9733;</span>', 5); ?>
+            <span class="rating-value" style="font-weight: 600; margin-left: 4px; color: #333;"><?php echo $rating_val; ?></span>
+            <span class="rating-count">(<?php echo $review_count; ?> Değerlendirme)</span>
+        </div>
+        <button type="button" class="trendyol-heart-btn" aria-label="Favorilere Ekle" data-product-id="<?php echo esc_attr($id); ?>" style="background: none; border: 1px solid #e2e8f0; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #94a3b8; transition: all 0.2s;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+        </button>
+    </div>
+    <style>
+        .trendyol-heart-btn:hover { border-color: #f27a1a; color: #f27a1a; }
+        .trendyol-heart-btn.is-active { fill: #f27a1a; stroke: #f27a1a; color: #f27a1a; border-color: #f27a1a; }
+        .trendyol-heart-btn.is-active svg { fill: #f27a1a; }
+    </style>
+    <?php
+}
