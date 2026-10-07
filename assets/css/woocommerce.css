@@ -5508,4 +5508,400 @@ button.button.emdief-btn-empty-cart:hover {
     align-items: flex-start;
   }
 }
+/* ==========================================================================
+   --- EMDIEF HOME: Modern Responsive Cart Page CSS (Desktop & Mobile) ---
+   ========================================================================== */
 
+/* 1. Desktop Cart Container (2 Kolon Düzeni) */
+@media (min-width: 992px) {
+    .woocommerce-cart .woocommerce {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 36px !important;
+        align-items: flex-start !important;
+    }
+    .woocommerce-cart .woocommerce > form.woocommerce-cart-form {
+        flex: 1 1 60% !important;
+        min-width: 0 !important;
+    }
+    .woocommerce-cart .woocommerce > .cart-collaterals {
+        flex: 0 0 36% !important;
+        min-width: 320px !important;
+        position: sticky !important;
+        top: 24px !important;
+    }
+    .woocommerce-cart .woocommerce > .cart-collaterals .cart_totals {
+        width: 100% !important;
+        float: none !important;
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 20px !important;
+        padding: 28px !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03) !important;
+    }
+}
+
+/* 2. Masaüstü Tablo Temizliği */
+.woocommerce-cart table.shop_table.cart {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    width: 100% !important;
+    background: #ffffff !important;
+}
+.woocommerce-cart table.shop_table.cart th {
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+    padding: 14px 16px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+.woocommerce-cart table.shop_table.cart td {
+    padding: 16px !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    vertical-align: middle !important;
+}
+.woocommerce-cart table.shop_table.cart td.product-thumbnail img {
+    width: 70px !important;
+    height: 70px !important;
+    object-fit: contain !important;
+    border-radius: 10px !important;
+    background: #f8fafc !important;
+    border: 1px solid #f1f5f9 !important;
+}
+.woocommerce-cart table.shop_table.cart td.product-name a {
+    font-weight: 700 !important;
+    color: #1e293b !important;
+    font-size: 14.5px !important;
+    line-height: 1.4 !important;
+}
+.woocommerce-cart table.shop_table.cart td.product-price,
+.woocommerce-cart table.shop_table.cart td.product-subtotal {
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    font-size: 15px !important;
+}
+.woocommerce-cart table.shop_table.cart td.product-subtotal {
+    color: #ea580c !important;
+}
+.woocommerce-cart table.shop_table.cart td.product-remove a.remove {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 26px !important;
+    height: 26px !important;
+    background: #fef2f2 !important;
+    color: #ef4444 !important;
+    border-radius: 50% !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    transition: all 0.2s ease !important;
+}
+
+/* 3. MOBİL SEPET GÖRÜNÜMÜ: Sıkışık Tabloyu Şık Kartlara Dönüştür (Trendyol Stili) */
+@media (max-width: 768px) {
+    .woocommerce-cart .woocommerce {
+        display: block !important;
+    }
+    .woocommerce-cart .woocommerce > form.woocommerce-cart-form,
+    .woocommerce-cart .woocommerce > .cart-collaterals {
+        width: 100% !important;
+        float: none !important;
+    }
+
+    /* Tablo Başlığını Gizle */
+    .woocommerce-cart table.shop_table.cart thead {
+        display: none !important;
+    }
+
+    /* Tablo ve Gövdeyi Blok Yap */
+    .woocommerce-cart table.shop_table.cart,
+    .woocommerce-cart table.shop_table.cart tbody {
+        display: block !important;
+        width: 100% !important;
+        border: none !important;
+        background: transparent !important;
+        padding: 0 !important;
+    }
+
+    /* Her Ürün Satırını Kart Haline Getir */
+    .woocommerce-cart table.shop_table.cart tr.cart_item {
+        display: grid !important;
+        grid-template-columns: 85px 1fr !important;
+        grid-template-rows: auto auto auto !important;
+        column-gap: 14px !important;
+        row-gap: 6px !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 16px !important;
+        padding: 14px !important;
+        margin-bottom: 14px !important;
+        position: relative !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Silme (X) Butonu - Kartın Sağ Üstünde */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-remove {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        padding: 0 !important;
+        border: none !important;
+        display: block !important;
+        z-index: 5 !important;
+        width: auto !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-remove a.remove {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 28px !important;
+        height: 28px !important;
+        background: #fef2f2 !important;
+        color: #ef4444 !important;
+        border-radius: 50% !important;
+        font-size: 18px !important;
+        font-weight: 700 !important;
+        line-height: 1 !important;
+        text-decoration: none !important;
+        border: 1px solid #fee2e2 !important;
+    }
+
+    /* Ürün Görseli - Sol Tarafta 85x85px */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-thumbnail {
+        grid-column: 1 !important;
+        grid-row: 1 / span 3 !important;
+        padding: 0 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        width: 85px !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-thumbnail img {
+        width: 85px !important;
+        height: 85px !important;
+        min-width: 85px !important;
+        object-fit: contain !important;
+        border-radius: 12px !important;
+        background: #f8fafc !important;
+        border: 1px solid #f1f5f9 !important;
+        padding: 4px !important;
+    }
+
+    /* Ürün Başlığı - Sağ Üstte Okunabilir */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-name {
+        grid-column: 2 !important;
+        grid-row: 1 !important;
+        padding: 0 32px 0 0 !important;
+        border: none !important;
+        display: block !important;
+        text-align: left !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-name a {
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        color: #1e293b !important;
+        line-height: 1.4 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        text-decoration: none !important;
+    }
+
+    /* Fiyat - Sağ Ortada Belirgin Turuncu */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-price {
+        grid-column: 2 !important;
+        grid-row: 2 !important;
+        padding: 2px 0 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        text-align: left !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-price .amount {
+        font-size: 15.5px !important;
+        font-weight: 800 !important;
+        color: #ea580c !important;
+    }
+
+    /* Miktar Seçici (+ / -) - Sağ Altta */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-quantity {
+        grid-column: 2 !important;
+        grid-row: 3 !important;
+        padding: 4px 0 0 0 !important;
+        border: none !important;
+        display: flex !important;
+        align-items: center !important;
+        text-align: left !important;
+    }
+    .woocommerce-cart table.shop_table.cart .quantity.emdief-qty-stepper {
+        height: 38px !important;
+        width: 104px !important;
+    }
+    .woocommerce-cart table.shop_table.cart .quantity.emdief-qty-stepper .emdief-qty-btn {
+        height: 32px !important;
+        min-width: 28px !important;
+        font-size: 16px !important;
+    }
+
+    /* Mobilde Ara Toplam Hücresini Gizle */
+    .woocommerce-cart table.shop_table.cart tr.cart_item td.product-subtotal {
+        display: none !important;
+    }
+
+    /* Aksiyonlar (Kupon & Sepeti Güncelle) */
+    .woocommerce-cart table.shop_table.cart tr td.actions {
+        display: block !important;
+        width: 100% !important;
+        padding: 12px 0 !important;
+        border: none !important;
+        background: transparent !important;
+        box-sizing: border-box !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr td.actions .coupon {
+        display: flex !important;
+        gap: 8px !important;
+        align-items: center !important;
+        margin-bottom: 12px !important;
+        width: 100% !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr td.actions .coupon input.input-text {
+        flex: 1 1 auto !important;
+        height: 44px !important;
+        padding: 0 14px !important;
+        border: 1.5px solid #cbd5e1 !important;
+        border-radius: 12px !important;
+        font-size: 13.5px !important;
+        background: #ffffff !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr td.actions .coupon button.button {
+        flex: 0 0 auto !important;
+        height: 44px !important;
+        padding: 0 18px !important;
+        background: #1e293b !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        border: none !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr td.actions button[name="update_cart"] {
+        width: 100% !important;
+        height: 42px !important;
+        background: #f8fafc !important;
+        color: #475569 !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        border-radius: 12px !important;
+        border: 1px solid #e2e8f0 !important;
+        margin-bottom: 10px !important;
+    }
+    .woocommerce-cart table.shop_table.cart tr td.actions .emdief-empty-cart-trigger {
+        width: 100% !important;
+        margin-top: 4px !important;
+    }
+
+    /* Sepet Toplamları Kartı */
+    .woocommerce-cart .cart-collaterals .cart_totals {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 18px !important;
+        padding: 20px !important;
+        margin-top: 16px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+    }
+    .woocommerce-cart .cart-collaterals .cart_totals h2 {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        color: #1e293b !important;
+        margin-bottom: 14px !important;
+        border-bottom: 2px solid #f8fafc !important;
+        padding-bottom: 10px !important;
+    }
+    .woocommerce-cart .wc-proceed-to-checkout a.checkout-button {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%) !important;
+        color: #ffffff !important;
+        font-size: 16px !important;
+        font-weight: 800 !important;
+        padding: 16px 20px !important;
+        border-radius: 14px !important;
+        box-shadow: 0 4px 15px rgba(109, 40, 217, 0.3) !important;
+        text-decoration: none !important;
+    }
+}
+
+/* 4. Sepet Sayfası Güven Rozetleri Grid ve WhatsApp Butonu */
+.woocommerce-cart .btn-whatsapp-order,
+.btn-whatsapp-order {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    background: #25d366 !important;
+    color: #ffffff !important;
+    font-size: 14px !important;
+    font-weight: 800 !important;
+    padding: 14px 20px !important;
+    border-radius: 14px !important;
+    text-decoration: none !important;
+    margin-top: 12px !important;
+    margin-bottom: 14px !important;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.28) !important;
+    box-sizing: border-box !important;
+    transition: all 0.2s ease !important;
+}
+.woocommerce-cart .btn-whatsapp-order:hover,
+.btn-whatsapp-order:hover {
+    background: #1eb954 !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) !important;
+}
+.cart-page-trust-grid,
+.cart-page-trust-pills {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-sizing: border-box !important;
+}
+.cart-trust-item,
+.trust-pill-item {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    padding: 10px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #334155 !important;
+    line-height: 1.3 !important;
+    box-sizing: border-box !important;
+}
+.cart-trust-item svg.trust-svg,
+.trust-pill-item svg {
+    flex-shrink: 0 !important;
+    width: 18px !important;
+    height: 18px !important;
+}

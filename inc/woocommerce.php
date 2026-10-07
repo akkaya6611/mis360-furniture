@@ -7116,11 +7116,23 @@ add_action('woocommerce_proceed_to_checkout', 'mis360_render_cart_whatsapp_btn',
 // 9. Sepet Sayfası Güven Rozetleri (v1.9.74)
 function mis360_render_cart_page_trust_badges() {
     ?>
-    <div class="cart-page-trust-pills">
-        <span class="trust-pill-item">🛡️ <?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
-        <span class="trust-pill-item">🏛️ <?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
-        <span class="trust-pill-item">🏦 <?php esc_html_e('Havale / FAST ile Komisyonsuz İndirim', 'mis360-mobilya'); ?></span>
-        <span class="trust-pill-item">🚚 <?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
+    <div class="cart-page-trust-grid">
+        <div class="cart-trust-item">
+            <svg class="trust-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <span><?php esc_html_e('1. Sınıf E1 MDF & Güvenli Köşeler', 'mis360-mobilya'); ?></span>
+        </div>
+        <div class="cart-trust-item">
+            <svg class="trust-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#0284c7" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 2L2 7h20L12 2z"></path></svg>
+            <span><?php esc_html_e('ETBİS Kayıtlı Resmi Mağaza', 'mis360-mobilya'); ?></span>
+        </div>
+        <div class="cart-trust-item">
+            <svg class="trust-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+            <span><?php esc_html_e('Havale / FAST ile İndirim', 'mis360-mobilya'); ?></span>
+        </div>
+        <div class="cart-trust-item">
+            <svg class="trust-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#8b5cf6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+            <span><?php esc_html_e('Sigortalı Hızlı Kargo', 'mis360-mobilya'); ?></span>
+        </div>
     </div>
     <?php
 }
