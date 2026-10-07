@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 
 
@@ -8035,3 +8035,31 @@ function mis360_tc_billing_notice() {
     echo '<div><strong>E-Fatura Bilgilendirmesi:</strong> Mevzuat gereği tüm siparişlere resmi e-fatura kesilmektedir. T.C. Kimlik numaranızı paylaşmak istemiyorsanız ilgili alana <strong>11111111111</strong> (11 adet 1) yazarak alışverişinizi tamamlayabilirsiniz.</div>';
     echo '</div>';
 }
+
+// --- EMDIEF HOME: Revert Checkout to Classic Shortcode (Fix for BirFatura Fields) ---
+add_action('init', 'mis360_force_classic_checkout_once');
+function mis360_force_classic_checkout_once() {
+    if (get_option('mis360_classic_checkout_forced_v2') === 'yes') return;
+
+    $checkout_page_id = get_option('woocommerce_checkout_page_id');
+    if ($checkout_page_id) {
+        $checkout_page = get_post($checkout_page_id);
+        if ($checkout_page && strpos($checkout_page->post_content, '<!-- wp:woocommerce/checkout') !== false) {
+            // It's using the block, replace with shortcode
+            $checkout_page->post_content = '[woocommerce_checkout]';
+            wp_update_post($checkout_page);
+        }
+    }
+    
+    $cart_page_id = get_option('woocommerce_cart_page_id');
+    if ($cart_page_id) {
+        $cart_page = get_post($cart_page_id);
+        if ($cart_page && strpos($cart_page->post_content, '<!-- wp:woocommerce/cart') !== false) {
+            $cart_page->post_content = '[woocommerce_cart]';
+            wp_update_post($cart_page);
+        }
+    }
+
+    update_option('mis360_classic_checkout_forced_v2', 'yes');
+}
+
