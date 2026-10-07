@@ -170,9 +170,11 @@ if (!defined('ABSPATH')) {
                     <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('ahsap-oyuncak', 'oyuncak') : home_url('/shop/?s=oyuncak')); ?>">🧩 <?php esc_html_e('Ahşap Oyuncak', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(function_exists('mis360_get_category_url') ? mis360_get_category_url('duzenleyiciler', 'duzenleyici') : home_url('/shop/?s=duzenleyici')); ?>">🧺 <?php esc_html_e('Düzenleyiciler', 'mis360-mobilya'); ?></a></li>
                     <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🔧 <?php esc_html_e('Kurulum', 'mis360-mobilya'); ?></a></li>
+                    <li class="<?php echo (is_home() || (is_single() && get_post_type() === 'post')) ? 'current-menu-item' : ''; ?>"><a href="<?php echo esc_url(home_url('/blog/')); ?>">📝 <?php esc_html_e('Blog', 'mis360-mobilya'); ?></a></li>
                     <li class="menu-item-has-children">
                         <a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>" class="nav-corp-trigger" aria-haspopup="true" aria-expanded="false"><?php esc_html_e('Kurumsal', 'mis360-mobilya'); ?> <span class="nav-arrow-down">▾</span></a>
                         <ul class="sub-menu">
+                            <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">📝 <?php esc_html_e('Blog & Montessori Rehberleri', 'mis360-mobilya'); ?></a></li>
                             <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>">🧩 <?php esc_html_e('Hakkımızda & Montessori', 'mis360-mobilya'); ?></a></li>
                             <li><a href="<?php echo esc_url(home_url('/teslimat-ve-iade/')); ?>">🧺 <?php esc_html_e('Teslimat ve İade Koşulları', 'mis360-mobilya'); ?></a></li>
                             <li><a href="<?php echo esc_url(home_url('/mesafeli-satis-sozlesmesi/')); ?>">📝 <?php esc_html_e('Mesafeli Satış Sözleşmesi', 'mis360-mobilya'); ?></a></li>
@@ -255,6 +257,9 @@ if (!defined('ABSPATH')) {
                 <a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>" class="quick-pill pill-video">
                     <span>🎬 Kurulum</span>
                 </a>
+                <a href="<?php echo esc_url(home_url('/blog/')); ?>" class="quick-pill">
+                    <span>📝 Blog</span>
+                </a>
             </div>
 
             <!-- 4. Kategorize Edilmiş Akordeon Menü Grupları -->
@@ -336,6 +341,37 @@ if (!defined('ABSPATH')) {
                             <a href="https://wa.me/<?php echo esc_attr(get_theme_mod('mis360_whatsapp', '905374778766')); ?>?text=<?php echo rawurlencode('Eksik parça / vida talebinde bulunmak istiyorum.'); ?>" target="_blank" rel="noopener">
                                 <span class="link-bullet">🔧</span>
                                 <span>Eksik Parça & Garanti Talebi</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Grup: Blog & Montessori Rehberleri -->
+                <div class="drawer-group">
+                    <button type="button" class="drawer-group-toggle" aria-expanded="false">
+                        <span class="group-title">
+                            <span class="group-emoji">📝</span>
+                            <strong>Blog & Rehberler</strong>
+                        </span>
+                        <span class="group-toggle-icon">▾</span>
+                    </button>
+                    <ul class="drawer-group-links" style="display: none;">
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/blog/')); ?>">
+                                <span class="link-bullet">📖</span>
+                                <span>Tüm Blog Yazıları</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/category/montessori-rehberleri/')); ?>">
+                                <span class="link-bullet">🌱</span>
+                                <span>Montessori Rehberleri</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?php echo esc_url(home_url('/category/montessori-yerel-rehberler/')); ?>">
+                                <span class="link-bullet">📍</span>
+                                <span>Yerel Şehir Rehberleri</span>
                             </a>
                         </li>
                     </ul>

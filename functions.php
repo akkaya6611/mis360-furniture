@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('MIS360_MOBILYA_VERSION', '1.9.122');
+define('MIS360_MOBILYA_VERSION', '1.9.123');
 define('MIS360_MOBILYA_DIR', get_template_directory());
 define('MIS360_MOBILYA_URI', get_template_directory_uri());
 
@@ -176,4 +176,16 @@ if (!function_exists('mis360_teddy_bear_avatar')) {
     function mis360_teddy_bear_avatar($s = 68, $c = '') {
         return '<div class="bear-fallback" style="font-size:36px;">ğŸ§¸</div>';
     }
+}
+// Otomatik Blog Menü Öğesi Ekleme (Admin Menülerinde Blog Yoksa Otomatik Ekler)
+add_filter('wp_nav_menu_items', 'mis360_auto_add_blog_menu_item', 10, 2);
+function mis360_auto_add_blog_menu_item($items, $args) {
+    if (isset($args->theme_location) && $args->theme_location === 'primary') {
+        if (strpos($items, '/blog') === false && strpos($items, 'blog') === false) {
+            $blog_url = esc_url(home_url('/blog/'));
+            $blog_title = esc_html__('Blog', 'mis360-mobilya');
+            $items .= '<li class="menu-item menu-item-blog"><a href="' . $blog_url . '">📝 ' . $blog_title . '</a></li>';
+        }
+    }
+    return $items;
 }

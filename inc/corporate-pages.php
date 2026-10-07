@@ -590,3 +590,43 @@ function mis360_corporate_template_include($template) {
     return $template;
 }
 add_filter('template_include', 'mis360_corporate_template_include', 99);
+/**
+ * Otomatik Blog Sayfası Kurulumu ve page_for_posts Ataması
+ */
+function mis360_ensure_blog_page_auto_setup() {
+    $blog_page = get_page_by_path('blog');
+    $blog_id = $blog_page ? $blog_page->ID : 0;
+    
+    if (!$blog_page) {
+        $blog_id = wp_insert_post([
+            'post_title'     => 'Blog & Montessori Rehberleri',
+            'post_name'      => 'blog',
+            'post_status'    => 'publish',
+            'post_type'      => 'page',
+            'comment_status' => 'closed',
+            'ping_status'    => 'closed',
+        ]);
+    } else {
+        if ($blog_page->post_status !== 'publish') {
+            wp_update_post([
+                'ID'          => $blog_page->ID,
+                'post_status' => 'publish',
+            ]);
+        }
+    }
+    
+    if ($blog_id && !is_wp_error($blog_id)) {
+        $current_posts_page = (int) get_option('page_for_posts');
+        if ($current_posts_page !== (int) $blog_id) {
+            update_option('page_for_posts', $blog_id);
+            flush_rewrite_rules(false);
+        }
+    }
+}
+add_action('init', 'mis360_ensure_blog_page_auto_setup');
+
+// /blog rewrite kuralını garantiye al
+add_action('init', 'mis360_register_blog_rewrite_rule');
+function mis360_register_blog_rewrite_rule() {
+    add_rewrite_rule('^blog/?$', 'index.php?post_type=post', 'top');
+}

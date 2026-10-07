@@ -148,6 +148,8 @@ if (!defined('ABSPATH')) {
 
                         <li><a href="<?php echo esc_url(home_url('/yardim-merkezi/')); ?>">🎬 <?php esc_html_e('Yardım & Kurulum Videoları', 'mis360-mobilya'); ?></a></li>
 
+                        <li><a href="<?php echo esc_url(home_url('/blog/')); ?>">📝 <?php esc_html_e('Blog & Montessori Rehberleri', 'mis360-mobilya'); ?></a></li>
+
                         <li><a href="<?php echo esc_url(home_url('/hakkimizda/')); ?>"><?php esc_html_e('Hakkımızda', 'mis360-mobilya'); ?></a></li>
 
                         <li><a href="<?php echo esc_url(home_url('/cerez-politikasi/')); ?>"><?php esc_html_e('Çerez Politikası', 'mis360-mobilya'); ?></a></li>
