@@ -988,6 +988,16 @@ function mis360Init() {
 
         input.dispatchEvent(new Event('change', { bubbles: true }));
         input.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // jQuery WooCommerce Cart Senkronizasyonu
+        if (window.jQuery) {
+            window.jQuery(input).trigger('change');
+            const cartBtn = document.querySelector('button[name="update_cart"]');
+            if (cartBtn) {
+                cartBtn.disabled = false;
+                cartBtn.removeAttribute('aria-disabled');
+            }
+        }
     });
 
     document.addEventListener('change', function(e) {

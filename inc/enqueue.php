@@ -134,7 +134,7 @@ function mis360_inject_cart_checkout_inline_css() {
 add_action('wp_enqueue_scripts', 'mis360_inject_cart_checkout_inline_css', 999);
 // Blog Sayfası CSS'ini Yükle
 function mis360_enqueue_blog_css() {
-    if (is_home() || is_category() || is_tag() || is_archive()) {
+    if (is_home() || is_category() || is_tag() || is_archive() || is_page('blog') || is_page_template('page-blog.php')) {
         wp_enqueue_style(
             'mis360-blog',
             get_template_directory_uri() . '/assets/css/blog.css',

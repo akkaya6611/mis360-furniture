@@ -587,50 +587,46 @@ function mis360_corporate_template_include($template) {
         }
     }
 
+    if ($slug === 'blog' || is_page('blog') || is_page_template('page-blog.php')) {
+        $blog_template = locate_template(['page-blog.php']);
+        if (!empty($blog_template)) {
+            return $blog_template;
+        }
+    }
+
     return $template;
 }
 add_filter('template_include', 'mis360_corporate_template_include', 99);
+
 /**
- * Otomatik Blog Sayfası Kurulumu (Güçlendirilmiş)
- * - "blog" sayfasını oluşturur
- * - page_for_posts + reading_mode'u zorla atar
- * - Rewrite kurallarını sıfırlar
+ * Otomatik Blog Sayfası Oluşturma (Kesinlikle Ana Sayfayı Etkilemez)
  */
-function mis360_ensure_blog_page_v2() {
+function mis360_ensure_blog_page_safe() {
     static $ran = false;
     if ($ran) return;
     $ran = true;
 
-    // Mevcut blog sayfasını bul veya oluştur
+    // Eğer page_for_posts geçmişte blog ID'sine eşitlendiyse temizle ki front-page.php ezilmesin
+    $current_posts_page = (int) get_option('page_for_posts');
+    if ($current_posts_page > 0) {
+        update_option('page_for_posts', 0);
+    }
+
     $blog_page = get_page_by_path('blog');
     if (!$blog_page) {
-        $blog_id = wp_insert_post([
+        wp_insert_post([
             'post_title'     => 'Blog & Montessori Rehberleri',
             'post_name'      => 'blog',
             'post_status'    => 'publish',
             'post_type'      => 'page',
+            'page_template'  => 'page-blog.php',
             'comment_status' => 'closed',
             'ping_status'    => 'closed',
         ]);
-        if (is_wp_error($blog_id)) return;
     } else {
-        $blog_id = $blog_page->ID;
         if ($blog_page->post_status !== 'publish') {
-            wp_update_post(['ID' => $blog_id, 'post_status' => 'publish']);
+            wp_update_post(['ID' => $blog_page->ID, 'post_status' => 'publish']);
         }
     }
-
-    // Front page'in static page olduğundan emin ol
-    if (get_option('show_on_front') !== 'page') {
-        update_option('show_on_front', 'page');
-    }
-
-    // Ana sayfa ataması (en güvenli: mevcut front page'i koru, sadece posts page'i ata)
-    $current_posts_page = (int) get_option('page_for_posts');
-    if ($current_posts_page !== (int) $blog_id) {
-        update_option('page_for_posts', (int) $blog_id);
-        flush_rewrite_rules(false);
-    }
 }
-// Her istekte kontrol et (kritik: her zaman çalışsın)
-add_action('init', 'mis360_ensure_blog_page_v2', 1);
+add_action('init', 'mis360_ensure_blog_page_safe', 1);

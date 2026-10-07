@@ -1,7 +1,7 @@
 <?php
 /**
- * Blog Ana Sayfa Template (home.php)
- * WordPress bu dosyayı "Settings > Reading > Posts page" atandığında kullanır.
+ * Template Name: Blog & Montessori Rehberleri
+ * Description: Emdief Home Blog Listeleme Şablonu
  *
  * @package Mis360-Mobilya
  */
@@ -14,6 +14,15 @@ get_header();
 if (function_exists('mis360_breadcrumbs')) {
     mis360_breadcrumbs();
 }
+
+// Blog yazılarını çek
+$paged = (get_query_var('paged')) ? get_query_var('paged') : ((get_query_var('page')) ? get_query_var('page') : 1);
+$blog_query = new WP_Query([
+    'post_type'      => 'post',
+    'post_status'    => 'publish',
+    'posts_per_page' => 10,
+    'paged'          => $paged,
+]);
 ?>
 
 <!-- Blog Hero Bandı -->
@@ -35,12 +44,12 @@ if (function_exists('mis360_breadcrumbs')) {
 
 <div class="emdief-container emdief-blog-page-wrap">
 
-    <?php if (have_posts()): ?>
+    <?php if ($blog_query->have_posts()): ?>
 
         <!-- Öne Çıkan İlk Yazı -->
-        <?php $first_post = true; ?>
+        <?php $first_post = ($paged == 1); ?>
         <div class="emdief-blog-featured-row">
-        <?php while (have_posts()): the_post();
+        <?php while ($blog_query->have_posts()): $blog_query->the_post();
             $city  = get_post_meta(get_the_ID(), '_mis360_ai_city', true);
             $cats  = get_the_terms(get_the_ID(), 'category');
             $cat_name = (!empty($cats) && !is_wp_error($cats)) ? $cats[0]->name : '';
@@ -113,12 +122,14 @@ if (function_exists('mis360_breadcrumbs')) {
         <!-- Sayfalama -->
         <div class="emdief-blog-pagination">
             <?php
-            the_posts_pagination([
-                'prev_text'          => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> ' . __('Önceki', 'mis360-mobilya'),
-                'next_text'          => __('Sonraki', 'mis360-mobilya') . ' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
-                'before_page_number' => '',
-                'mid_size'           => 2,
+            echo paginate_links([
+                'total'     => $blog_query->max_num_pages,
+                'current'   => max(1, $paged),
+                'prev_text' => '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> ' . __('Önceki', 'mis360-mobilya'),
+                'next_text' => __('Sonraki', 'mis360-mobilya') . ' <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
+                'mid_size'  => 2,
             ]);
+            wp_reset_postdata();
             ?>
         </div>
 
