@@ -177,7 +177,6 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                             <a href="<?php echo esc_url(add_query_arg('tab', 'coupons', wc_get_page_permalink('myaccount'))); ?>">
                                 <span class="nav-svg"><?php echo mis360_icon('ticket', 18); ?></span>
                                 <span class="nav-text"><?php esc_html_e('Kuponlarım', 'mis360-mobilya'); ?></span>
-                                <span class="nav-tag-badge">%10</span>
                             </a>
                         </li>
                         <li class="nav-item <?php echo $is_help ? 'is-active' : ''; ?>">
@@ -215,28 +214,14 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                             </div>
                         </div>
 
-                        <div class="coupon-cards-grid">
-                            <div class="coupon-ticket-card">
-                                <div class="coupon-left-ticket">
-                                    <span class="val">%10</span>
-                                    <span class="sub">İNDİRİM</span>
-                                </div>
-                                <div class="coupon-right-ticket">
-                                    <div class="coupon-tag-row">
-                                        <span class="badge-club">Montessori Club</span>
-                                        <span class="badge-active">Aktif</span>
-                                    </div>
-                                    <h4>Montessori Aile Hoş Geldin Kuponu</h4>
-                                    <p>Tüm 1. sınıf kaliteli MDF kitaplık ve mobilya siparişlerinde geçerlidir.</p>
-                                    <div class="coupon-action-row">
-                                        <code class="ticket-code">EMDIEF10</code>
-                                        <button type="button" class="btn-ticket-copy btn-copy-code" data-copy="EMDIEF10">
-                                            <?php echo mis360_icon('copy', 14); ?>
-                                            <span>Kodu Kopyala</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="account-no-coupons" style="padding: 3rem 2rem; text-align: center; background: #fff; border-radius: 18px; border: 1px dashed #cbd5e1;">
+                            <div style="font-size: 2.8rem; margin-bottom: 0.75rem;">🎟️</div>
+                            <h4 style="font-size: 1.2rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">Şu Anda Aktif Promosyon Kuponu Bulunmuyor</h4>
+                            <p style="color: #64748b; font-size: 0.92rem; max-width: 440px; margin: 0 auto 1.5rem auto; line-height: 1.5;">Dönemsel kampanya ve indirim kuponlarımız tanımlandığında burada listelenecektir.</p>
+                            <a href="<?php echo esc_url(wc_get_page_permalink('shop')); ?>" class="emdief-btn btn-primary btn-md">
+                                <span>Kataloğu Keşfet</span>
+                                <?php echo mis360_icon('arrow-right', 16); ?>
+                            </a>
                         </div>
                     </div>
                 <?php elseif ($is_help): ?>
@@ -390,12 +375,12 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                             </div>
                             <div class="stat-card">
                                 <div class="stat-icon-frame icon-coral">
-                                    <?php echo mis360_icon('ticket', 22); ?>
+                                    <?php echo mis360_icon('shield', 22); ?>
                                 </div>
                                 <div class="stat-meta">
-                                    <span class="stat-title">Geçerli Hoş Geldin Kuponu</span>
-                                    <strong class="stat-value color-coral">%10 İndirim</strong>
-                                    <span class="stat-sub">Kod: <code>EMDIEF10</code></span>
+                                    <span class="stat-title">Garanti Kapsamı</span>
+                                    <strong class="stat-value color-coral">%100 Güvenli</strong>
+                                    <span class="stat-sub">Hasarsız Teslimat Güvencesi</span>
                                 </div>
                             </div>
                         </div>
@@ -512,24 +497,6 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                             </div>
                         </div>
 
-                        <!-- Kupon ve Özel Sadakat Şeridi -->
-                        <div class="account-promo-strip">
-                            <div class="promo-left">
-                                <div class="promo-badge-tag">ÖZEL KULÜP AYRICALIĞI</div>
-                                <h3 class="promo-heading">Montessori Aile Kulübü %10 İndirim Kuponunuz</h3>
-                                <p class="promo-desc">1. Sınıf MDF kitaplık, eğitici ahşap oyuncaklar ve çocuk odası düzenleyicilerinde geçerlidir.</p>
-                            </div>
-                            <div class="promo-right">
-                                <div class="coupon-pill-wrap">
-                                    <span class="coupon-code-text">EMDIEF10</span>
-                                    <button type="button" class="coupon-copy-btn btn-copy-code" data-copy="EMDIEF10">
-                                        <?php echo mis360_icon('copy', 14); ?>
-                                        <span>Kopyala</span>
-                                    </button>
-                                </div>
-                                <small class="coupon-expiry">Tüm Alışverişlerde Geçerli</small>
-                            </div>
-                        </div>
                     </div>
                 <?php endif; ?>
             </main>

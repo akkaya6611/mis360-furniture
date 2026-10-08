@@ -127,11 +127,13 @@ function mis360_inject_cart_checkout_inline_css() {
         .cart-page-trust-grid, .cart-page-trust-pills { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; margin-top: 14px !important; padding: 0 !important; background: transparent !important; border: none !important; box-sizing: border-box !important; }
         .cart-trust-item, .trust-pill-item { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; border-radius: 10px !important; padding: 10px 8px !important; display: flex !important; align-items: center !important; gap: 8px !important; font-size: 11px !important; font-weight: 700 !important; color: #334155 !important; line-height: 1.3 !important; box-sizing: border-box !important; }
         .cart-trust-item svg, .trust-pill-item svg { flex-shrink: 0 !important; width: 18px !important; height: 18px !important; }
-        .woocommerce-cart table.shop_table.cart tr td.actions .coupon,
-        .woocommerce-cart .actions .coupon,
-        .woocommerce-form-coupon-toggle,
-        form.checkout_coupon,
-        .checkout_coupon { display: none !important; }
+        .woocommerce-form-coupon-toggle { margin-bottom: 20px !important; }
+        .woocommerce-form-coupon-toggle .woocommerce-info { background: #fffbeb !important; border: 1.5px solid #fde68a !important; border-radius: 12px !important; padding: 12px 18px !important; color: #92400e !important; font-size: 13.5px !important; font-weight: 600 !important; }
+        .woocommerce-form-coupon-toggle .woocommerce-info a.showcoupon { color: #d97706 !important; font-weight: 700 !important; text-decoration: underline !important; }
+        form.checkout_coupon { display: flex !important; gap: 10px !important; align-items: center !important; background: #ffffff !important; border: 1.5px solid #e2e8f0 !important; border-radius: 14px !important; padding: 16px !important; margin-bottom: 24px !important; box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important; flex-wrap: wrap !important; }
+        form.checkout_coupon p { margin: 0 !important; }
+        form.checkout_coupon input.input-text { height: 44px !important; padding: 0 16px !important; border: 1.5px solid #cbd5e1 !important; border-radius: 10px !important; font-size: 14px !important; flex: 1 1 200px !important; box-sizing: border-box !important; }
+        form.checkout_coupon button.button { height: 44px !important; padding: 0 22px !important; background: #1e293b !important; color: #ffffff !important; font-weight: 700 !important; font-size: 13.5px !important; border-radius: 10px !important; border: none !important; cursor: pointer !important; white-space: nowrap !important; }
         ";
         wp_add_inline_style('mis360-style', $cart_css);
     }

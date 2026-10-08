@@ -7352,8 +7352,19 @@ function mis360_render_exit_intent_popup() {
         window.mis360ApplyExitCoupon = function() {
             var btn = document.querySelector('.exit-btn-apply');
             if (btn) btn.innerHTML = '⏳ <?php esc_html_e("Uygulanıyor...", "mis360-mobilya"); ?>';
-            sessionStorage.setItem(shownKey, '1');
-            window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
+            
+            // Sepette kupon inputu varsa doldur ve submit et, yoksa checkout'a kuponlu yönlendir
+            var couponInput = document.querySelector('input[name="coupon_code"]');
+            var couponBtn = document.querySelector('button[name="apply_coupon"]');
+            if (couponInput && couponBtn) {
+                couponInput.value = 'EMDIEF5';
+                sessionStorage.setItem(shownKey, '1');
+                couponBtn.click();
+                modal.style.display = 'none';
+            } else {
+                sessionStorage.setItem(shownKey, '1');
+                window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
+            }
         };
 
         var triggered = false;
@@ -7984,25 +7995,34 @@ function mis360_tc_billing_notice() {
     echo '</div>';
 }
 
-// Kupon Kodlarini Sistemden Kaldir - Sadece EMDIEF5 (Sepet Terk Kuponu) Gecerli Olsun
-add_filter('woocommerce_coupons_enabled', 'mis360_restrict_coupons_to_exit_intent', 999);
-function mis360_restrict_coupons_to_exit_intent($enabled) {
-    // Sepet ve odeme sayfasindaki genel kupon giris formlarini tamamen gizle/kapat
-    if (is_cart() || is_checkout()) {
-        return false;
-    }
-    return $enabled;
-}
+// Kupon filtresini daima acik tut
+add_filter('woocommerce_coupons_enabled', '__return_true', 999);
 
-// Sadece EMDIEF5 kuponunun uygulanmasina izin ver, harici kuponlari engelle
-add_filter('woocommerce_coupon_is_valid', 'mis360_allow_only_emdief5_coupon', 999, 2);
-function mis360_allow_only_emdief5_coupon($valid, $coupon) {
+// Odeme Sayfasinda Kupon Kodunu Gorunur Yap
+add_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
+
+// EMDIEF10 Kuponunu Sistemden Tamamen Engelle / Gecersiz Kil
+add_filter('woocommerce_coupon_is_valid', 'mis360_block_emdief10_coupon', 999, 2);
+function mis360_block_emdief10_coupon($valid, $coupon) {
     if (!$coupon) return $valid;
     $code = strtolower($coupon->get_code());
-    if ($code !== 'emdief5') {
-        return false;
+    if ($code === 'emdief10') {
+        throw new Exception(__('Bu kupon kodunun (EMDIEF10) süresi dolmuş veya sistemden kaldırılmıştır.', 'mis360-mobilya'));
     }
     return $valid;
+}
+
+// Veritabaninda varsa EMDIEF10 kuponunu cop kutusuna tasi
+add_action('init', 'mis360_trash_emdief10_coupon_once');
+function mis360_trash_emdief10_coupon_once() {
+    if (get_option('mis360_emdief10_removed_v1') === 'yes') return;
+    if (function_exists('wc_get_coupon_id_by_code')) {
+        $coupon_id = wc_get_coupon_id_by_code('emdief10');
+        if ($coupon_id) {
+            wp_trash_post($coupon_id);
+        }
+    }
+    update_option('mis360_emdief10_removed_v1', 'yes');
 }
 
 // URL uzerinden ?apply_coupon=EMDIEF5 ile gelindiginde otomatik uygula
