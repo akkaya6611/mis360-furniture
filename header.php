@@ -530,6 +530,7 @@ if (!defined('ABSPATH')) {
                         <?php echo function_exists('mis360_icon') ? mis360_icon('arrow-right', 18) : '→'; ?>
                     </button>
                 </form>
+                <?php if (function_exists('mis360_render_social_login')) { mis360_render_social_login('modal-login'); } ?>
             </div>
 
             <!-- Kayıt Formu Paneli -->
@@ -568,6 +569,7 @@ if (!defined('ABSPATH')) {
                         <?php echo function_exists('mis360_icon') ? mis360_icon('sparkles', 18) : '✨'; ?>
                     </button>
                 </form>
+                <?php if (function_exists('mis360_render_social_login')) { mis360_render_social_login('modal-register'); } ?>
             </div>
         </div>
 

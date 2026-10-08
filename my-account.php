@@ -530,6 +530,12 @@ $is_dashboard  = !$is_orders && !$is_address && !$is_account && !$is_coupons && 
                     </a>
                 <?php endif; ?>
             </div>
+
+            <?php if (function_exists('mis360_render_social_login')): ?>
+                <div style="max-width: 320px; margin: 12px auto 0;">
+                    <?php mis360_render_social_login('account-guest'); ?>
+                </div>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 </div>

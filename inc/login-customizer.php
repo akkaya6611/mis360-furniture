@@ -280,6 +280,67 @@ add_action('login_enqueue_scripts', function() {
             color: #ea580c;
             text-decoration: underline;
         }
+
+        /* --- Nextend Social Login (Google ile Giriş) Şık Entegrasyonu --- */
+        #nsl-custom-login-form-main,
+        .nsl-container,
+        .nsl-container-block {
+            width: 100% !important;
+            margin: 18px 0 0 0 !important;
+            display: block !important;
+            clear: both !important;
+        }
+        #nsl-custom-login-form-main::before,
+        .nsl-container-block::before {
+            content: 'veya Google ile devam et' !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+            color: #94a3b8 !important;
+            font-size: 0.8rem !important;
+            font-weight: 600 !important;
+            margin-bottom: 12px !important;
+            letter-spacing: 0.02em !important;
+        }
+        .nsl-container .nsl-container-buttons {
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 8px !important;
+        }
+        .nsl-container .nsl-container-buttons a {
+            width: 100% !important;
+            text-decoration: none !important;
+            display: block !important;
+        }
+        .nsl-container .nsl-button {
+            width: 100% !important;
+            height: 48px !important;
+            border-radius: 12px !important;
+            border: 1.5px solid #e2e8f0 !important;
+            background-color: #ffffff !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+        }
+        .nsl-container .nsl-button:hover {
+            border-color: #cbd5e1 !important;
+            background-color: #f8fafc !important;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+            transform: translateY(-1px) !important;
+        }
+        .nsl-container .nsl-button-svg-container {
+            padding: 0 10px 0 0 !important;
+        }
+        .nsl-container .nsl-button-label-container {
+            font-size: 0.92rem !important;
+            font-weight: 600 !important;
+            color: #334155 !important;
+        }
     </style>
     <?php
 });

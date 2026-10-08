@@ -2319,6 +2319,85 @@ button.button.emdief-btn-empty-cart:hover {
   margin-top: 0.5rem;
 }
 
+/* --- Emdief Home: Sosyal Medya ile Giriş (Nextend Social Login / Google) --- */
+.emdief-social-auth-wrap {
+  width: 100%;
+  margin-top: 14px;
+  box-sizing: border-box;
+}
+.emdief-social-auth-wrap .auth-social-separator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 14px 0 12px;
+  color: #94a3b8;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.emdief-social-auth-wrap .auth-social-separator::before,
+.emdief-social-auth-wrap .auth-social-separator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+.emdief-social-auth-wrap .auth-social-separator span {
+  padding: 0 10px;
+  letter-spacing: 0.02em;
+}
+.emdief-social-auth-wrap .auth-social-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.emdief-social-auth-wrap .nsl-container,
+.emdief-social-auth-wrap #nsl-custom-login-form-main {
+  width: 100% !important;
+  display: block !important;
+  margin: 0 !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-container-buttons {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-container-buttons a {
+  width: 100% !important;
+  text-decoration: none !important;
+  display: block !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-button {
+  width: 100% !important;
+  min-height: 48px !important;
+  border-radius: 12px !important;
+  border: 1.5px solid #e2e8f0 !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-button:hover {
+  border-color: #cbd5e1 !important;
+  background-color: #f8fafc !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+  transform: translateY(-1px) !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-button-svg-container {
+  padding: 0 10px 0 0 !important;
+}
+.emdief-social-auth-wrap .nsl-container .nsl-button-label-container {
+  font-size: 0.92rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
 .auth-modal-footer {
   padding: 0.9rem 2rem;
   background-color: var(--emd-bg-warm);

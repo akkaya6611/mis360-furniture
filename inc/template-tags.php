@@ -902,3 +902,60 @@ function mis360_render_etbis_product_badge() {
     <?php
 }
 
+/**
+ * Sosyal Medya ile Giriş (Nextend Social Login / Google) Render Fonksiyonu
+ *
+ * @param string $context Çağrıldığı yer ('modal-login', 'modal-register', 'account-guest', 'general')
+ */
+function mis360_render_social_login($context = 'general') {
+    if (is_user_logged_in()) {
+        return;
+    }
+
+    $output = '';
+
+    // 1. Nextend Social Login (Öncelikli)
+    if (shortcode_exists('nextend_social_login')) {
+        $rendered = do_shortcode('[nextend_social_login]');
+        if (strpos($rendered, '[nextend_social_login]') === false && !empty(trim($rendered))) {
+            $output = $rendered;
+        }
+    }
+
+    // 2. Nextend Social Login Action Kancası
+    if (empty($output) && class_exists('NextendSocialLogin')) {
+        ob_start();
+        do_action('nextend_social_login');
+        $rendered = ob_get_clean();
+        if (!empty(trim($rendered))) {
+            $output = $rendered;
+        }
+    }
+
+    // 3. Diğer popüler sosyal giriş eklentileri desteği
+    if (empty($output)) {
+        if (shortcode_exists('TheChamp-Login')) {
+            $output = do_shortcode('[TheChamp-Login]');
+        } elseif (shortcode_exists('miniorange_social_login')) {
+            $output = do_shortcode('[miniorange_social_login]');
+        } elseif (shortcode_exists('wp_social_login')) {
+            $output = do_shortcode('[wp_social_login]');
+        }
+    }
+
+    // Çıktı varsa şık kutu ve 'veya' ayracıyla ekrana bas
+    if (!empty(trim($output))) {
+        ?>
+        <div class="emdief-social-auth-wrap context-<?php echo esc_attr($context); ?>">
+            <div class="auth-social-separator">
+                <span><?php esc_html_e('veya Google ile devam et', 'mis360-mobilya'); ?></span>
+            </div>
+            <div class="auth-social-buttons">
+                <?php echo $output; ?>
+            </div>
+        </div>
+        <?php
+    }
+}
+
+
