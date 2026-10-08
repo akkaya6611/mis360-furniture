@@ -7865,88 +7865,38 @@ function mis360_fake_reviews_tab_callback() {
     echo '</div>';
 }
 
-// --- EMDIEF HOME: KDV (Tax) Setup & Dynamic Rules ---
+// --- EMDIEF HOME: KDV (Tax) Kaldirildi - Fiyatlar Net / KDV Dahil & Kupon Garantisi ---
+add_action('init', 'mis360_disable_taxes_and_restore_net_prices');
+function mis360_disable_taxes_and_restore_net_prices() {
+    static $done = false;
+    if ($done) return;
+    $done = true;
 
-// 1. Automatically configure tax rates in DB (runs once)
-add_action('admin_init', 'mis360_setup_turkish_taxes_once');
-function mis360_setup_turkish_taxes_once() {
-    if (get_option('mis360_taxes_configured_v1') === 'yes') return;
-
-    // Enable Taxes
-    update_option('woocommerce_calc_taxes', 'yes');
-    update_option('woocommerce_prices_include_tax', 'yes'); // As in Turkey, prices include tax
-    update_option('woocommerce_tax_display_shop', 'incl');
-    update_option('woocommerce_tax_display_cart', 'incl');
-    update_option('woocommerce_tax_display_cart', 'incl');
-
-    // Set additional tax classes
-    $existing = get_option('woocommerce_tax_classes', '');
-    if (strpos($existing, 'Ahsap Oyuncak') === false) {
-        update_option('woocommerce_tax_classes', trim($existing . "
-Ahsap Oyuncak"));
+    // Vergi hesaplamasini tamamen kapat (Fiyatlar net / KDV dahildir)
+    if (get_option('woocommerce_calc_taxes') !== 'no') {
+        update_option('woocommerce_calc_taxes', 'no');
+    }
+    if (get_option('woocommerce_prices_include_tax') !== 'yes') {
+        update_option('woocommerce_prices_include_tax', 'yes');
     }
 
-    global $wpdb;
-    $table = $wpdb->prefix . 'woocommerce_tax_rates';
-
-    // Clear old rates (optional, but requested to ensure clean 10% and 20% setup)
-    // We will just insert them safely if they don't exist.
-    $wpdb->query("TRUNCATE TABLE {$table}");
-    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}woocommerce_tax_rate_locations");
-
-    // Insert 10% Standard Rate (for everything else)
-    $wpdb->insert(
-        $table,
-        [
-            'tax_rate_country'  => 'TR',
-            'tax_rate_state'    => '',
-            'tax_rate'          => '10.0000',
-            'tax_rate_name'     => 'KDV %10',
-            'tax_rate_priority' => 1,
-            'tax_rate_compound' => 0,
-            'tax_rate_shipping' => 1,
-            'tax_rate_order'    => 1,
-            'tax_rate_class'    => '' // Standard
-        ]
-    );
-
-    // Insert 20% Ahsap Oyuncak Rate
-    $wpdb->insert(
-        $table,
-        [
-            'tax_rate_country'  => 'TR',
-            'tax_rate_state'    => '',
-            'tax_rate'          => '20.0000',
-            'tax_rate_name'     => 'KDV %20',
-            'tax_rate_priority' => 1,
-            'tax_rate_compound' => 0,
-            'tax_rate_shipping' => 1,
-            'tax_rate_order'    => 2,
-            'tax_rate_class'    => 'ahsap-oyuncak'
-        ]
-    );
-
-    update_option('mis360_taxes_configured_v1', 'yes');
-}
-
-// 2. Dynamically assign tax class based on category
-add_filter('woocommerce_product_get_tax_class', 'mis360_dynamic_tax_class_by_category', 10, 2);
-add_filter('woocommerce_product_variation_get_tax_class', 'mis360_dynamic_tax_class_by_category', 10, 2);
-function mis360_dynamic_tax_class_by_category($tax_class, $product) {
-    if (!$product) return $tax_class;
-    
-    // For variations, get parent ID
-    $product_id = $product->is_type('variation') ? $product->get_parent_id() : $product->get_id();
-    
-    // If it's in the 'ahsap-oyuncak' category (or similar), apply 20% class
-    // We check against term slugs: ahsap-oyuncak, oyuncak
-    if (has_term(['ahsap-oyuncak', 'oyuncak'], 'product_cat', $product_id)) {
-        return 'ahsap-oyuncak';
+    // Kupon kullanimini kesinlikle aktif tut
+    if (get_option('woocommerce_enable_coupons') !== 'yes') {
+        update_option('woocommerce_enable_coupons', 'yes');
     }
-    
-    // Otherwise, standard (10%)
-    return ''; // Standard class is empty string
+
+    // Gecmiste eklenmis vergi oranlarini veritabanindan temizle (tek seferlik)
+    if (get_option('mis360_taxes_cleaned_v2') !== 'yes') {
+        global $wpdb;
+        $table = $wpdb->prefix . 'woocommerce_tax_rates';
+        $wpdb->query("TRUNCATE TABLE {$table}");
+        $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}woocommerce_tax_rate_locations");
+        update_option('mis360_taxes_cleaned_v2', 'yes');
+    }
 }
+
+// Kupon filtresini daima acik tut
+add_filter('woocommerce_coupons_enabled', '__return_true', 999);
 
 // --- EMDIEF HOME: BirFatura Native Checkout Fields ---
 add_filter('woocommerce_checkout_fields', 'mis360_add_birfatura_checkout_fields');
@@ -8047,6 +7997,9 @@ function mis360_tc_billing_notice() {
     echo '<div><strong>E-Fatura Bilgilendirmesi:</strong> Mevzuat gereği tüm siparişlere resmi e-fatura kesilmektedir. T.C. Kimlik numaranızı paylaşmak istemiyorsanız ilgili alana <strong>11111111111</strong> (11 adet 1) yazarak alışverişinizi tamamlayabilirsiniz.</div>';
     echo '</div>';
 }
+
+// Odeme Sayfasinda Kupon Kodunu Her Zaman Gorunur Yap
+add_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
 
 // --- EMDIEF HOME: Revert Checkout to Classic Shortcode (Fix for BirFatura Fields) ---
 add_action('init', 'mis360_force_classic_checkout_once');
