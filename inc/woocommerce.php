@@ -7352,19 +7352,8 @@ function mis360_render_exit_intent_popup() {
         window.mis360ApplyExitCoupon = function() {
             var btn = document.querySelector('.exit-btn-apply');
             if (btn) btn.innerHTML = '⏳ <?php esc_html_e("Uygulanıyor...", "mis360-mobilya"); ?>';
-            
-            // Sepette kupon inputu varsa doldur ve submit et, yoksa checkout'a kuponlu yönlendir
-            var couponInput = document.querySelector('input[name="coupon_code"]');
-            var couponBtn = document.querySelector('button[name="apply_coupon"]');
-            if (couponInput && couponBtn) {
-                couponInput.value = 'EMDIEF5';
-                sessionStorage.setItem(shownKey, '1');
-                couponBtn.click();
-                modal.style.display = 'none';
-            } else {
-                sessionStorage.setItem(shownKey, '1');
-                window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
-            }
+            sessionStorage.setItem(shownKey, '1');
+            window.location.href = '<?php echo esc_url(add_query_arg("apply_coupon", "EMDIEF5", wc_get_checkout_url())); ?>';
         };
 
         var triggered = false;
@@ -7895,9 +7884,6 @@ function mis360_disable_taxes_and_restore_net_prices() {
     }
 }
 
-// Kupon filtresini daima acik tut
-add_filter('woocommerce_coupons_enabled', '__return_true', 999);
-
 // --- EMDIEF HOME: BirFatura Native Checkout Fields ---
 add_filter('woocommerce_checkout_fields', 'mis360_add_birfatura_checkout_fields');
 function mis360_add_birfatura_checkout_fields($fields) {
@@ -7998,8 +7984,38 @@ function mis360_tc_billing_notice() {
     echo '</div>';
 }
 
-// Odeme Sayfasinda Kupon Kodunu Her Zaman Gorunur Yap
-add_action('woocommerce_before_checkout_form', 'woocommerce_checkout_coupon_form', 10);
+// Kupon Kodlarini Sistemden Kaldir - Sadece EMDIEF5 (Sepet Terk Kuponu) Gecerli Olsun
+add_filter('woocommerce_coupons_enabled', 'mis360_restrict_coupons_to_exit_intent', 999);
+function mis360_restrict_coupons_to_exit_intent($enabled) {
+    // Sepet ve odeme sayfasindaki genel kupon giris formlarini tamamen gizle/kapat
+    if (is_cart() || is_checkout()) {
+        return false;
+    }
+    return $enabled;
+}
+
+// Sadece EMDIEF5 kuponunun uygulanmasina izin ver, harici kuponlari engelle
+add_filter('woocommerce_coupon_is_valid', 'mis360_allow_only_emdief5_coupon', 999, 2);
+function mis360_allow_only_emdief5_coupon($valid, $coupon) {
+    if (!$coupon) return $valid;
+    $code = strtolower($coupon->get_code());
+    if ($code !== 'emdief5') {
+        return false;
+    }
+    return $valid;
+}
+
+// URL uzerinden ?apply_coupon=EMDIEF5 ile gelindiginde otomatik uygula
+add_action('template_redirect', 'mis360_auto_apply_exit_coupon');
+function mis360_auto_apply_exit_coupon() {
+    if (!class_exists('WooCommerce') || !WC()->cart) return;
+    if (isset($_GET['apply_coupon'])) {
+        $coupon_code = sanitize_text_field($_GET['apply_coupon']);
+        if (strtolower($coupon_code) === 'emdief5' && !WC()->cart->has_discount('emdief5')) {
+            WC()->cart->apply_coupon('emdief5');
+        }
+    }
+}
 
 // --- EMDIEF HOME: Revert Checkout to Classic Shortcode (Fix for BirFatura Fields) ---
 add_action('init', 'mis360_force_classic_checkout_once');
