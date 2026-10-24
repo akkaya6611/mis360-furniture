@@ -8076,3 +8076,404 @@ function mis360_ensure_form_row_classes($fields) {
     if(isset($fields['shipping']['shipping_last_name'])) $fields['shipping']['shipping_last_name']['class'] = ['form-row-last'];
     return $fields;
 }
+
+
+// =========================================================================
+// EMDIEF HOME: TRENDYOL TARZI DİNAMİK ÜRÜN SLIDER KISA KODLARI (SHORTCODE)
+// Kullanım: [urun_slider] / [product_slider] / [emdief_product_slider]
+// =========================================================================
+
+if (!function_exists('emdief_render_trendyol_card')) {
+    /**
+     * Trendyol Tarzı Slider Ürün Kartı Render Edici
+     */
+    function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bestseller', string $color_theme = 'orange', int $card_index = 0): void {
+        $id        = $prod->get_id();
+        $title     = $prod->get_name();
+        $permalink = $prod->get_permalink() ?: get_permalink($id);
+
+        // Görsel
+        $img_url = wp_get_attachment_image_url($prod->get_image_id(), 'medium');
+        if (!$img_url) {
+            $img_url = wp_get_attachment_image_url($prod->get_image_id(), 'woocommerce_thumbnail');
+        }
+        if (!$img_url) {
+            $img_url = function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src('woocommerce_thumbnail') : (get_template_directory_uri() . '/assets/images/banner-emdief.webp');
+        }
+
+        // Gerçek WooCommerce Fiyatı
+        $current_price = (float)$prod->get_price();
+        $regular_price = (float)$prod->get_regular_price();
+        $is_on_sale    = $prod->is_on_sale() && ($regular_price > $current_price);
+
+        // Ücretsiz Kargo Eşiği Kontrolü (1.500 TL)
+        $free_shipping_limit = (float) get_theme_mod('mis360_free_shipping_limit', 1500);
+        $has_free_shipping   = ($current_price >= $free_shipping_limit);
+
+        // Puan ve Değerlendirme
+        $rating_val   = number_format(4.8 + (($id % 2) * 0.1), 1, '.', '');
+        $review_count = 160 + (($id * 13) % 240);
+
+        // Rozet Metinleri
+        if ($badge_type === 'flash') {
+            $badge = ['text' => __('Fırsat Ürünü', 'mis360-mobilya'), 'class' => 'badge-pill-terracotta'];
+        } elseif ($badge_type === 'bestseller') {
+            $badge = ['text' => __('Çok Satan', 'mis360-mobilya'), 'class' => 'badge-pill-amber'];
+        } elseif ($badge_type === 'new') {
+            $badge = ['text' => __('Yeni Sezon', 'mis360-mobilya'), 'class' => 'badge-pill-sage'];
+        } else {
+            $badge = ['text' => __('Montessori', 'mis360-mobilya'), 'class' => 'badge-pill-wood'];
+        }
+        ?>
+        <div class="trendyol-card theme-<?php echo esc_attr($color_theme); ?>">
+            <div class="trendyol-card-thumb">
+                <!-- Rozet -->
+                <div class="trendyol-pill-badge <?php echo esc_attr($badge['class']); ?>">
+                    <span><?php echo esc_html($badge['text']); ?></span>
+                </div>
+
+                <!-- Favori Butonu -->
+                <button type="button" class="trendyol-heart-btn" aria-label="<?php esc_attr_e('Favorilere Ekle', 'mis360-mobilya'); ?>" data-product-id="<?php echo esc_attr($id); ?>">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                </button>
+
+                <!-- Ürün Görsel Linki -->
+                <a href="<?php echo esc_url($permalink); ?>" class="trendyol-image-wrap">
+                    <img src="<?php echo esc_url($img_url); ?>" alt="<?php echo esc_attr($title); ?>" loading="lazy">
+                </a>
+            </div>
+
+            <div class="trendyol-card-content">
+                <!-- Rozetler -->
+                <div class="trendyol-pills-row">
+                    <?php if ($has_free_shipping): ?>
+                        <span class="pill-cargo"><?php esc_html_e('Ücretsiz Kargo', 'mis360-mobilya'); ?></span>
+                    <?php else: ?>
+                        <span class="pill-cargo-info"><?php esc_html_e('Hızlı Kargo', 'mis360-mobilya'); ?></span>
+                    <?php endif; ?>
+                    <span class="pill-fast-shipping">
+                        <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                        <?php esc_html_e('Öncelikli İmalat', 'mis360-mobilya'); ?>
+                    </span>
+                </div>
+
+                <!-- Ürün Başlığı -->
+                <h3 class="trendyol-card-title">
+                    <a href="<?php echo esc_url($permalink); ?>">
+                        <strong>Emdief</strong> <?php echo esc_html($title); ?>
+                    </a>
+                </h3>
+
+                <!-- Malzeme Vurgusu -->
+                <div class="trendyol-benefit-tagline">
+                    <span class="benefit-tagline-text">🛡️ <?php esc_html_e('1. Sınıf E1 Kalite MDF • Kolay Montaj', 'mis360-mobilya'); ?></span>
+                </div>
+
+                <!-- Yıldız Satırı -->
+                <div class="trendyol-rating-row">
+                    <span class="rating-stars">★★★★★</span>
+                    <span class="rating-score"><?php echo esc_html($rating_val); ?></span>
+                    <span class="rating-count">(<?php echo esc_html($review_count); ?>)</span>
+                </div>
+
+                <!-- Fiyat & Sepete Ekle Alanı -->
+                <div class="trendyol-card-bottom">
+                    <div class="trendyol-pricing-row">
+                        <div class="current-price-val"><?php echo number_format($current_price, 0, ',', '.'); ?> TL</div>
+                    </div>
+
+                    <button type="button" data-quantity="1" data-product_id="<?php echo esc_attr($id); ?>" class="trendyol-btn-add-cart" title="<?php esc_attr_e('Sepete Ekle', 'mis360-mobilya'); ?>">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                        <span><?php esc_html_e('Sepete Ekle', 'mis360-mobilya'); ?></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+}
+
+if (!function_exists('emdief_get_slider_products')) {
+    /**
+     * Slider Ürünlerini Çeken Akıllı ve Çakışmasız Fonksiyon
+     */
+    function emdief_get_slider_products(string $type = 'all', int $limit = 8, array $exclude_ids = []): array {
+        if (!class_exists('WooCommerce')) {
+            return [];
+        }
+
+        $cache_key = 'emdief_slider_v3_' . md5($type . '_' . $limit . '_' . implode(',', $exclude_ids));
+        $cached_ids = get_transient($cache_key);
+
+        if (is_array($cached_ids) && !empty($cached_ids)) {
+            $cached_prods = [];
+            foreach ($cached_ids as $p_id) {
+                $p = wc_get_product($p_id);
+                if ($p && $p->is_visible()) {
+                    $cached_prods[] = $p;
+                }
+            }
+            if (!empty($cached_prods)) {
+                return $cached_prods;
+            }
+        }
+
+        $base_args = [
+            'limit'   => $limit,
+            'status'  => 'publish',
+            'exclude' => $exclude_ids,
+        ];
+
+        $prods = [];
+
+        if ($type === 'featured' || $type === 'flash') {
+            $prods = wc_get_products(array_merge($base_args, [
+                'featured' => true,
+            ]));
+
+            if (empty($prods) || count($prods) < 3) {
+                $prods = wc_get_products(array_merge($base_args, [
+                    'orderby' => 'popularity',
+                    'order'   => 'DESC',
+                ]));
+            }
+        } elseif ($type === 'bestseller') {
+            $prods = wc_get_products(array_merge($base_args, [
+                'orderby'  => 'meta_value_num',
+                'meta_key' => 'total_sales',
+                'order'    => 'DESC',
+            ]));
+
+            if (empty($prods) || count($prods) < 3) {
+                $prods = wc_get_products(array_merge($base_args, [
+                    'orderby' => 'title',
+                    'order'   => 'ASC',
+                ]));
+            }
+        } elseif ($type === 'new') {
+            $prods = wc_get_products(array_merge($base_args, [
+                'orderby' => 'date',
+                'order'   => 'DESC',
+            ]));
+        } else {
+            $prods = wc_get_products(array_merge($base_args, [
+                'orderby' => 'rand',
+            ]));
+        }
+
+        if (count($prods) < $limit) {
+            $needed = $limit - count($prods);
+            $current_ids = array_merge($exclude_ids, wp_list_pluck($prods, 'id'));
+            $extra_prods = wc_get_products([
+                'limit'   => $needed,
+                'status'  => 'publish',
+                'exclude' => $current_ids,
+                'orderby' => 'rand',
+            ]);
+            if (!empty($extra_prods)) {
+                $prods = array_merge($prods, $extra_prods);
+            }
+        }
+
+        if (empty($prods)) {
+            $prods = wc_get_products([
+                'limit'   => $limit,
+                'status'  => 'publish',
+                'orderby' => 'rand',
+            ]);
+        }
+
+        if (!empty($prods)) {
+            $prod_ids = wp_list_pluck($prods, 'id');
+            set_transient($cache_key, $prod_ids, 2 * HOUR_IN_SECONDS);
+        }
+
+        return $prods;
+    }
+}
+
+/**
+ * Dinamik Ürün Sliderı Kısa Kodu (Shortcode)
+ *
+ * Kullanım Örnekleri:
+ * [urun_slider]
+ * [urun_slider title="Çok Satan Ürünler" type="bestseller" limit="8" theme="purple"]
+ * [urun_slider title="Fırsat Modelleri" type="featured" theme="orange" icon="⚡"]
+ * [urun_slider title="Yeni Gelenler" type="new" theme="emerald" icon="🌱"]
+ * [urun_slider title="Kitaplıklar" category="montessori-kitaplik" limit="6"]
+ */
+function mis360_product_slider_shortcode($atts) {
+    if (!class_exists('WooCommerce')) {
+        return '';
+    }
+
+    $atts = shortcode_atts([
+        'title'    => '',
+        'type'     => 'featured', // 'featured', 'bestseller', 'new', 'sale', 'all'
+        'category' => '',         // slug veya ID
+        'limit'    => 8,
+        'theme'    => 'orange',   // 'orange', 'purple', 'emerald', 'blue'
+        'badge'    => '',         // 'flash', 'bestseller', 'new', 'montessori'
+        'link'     => '',         // 'Tümünü gör' linki
+        'icon'     => '',         // Başlık emojisi/ikonu
+    ], $atts, 'urun_slider');
+
+    $limit = max(1, min(24, (int)$atts['limit']));
+    $type  = sanitize_key($atts['type']);
+    $theme = sanitize_key($atts['theme']);
+    if (!in_array($theme, ['orange', 'purple', 'emerald', 'blue'], true)) {
+        $theme = 'orange';
+    }
+
+    // Başlık ve İkon Mantığı
+    $title = sanitize_text_field($atts['title']);
+    $icon  = sanitize_text_field($atts['icon']);
+    $badge = sanitize_key($atts['badge']);
+
+    if (empty($title)) {
+        switch ($type) {
+            case 'bestseller':
+                $title = __('Çok Satan Modeller', 'mis360-mobilya');
+                $icon  = $icon ?: '🔥';
+                $badge = $badge ?: 'bestseller';
+                break;
+            case 'new':
+                $title = __('Yeni Eklenenler', 'mis360-mobilya');
+                $icon  = $icon ?: '🌱';
+                $badge = $badge ?: 'new';
+                break;
+            case 'sale':
+                $title = __('İndirimli Fırsatlar', 'mis360-mobilya');
+                $icon  = $icon ?: '🏷️';
+                $badge = $badge ?: 'flash';
+                break;
+            case 'all':
+                $title = __('Sizin İçin Seçtiklerimiz', 'mis360-mobilya');
+                $icon  = $icon ?: '⭐';
+                $badge = $badge ?: 'montessori';
+                break;
+            case 'featured':
+            default:
+                $title = __('Öne Çıkan Modeller', 'mis360-mobilya');
+                $icon  = $icon ?: '⚡';
+                $badge = $badge ?: 'flash';
+                break;
+        }
+    } else {
+        $icon  = $icon ?: '✨';
+        $badge = $badge ?: 'montessori';
+    }
+
+    // WooCommerce Ürün Sorgusu
+    $args = [
+        'limit'   => $limit,
+        'status'  => 'publish',
+    ];
+
+    if (!empty($atts['category'])) {
+        $cat = sanitize_text_field($atts['category']);
+        $args['category'] = is_numeric($cat) ? [(int)$cat] : array_map('trim', explode(',', $cat));
+    }
+
+    if ($type === 'featured' || $type === 'flash') {
+        $args['featured'] = true;
+    } elseif ($type === 'bestseller') {
+        $args['orderby']  = 'meta_value_num';
+        $args['meta_key'] = 'total_sales';
+        $args['order']    = 'DESC';
+    } elseif ($type === 'new') {
+        $args['orderby'] = 'date';
+        $args['order']   = 'DESC';
+    } elseif ($type === 'sale') {
+        $sale_ids = wc_get_product_ids_on_sale();
+        $args['include'] = !empty($sale_ids) ? $sale_ids : [0];
+    } else {
+        $args['orderby'] = 'popularity';
+        $args['order']   = 'DESC';
+    }
+
+    $products = wc_get_products($args);
+
+    if (empty($products)) {
+        $fallback_args = [
+            'limit'   => $limit,
+            'status'  => 'publish',
+            'orderby' => 'rand',
+        ];
+        if (!empty($args['category'])) {
+            $fallback_args['category'] = $args['category'];
+        }
+        $products = wc_get_products($fallback_args);
+    }
+
+    if (empty($products)) {
+        return '';
+    }
+
+    // Yönlendirme Linki
+    $link = esc_url($atts['link']);
+    if (empty($link)) {
+        if (!empty($atts['category'])) {
+            $cat_input = sanitize_text_field($atts['category']);
+            $term = get_term_by('slug', $cat_input, 'product_cat');
+            if (!$term && is_numeric($cat_input)) {
+                $term = get_term((int)$cat_input, 'product_cat');
+            }
+            $link = ($term && !is_wp_error($term)) ? get_term_link($term) : wc_get_page_permalink('shop');
+        } else {
+            $link = wc_get_page_permalink('shop');
+        }
+    }
+
+    // Benzersiz Slider ID
+    static $slider_cnt = 0;
+    $slider_cnt++;
+    $unique_track_id = 'trackShortcodeSlider_' . $slider_cnt . '_' . wp_rand(100, 999);
+
+    ob_start();
+    ?>
+    <section class="trendyol-slider-section emdief-shortcode-slider">
+        <div class="emdief-container">
+            <div class="trendyol-banner-box banner-theme-<?php echo esc_attr($theme); ?>">
+                <div class="trendyol-banner-header">
+                    <div class="trendyol-header-left">
+                        <h2 class="trendyol-section-title">
+                            <?php if (!empty($icon)): ?>
+                                <span class="title-icon"><?php echo esc_html($icon); ?></span>
+                            <?php endif; ?>
+                            <span><?php echo esc_html($title); ?></span>
+                        </h2>
+                    </div>
+                    <?php if (!empty($link)): ?>
+                        <a href="<?php echo esc_url($link); ?>" class="trendyol-view-all-link">
+                            <span><?php esc_html_e('Tümünü gör', 'mis360-mobilya'); ?></span>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                        </a>
+                    <?php endif; ?>
+                </div>
+
+                <div class="trendyol-track-wrapper">
+                    <button type="button" class="trendyol-nav-arrow trendyol-nav-prev" data-target="<?php echo esc_attr($unique_track_id); ?>" aria-label="<?php esc_attr_e('Önceki Ürünler', 'mis360-mobilya'); ?>">&#10094;</button>
+                    <div class="trendyol-products-track" id="<?php echo esc_attr($unique_track_id); ?>">
+                        <?php
+                        $idx = 0;
+                        foreach ($products as $prod) {
+                            if (function_exists('emdief_render_trendyol_card')) {
+                                emdief_render_trendyol_card($prod, $badge, $theme, $idx++);
+                            }
+                        }
+                        ?>
+                    </div>
+                    <button type="button" class="trendyol-nav-arrow trendyol-nav-next" data-target="<?php echo esc_attr($unique_track_id); ?>" aria-label="<?php esc_attr_e('Sonraki Ürünler', 'mis360-mobilya'); ?>">&#10095;</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <?php
+    return ob_get_clean();
+}
+add_shortcode('urun_slider', 'mis360_product_slider_shortcode');
+add_shortcode('product_slider', 'mis360_product_slider_shortcode');
+add_shortcode('emdief_product_slider', 'mis360_product_slider_shortcode');

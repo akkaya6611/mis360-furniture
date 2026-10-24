@@ -5080,6 +5080,21 @@ button.button.emdief-btn-empty-cart:hover {
 .trendyol-slider-section {
     padding: 24px 0;
 }
+.single-content .trendyol-slider-section,
+.emdief-article-wrapper .trendyol-slider-section,
+.entry-content .trendyol-slider-section {
+    padding: 20px 0 !important;
+    width: 100% !important;
+    clear: both !important;
+}
+.single-content .trendyol-slider-section .emdief-container,
+.emdief-article-wrapper .trendyol-slider-section .emdief-container,
+.entry-content .trendyol-slider-section .emdief-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+}
+
 
 /* Banner Container with Rounded Corners & Vivid Gradients */
 .trendyol-banner-box {

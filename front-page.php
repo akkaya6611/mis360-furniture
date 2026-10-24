@@ -191,6 +191,7 @@ get_header();
  * Yardımcı Fonksiyon: Trendyol Tarzı Slider Ürün Kartı Render Edici
  * SIFIR YAPAY İNDİRİM - %100 GERÇEK WOOCOMMERCE FİYATI
  */
+if (!function_exists('emdief_render_trendyol_card')) {
 function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bestseller', string $color_theme = 'orange', int $card_index = 0): void {
     $id        = $prod->get_id();
     $title     = $prod->get_name();
@@ -297,6 +298,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
     </div>
     <?php
 }
+}
 
 /**
  * Slider Ürünlerini Çeken Akıllı ve Çakışmasız Yardımcı Fonksiyon
@@ -307,6 +309,7 @@ function emdief_render_trendyol_card(WC_Product $prod, string $badge_type = 'bes
  * @param array $exclude_ids Daha önceki sliderlarda gösterilmiş ürün ID'leri
  * @return array WC_Product nesneleri dizisi
  */
+if (!function_exists('emdief_get_slider_products')) {
 function emdief_get_slider_products(string $type = 'all', int $limit = 8, array $exclude_ids = []): array {
     if (!class_exists('WooCommerce')) {
         return [];
@@ -405,6 +408,7 @@ function emdief_get_slider_products(string $type = 'all', int $limit = 8, array 
     }
 
     return $prods;
+}
 }
 ?>
 
